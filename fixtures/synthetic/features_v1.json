@@ -1,0 +1,1643 @@
+{
+  "cutoff": "2026-01-15T03:30:00Z",
+  "data_mode": "SYNTHETIC_ONLY",
+  "fictional": true,
+  "fixture_id": "ril-016-three-code-v1",
+  "record_count": 24,
+  "records": [
+    {
+      "code": "THOROUGHBRED",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 1.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "finish_consistency": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 0.391304347826087
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 2.6666666666666665
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://thoroughbred/run-1",
+        "synthetic://thoroughbred/run-2",
+        "synthetic://thoroughbred/run-3"
+      ],
+      "participant_id": "THOROUGHBRED:synthetic:participant-01-01",
+      "race_id": "THOROUGHBRED:synthetic:race-001-01",
+      "schema_version": "features-v1",
+      "snapshot_hash": "934ca726fb13bc288ff9289b0f74e6323f6adaed77940b57ac9d691ef19e7d39",
+      "target_distance": 1200
+    },
+    {
+      "code": "THOROUGHBRED",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 1.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "finish_consistency": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 0.391304347826087
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 2.3333333333333335
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://thoroughbred/run-1",
+        "synthetic://thoroughbred/run-2",
+        "synthetic://thoroughbred/run-3"
+      ],
+      "participant_id": "THOROUGHBRED:synthetic:participant-01-02",
+      "race_id": "THOROUGHBRED:synthetic:race-001-01",
+      "schema_version": "features-v1",
+      "snapshot_hash": "6666e88257df9e4901ab350282fcc88076a5793ba458cb39434927671e527cb7",
+      "target_distance": 1200
+    },
+    {
+      "code": "THOROUGHBRED",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 1.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "finish_consistency": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 0.6000000000000001
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 2.0
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://thoroughbred/run-1",
+        "synthetic://thoroughbred/run-2",
+        "synthetic://thoroughbred/run-3"
+      ],
+      "participant_id": "THOROUGHBRED:synthetic:participant-01-03",
+      "race_id": "THOROUGHBRED:synthetic:race-001-01",
+      "schema_version": "features-v1",
+      "snapshot_hash": "9b7057f7b97338e173e33ba74157c21d0123fe32897f710b8edd796c5acc2c3d",
+      "target_distance": 1200
+    },
+    {
+      "code": "THOROUGHBRED",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 2.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "finish_consistency": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 0.6000000000000001
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 3.0
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://thoroughbred/run-1",
+        "synthetic://thoroughbred/run-2",
+        "synthetic://thoroughbred/run-3"
+      ],
+      "participant_id": "THOROUGHBRED:synthetic:participant-01-04",
+      "race_id": "THOROUGHBRED:synthetic:race-001-01",
+      "schema_version": "features-v1",
+      "snapshot_hash": "219220ec1f10e56e77256594bb68c630a063c076561d0ecd024e13e84f19c43b",
+      "target_distance": 1200
+    },
+    {
+      "code": "THOROUGHBRED",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 1.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "finish_consistency": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 0.391304347826087
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 2.6666666666666665
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://thoroughbred/run-1",
+        "synthetic://thoroughbred/run-2",
+        "synthetic://thoroughbred/run-3"
+      ],
+      "participant_id": "THOROUGHBRED:synthetic:participant-02-01",
+      "race_id": "THOROUGHBRED:synthetic:race-001-02",
+      "schema_version": "features-v1",
+      "snapshot_hash": "d69c9a3a35c8f775373d746395baac97c89f622a49935e55905dfcf31e0f3ef6",
+      "target_distance": 1400
+    },
+    {
+      "code": "THOROUGHBRED",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 1.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "finish_consistency": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 0.391304347826087
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 2.3333333333333335
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://thoroughbred/run-1",
+        "synthetic://thoroughbred/run-2",
+        "synthetic://thoroughbred/run-3"
+      ],
+      "participant_id": "THOROUGHBRED:synthetic:participant-02-02",
+      "race_id": "THOROUGHBRED:synthetic:race-001-02",
+      "schema_version": "features-v1",
+      "snapshot_hash": "537cdf0f516b5330aa56cfd61f923f28d4f60b8d4e6f9d2ee8d7a77771c9ebc6",
+      "target_distance": 1400
+    },
+    {
+      "code": "THOROUGHBRED",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 1.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "finish_consistency": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 0.6000000000000001
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 2.0
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://thoroughbred/run-1",
+        "synthetic://thoroughbred/run-2",
+        "synthetic://thoroughbred/run-3"
+      ],
+      "participant_id": "THOROUGHBRED:synthetic:participant-02-03",
+      "race_id": "THOROUGHBRED:synthetic:race-001-02",
+      "schema_version": "features-v1",
+      "snapshot_hash": "74fb4cd69714d109000a6d93b583a3ba0bddce9c0eb7fcf1f8d4e0c9865d6282",
+      "target_distance": 1400
+    },
+    {
+      "code": "THOROUGHBRED",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 2.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "finish_consistency": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 0.6000000000000001
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 3.0
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://thoroughbred/run-1",
+            "synthetic://thoroughbred/run-2",
+            "synthetic://thoroughbred/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://thoroughbred/run-1",
+        "synthetic://thoroughbred/run-2",
+        "synthetic://thoroughbred/run-3"
+      ],
+      "participant_id": "THOROUGHBRED:synthetic:participant-02-04",
+      "race_id": "THOROUGHBRED:synthetic:race-001-02",
+      "schema_version": "features-v1",
+      "snapshot_hash": "5372005733934d0c2dbff53fd2d2f9ce22f74a84f191cf4e2adc8257d1d3a350",
+      "target_distance": 1400
+    },
+    {
+      "code": "HARNESS",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 1.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 2.6666666666666665
+        },
+        "recent_finish_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 1.0
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://harness/run-1",
+        "synthetic://harness/run-2",
+        "synthetic://harness/run-3"
+      ],
+      "participant_id": "HARNESS:synthetic:participant-01-01",
+      "race_id": "HARNESS:synthetic:race-001-01",
+      "schema_version": "features-v1",
+      "snapshot_hash": "3074b4b7ce1d4e4e8ddefa0f67b6533cae87bac9ed3ae281b2a7bfd0ae31c5e5",
+      "target_distance": 1200
+    },
+    {
+      "code": "HARNESS",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 1.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 2.3333333333333335
+        },
+        "recent_finish_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 0.5
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://harness/run-1",
+        "synthetic://harness/run-2",
+        "synthetic://harness/run-3"
+      ],
+      "participant_id": "HARNESS:synthetic:participant-01-02",
+      "race_id": "HARNESS:synthetic:race-001-01",
+      "schema_version": "features-v1",
+      "snapshot_hash": "1d53b6e7a0b3f73eb49a7d0b063bc27a2cf15249549e80ccb7a8fcf5cac1711e",
+      "target_distance": 1200
+    },
+    {
+      "code": "HARNESS",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 1.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 2.0
+        },
+        "recent_finish_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://harness/run-1",
+        "synthetic://harness/run-2",
+        "synthetic://harness/run-3"
+      ],
+      "participant_id": "HARNESS:synthetic:participant-01-03",
+      "race_id": "HARNESS:synthetic:race-001-01",
+      "schema_version": "features-v1",
+      "snapshot_hash": "e5072ca1cec22304fdc0bcc1df7937e8549415630a1554c5c19a8c7360dfdb9c",
+      "target_distance": 1200
+    },
+    {
+      "code": "HARNESS",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 2.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 3.0
+        },
+        "recent_finish_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 0.25
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://harness/run-1",
+        "synthetic://harness/run-2",
+        "synthetic://harness/run-3"
+      ],
+      "participant_id": "HARNESS:synthetic:participant-01-04",
+      "race_id": "HARNESS:synthetic:race-001-01",
+      "schema_version": "features-v1",
+      "snapshot_hash": "7db6522614a4bb3692cf795acc9c85cf1a9c9eda33489e965389821191c5b2a6",
+      "target_distance": 1200
+    },
+    {
+      "code": "HARNESS",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 1.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 2.6666666666666665
+        },
+        "recent_finish_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 1.0
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://harness/run-1",
+        "synthetic://harness/run-2",
+        "synthetic://harness/run-3"
+      ],
+      "participant_id": "HARNESS:synthetic:participant-02-01",
+      "race_id": "HARNESS:synthetic:race-001-02",
+      "schema_version": "features-v1",
+      "snapshot_hash": "6389a59d2902d32ec7eb8ad547f91b747f5136b97d47e56ae042dab2b8b471e1",
+      "target_distance": 1400
+    },
+    {
+      "code": "HARNESS",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 1.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 2.3333333333333335
+        },
+        "recent_finish_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 0.5
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://harness/run-1",
+        "synthetic://harness/run-2",
+        "synthetic://harness/run-3"
+      ],
+      "participant_id": "HARNESS:synthetic:participant-02-02",
+      "race_id": "HARNESS:synthetic:race-001-02",
+      "schema_version": "features-v1",
+      "snapshot_hash": "651fec7451899bf21cb0c0882208b7fcef16dd5c03d4f7cbfad2a0c40baf84b7",
+      "target_distance": 1400
+    },
+    {
+      "code": "HARNESS",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 1.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 2.0
+        },
+        "recent_finish_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://harness/run-1",
+        "synthetic://harness/run-2",
+        "synthetic://harness/run-3"
+      ],
+      "participant_id": "HARNESS:synthetic:participant-02-03",
+      "race_id": "HARNESS:synthetic:race-001-02",
+      "schema_version": "features-v1",
+      "snapshot_hash": "716e637eddea98e3a559f0f526f969a43ce6fb4fd33fbb36b0dee544ace3560e",
+      "target_distance": 1400
+    },
+    {
+      "code": "HARNESS",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 2.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 3.0
+        },
+        "recent_finish_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 0.25
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://harness/run-1",
+            "synthetic://harness/run-2",
+            "synthetic://harness/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://harness/run-1",
+        "synthetic://harness/run-2",
+        "synthetic://harness/run-3"
+      ],
+      "participant_id": "HARNESS:synthetic:participant-02-04",
+      "race_id": "HARNESS:synthetic:race-001-02",
+      "schema_version": "features-v1",
+      "snapshot_hash": "bde4ae1d40deae0c044c1c02ae10b14d44c99c52a0ba124903003f04b41cc7d0",
+      "target_distance": 1400
+    },
+    {
+      "code": "GREYHOUND",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 1.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 2.6666666666666665
+        },
+        "recent_finish_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 1.0
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://greyhound/run-1",
+        "synthetic://greyhound/run-2",
+        "synthetic://greyhound/run-3"
+      ],
+      "participant_id": "GREYHOUND:synthetic:participant-01-01",
+      "race_id": "GREYHOUND:synthetic:race-001-01",
+      "schema_version": "features-v1",
+      "snapshot_hash": "76ef1eacba60bb5192e492b7b67b7874dcddadbcbe6d40620f021abf3bb204fd",
+      "target_distance": 1200
+    },
+    {
+      "code": "GREYHOUND",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 1.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 2.3333333333333335
+        },
+        "recent_finish_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 0.5
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://greyhound/run-1",
+        "synthetic://greyhound/run-2",
+        "synthetic://greyhound/run-3"
+      ],
+      "participant_id": "GREYHOUND:synthetic:participant-01-02",
+      "race_id": "GREYHOUND:synthetic:race-001-01",
+      "schema_version": "features-v1",
+      "snapshot_hash": "a4579feb9ac48328b97d1c4e9f99daa1f486fc49d02349aa67f74386f63da23e",
+      "target_distance": 1200
+    },
+    {
+      "code": "GREYHOUND",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 1.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 2.0
+        },
+        "recent_finish_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://greyhound/run-1",
+        "synthetic://greyhound/run-2",
+        "synthetic://greyhound/run-3"
+      ],
+      "participant_id": "GREYHOUND:synthetic:participant-01-03",
+      "race_id": "GREYHOUND:synthetic:race-001-01",
+      "schema_version": "features-v1",
+      "snapshot_hash": "1da371611f46e23d08f183d939466715c5d0a742b0683fc5212a9d08a7990d28",
+      "target_distance": 1200
+    },
+    {
+      "code": "GREYHOUND",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 2.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 3.0
+        },
+        "recent_finish_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 0.25
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://greyhound/run-1",
+        "synthetic://greyhound/run-2",
+        "synthetic://greyhound/run-3"
+      ],
+      "participant_id": "GREYHOUND:synthetic:participant-01-04",
+      "race_id": "GREYHOUND:synthetic:race-001-01",
+      "schema_version": "features-v1",
+      "snapshot_hash": "ad5a2a36d23dac5673a9d319f3f3fe83a6eef3670da92d7f960fa5fc32bf05f6",
+      "target_distance": 1200
+    },
+    {
+      "code": "GREYHOUND",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 1.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 2.6666666666666665
+        },
+        "recent_finish_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 1.0
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://greyhound/run-1",
+        "synthetic://greyhound/run-2",
+        "synthetic://greyhound/run-3"
+      ],
+      "participant_id": "GREYHOUND:synthetic:participant-02-01",
+      "race_id": "GREYHOUND:synthetic:race-001-02",
+      "schema_version": "features-v1",
+      "snapshot_hash": "00f112984d279493c9cf5d0ce0ff126f1b1792e01d89b17b4198c323cdf26e2a",
+      "target_distance": 1400
+    },
+    {
+      "code": "GREYHOUND",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 1.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 2.3333333333333335
+        },
+        "recent_finish_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 0.5
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://greyhound/run-1",
+        "synthetic://greyhound/run-2",
+        "synthetic://greyhound/run-3"
+      ],
+      "participant_id": "GREYHOUND:synthetic:participant-02-02",
+      "race_id": "GREYHOUND:synthetic:race-001-02",
+      "schema_version": "features-v1",
+      "snapshot_hash": "6dc46bb93cbb841c46d89bba9e5588d26e42fad6d3a80ca8fe1726ff38123126",
+      "target_distance": 1400
+    },
+    {
+      "code": "GREYHOUND",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 1.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 2.0
+        },
+        "recent_finish_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://greyhound/run-1",
+        "synthetic://greyhound/run-2",
+        "synthetic://greyhound/run-3"
+      ],
+      "participant_id": "GREYHOUND:synthetic:participant-02-03",
+      "race_id": "GREYHOUND:synthetic:race-001-02",
+      "schema_version": "features-v1",
+      "snapshot_hash": "9dc34d632657cf72eaea21807d283cc3c816e739b53dec1560612e4212d65f5a",
+      "target_distance": 1400
+    },
+    {
+      "code": "GREYHOUND",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "excluded_future_receipt_ids": [],
+      "features": {
+        "best_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 2.0
+        },
+        "distance_match_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 0.3333333333333333
+        },
+        "mean_finish_position": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 3.0
+        },
+        "recent_finish_rate": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 0.25
+        },
+        "runs_count": {
+          "missing": false,
+          "missing_reason": null,
+          "source_receipt_ids": [
+            "synthetic://greyhound/run-1",
+            "synthetic://greyhound/run-2",
+            "synthetic://greyhound/run-3"
+          ],
+          "value": 3.0
+        }
+      },
+      "included_receipt_ids": [
+        "synthetic://greyhound/run-1",
+        "synthetic://greyhound/run-2",
+        "synthetic://greyhound/run-3"
+      ],
+      "participant_id": "GREYHOUND:synthetic:participant-02-04",
+      "race_id": "GREYHOUND:synthetic:race-001-02",
+      "schema_version": "features-v1",
+      "snapshot_hash": "c094ea9857cc2298b5daf1020a2b8677c3d2bce67b6ed95830553c60156640c4",
+      "target_distance": 1400
+    }
+  ],
+  "schema_version": "features-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}

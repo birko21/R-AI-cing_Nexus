@@ -9,3 +9,5 @@ if ($LASTEXITCODE -ne 0) { throw "B0 forecast manifest validation failed with ex
 if ($LASTEXITCODE -ne 0) { throw "B1 forecast manifest validation failed with exit code $LASTEXITCODE" }
 & '.venv\Scripts\python.exe' scripts/generate_forecast_archive.py
 if ($LASTEXITCODE -ne 0) { throw "Forecast archive validation failed with exit code $LASTEXITCODE" }
+& '.venv\Scripts\python.exe' scripts/generate_feature_manifest.py
+if ($LASTEXITCODE -ne 0) { throw "Feature manifest validation failed with exit code $LASTEXITCODE" }
