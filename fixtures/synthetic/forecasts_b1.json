@@ -1,0 +1,443 @@
+{
+  "fictional": true,
+  "fixture_id": "ril-016-three-code-v1",
+  "forecasts": [
+    {
+      "abstention_reason": null,
+      "code": "THOROUGHBRED",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostics": [
+        "PRE_CUTOFF_RUNS_ONLY",
+        "MINIMUM_SUPPORT=2",
+        "NORMALIZED_PROBABILITIES"
+      ],
+      "field_revision": "THOROUGHBRED:synthetic:race-001-01:field-r1",
+      "field_status": "OFFICIAL",
+      "forecast_id": "b1-bfb0f748b887d2e3",
+      "manifest_checksum": "799fc4b9bb8d0c6a1c17ebd1c942ea56d78d73e9bdffd8b6a4fb5817d1073404",
+      "minimum_support": 2,
+      "model_id": "B1_FORM_HEURISTIC",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b1-form-v1",
+      "race_id": "THOROUGHBRED:synthetic:race-001-01",
+      "runners": [
+        {
+          "entry_id": "THOROUGHBRED:synthetic:entry-001-01-01",
+          "features": {
+            "distance_match": 0.5,
+            "form_score": 0.5277777777777778,
+            "raw_score": 0.4883551284267592,
+            "recency_score": 0.32051567099320954,
+            "smoothed_score": 0.5883551284267592,
+            "support_count": 3
+          },
+          "number": 1,
+          "probability": 0.2516335377587316
+        },
+        {
+          "entry_id": "THOROUGHBRED:synthetic:entry-001-01-02",
+          "features": {
+            "distance_match": 0.5,
+            "form_score": 0.5833333333333334,
+            "raw_score": 0.5189106839823148,
+            "recency_score": 0.32051567099320954,
+            "smoothed_score": 0.6189106839823147,
+            "support_count": 3
+          },
+          "number": 2,
+          "probability": 0.26470183982858436
+        },
+        {
+          "entry_id": "THOROUGHBRED:synthetic:entry-001-01-03",
+          "features": {
+            "distance_match": 0.5,
+            "form_score": 0.611111111111111,
+            "raw_score": 0.5341884617600925,
+            "recency_score": 0.32051567099320954,
+            "smoothed_score": 0.6341884617600925,
+            "support_count": 3
+          },
+          "number": 3,
+          "probability": 0.27123599086351075
+        },
+        {
+          "entry_id": "THOROUGHBRED:synthetic:entry-001-01-04",
+          "features": {
+            "distance_match": 0.5,
+            "form_score": 0.3611111111111111,
+            "raw_score": 0.39668846176009254,
+            "recency_score": 0.32051567099320954,
+            "smoothed_score": 0.4966884617600925,
+            "support_count": 3
+          },
+          "number": 4,
+          "probability": 0.2124286315491733
+        }
+      ],
+      "smoothing": 0.1,
+      "status": "READY",
+      "target_distance": 1200,
+      "weights": {
+        "distance": 0.3,
+        "form": 0.55,
+        "half_life_days": 30.0,
+        "recency": 0.15
+      }
+    },
+    {
+      "abstention_reason": null,
+      "code": "THOROUGHBRED",
+      "cutoff": "2026-01-15T04:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostics": [
+        "PRE_CUTOFF_RUNS_ONLY",
+        "MINIMUM_SUPPORT=2",
+        "NORMALIZED_PROBABILITIES"
+      ],
+      "field_revision": "THOROUGHBRED:synthetic:race-001-02:field-r1",
+      "field_status": "FINAL_FIELDS",
+      "forecast_id": "b1-2e2de2f170b88322",
+      "manifest_checksum": "799fc4b9bb8d0c6a1c17ebd1c942ea56d78d73e9bdffd8b6a4fb5817d1073404",
+      "minimum_support": 2,
+      "model_id": "B1_FORM_HEURISTIC",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b1-form-v1",
+      "race_id": "THOROUGHBRED:synthetic:race-001-02",
+      "runners": [
+        {
+          "entry_id": "THOROUGHBRED:synthetic:entry-001-02-01",
+          "features": {
+            "distance_match": 0.6666666666666666,
+            "form_score": 0.5277777777777778,
+            "raw_score": 0.5382884006780766,
+            "recency_score": 0.32007081933532516,
+            "smoothed_score": 0.6382884006780766,
+            "support_count": 3
+          },
+          "number": 1,
+          "probability": 0.48267053006815647
+        },
+        {
+          "entry_id": "THOROUGHBRED:synthetic:entry-001-02-03",
+          "features": {
+            "distance_match": 0.6666666666666666,
+            "form_score": 0.611111111111111,
+            "raw_score": 0.5841217340114099,
+            "recency_score": 0.32007081933532516,
+            "smoothed_score": 0.6841217340114099,
+            "support_count": 3
+          },
+          "number": 3,
+          "probability": 0.5173294699318436
+        }
+      ],
+      "smoothing": 0.1,
+      "status": "READY",
+      "target_distance": 1400,
+      "weights": {
+        "distance": 0.3,
+        "form": 0.55,
+        "half_life_days": 30.0,
+        "recency": 0.15
+      }
+    },
+    {
+      "abstention_reason": null,
+      "code": "HARNESS",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostics": [
+        "PRE_CUTOFF_RUNS_ONLY",
+        "MINIMUM_SUPPORT=2",
+        "NORMALIZED_PROBABILITIES"
+      ],
+      "field_revision": "HARNESS:synthetic:race-001-01:field-r1",
+      "field_status": "OFFICIAL",
+      "forecast_id": "b1-1c3c8ac8ec02f846",
+      "manifest_checksum": "799fc4b9bb8d0c6a1c17ebd1c942ea56d78d73e9bdffd8b6a4fb5817d1073404",
+      "minimum_support": 2,
+      "model_id": "B1_FORM_HEURISTIC",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b1-form-v1",
+      "race_id": "HARNESS:synthetic:race-001-01",
+      "runners": [
+        {
+          "entry_id": "HARNESS:synthetic:entry-001-01-01",
+          "features": {
+            "distance_match": 0.5,
+            "form_score": 0.5277777777777778,
+            "raw_score": 0.5091349052554321,
+            "recency_score": 0.4683067757769554,
+            "smoothed_score": 0.6091349052554321,
+            "support_count": 3
+          },
+          "number": 1,
+          "probability": 0.2514332326885458
+        },
+        {
+          "entry_id": "HARNESS:synthetic:entry-001-01-02",
+          "features": {
+            "distance_match": 0.5,
+            "form_score": 0.5833333333333334,
+            "raw_score": 0.5369126830332099,
+            "recency_score": 0.4683067757769554,
+            "smoothed_score": 0.6369126830332099,
+            "support_count": 3
+          },
+          "number": 2,
+          "probability": 0.26289909419691226
+        },
+        {
+          "entry_id": "HARNESS:synthetic:entry-001-01-03",
+          "features": {
+            "distance_match": 0.5,
+            "form_score": 0.611111111111111,
+            "raw_score": 0.5508015719220988,
+            "recency_score": 0.4683067757769554,
+            "smoothed_score": 0.6508015719220988,
+            "support_count": 3
+          },
+          "number": 3,
+          "probability": 0.2686320249510955
+        },
+        {
+          "entry_id": "HARNESS:synthetic:entry-001-01-04",
+          "features": {
+            "distance_match": 0.5,
+            "form_score": 0.3611111111111111,
+            "raw_score": 0.42580157192209883,
+            "recency_score": 0.4683067757769554,
+            "smoothed_score": 0.5258015719220989,
+            "support_count": 3
+          },
+          "number": 4,
+          "probability": 0.21703564816344642
+        }
+      ],
+      "smoothing": 0.1,
+      "status": "READY",
+      "target_distance": 1200,
+      "weights": {
+        "distance": 0.35,
+        "form": 0.5,
+        "half_life_days": 45.0,
+        "recency": 0.15
+      }
+    },
+    {
+      "abstention_reason": null,
+      "code": "HARNESS",
+      "cutoff": "2026-01-15T04:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostics": [
+        "PRE_CUTOFF_RUNS_ONLY",
+        "MINIMUM_SUPPORT=2",
+        "NORMALIZED_PROBABILITIES"
+      ],
+      "field_revision": "HARNESS:synthetic:race-001-02:field-r1",
+      "field_status": "FINAL_FIELDS",
+      "forecast_id": "b1-76f3daecf528f958",
+      "manifest_checksum": "799fc4b9bb8d0c6a1c17ebd1c942ea56d78d73e9bdffd8b6a4fb5817d1073404",
+      "minimum_support": 2,
+      "model_id": "B1_FORM_HEURISTIC",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b1-form-v1",
+      "race_id": "HARNESS:synthetic:race-001-02",
+      "runners": [
+        {
+          "entry_id": "HARNESS:synthetic:entry-001-02-01",
+          "features": {
+            "distance_match": 0.6666666666666666,
+            "form_score": 0.5277777777777778,
+            "raw_score": 0.5674032260840454,
+            "recency_score": 0.4678733590788209,
+            "smoothed_score": 0.6674032260840453,
+            "support_count": 3
+          },
+          "number": 1,
+          "probability": 0.48486470019046235
+        },
+        {
+          "entry_id": "HARNESS:synthetic:entry-001-02-03",
+          "features": {
+            "distance_match": 0.6666666666666666,
+            "form_score": 0.611111111111111,
+            "raw_score": 0.609069892750712,
+            "recency_score": 0.4678733590788209,
+            "smoothed_score": 0.709069892750712,
+            "support_count": 3
+          },
+          "number": 3,
+          "probability": 0.5151352998095375
+        }
+      ],
+      "smoothing": 0.1,
+      "status": "READY",
+      "target_distance": 1400,
+      "weights": {
+        "distance": 0.35,
+        "form": 0.5,
+        "half_life_days": 45.0,
+        "recency": 0.15
+      }
+    },
+    {
+      "abstention_reason": null,
+      "code": "GREYHOUND",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostics": [
+        "PRE_CUTOFF_RUNS_ONLY",
+        "MINIMUM_SUPPORT=2",
+        "NORMALIZED_PROBABILITIES"
+      ],
+      "field_revision": "GREYHOUND:synthetic:race-001-01:field-r1",
+      "field_status": "OFFICIAL",
+      "forecast_id": "b1-9d1c013bb97d4093",
+      "manifest_checksum": "799fc4b9bb8d0c6a1c17ebd1c942ea56d78d73e9bdffd8b6a4fb5817d1073404",
+      "minimum_support": 2,
+      "model_id": "B1_FORM_HEURISTIC",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b1-form-v1",
+      "race_id": "GREYHOUND:synthetic:race-001-01",
+      "runners": [
+        {
+          "entry_id": "GREYHOUND:synthetic:entry-001-01-01",
+          "features": {
+            "distance_match": 0.5,
+            "form_score": 0.5277777777777778,
+            "raw_score": 0.4064027993320577,
+            "recency_score": 0.1968651409487363,
+            "smoothed_score": 0.5064027993320577,
+            "support_count": 3
+          },
+          "number": 1,
+          "probability": 0.2515523235895501
+        },
+        {
+          "entry_id": "GREYHOUND:synthetic:entry-001-01-02",
+          "features": {
+            "distance_match": 0.5,
+            "form_score": 0.5833333333333334,
+            "raw_score": 0.4314027993320577,
+            "recency_score": 0.1968651409487363,
+            "smoothed_score": 0.5314027993320577,
+            "support_count": 3
+          },
+          "number": 2,
+          "probability": 0.26397091230595066
+        },
+        {
+          "entry_id": "GREYHOUND:synthetic:entry-001-01-03",
+          "features": {
+            "distance_match": 0.5,
+            "form_score": 0.611111111111111,
+            "raw_score": 0.4439027993320577,
+            "recency_score": 0.1968651409487363,
+            "smoothed_score": 0.5439027993320577,
+            "support_count": 3
+          },
+          "number": 3,
+          "probability": 0.27018020666415093
+        },
+        {
+          "entry_id": "GREYHOUND:synthetic:entry-001-01-04",
+          "features": {
+            "distance_match": 0.5,
+            "form_score": 0.3611111111111111,
+            "raw_score": 0.33140279933205774,
+            "recency_score": 0.1968651409487363,
+            "smoothed_score": 0.4314027993320577,
+            "support_count": 3
+          },
+          "number": 4,
+          "probability": 0.21429655744034842
+        }
+      ],
+      "smoothing": 0.1,
+      "status": "READY",
+      "target_distance": 1200,
+      "weights": {
+        "distance": 0.2,
+        "form": 0.45,
+        "half_life_days": 21.0,
+        "recency": 0.35
+      }
+    },
+    {
+      "abstention_reason": null,
+      "code": "GREYHOUND",
+      "cutoff": "2026-01-15T04:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostics": [
+        "PRE_CUTOFF_RUNS_ONLY",
+        "MINIMUM_SUPPORT=2",
+        "NORMALIZED_PROBABILITIES"
+      ],
+      "field_revision": "GREYHOUND:synthetic:race-001-02:field-r1",
+      "field_status": "FINAL_FIELDS",
+      "forecast_id": "b1-ef58385513724758",
+      "manifest_checksum": "799fc4b9bb8d0c6a1c17ebd1c942ea56d78d73e9bdffd8b6a4fb5817d1073404",
+      "minimum_support": 2,
+      "model_id": "B1_FORM_HEURISTIC",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b1-form-v1",
+      "race_id": "GREYHOUND:synthetic:race-001-02",
+      "runners": [
+        {
+          "entry_id": "GREYHOUND:synthetic:entry-001-02-01",
+          "features": {
+            "distance_match": 0.6666666666666666,
+            "form_score": 0.5277777777777778,
+            "raw_score": 0.4395995562991869,
+            "recency_score": 0.19647492275958167,
+            "smoothed_score": 0.5395995562991869,
+            "support_count": 3
+          },
+          "number": 1,
+          "probability": 0.48320944309128006
+        },
+        {
+          "entry_id": "GREYHOUND:synthetic:entry-001-02-03",
+          "features": {
+            "distance_match": 0.6666666666666666,
+            "form_score": 0.611111111111111,
+            "raw_score": 0.4770995562991869,
+            "recency_score": 0.19647492275958167,
+            "smoothed_score": 0.5770995562991869,
+            "support_count": 3
+          },
+          "number": 3,
+          "probability": 0.5167905569087199
+        }
+      ],
+      "smoothing": 0.1,
+      "status": "READY",
+      "target_distance": 1400,
+      "weights": {
+        "distance": 0.2,
+        "form": 0.45,
+        "half_life_days": 21.0,
+        "recency": 0.35
+      }
+    }
+  ],
+  "generated_at": "2026-01-15T00:00:00Z",
+  "model": {
+    "data_mode": "SYNTHETIC_ONLY",
+    "inputs": [
+      "pre_cutoff_historical_runs",
+      "target_distance",
+      "field_membership"
+    ],
+    "minimum_support": 2,
+    "model_id": "B1_FORM_HEURISTIC",
+    "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+    "model_version": "b1-form-v1",
+    "smoothing": 0.1
+  },
+  "schema_version": "ril-022-b1-v1",
+  "source_fixture_sha256": "799fc4b9bb8d0c6a1c17ebd1c942ea56d78d73e9bdffd8b6a4fb5817d1073404",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
