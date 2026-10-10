@@ -10,6 +10,9 @@
     "validate": "powershell -ExecutionPolicy Bypass -File scripts/validate_repository.ps1",
     "web:build": "pnpm --filter @racing-intelligence/web build",
     "web:check": "pnpm --filter @racing-intelligence/web typecheck",
-    "api:test": "powershell -ExecutionPolicy Bypass -Command \".\\.venv\\Scripts\\python.exe -m pytest services/api/tests -q\""
+    "api:test": "powershell -ExecutionPolicy Bypass -Command \".\\.venv\\Scripts\\python.exe -m pytest services/api/tests -q\"",
+    "db:upgrade": "powershell -ExecutionPolicy Bypass -File scripts/db_migrate.ps1 -Direction upgrade",
+    "db:downgrade": "powershell -ExecutionPolicy Bypass -File scripts/db_migrate.ps1 -Direction downgrade",
+    "db:verify": "powershell -ExecutionPolicy Bypass -Command \".\\.venv\\Scripts\\python.exe scripts/verify_migration_checksums.py\""
   }
 }

@@ -30,7 +30,13 @@ $required = @(
     'contracts/openapi_mvp.yaml',
     'contracts/types.ts',
     'services/api/app/contracts.py',
-    'services/api/tests/test_contract.py'
+    'services/api/tests/test_contract.py',
+    'alembic.ini',
+    'migrations/env.py',
+    'migrations/versions/001_offline_mvp.py',
+    'scripts/db_migrate.ps1',
+    'scripts/record_migration_checksums.py',
+    'scripts/verify_migration_checksums.py'
 )
 
 foreach ($path in $required) {

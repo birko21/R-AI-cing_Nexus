@@ -50,3 +50,7 @@ pnpm validate
 ```
 
 The API contract is in `contracts/openapi_mvp.yaml`; its hand-checked TypeScript types are in `contracts/types.ts`. The fixture command only verifies the bootstrap manifest. Full three-code synthetic records are delivered by RIL-016.
+
+## Database migration foundation
+
+Set `DATABASE_URL` to a disposable local PostgreSQL database using the `postgresql+psycopg://` scheme, then run `pnpm db:upgrade`. The migration runner records and verifies SHA-256 checksums. Use `pnpm db:downgrade` followed by `pnpm db:upgrade` for the forward/rollback smoke; never point this smoke at a shared or production database.
