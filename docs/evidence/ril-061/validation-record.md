@@ -25,7 +25,7 @@ The branch contains no provider credentials, no live network adapter activation,
 
 - Pull request: [#75](https://github.com/birko21/R-AI-cing_Nexus/pull/75)
 - Branch: `feature/ril-061-real-data-readiness`
-- Head commit under review: `411a4e7494d24ca16613efd5c7b6ff41612e175e`
-- Latest PR workflow run for that head: `38031589017`
+- Head commit under review: `a89c163676b8a0cf77abf257486ca1a641c0eabc`
+- Latest PR workflow run for that head: `38032285762`
 - Remote checks: backend, contracts-security-and-synthetic-evaluation, frontend and browser-smoke all `SUCCESS`.
 - PR state: `OPEN`, merge state `CLEAN`, review decision pending; no merge or branch-protection bypass was performed.
