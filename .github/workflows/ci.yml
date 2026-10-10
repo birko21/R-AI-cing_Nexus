@@ -70,6 +70,25 @@ jobs:
       - name: Frontend production build
         run: pnpm run web:build
 
+  render-readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: services/api/requirements.lock.txt
+      - name: Install Blueprint and authentication validation dependencies
+        run: python -m pip install --requirement services/api/requirements.lock.txt
+      - name: Validate Nexus Render Blueprint
+        run: python scripts/validate_render_blueprint.py
+      - name: Validate real OIDC authentication and authorisation
+        run: python -m pytest services/api/tests/test_oidc_auth.py -q
+      - name: Validate provider connectivity is disabled by default
+        run: python -m pytest services/api/tests/test_external_provider_integrations.py -q
+
   browser-smoke:
     runs-on: ubuntu-latest
     timeout-minutes: 20

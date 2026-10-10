@@ -1,4 +1,6 @@
-import { useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
+
+export type NexusApiRequest = (path: string, init?: RequestInit, requiredScope?: string) => Promise<Response>;
 
 type Code = 'ALL' | 'THOROUGHBRED' | 'HARNESS' | 'GREYHOUND';
 type Status = 'DEMO' | 'NO_RACING' | 'NO_DATA' | 'UNAVAILABLE' | 'LOADING' | 'STALE' | 'QUARANTINED' | 'UNSUPPORTED' | 'AUTH_DENIED';
@@ -284,12 +286,13 @@ function answerAssistantQuestion(question: string): AssistantAnswer {
   };
 }
 
-export default function App() {
+export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {}) {
   const [selectedCode, setSelectedCode] = useState<Code>('ALL');
   const [selectedStatus, setSelectedStatus] = useState<Status | 'ALL'>('ALL');
   const [showStateExamples, setShowStateExamples] = useState(true);
   const [selectedRace, setSelectedRace] = useState<Exclude<Code, 'ALL'> | null>(null);
   const [evidenceTab, setEvidenceTab] = useState<EvidenceTab>('FIELD');
+  const [apiStatus, setApiStatus] = useState<'idle' | 'checking' | 'ready' | 'denied' | 'unavailable'>('idle');
   const visibleItems = useMemo(
     () => commandItems.filter((item) =>
       (selectedCode === 'ALL' || item.code === selectedCode) &&
@@ -298,11 +301,42 @@ export default function App() {
     [selectedCode, selectedStatus, showStateExamples],
   );
 
+  useEffect(() => {
+    if (!apiRequest) return;
+    let active = true;
+    setApiStatus('checking');
+    void apiRequest('/v1/codes', undefined, 'races:read')
+      .then((response) => {
+        if (!active) return;
+        setApiStatus(response.ok ? 'ready' : response.status === 401 || response.status === 403 ? 'denied' : 'unavailable');
+      })
+      .catch(() => {
+        if (active) setApiStatus('unavailable');
+      });
+    return () => { active = false; };
+  }, [apiRequest]);
+
+  if (import.meta.env.VITE_AUTH_REQUIRED === 'true') {
+    return (
+      <main className="shell">
+        <section className="intro" aria-labelledby="auth-required-title">
+          <p className="eyebrow">RACING INTELLIGENCE LAB</p>
+          <h1 id="auth-required-title">Protected staging configuration required</h1>
+          <p>
+            The Nexus research interface is fail-closed until the approved OIDC login flow,
+            callback and protected session are configured. No research data or provider
+            connectivity is available from this deployment.
+          </p>
+        </section>
+      </main>
+    );
+  }
+
   return (
     <main className="shell">
       <header className="topbar">
         <div><p className="eyebrow">RACING INTELLIGENCE LAB</p><h1>Today / Command Centre</h1></div>
-        <div className="header-badges"><span className="mode-badge">DEMO ONLY</span><span className="mode-badge subdued">SYNTHETIC_ONLY</span></div>
+        <div className="header-badges"><span className="mode-badge">DEMO ONLY</span><span className="mode-badge subdued">SYNTHETIC_ONLY</span>{apiStatus !== 'idle' && <span className="mode-badge subdued">API {apiStatus.toUpperCase()}</span>}</div>
       </header>
       <section className="intro" aria-labelledby="intro-title">
         <p className="eyebrow">LOCAL RESEARCH WORKSPACE</p>

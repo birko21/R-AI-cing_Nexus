@@ -29,6 +29,15 @@ def test_health_and_status_are_anonymous_and_correlated() -> None:
         assert status.headers["X-Correlation-ID"]
 
 
+def test_cors_allows_only_the_configured_local_frontend() -> None:
+    with TestClient(app) as client:
+        allowed = client.get("/health/live", headers={"Origin": "http://127.0.0.1:5173"})
+        assert allowed.headers["access-control-allow-origin"] == "http://127.0.0.1:5173"
+
+        denied = client.get("/health/live", headers={"Origin": "https://untrusted.example"})
+        assert "access-control-allow-origin" not in denied.headers
+
+
 def test_domain_routes_fail_closed_with_stable_error_envelope() -> None:
     with TestClient(app) as client:
         response = client.get("/v1/codes")
