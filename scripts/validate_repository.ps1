@@ -16,8 +16,17 @@ $required = @(
     'docs/TRACEABILITY.md',
     'docs/RISK_REGISTER.md',
     'docs/WORKFLOW.md',
+    'docs/LOCAL_DEVELOPMENT.md',
     'docs/checkpoints/checkpoint.schema.json',
-    'scripts/validate_checkpoint.ps1'
+    'scripts/validate_checkpoint.ps1',
+    '.env.example',
+    'package.json',
+    'pnpm-workspace.yaml',
+    'pnpm-lock.yaml',
+    'apps/web/package.json',
+    'services/api/pyproject.toml',
+    'services/api/requirements.lock.txt',
+    'fixtures/synthetic/manifest.json'
 )
 
 foreach ($path in $required) {

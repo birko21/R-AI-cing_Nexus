@@ -1,0 +1,8 @@
+{
+  "fixture_id": "bootstrap-ril-006",
+  "seed": "RIL-006-bootstrap",
+  "data_mode": "SYNTHETIC_ONLY",
+  "fictional": true,
+  "races": [],
+  "note": "Bootstrap manifest only. Three-code race records are implemented by RIL-016."
+}

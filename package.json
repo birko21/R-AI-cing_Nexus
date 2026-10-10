@@ -1,0 +1,14 @@
+{
+  "name": "r-ai-cing-nexus",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@11.19.0",
+  "scripts": {
+    "bootstrap": "powershell -ExecutionPolicy Bypass -File scripts/bootstrap.ps1",
+    "dev": "powershell -ExecutionPolicy Bypass -File scripts/start-dev.ps1",
+    "seed:fixture": "powershell -ExecutionPolicy Bypass -File scripts/seed_fixture.ps1",
+    "validate": "powershell -ExecutionPolicy Bypass -File scripts/validate_repository.ps1",
+    "web:build": "pnpm --filter @racing-intelligence/web build",
+    "web:check": "pnpm --filter @racing-intelligence/web typecheck"
+  }
+}

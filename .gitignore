@@ -1,0 +1,24 @@
+# Local credentials and environment overrides
+.env
+.env.*
+!.env.example
+
+# Python local environment and generated files
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Node package manager and build output
+node_modules/
+dist/
+coverage/
+.vite/
+*.tsbuildinfo
+
+# Local logs and editor state
+*.log
+.DS_Store
+.vscode/
