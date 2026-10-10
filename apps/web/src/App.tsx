@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type FormEvent } from 'react';
 
 type Code = 'ALL' | 'THOROUGHBRED' | 'HARNESS' | 'GREYHOUND';
 type Status = 'DEMO' | 'NO_RACING' | 'NO_DATA' | 'UNAVAILABLE' | 'LOADING' | 'STALE' | 'QUARANTINED' | 'UNSUPPORTED' | 'AUTH_DENIED';
@@ -16,6 +16,22 @@ type CommandItem = {
 };
 
 type EvidenceTab = 'FIELD' | 'PROVENANCE' | 'FORECAST' | 'MARKET';
+type AssistantAnswerKind = 'EVIDENCE' | 'DISCREPANCY' | 'NOT_AVAILABLE';
+
+type AssistantCitation = {
+  sourceId: string;
+  modelId: string;
+  observedAt: string;
+  limitation: string;
+};
+
+type AssistantAnswer = {
+  kind: AssistantAnswerKind;
+  title: string;
+  body: string;
+  citations: AssistantCitation[];
+  noteDraft: string;
+};
 
 type ResearchRace = {
   code: Exclude<Code, 'ALL'>;
@@ -170,6 +186,35 @@ function localNow(): string {
   }).format(new Date());
 }
 
+function answerAssistantQuestion(question: string): AssistantAnswer {
+  const normalized = question.trim().toLowerCase();
+  if (normalized.includes('discrep') || normalized.includes('differ') || normalized.includes('scratch')) {
+    return {
+      kind: 'DISCREPANCY',
+      title: 'The forecast and field use different revisions.',
+      body: 'The archived forecast references field-r1, while the current field is field-r2 after a scratching. The forecast remains immutable and is invalidated; no replacement probability was estimated for the changed field.',
+      citations: [{ sourceId: 'synthetic://thoroughbred/race-001', modelId: 'B1_FORM_HEURISTIC', observedAt: '15 Jan 2026, 14:00 AEDT', limitation: 'Illustrative model archive; not validated.' }],
+      noteDraft: 'Discrepancy: forecast field-r1 was invalidated after the field changed to field-r2; no replacement probability was estimated.',
+    };
+  }
+  if (normalized.includes('section') || normalized.includes('speed') || normalized.includes('latest') || normalized.includes('current')) {
+    return {
+      kind: 'NOT_AVAILABLE',
+      title: 'NOT_AVAILABLE · verified specialty evidence is absent.',
+      body: 'No verified sectional-speed source is present in this synthetic fixture. The assistant will not estimate a current value or present an unsupported currentness claim.',
+      citations: [{ sourceId: 'synthetic://thoroughbred/race-001', modelId: 'B0_UNIFORM', observedAt: '15 Jan 2026, 14:00 AEDT', limitation: 'No verified sectional or live source is available.' }],
+      noteDraft: 'NOT_AVAILABLE: no verified sectional-speed source was available; no value was estimated.',
+    };
+  }
+  return {
+    kind: 'EVIDENCE',
+    title: 'Evidence is available for the synthetic field record.',
+    body: 'The field is a fictional, synthetic record at revision field-r2. The receipt and publication timestamps are shown below; this is provenance evidence, not a live or official racing claim.',
+    citations: [{ sourceId: 'synthetic://thoroughbred/race-001', modelId: 'B0_UNIFORM', observedAt: '15 Jan 2026, 14:00 AEDT', limitation: 'Synthetic-only fixture; no live-source or validation claim.' }],
+    noteDraft: 'Evidence note: field-r2 is a synthetic fixture record observed 15 Jan 2026 at 14:00 AEDT.',
+  };
+}
+
 export default function App() {
   const [selectedCode, setSelectedCode] = useState<Code>('ALL');
   const [selectedStatus, setSelectedStatus] = useState<Status | 'ALL'>('ALL');
@@ -209,6 +254,7 @@ export default function App() {
         <div><span className="summary-value">3</span><span className="summary-label">codes covered</span></div>
         <div><span className="summary-value">{localNow()}</span><span className="summary-label">local browser time · Australia/Sydney</span></div>
       </section>
+      <AssistantWorkbench />
       <section className="code-grid" aria-label="Today command cards">
         {visibleItems.map((item) => <article aria-label={`${item.label} · ${statusText[item.status]}`} className={`code-card status-${item.status.toLowerCase()}`} key={item.id}>
           <div className="card-topline"><span className="status-dot" aria-hidden="true" /><span className="status-pill">{statusText[item.status]}</span></div>
@@ -224,6 +270,45 @@ export default function App() {
       <footer className="footer"><span>Local API: 127.0.0.1:8000</span><span>Data rights: synthetic fixture only</span><span>Model: not trained</span></footer>
     </main>
   );
+}
+
+function AssistantWorkbench() {
+  const [question, setQuestion] = useState('What evidence supports this race?');
+  const [answer, setAnswer] = useState<AssistantAnswer>(() => answerAssistantQuestion('evidence'));
+  const [noteDraft, setNoteDraft] = useState(answer.noteDraft);
+  const [approval, setApproval] = useState(false);
+  const [savedNote, setSavedNote] = useState(false);
+
+  const ask = (value: string) => {
+    const nextAnswer = answerAssistantQuestion(value);
+    setQuestion(value);
+    setAnswer(nextAnswer);
+    setNoteDraft(nextAnswer.noteDraft);
+    setApproval(false);
+    setSavedNote(false);
+  };
+
+  const submit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (question.trim()) ask(question);
+  };
+
+  return <section className="assistant-workbench" aria-labelledby="assistant-title">
+    <div className="assistant-heading"><div><p className="eyebrow">BOUNDED RESEARCH ASSISTANT · SYNTHETIC DEMO</p><h2 id="assistant-title">Ask an evidence-grounded question.</h2></div><div className="header-badges"><span className="mode-badge subdued">SYNTHETIC_ONLY</span><span className="mode-badge">CITATIONS REQUIRED</span></div></div>
+    <p className="assistant-disclaimer">Answers cite source IDs, model IDs, timestamps and limitations. Unknown or missing values return <strong>NOT_AVAILABLE</strong>; nothing is estimated or presented as live, official or validated.</p>
+    <div className="assistant-prompts" aria-label="Example questions">
+      <button type="button" onClick={() => ask('What evidence supports this race?')}>Evidence for this race</button>
+      <button type="button" onClick={() => ask('Why does the forecast differ from the current field?')}>Explain discrepancy</button>
+      <button type="button" onClick={() => ask('What is the current sectional speed?')}>Ask for missing value</button>
+    </div>
+    <form className="assistant-form" onSubmit={submit}><label htmlFor="assistant-question">Question</label><div><input id="assistant-question" value={question} onChange={(event) => setQuestion(event.target.value)} /><button type="submit">Ask</button></div></form>
+    <article className={`assistant-answer assistant-${answer.kind.toLowerCase()}`} aria-live="polite">
+      <div className="panel-heading"><div><span className="assistant-answer-kind">{answer.kind === 'NOT_AVAILABLE' ? 'NOT_AVAILABLE' : answer.kind}</span><h3>{answer.title}</h3></div></div>
+      <p>{answer.body}</p>
+      <section className="citation-block" aria-label="Answer citations"><h4>Evidence citations</h4>{answer.citations.map((citation) => <dl key={`${citation.sourceId}-${citation.modelId}`} className="citation-card"><dt>Source ID</dt><dd>{citation.sourceId}</dd><dt>Model ID</dt><dd>{citation.modelId}</dd><dt>Observed</dt><dd>{citation.observedAt}</dd><dt>Limitation</dt><dd>{citation.limitation}</dd></dl>)}</section>
+      <section className="note-block" aria-label="User approved note"><h4>Optional local note</h4><textarea aria-label="Note draft" value={noteDraft} onChange={(event) => { setNoteDraft(event.target.value); setSavedNote(false); }} /><label className="approval-row"><input checked={approval} onChange={(event) => setApproval(event.target.checked)} type="checkbox" />I approve saving this note to my local journal.</label><button className="note-button" disabled={!approval || !noteDraft.trim()} onClick={() => setSavedNote(true)} type="button">Save approved note</button>{savedNote && <p className="saved-note" role="status">Saved locally · user approved · no external transmission</p>}</section>
+    </article>
+  </section>;
 }
 
 function ResearchView({ race, evidenceTab, onClose, onTabChange }: { race: ResearchRace; evidenceTab: EvidenceTab; onClose: () => void; onTabChange: (tab: EvidenceTab) => void }) {

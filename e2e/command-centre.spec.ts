@@ -5,7 +5,7 @@ test('command centre filters codes and distinguishes data states', async ({ page
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Today / Command Centre' })).toBeVisible();
   await expect(page.getByText('DEMO ONLY')).toBeVisible();
-  await expect(page.getByText('SYNTHETIC_ONLY')).toBeVisible();
+  await expect(page.locator('header').getByText('SYNTHETIC_ONLY')).toBeVisible();
   await expect(page.getByText('Fictional Thoroughbred Park')).toBeVisible();
   await expect(page.getByText('Fictional Harness Circuit')).toBeVisible();
   await expect(page.getByText('Fictional Greyhound Track')).toBeVisible();
@@ -101,4 +101,29 @@ test('market workbench shows provenance and suppresses restricted exports', asyn
   await expect(workbench.getByText('SUPPRESSED · RESTRICTED')).toBeVisible();
   await expect(workbench.getByRole('button', { name: 'Export restricted prices' })).toBeDisabled();
   await page.screenshot({ path: 'docs/evidence/ril-040/market-workbench.png', fullPage: true });
+});
+
+test('bounded assistant cites evidence, explains discrepancies and requires note approval', async ({ page }) => {
+  await page.goto('/');
+  const assistant = page.getByRole('region', { name: 'Ask an evidence-grounded question.' });
+  await expect(assistant).toBeVisible();
+  await expect(assistant.getByText('Source ID', { exact: true })).toBeVisible();
+  await expect(assistant.getByText('SYNTHETIC_ONLY', { exact: true })).toBeVisible();
+
+  await assistant.getByRole('button', { name: 'Explain discrepancy' }).click();
+  await expect(assistant.getByText('The forecast and field use different revisions.')).toBeVisible();
+  await expect(assistant.locator('p').filter({ hasText: 'field-r1' })).toBeVisible();
+  await expect(assistant.locator('p').filter({ hasText: 'no replacement probability was estimated' })).toBeVisible();
+
+  const saveNote = assistant.getByRole('button', { name: 'Save approved note' });
+  await expect(saveNote).toBeDisabled();
+  await assistant.getByRole('checkbox', { name: /I approve saving/ }).check();
+  await expect(saveNote).toBeEnabled();
+  await saveNote.click();
+  await expect(assistant.getByRole('status')).toContainText('Saved locally');
+
+  await assistant.getByRole('button', { name: 'Ask for missing value' }).click();
+  await expect(assistant.getByText('NOT_AVAILABLE · verified specialty evidence is absent.')).toBeVisible();
+  await expect(assistant.getByText('will not estimate a current value')).toBeVisible();
+  await page.screenshot({ path: 'docs/evidence/ril-049/assistant-citations.png', fullPage: true });
 });
