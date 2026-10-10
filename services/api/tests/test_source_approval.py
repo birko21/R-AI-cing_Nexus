@@ -7,6 +7,7 @@ from app.source_approval import (
     SourceApprovalRecord,
     UnavailableSourceStub,
     evaluate_source_approval,
+    evaluate_tiered_source_approval,
 )
 
 
@@ -50,3 +51,27 @@ def test_unavailable_stub_cannot_be_constructed_for_approved_source() -> None:
     checkpoint = checkpoint.__class__(checkpoint.source_id, "APPROVED", (), "incorrect")
     with pytest.raises(ValueError, match="blocked"):
         UnavailableSourceStub(checkpoint)
+
+
+def test_read_and_diagnostic_tiers_do_not_imply_historical_model_rights() -> None:
+    record = SourceApprovalRecord(
+        "punters-edge",
+        approved_operations=("GET_RESULTS",),
+        approved_codes=("THOROUGHBRED",),
+        approval_tier="EPHEMERAL_READ_ONLY_DIAGNOSTIC",
+        account_entitlement_evidence="account-plan-record",
+        credential_custodian="owner",
+        quota_ceiling="6 requests",
+        kill_switch_reference="diagnostics-off",
+    )
+
+    diagnostic = evaluate_tiered_source_approval(
+        record, required_tier="EPHEMERAL_READ_ONLY_DIAGNOSTIC", operation="GET_RESULTS", code="THOROUGHBRED",
+    )
+    historical = evaluate_tiered_source_approval(
+        record, required_tier="HISTORICAL_RETENTION_AND_MODEL_TRAINING", operation="GET_RESULTS", code="THOROUGHBRED",
+    )
+
+    assert diagnostic.status == "APPROVED"
+    assert historical.status == "BLOCKED_EXTERNAL_DEPENDENCY"
+    assert "model_training_permission" in historical.missing_requirements

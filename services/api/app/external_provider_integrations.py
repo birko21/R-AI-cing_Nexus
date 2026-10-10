@@ -28,7 +28,7 @@ from app.providers import (
     PaginationCapability,
     validate_adapter_page,
 )
-from app.source_approval import SourceApprovalRecord, evaluate_source_approval
+from app.source_approval import ApprovalTier, SourceApprovalRecord, evaluate_tiered_source_approval
 
 
 ProviderId = Literal["formfav", "punters-edge", "krok-odds", "betfair-exchange"]
@@ -43,7 +43,7 @@ class ProviderActivationError(RuntimeError):
 
 @dataclass(frozen=True)
 class EndpointSpec:
-    operation: ProviderOperation
+    operation: str
     method: str
     path: str
     description: str
@@ -119,7 +119,7 @@ class ExistingProviderAsset:
     evidence_summary: tuple[str, ...]
     rights_summary: tuple[str, ...]
 
-    def endpoint(self, operation: ProviderOperation, *, view: MarketView = "catalogue") -> EndpointSpec:
+    def endpoint(self, operation: str, *, view: MarketView = "catalogue") -> EndpointSpec:
         candidates = tuple(item for item in self.endpoints if item.operation == operation)
         if self.provider_id == "betfair-exchange" and operation == "GET_MARKETS":
             wanted = "listMarketBook" if view == "book" else "listMarketCatalogue"
@@ -177,6 +177,7 @@ def build_existing_provider_assets() -> dict[str, ExistingProviderAsset]:
             (
                 EndpointSpec("GET_RESULTS", "GET", "/v1/racing/results", "historical results and settled fixed prices"),
                 EndpointSpec("GET_ENTRIES", "GET", "/v1/racing/horses/form", "horse history/form"),
+                EndpointSpec("ACCOUNT_METADATA_READ", "GET", "/v1/keys/info", "account metadata and quota"),
             ),
             _capabilities("punters-edge", "PuntersEdge", frozenset({"race_id", "runner_id", "start_time", "resulted_at", "position", "dead_heat", "fixed_win_price", "fixed_place_price", "horse_form"}), frozenset({"GET_RESULTS", "GET_ENTRIES"}), QuotaCapability(unknown=True, notes="A sanitized sibling probe recorded remaining credits; exact current quota is not independently re-verified here.")),
             ("Sibling sanitized validation recorded 10 final AU thoroughbred races, 9 complete, with fixed Win/Place prices.", "Personal free-plan evidence is historical evidence, not a Nexus entitlement record."),
@@ -229,7 +230,7 @@ def build_bounded_probe_plan(provider_id: str, *, code: str, date: str, venue: s
         raise ValueError("audited provider assets do not establish this racing code")
     operations = {
         "formfav": ("LIST_MEETINGS", "GET_RACES"),
-        "punters-edge": ("GET_RESULTS", "GET_ENTRIES"),
+        "punters-edge": ("ACCOUNT_METADATA_READ", "GET_RESULTS", "GET_RESULTS", "GET_ENTRIES", "GET_ENTRIES", "GET_ENTRIES"),
         "krok-odds": ("LIST_MEETINGS", "GET_ENTRIES", "GET_MARKETS", "GET_RESULTS"),
         "betfair-exchange": ("GET_MARKETS",),
     }[provider_id]
@@ -252,28 +253,55 @@ class GatedReadOnlyProviderAdapter:
     def capabilities(self) -> ProviderCapabilities:
         return self.asset.capabilities
 
+    def _check_runtime(self) -> None:
+        if self._transport is None or self._credential_resolver is None:
+            raise ProviderActivationError("server-side transport and credential resolver are required")
+
     def _check_gate(self, operation: ProviderOperation, code: str, approval: SourceApprovalRecord | None) -> SourceApprovalRecord:
         if approval is None:
             raise ProviderActivationError("external provider access is disabled until a named approval record is supplied")
-        checkpoint = evaluate_source_approval(approval)
+        checkpoint = evaluate_tiered_source_approval(
+            approval,
+            required_tier="HISTORICAL_RETENTION_AND_MODEL_TRAINING",
+            operation=operation,
+            code=code,
+        )
         if checkpoint.status != "APPROVED":
-            raise ProviderActivationError(f"source approval is incomplete: {','.join(checkpoint.missing_requirements)}")
+            raise ProviderActivationError(f"historical/model approval is incomplete: {','.join(checkpoint.missing_requirements)}")
         if approval.source_id != self.asset.provider_id:
             raise ProviderActivationError("approval source does not match provider")
-        if operation not in approval.approved_operations or code not in approval.approved_codes:
-            raise ProviderActivationError("approval does not name this operation and racing code")
-        if self._transport is None or self._credential_resolver is None:
-            raise ProviderActivationError("server-side transport and credential resolver are required")
+        self._check_runtime()
         return approval
+
+    def _check_diagnostic_gate(self, operation: str, code: str, approval: SourceApprovalRecord | None) -> SourceApprovalRecord:
+        if approval is None:
+            raise ProviderActivationError("diagnostics are disabled until a named approval record is supplied")
+        required_tier: ApprovalTier = "ACCOUNT_METADATA_READ" if operation == "ACCOUNT_METADATA_READ" else "EPHEMERAL_READ_ONLY_DIAGNOSTIC"
+        checkpoint = evaluate_tiered_source_approval(
+            approval, required_tier=required_tier, operation=operation, code=code,
+        )
+        if checkpoint.status != "APPROVED":
+            raise ProviderActivationError(f"diagnostic approval is incomplete: {','.join(checkpoint.missing_requirements)}")
+        if approval.source_id != self.asset.provider_id:
+            raise ProviderActivationError("approval source does not match provider")
+        self._check_runtime()
+        return approval
+
+    def _credentials(self) -> tuple[Mapping[str, str], dict[str, str]]:
+        assert self._credential_resolver is not None
+        credentials = self._credential_resolver()
+        if not credentials:
+            raise ProviderActivationError("credential resolver returned no credential")
+        if isinstance(credentials, str):
+            return {"token": credentials}, {"Authorization": f"Bearer {credentials}"}
+        return credentials, {"Authorization": f"Bearer {credentials.get('token', '')}"}
 
     def fetch(self, operation: ProviderOperation, *, code: str, approval: SourceApprovalRecord | None = None, date: str | None = None, venue: str | None = None, race: int | None = None, view: MarketView = "catalogue", cursor: str | None = None, page_size: int | None = None) -> AdapterPage:
         approved = self._check_gate(operation, code, approval)
         if code not in self.capabilities.supported_codes:
             raise AdapterContractError(f"provider does not support racing code {code}")
         endpoint = self.asset.endpoint(operation, view=view)
-        credentials = self._credential_resolver()
-        if not credentials:
-            raise ProviderActivationError("credential resolver returned no credential")
+        credentials, headers = self._credentials()
         params: dict[str, object] = {"code": code}
         if date is not None:
             params["date"] = date
@@ -286,10 +314,6 @@ class GatedReadOnlyProviderAdapter:
         if page_size is not None:
             params["limit"] = page_size
         body: dict[str, object] | None = None
-        if isinstance(credentials, str):
-            headers = {"Authorization": f"Bearer {credentials}"}
-        else:
-            headers = {"Authorization": f"Bearer {credentials.get('token', '')}"}
         if self.asset.provider_id == "betfair-exchange":
             app_key = credentials.get("app_key", "") if isinstance(credentials, Mapping) else ""
             session_token = credentials.get("session_token", "") if isinstance(credentials, Mapping) else ""
@@ -316,6 +340,99 @@ class GatedReadOnlyProviderAdapter:
         page = AdapterPage((envelope,), as_of=retrieved_at)
         validate_adapter_page(enabled, page)
         return page
+
+    def diagnostic(
+        self,
+        operation: str,
+        *,
+        code: str,
+        approval: SourceApprovalRecord | None = None,
+        date: str | None = None,
+        venue: str | None = None,
+        race: int | None = None,
+        view: MarketView = "catalogue",
+        request_ordinal: int = 1,
+        request_ceiling: int = 6,
+    ) -> "SanitizedDiagnostic":
+        """Perform one approved read and return aggregate metadata only."""
+
+        approved = self._check_diagnostic_gate(operation, code, approval)
+        if request_ordinal < 1 or request_ordinal > request_ceiling or request_ceiling > 6:
+            raise ProviderActivationError("diagnostic request ceiling must be between 1 and 6")
+        endpoint = self.asset.endpoint(operation, view=view)
+        credentials, headers = self._credentials()
+        params: dict[str, object] = {"code": code}
+        for key, value in (("date", date), ("venue", venue), ("race", race)):
+            if value is not None:
+                params[key] = value
+        body: dict[str, object] | None = None
+        if self.asset.provider_id == "betfair-exchange":
+            app_key = credentials.get("app_key", "")
+            session_token = credentials.get("session_token", "")
+            if not app_key or not session_token:
+                raise ProviderActivationError("Betfair requires server-side app key and session token")
+            headers = {"X-Application": app_key, "X-Authentication": session_token, "Content-Type": "application/json"}
+            method_name = endpoint.description.split(" ", 1)[0]
+            body = {"jsonrpc": "2.0", "method": f"SportsAPING/v1.0/{method_name}", "params": params, "id": 1}
+            params = {}
+        assert self._transport is not None
+        response = self._transport.request(
+            method=endpoint.method, url=f"{self.asset.base_url}{endpoint.path}", headers=headers,
+            params=params, json_body=body, timeout_seconds=4.0,
+        )
+        fields = _field_presence(response.payload)
+        quota_fields = {"plan", "credits", "credits_remaining", "quota", "requests_remaining", "requests_per_minute"}
+        quota_checked = operation == "ACCOUNT_METADATA_READ" and bool(quota_fields.intersection(fields))
+        if operation == "ACCOUNT_METADATA_READ" and not quota_checked:
+            raise ProviderActivationError("account metadata response did not expose current quota or credit fields")
+        return SanitizedDiagnostic(
+            provider_id=self.asset.provider_id, operation=operation, code=code,
+            request_ordinal=request_ordinal, request_ceiling=request_ceiling,
+            status_class=f"{response.status_code // 100}xx", row_count=_aggregate_row_count(response.payload),
+            field_presence=fields, quota_checked=quota_checked,
+            raw_payload_retained=False, approval_reference=approved.source_id,
+        )
+
+
+@dataclass(frozen=True)
+class SanitizedDiagnostic:
+    provider_id: str
+    operation: str
+    code: str
+    request_ordinal: int
+    request_ceiling: int
+    status_class: str
+    row_count: int
+    field_presence: tuple[str, ...]
+    quota_checked: bool
+    raw_payload_retained: bool
+    approval_reference: str
+
+
+def _field_presence(value: object, *, _depth: int = 0) -> tuple[str, ...]:
+    if _depth > 3:
+        return ()
+    if isinstance(value, list):
+        fields: set[str] = set()
+        for item in value[:100]:
+            fields.update(_field_presence(item, _depth=_depth + 1))
+        return tuple(sorted(fields))
+    if not isinstance(value, Mapping):
+        return ()
+    fields: set[str] = set()
+    for key, nested in value.items():
+        if isinstance(key, str) and key not in {"token", "key", "password", "secret", "authorization"}:
+            fields.add(key)
+        fields.update(_field_presence(nested, _depth=_depth + 1))
+    return tuple(sorted(fields))
+
+
+def _aggregate_row_count(value: object) -> int:
+    if isinstance(value, list):
+        return len(value) + sum(_aggregate_row_count(item) for item in value[:100])
+    if isinstance(value, Mapping):
+        return sum(_aggregate_row_count(item) for item in value.values())
+    return 0
 
 
 def build_disabled_provider_adapters() -> dict[str, GatedReadOnlyProviderAdapter]:
