@@ -1,0 +1,80 @@
+{
+  "allowed": {
+    "as_of": "2026-01-15T00:00:00Z",
+    "limit": 25,
+    "read_only": true,
+    "reason": "bounded read-only result",
+    "rows": [
+      {
+        "as_of": "2026-01-15T00:00:00+00:00",
+        "race_id": "race-1"
+      }
+    ],
+    "status": "OK",
+    "tool": "races"
+  },
+  "catalog": [
+    {
+      "max_rows": 100,
+      "read_only": true,
+      "required_scope": "races:read",
+      "requires_as_of": true,
+      "tool": "races"
+    },
+    {
+      "max_rows": 100,
+      "read_only": true,
+      "required_scope": "races:read",
+      "requires_as_of": true,
+      "tool": "histories"
+    },
+    {
+      "max_rows": 100,
+      "read_only": true,
+      "required_scope": "forecasts:read",
+      "requires_as_of": true,
+      "tool": "features"
+    },
+    {
+      "max_rows": 100,
+      "read_only": true,
+      "required_scope": "markets:read",
+      "requires_as_of": true,
+      "tool": "markets"
+    },
+    {
+      "max_rows": 100,
+      "read_only": true,
+      "required_scope": "forecasts:read",
+      "requires_as_of": true,
+      "tool": "forecasts"
+    },
+    {
+      "max_rows": 100,
+      "read_only": true,
+      "required_scope": "backtests:read",
+      "requires_as_of": true,
+      "tool": "backtests"
+    },
+    {
+      "max_rows": 100,
+      "read_only": true,
+      "required_scope": "provenance:read",
+      "requires_as_of": true,
+      "tool": "provenance"
+    }
+  ],
+  "denied": {
+    "as_of": "2026-01-15T00:00:00Z",
+    "limit": 25,
+    "read_only": true,
+    "reason": "required scope markets:read is missing",
+    "rows": [],
+    "status": "NOT_ENTITLED",
+    "tool": "markets"
+  },
+  "fictional": true,
+  "note": "Read-only tool contract evidence; no external tool or live source is enabled.",
+  "schema_version": "research-tools-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}

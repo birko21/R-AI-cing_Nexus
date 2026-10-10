@@ -45,3 +45,5 @@ if ($LASTEXITCODE -ne 0) { throw "Watchlist fixture validation failed with exit 
 if ($LASTEXITCODE -ne 0) { throw "Alert fixture validation failed with exit code $LASTEXITCODE" }
 & '.venv\Scripts\python.exe' scripts/generate_responsible_controls_fixture.py
 if ($LASTEXITCODE -ne 0) { throw "Responsible controls fixture validation failed with exit code $LASTEXITCODE" }
+& '.venv\Scripts\python.exe' scripts/generate_research_tool_fixture.py
+if ($LASTEXITCODE -ne 0) { throw "Research tool fixture validation failed with exit code $LASTEXITCODE" }
