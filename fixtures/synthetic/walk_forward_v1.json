@@ -1,0 +1,32 @@
+{
+  "coverage_note": "The fixed demo fixture has one calendar day; no pre-demo training races are fabricated.",
+  "data_mode": "SYNTHETIC_ONLY",
+  "fixture_id": "ril-016-three-code-v1",
+  "fixture_race_count": 6,
+  "folds": [
+    {
+      "calibration_end": "2026-01-15T05:00:00Z",
+      "calibration_race_ids": [
+        "GREYHOUND:synthetic:race-001-01",
+        "HARNESS:synthetic:race-001-01",
+        "THOROUGHBRED:synthetic:race-001-01"
+      ],
+      "calibration_start": "2026-01-15T04:00:00Z",
+      "fold_id": "fold-001",
+      "mode": "EXPANDING",
+      "test_end": "2026-01-15T06:00:00Z",
+      "test_race_ids": [
+        "GREYHOUND:synthetic:race-001-02",
+        "HARNESS:synthetic:race-001-02",
+        "THOROUGHBRED:synthetic:race-001-02"
+      ],
+      "test_start": "2026-01-15T05:00:00Z",
+      "training_end": "2026-01-15T04:00:00Z",
+      "training_race_ids": [],
+      "training_start": "2026-01-15T03:00:00Z"
+    }
+  ],
+  "manifest_hash": "a3a38ea3b403fc7a50f970cf06cfa80a9e62ce33373a01edd89fda4382e79b5f",
+  "mode": "EXPANDING",
+  "schema_version": "walk-forward-v1"
+}
