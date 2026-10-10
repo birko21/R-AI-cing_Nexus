@@ -1,0 +1,337 @@
+{
+  "edge_case_abstentions": [
+    {
+      "case": "COUPLED_ENTRY",
+      "code": "THOROUGHBRED",
+      "data_mode": "SYNTHETIC_ONLY",
+      "reason": "COUPLED_ENTRY",
+      "record_id": "THOROUGHBRED:edge-coupled",
+      "status": "ABSTAIN",
+      "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+    },
+    {
+      "case": "INCOMPLETE_FIELD",
+      "code": "THOROUGHBRED",
+      "data_mode": "SYNTHETIC_ONLY",
+      "reason": "INCOMPLETE_FIELD",
+      "record_id": "THOROUGHBRED:edge-incomplete",
+      "status": "ABSTAIN",
+      "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+    },
+    {
+      "case": "NO_RACING",
+      "code": "THOROUGHBRED",
+      "data_mode": "SYNTHETIC_ONLY",
+      "reason": "NOT_AVAILABLE",
+      "record_id": "THOROUGHBRED:edge-no-racing",
+      "status": "NOT_AVAILABLE",
+      "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+    },
+    {
+      "case": "DEAD_HEAT",
+      "code": "THOROUGHBRED",
+      "data_mode": "SYNTHETIC_ONLY",
+      "reason": "UNSUPPORTED_OUTCOME",
+      "record_id": "THOROUGHBRED:edge-dead-heat",
+      "status": "ABSTAIN",
+      "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+    },
+    {
+      "case": "COUPLED_ENTRY",
+      "code": "HARNESS",
+      "data_mode": "SYNTHETIC_ONLY",
+      "reason": "COUPLED_ENTRY",
+      "record_id": "HARNESS:edge-coupled",
+      "status": "ABSTAIN",
+      "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+    },
+    {
+      "case": "INCOMPLETE_FIELD",
+      "code": "HARNESS",
+      "data_mode": "SYNTHETIC_ONLY",
+      "reason": "INCOMPLETE_FIELD",
+      "record_id": "HARNESS:edge-incomplete",
+      "status": "ABSTAIN",
+      "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+    },
+    {
+      "case": "NO_RACING",
+      "code": "HARNESS",
+      "data_mode": "SYNTHETIC_ONLY",
+      "reason": "NOT_AVAILABLE",
+      "record_id": "HARNESS:edge-no-racing",
+      "status": "NOT_AVAILABLE",
+      "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+    },
+    {
+      "case": "DEAD_HEAT",
+      "code": "HARNESS",
+      "data_mode": "SYNTHETIC_ONLY",
+      "reason": "UNSUPPORTED_OUTCOME",
+      "record_id": "HARNESS:edge-dead-heat",
+      "status": "ABSTAIN",
+      "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+    },
+    {
+      "case": "COUPLED_ENTRY",
+      "code": "GREYHOUND",
+      "data_mode": "SYNTHETIC_ONLY",
+      "reason": "COUPLED_ENTRY",
+      "record_id": "GREYHOUND:edge-coupled",
+      "status": "ABSTAIN",
+      "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+    },
+    {
+      "case": "INCOMPLETE_FIELD",
+      "code": "GREYHOUND",
+      "data_mode": "SYNTHETIC_ONLY",
+      "reason": "INCOMPLETE_FIELD",
+      "record_id": "GREYHOUND:edge-incomplete",
+      "status": "ABSTAIN",
+      "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+    },
+    {
+      "case": "NO_RACING",
+      "code": "GREYHOUND",
+      "data_mode": "SYNTHETIC_ONLY",
+      "reason": "NOT_AVAILABLE",
+      "record_id": "GREYHOUND:edge-no-racing",
+      "status": "NOT_AVAILABLE",
+      "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+    },
+    {
+      "case": "DEAD_HEAT",
+      "code": "GREYHOUND",
+      "data_mode": "SYNTHETIC_ONLY",
+      "reason": "UNSUPPORTED_OUTCOME",
+      "record_id": "GREYHOUND:edge-dead-heat",
+      "status": "ABSTAIN",
+      "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+    }
+  ],
+  "fictional": true,
+  "fixture_id": "ril-016-three-code-v1",
+  "forecasts": [
+    {
+      "abstention_reason": null,
+      "code": "THOROUGHBRED",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostics": [
+        "UNIFORM_ACTIVE_ELIGIBLE_N=4"
+      ],
+      "field_revision": "THOROUGHBRED:synthetic:race-001-01:field-r1",
+      "field_status": "OFFICIAL",
+      "forecast_id": "b0-19b75c6b072614b0",
+      "manifest_checksum": "799fc4b9bb8d0c6a1c17ebd1c942ea56d78d73e9bdffd8b6a4fb5817d1073404",
+      "model_id": "B0_UNIFORM",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b0-uniform-v1",
+      "race_id": "THOROUGHBRED:synthetic:race-001-01",
+      "runners": [
+        {
+          "entry_id": "THOROUGHBRED:synthetic:entry-001-01-01",
+          "number": 1,
+          "probability": 0.25
+        },
+        {
+          "entry_id": "THOROUGHBRED:synthetic:entry-001-01-02",
+          "number": 2,
+          "probability": 0.25
+        },
+        {
+          "entry_id": "THOROUGHBRED:synthetic:entry-001-01-03",
+          "number": 3,
+          "probability": 0.25
+        },
+        {
+          "entry_id": "THOROUGHBRED:synthetic:entry-001-01-04",
+          "number": 4,
+          "probability": 0.25
+        }
+      ],
+      "status": "READY"
+    },
+    {
+      "abstention_reason": null,
+      "code": "THOROUGHBRED",
+      "cutoff": "2026-01-15T04:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostics": [
+        "UNIFORM_ACTIVE_ELIGIBLE_N=2"
+      ],
+      "field_revision": "THOROUGHBRED:synthetic:race-001-02:field-r1",
+      "field_status": "FINAL_FIELDS",
+      "forecast_id": "b0-fd7d92ff4df583c6",
+      "manifest_checksum": "799fc4b9bb8d0c6a1c17ebd1c942ea56d78d73e9bdffd8b6a4fb5817d1073404",
+      "model_id": "B0_UNIFORM",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b0-uniform-v1",
+      "race_id": "THOROUGHBRED:synthetic:race-001-02",
+      "runners": [
+        {
+          "entry_id": "THOROUGHBRED:synthetic:entry-001-02-01",
+          "number": 1,
+          "probability": 0.5
+        },
+        {
+          "entry_id": "THOROUGHBRED:synthetic:entry-001-02-03",
+          "number": 3,
+          "probability": 0.5
+        }
+      ],
+      "status": "READY"
+    },
+    {
+      "abstention_reason": null,
+      "code": "HARNESS",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostics": [
+        "UNIFORM_ACTIVE_ELIGIBLE_N=4"
+      ],
+      "field_revision": "HARNESS:synthetic:race-001-01:field-r1",
+      "field_status": "OFFICIAL",
+      "forecast_id": "b0-c85d060aad4ec02f",
+      "manifest_checksum": "799fc4b9bb8d0c6a1c17ebd1c942ea56d78d73e9bdffd8b6a4fb5817d1073404",
+      "model_id": "B0_UNIFORM",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b0-uniform-v1",
+      "race_id": "HARNESS:synthetic:race-001-01",
+      "runners": [
+        {
+          "entry_id": "HARNESS:synthetic:entry-001-01-01",
+          "number": 1,
+          "probability": 0.25
+        },
+        {
+          "entry_id": "HARNESS:synthetic:entry-001-01-02",
+          "number": 2,
+          "probability": 0.25
+        },
+        {
+          "entry_id": "HARNESS:synthetic:entry-001-01-03",
+          "number": 3,
+          "probability": 0.25
+        },
+        {
+          "entry_id": "HARNESS:synthetic:entry-001-01-04",
+          "number": 4,
+          "probability": 0.25
+        }
+      ],
+      "status": "READY"
+    },
+    {
+      "abstention_reason": null,
+      "code": "HARNESS",
+      "cutoff": "2026-01-15T04:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostics": [
+        "UNIFORM_ACTIVE_ELIGIBLE_N=2"
+      ],
+      "field_revision": "HARNESS:synthetic:race-001-02:field-r1",
+      "field_status": "FINAL_FIELDS",
+      "forecast_id": "b0-138cfd4af2dfae70",
+      "manifest_checksum": "799fc4b9bb8d0c6a1c17ebd1c942ea56d78d73e9bdffd8b6a4fb5817d1073404",
+      "model_id": "B0_UNIFORM",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b0-uniform-v1",
+      "race_id": "HARNESS:synthetic:race-001-02",
+      "runners": [
+        {
+          "entry_id": "HARNESS:synthetic:entry-001-02-01",
+          "number": 1,
+          "probability": 0.5
+        },
+        {
+          "entry_id": "HARNESS:synthetic:entry-001-02-03",
+          "number": 3,
+          "probability": 0.5
+        }
+      ],
+      "status": "READY"
+    },
+    {
+      "abstention_reason": null,
+      "code": "GREYHOUND",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostics": [
+        "UNIFORM_ACTIVE_ELIGIBLE_N=4"
+      ],
+      "field_revision": "GREYHOUND:synthetic:race-001-01:field-r1",
+      "field_status": "OFFICIAL",
+      "forecast_id": "b0-dab9da0b9bc103e4",
+      "manifest_checksum": "799fc4b9bb8d0c6a1c17ebd1c942ea56d78d73e9bdffd8b6a4fb5817d1073404",
+      "model_id": "B0_UNIFORM",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b0-uniform-v1",
+      "race_id": "GREYHOUND:synthetic:race-001-01",
+      "runners": [
+        {
+          "entry_id": "GREYHOUND:synthetic:entry-001-01-01",
+          "number": 1,
+          "probability": 0.25
+        },
+        {
+          "entry_id": "GREYHOUND:synthetic:entry-001-01-02",
+          "number": 2,
+          "probability": 0.25
+        },
+        {
+          "entry_id": "GREYHOUND:synthetic:entry-001-01-03",
+          "number": 3,
+          "probability": 0.25
+        },
+        {
+          "entry_id": "GREYHOUND:synthetic:entry-001-01-04",
+          "number": 4,
+          "probability": 0.25
+        }
+      ],
+      "status": "READY"
+    },
+    {
+      "abstention_reason": null,
+      "code": "GREYHOUND",
+      "cutoff": "2026-01-15T04:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostics": [
+        "UNIFORM_ACTIVE_ELIGIBLE_N=2"
+      ],
+      "field_revision": "GREYHOUND:synthetic:race-001-02:field-r1",
+      "field_status": "FINAL_FIELDS",
+      "forecast_id": "b0-1dc2907461f60c83",
+      "manifest_checksum": "799fc4b9bb8d0c6a1c17ebd1c942ea56d78d73e9bdffd8b6a4fb5817d1073404",
+      "model_id": "B0_UNIFORM",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b0-uniform-v1",
+      "race_id": "GREYHOUND:synthetic:race-001-02",
+      "runners": [
+        {
+          "entry_id": "GREYHOUND:synthetic:entry-001-02-01",
+          "number": 1,
+          "probability": 0.5
+        },
+        {
+          "entry_id": "GREYHOUND:synthetic:entry-001-02-03",
+          "number": 3,
+          "probability": 0.5
+        }
+      ],
+      "status": "READY"
+    }
+  ],
+  "generated_at": "2026-01-15T00:00:00Z",
+  "model": {
+    "data_mode": "SYNTHETIC_ONLY",
+    "method": "1/n over active eligible runners",
+    "model_id": "B0_UNIFORM",
+    "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+    "model_version": "b0-uniform-v1"
+  },
+  "schema_version": "ril-021-b0-v1",
+  "source_fixture_sha256": "799fc4b9bb8d0c6a1c17ebd1c942ea56d78d73e9bdffd8b6a4fb5817d1073404",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}

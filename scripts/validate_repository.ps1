@@ -28,6 +28,7 @@ $required = @(
     'services/api/requirements.lock.txt',
     'fixtures/synthetic/manifest.json',
     'fixtures/synthetic/fixture.json',
+    'fixtures/synthetic/forecasts_b0.json',
     'playwright.config.ts',
     'e2e/command-centre.spec.ts',
     'contracts/openapi_mvp.yaml',
@@ -48,6 +49,7 @@ $required = @(
     'services/api/tests/test_provenance.py',
     'services/api/tests/test_capabilities.py',
     'services/api/tests/test_fixtures.py',
+    'services/api/tests/test_baseline.py',
     'docs/domain/ENTITY_DICTIONARY.md',
     'docs/domain/RACE_LIFECYCLE.md',
     'docs/domain/BITEMPORAL_QUERIES.md',
@@ -62,6 +64,7 @@ $required = @(
     'docs/evidence/ril-020/accessibility-report.md',
     'docs/evidence/ril-020/degraded-desktop.png',
     'docs/evidence/ril-020/degraded-mobile.png',
+    'docs/models/B0_UNIFORM_BASELINE.md',
     'alembic.ini',
     'migrations/env.py',
     'migrations/versions/001_offline_mvp.py',
@@ -72,6 +75,7 @@ $required = @(
     'migrations/versions/006_capability_controls.py',
     'scripts/db_migrate.ps1',
     'scripts/generate_synthetic_fixtures.py',
+    'scripts/generate_b0_forecast_manifest.py',
     'scripts/record_migration_checksums.py',
     'scripts/verify_migration_checksums.py'
 )
