@@ -42,7 +42,12 @@ and refreshed when a signing key rotates. Authentication failures do not
 return token contents.
 
 The Blueprint leaves OIDC values as sync: false; the owner must enter them
-in the Nexus service only. OIDC configuration is not considered complete until
+in the Nexus service only. The deployed staging values are the Auth0 tenant
+`dev-raicingnexus.au.auth0.com`, API audience
+`https://r-ai-cing-nexus-staging-api`, JWKS URL
+`https://dev-raicingnexus.au.auth0.com/.well-known/jwks.json`, and owner
+subject `google-oauth2|115598913832890441287`. OIDC configuration is not
+considered complete until
 the issuer, audience, JWKS endpoint, token signature and required scopes have
 been tested against the real identity provider.
 
@@ -139,10 +144,11 @@ automatic spend is requested by this change.
   an invitation-only connection. Assign only the owner account these
   permissions.
 - Enter the exact Auth0 values in Nexus Render only: domain
-  `<tenant>.auth0.com`, SPA client ID, issuer
-  `https://<tenant>.auth0.com/`, JWKS URL
-  `https://<tenant>.auth0.com/.well-known/jwks.json`, audience
-  `https://r-ai-cing-nexus-staging-api`, and the owner subject `auth0|...`.
+  `dev-raicingnexus.au.auth0.com`, the supplied Nexus SPA client ID, issuer
+  `https://dev-raicingnexus.au.auth0.com/`, JWKS URL
+  `https://dev-raicingnexus.au.auth0.com/.well-known/jwks.json`, audience
+  `https://r-ai-cing-nexus-staging-api`, and owner subject
+  `google-oauth2|115598913832890441287`.
 - Configure Auth0 Allowed Callback URLs as
   `http://127.0.0.1:5173/callback`, `http://localhost:5173/callback`, and
   `https://nexus-staging-frontend.onrender.com/callback`. Configure Allowed
