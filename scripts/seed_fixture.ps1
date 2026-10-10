@@ -17,3 +17,5 @@ if ($LASTEXITCODE -ne 0) { throw "Split manifest validation failed with exit cod
 if ($LASTEXITCODE -ne 0) { throw "Metric report validation failed with exit code $LASTEXITCODE" }
 & '.venv\Scripts\python.exe' scripts/generate_diagnostics_fixture.py
 if ($LASTEXITCODE -ne 0) { throw "Diagnostics fixture validation failed with exit code $LASTEXITCODE" }
+& '.venv\Scripts\python.exe' scripts/generate_registry_fixture.py
+if ($LASTEXITCODE -ne 0) { throw "Registry fixture validation failed with exit code $LASTEXITCODE" }

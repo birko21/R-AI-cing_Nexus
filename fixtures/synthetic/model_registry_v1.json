@@ -1,0 +1,180 @@
+{
+  "artifacts": [
+    {
+      "artifact_id": "b0-v1",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "created_at": "2026-01-15T00:00:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "feature_schema_version": "features-v1",
+      "model_id": "B0_UNIFORM",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b0-uniform-v1"
+    },
+    {
+      "artifact_id": "b1-v1",
+      "artifact_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "created_at": "2026-01-15T00:00:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "feature_schema_version": "features-v1",
+      "model_id": "B1_FORM_HEURISTIC",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b1-form-v1"
+    },
+    {
+      "artifact_id": "insufficient-v0",
+      "artifact_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "created_at": "2026-01-15T00:00:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "feature_schema_version": "features-v1",
+      "model_id": "EXPERIMENTAL_FORM",
+      "model_status": "EXPERIMENTAL",
+      "model_version": "exp-v0"
+    },
+    {
+      "artifact_id": "rejected-v0",
+      "artifact_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "created_at": "2026-01-15T00:00:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "feature_schema_version": "features-v1",
+      "model_id": "EXPERIMENTAL_FORM",
+      "model_status": "EXPERIMENTAL",
+      "model_version": "exp-v0-rejected"
+    }
+  ],
+  "assurance": [],
+  "automated_promotion": false,
+  "available_statuses": [
+    "BLOCK",
+    "CHAMPION",
+    "HOLD",
+    "INSUFFICIENT EVIDENCE",
+    "SHADOW"
+  ],
+  "current_champion": null,
+  "decisions": [
+    {
+      "approved_by": null,
+      "artifact_id": "b0-v1",
+      "assurance_id": null,
+      "created_at": "2026-01-15T00:00:00Z",
+      "decision_id": "decision-b0",
+      "decision_reason": "Baseline retained for comparison.",
+      "evaluation_id": "eval-b0-v1",
+      "manual_approval": false,
+      "status": "SHADOW"
+    },
+    {
+      "approved_by": null,
+      "artifact_id": "b1-v1",
+      "assurance_id": null,
+      "created_at": "2026-01-15T00:00:00Z",
+      "decision_id": "decision-b1",
+      "decision_reason": "Insufficient independent evidence for promotion.",
+      "evaluation_id": "eval-b1-v1",
+      "manual_approval": false,
+      "status": "HOLD"
+    },
+    {
+      "approved_by": null,
+      "artifact_id": "insufficient-v0",
+      "assurance_id": null,
+      "created_at": "2026-01-15T00:00:00Z",
+      "decision_id": "decision-insufficient",
+      "decision_reason": "Support threshold not met.",
+      "evaluation_id": null,
+      "manual_approval": false,
+      "status": "INSUFFICIENT EVIDENCE"
+    },
+    {
+      "approved_by": null,
+      "artifact_id": "rejected-v0",
+      "assurance_id": null,
+      "created_at": "2026-01-15T00:00:00Z",
+      "decision_id": "decision-rejected",
+      "decision_reason": "Failed reproducibility review; retained for audit.",
+      "evaluation_id": null,
+      "manual_approval": false,
+      "status": "BLOCK"
+    }
+  ],
+  "evaluations": [
+    {
+      "artifact_id": "b0-v1",
+      "created_at": "2026-01-15T00:00:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "evaluation_hash": "e068a578a7cde015c261f9b75623215ed924adaba033e7dbc5a15e88b370d74a",
+      "evaluation_id": "eval-b0-v1",
+      "metrics": {
+        "brier": 0.4,
+        "log_loss": 1.0,
+        "n": 3
+      },
+      "sample_count": 3,
+      "split_manifest_hash": "4444444444444444444444444444444444444444444444444444444444444444"
+    },
+    {
+      "artifact_id": "b1-v1",
+      "created_at": "2026-01-15T00:00:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "evaluation_hash": "e068a578a7cde015c261f9b75623215ed924adaba033e7dbc5a15e88b370d74a",
+      "evaluation_id": "eval-b1-v1",
+      "metrics": {
+        "brier": 0.4,
+        "log_loss": 1.0,
+        "n": 3
+      },
+      "sample_count": 3,
+      "split_manifest_hash": "4444444444444444444444444444444444444444444444444444444444444444"
+    }
+  ],
+  "fictional": true,
+  "leaderboard": [
+    {
+      "artifact_id": "rejected-v0",
+      "artifact_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "created_at": "2026-01-15T00:00:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "feature_schema_version": "features-v1",
+      "model_id": "EXPERIMENTAL_FORM",
+      "model_status": "EXPERIMENTAL",
+      "model_version": "exp-v0-rejected",
+      "registry_status": "BLOCK"
+    },
+    {
+      "artifact_id": "b1-v1",
+      "artifact_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "created_at": "2026-01-15T00:00:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "feature_schema_version": "features-v1",
+      "model_id": "B1_FORM_HEURISTIC",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b1-form-v1",
+      "registry_status": "HOLD"
+    },
+    {
+      "artifact_id": "insufficient-v0",
+      "artifact_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "created_at": "2026-01-15T00:00:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "feature_schema_version": "features-v1",
+      "model_id": "EXPERIMENTAL_FORM",
+      "model_status": "EXPERIMENTAL",
+      "model_version": "exp-v0",
+      "registry_status": "INSUFFICIENT EVIDENCE"
+    },
+    {
+      "artifact_id": "b0-v1",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "created_at": "2026-01-15T00:00:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "feature_schema_version": "features-v1",
+      "model_id": "B0_UNIFORM",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b0-uniform-v1",
+      "registry_status": "SHADOW"
+    }
+  ],
+  "promotion_policy": "CHAMPION requires passing independent assurance and explicit manual approval.",
+  "schema_version": "model-registry-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
