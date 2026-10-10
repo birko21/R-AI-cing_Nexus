@@ -1,0 +1,26 @@
+{
+  "allowed_url_prefixes": [
+    "https://public.example/racing/"
+  ],
+  "blocked_access_statuses": [
+    401,
+    402,
+    403,
+    407,
+    408,
+    409,
+    451
+  ],
+  "data_mode": "SCRAPED_PUBLIC",
+  "fictional": true,
+  "kill_switch_default": false,
+  "max_retries": 2,
+  "minimum_interval_seconds": 1.0,
+  "note": "Policy fixture only; no real source is enabled.",
+  "robots_required": true,
+  "schema_version": "scraping-policy-v1",
+  "terms_permission_required": true,
+  "timeout_seconds": 10.0,
+  "user_agent": "RacingIntelligenceLab/0.1 (+research@example.invalid)",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}

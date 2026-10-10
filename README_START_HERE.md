@@ -8,8 +8,8 @@ Racing Intelligence Lab is an independent, single-user, local-first research app
 - **Data mode:** synthetic-only for the active MVP; fictional fixtures must remain visibly labelled.
 - **Model status:** illustrative B0/B1 baselines only; no validated predictive claim.
 - **Wagering:** permanently out of scope; no bookmaker credentials, order endpoints or automatic staking.
-- **Current checkpoint:** RIL-030 immutable model registry, retained rejected artifacts, manual assurance and no-automatic-promotion controls are implemented.
-- **Next ticket:** RIL-031, after the RIL-030 evidence is accepted.
+- **Current checkpoint:** RIL-031 controlled public-scraping policy boundary, provenance envelope, fail-closed access controls and deterministic offline tests are implemented.
+- **Next ticket:** RIL-032, provider capability and adapter contract.
 
 ## Normative reading order
 
@@ -26,7 +26,7 @@ The active MVP is a modular local application:
 
 `React/Vite browser (localhost) ↔ FastAPI (loopback, scoped auth) ↔ PostgreSQL (local)`
 
-G0–G3 does not require cloud deployment, OIDC, licensed feeds, live odds, external LLMs, or external connectivity. Controlled public scraping is a later, separately labelled capability and cannot silently change the active synthetic-only evidence status.
+G0–G3 does not require cloud deployment, OIDC, licensed feeds, live odds, external LLMs, or external connectivity. Controlled public scraping is separately labelled, policy-gated and cannot silently change the active synthetic-only evidence status. RIL-031 provides the boundary only; no real provider is enabled by the synthetic fixture.
 
 ## Evidence rule
 
