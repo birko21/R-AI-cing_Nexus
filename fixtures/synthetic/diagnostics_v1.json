@@ -1,0 +1,95 @@
+{
+  "fictional": true,
+  "records": [
+    {
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostics": {
+        "abstain": false,
+        "abstention_reasons": [],
+        "coverage": 1.0,
+        "disagreement": 0.020000000000000018,
+        "evidence_strength": "HIGH",
+        "missingness": [],
+        "ood_score": null,
+        "ood_warning": false,
+        "probabilities": {
+          "entry-1": 0.7,
+          "entry-2": 0.3
+        },
+        "support_count": 4,
+        "thresholds": {
+          "abstain_on_disagreement": true,
+          "abstain_on_missingness": true,
+          "abstain_on_ood": true,
+          "maximum_disagreement": 0.2,
+          "maximum_ood_score": 0.5,
+          "minimum_support": 2
+        }
+      },
+      "scenario": "SUPPORTED_CLEAN"
+    },
+    {
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostics": {
+        "abstain": true,
+        "abstention_reasons": [
+          "MISSING_FEATURES"
+        ],
+        "coverage": 1.0,
+        "disagreement": null,
+        "evidence_strength": "LOW",
+        "missingness": [
+          "MISSING_SECTIONAL"
+        ],
+        "ood_score": null,
+        "ood_warning": false,
+        "probabilities": {
+          "entry-1": 0.6,
+          "entry-2": 0.4
+        },
+        "support_count": 3,
+        "thresholds": {
+          "abstain_on_disagreement": true,
+          "abstain_on_missingness": true,
+          "abstain_on_ood": true,
+          "maximum_disagreement": 0.2,
+          "maximum_ood_score": 0.5,
+          "minimum_support": 2
+        }
+      },
+      "scenario": "MISSING_SPECIALTY_INPUT"
+    },
+    {
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostics": {
+        "abstain": true,
+        "abstention_reasons": [
+          "MODEL_DISAGREEMENT",
+          "OUT_OF_DISTRIBUTION"
+        ],
+        "coverage": 1.0,
+        "disagreement": 0.35000000000000003,
+        "evidence_strength": "LOW",
+        "missingness": [],
+        "ood_score": 0.9,
+        "ood_warning": true,
+        "probabilities": {
+          "entry-1": 0.6,
+          "entry-2": 0.4
+        },
+        "support_count": 3,
+        "thresholds": {
+          "abstain_on_disagreement": true,
+          "abstain_on_missingness": true,
+          "abstain_on_ood": true,
+          "maximum_disagreement": 0.2,
+          "maximum_ood_score": 0.5,
+          "minimum_support": 2
+        }
+      },
+      "scenario": "OOD_AND_DISAGREEMENT"
+    }
+  ],
+  "schema_version": "diagnostics-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
