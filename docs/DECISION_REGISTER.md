@@ -28,8 +28,10 @@ Statuses: `DECIDED_BY_SPEC`, `OPEN_OWNER`, `BLOCKED_EXTERNAL`, `DEFERRED`.
 | D-018 | Unknown timing proof | DECIDED_BY_SPEC | Missing verifiable publication/receipt proof is excluded from point-in-time inputs | None |
 | D-019 | Correction semantics | DECIDED_BY_SPEC | Append revisions; forecasts and selections are write-once; outcomes may receive addenda | None |
 | D-020 | Release approval | DECIDED_BY_SPEC | Gates require observed evidence; no automatic model promotion | Owner signs restricted pilot |
+| D-021 | Four-provider intelligence expansion | BLOCKED_EXTERNAL | FormFav, PuntersEdge, Krok Odds and Betfair Exchange are separate candidates; Betfair is first-class market intelligence, but all real adapters remain disabled | Provider-specific access, cost, retention, display and model-use evidence |
+| D-022 | Synthetic Betfair development | DECIDED_BY_SPEC | Offline catalogue/book/runner/price-history/SP fixture may progress contracts and tests; no credentials, login, trading, staking or external connectivity | None |
+| D-023 | Specialist model promotion | DECIDED_BY_SPEC | Thoroughbred, harness and greyhound form-only/market-only/combined inputs remain illustrative until walk-forward evaluation, calibration and independent assurance pass | Owner approval after evidence review |
 
 ## Open decisions requiring owner attention
 
 No owner response is required for current G0 work. The following remain explicit future gates: approval of any real provider or scraper source, production OIDC, cloud spend, external LLM transfer, retention terms, and promotion of any model beyond illustrative status.
-
