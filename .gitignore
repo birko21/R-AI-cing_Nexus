@@ -17,6 +17,8 @@ dist/
 coverage/
 .vite/
 *.tsbuildinfo
+test-results/
+playwright-report/
 
 # Local logs and editor state
 *.log

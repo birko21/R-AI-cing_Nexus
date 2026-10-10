@@ -8,10 +8,10 @@ RIL-006 provides a reproducible Windows-first local bootstrap for the offline MV
 - Node.js 22.x or later and pnpm 11.19.0. The root `package.json` pins the package manager version.
 - Python 3.11–3.13. The API package rejects unsupported Python versions.
 - PostgreSQL 18 running locally and accepting TCP connections on `127.0.0.1:5432`. The bootstrap checks the standard Windows installation path for `pg_isready.exe`.
-- Playwright 1.64.0 or later for browser tests. Install the browser binary when browser tests are introduced:
+- Playwright Test 1.64.0 is pinned in the root workspace. Install the browser binary when browser tests are introduced:
 
   ```powershell
-  npx --yes playwright install chromium
+  pnpm exec playwright install chromium
   ```
 
 Docker is not required for the current Windows bootstrap. Cloud services, licensed racing feeds, external LLMs, OIDC and public scraping remain outside the active G0–G3 MVP.
@@ -46,6 +46,7 @@ Frontend checks and the repository baseline check are:
 pnpm web:check
 pnpm web:build
 pnpm api:test
+pnpm web:e2e
 pnpm validate
 ```
 
