@@ -33,3 +33,5 @@ if ($LASTEXITCODE -ne 0) { throw "Source health fixture validation failed with e
 if ($LASTEXITCODE -ne 0) { throw "Market quote fixture validation failed with exit code $LASTEXITCODE" }
 & '.venv\Scripts\python.exe' scripts/generate_market_history_fixture.py
 if ($LASTEXITCODE -ne 0) { throw "Market history fixture validation failed with exit code $LASTEXITCODE" }
+& '.venv\Scripts\python.exe' scripts/generate_market_math_fixture.py
+if ($LASTEXITCODE -ne 0) { throw "Market math fixture validation failed with exit code $LASTEXITCODE" }

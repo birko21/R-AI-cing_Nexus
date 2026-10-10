@@ -21,6 +21,7 @@
     "quote_id": "quote-1",
     "retrieved_at": "2026-01-15T10:00:00Z",
     "rights_state": "SYNTHETIC",
+    "runner_status": "ACTIVE",
     "size": 100.0,
     "source_receipt_id": "receipt-1",
     "source_timestamp": "2026-01-15T10:00:00Z"

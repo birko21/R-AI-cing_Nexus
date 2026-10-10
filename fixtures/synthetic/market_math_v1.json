@@ -1,0 +1,36 @@
+{
+  "comparable": {
+    "implied_probabilities": {
+      "selection-1": 0.5,
+      "selection-2": 0.25
+    },
+    "market_type": "WIN",
+    "normalized_probabilities": {
+      "selection-1": 0.6666666666666666,
+      "selection-2": 0.3333333333333333
+    },
+    "overround": 0.75,
+    "reason": "quotes share a market, field revision and timestamp window",
+    "status": "COMPARABLE"
+  },
+  "fictional": true,
+  "note": "Reference math evidence only; no market recommendation or order operation is enabled.",
+  "schema_version": "market-math-v1",
+  "scratched_not_comparable": {
+    "implied_probabilities": {},
+    "market_type": "WIN",
+    "normalized_probabilities": {},
+    "overround": null,
+    "reason": "fewer than two active runners remain",
+    "status": "NOT_COMPARABLE"
+  },
+  "timestamp_not_comparable": {
+    "implied_probabilities": {},
+    "market_type": "WIN",
+    "normalized_probabilities": {},
+    "overround": null,
+    "reason": "quote source timestamps exceed the comparability window",
+    "status": "NOT_COMPARABLE"
+  },
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
