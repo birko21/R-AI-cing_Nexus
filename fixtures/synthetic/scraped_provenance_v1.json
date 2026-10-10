@@ -1,0 +1,29 @@
+{
+  "fictional": true,
+  "note": "Offline replay evidence only; no real public source was retrieved.",
+  "receipt": {
+    "content_sha256": "fc37e3b928f22b58f2dc7300ee0ef3ec5de391e7fded3bce0a56b7abde5207a1",
+    "data_mode": "SCRAPED_PUBLIC",
+    "envelope_id": "env-1",
+    "envelope_payload_sha256": "fc37e3b928f22b58f2dc7300ee0ef3ec5de391e7fded3bce0a56b7abde5207a1",
+    "licensed": false,
+    "official": false,
+    "parser_version": "parser-v1",
+    "receipt_id": "receipt-1",
+    "replay_fixture_id": "replay-1",
+    "retention_status": "ACTIVE",
+    "retention_until": "2026-02-01T00:00:00Z",
+    "retrieval_url": "https://public.example/racing/race-1",
+    "retrieved_at": "2026-01-15T00:00:00Z",
+    "rights_state": "UNASSESSED",
+    "source_identifier": "https://public.example/racing/race-1"
+  },
+  "replay_fixture": {
+    "content": "{\"race\":\"PUBLIC:fixture:race-1\",\"status\":\"OFFICIAL\"}",
+    "content_sha256": "fc37e3b928f22b58f2dc7300ee0ef3ec5de391e7fded3bce0a56b7abde5207a1",
+    "fixture_id": "replay-1",
+    "parser_version": "parser-v1"
+  },
+  "schema_version": "scraped-provenance-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
