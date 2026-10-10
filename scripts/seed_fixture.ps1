@@ -51,3 +51,5 @@ if ($LASTEXITCODE -ne 0) { throw "Research tool fixture validation failed with e
 if ($LASTEXITCODE -ne 0) { throw "Evidence fixture validation failed with exit code $LASTEXITCODE" }
 & '.venv\Scripts\python.exe' scripts/generate_egress_fixture.py
 if ($LASTEXITCODE -ne 0) { throw "Egress fixture validation failed with exit code $LASTEXITCODE" }
+& '.venv\Scripts\python.exe' scripts/generate_assistant_eval_fixture.py
+if ($LASTEXITCODE -ne 0) { throw "Assistant evaluation fixture validation failed with exit code $LASTEXITCODE" }
