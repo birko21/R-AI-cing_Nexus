@@ -8,8 +8,8 @@ Racing Intelligence Lab is an independent, single-user, local-first research app
 - **Data mode:** synthetic-only for the active MVP; fictional fixtures must remain visibly labelled.
 - **Model status:** illustrative B0/B1 baselines only; no validated predictive claim.
 - **Wagering:** permanently out of scope; no bookmaker credentials, order endpoints or automatic staking.
-- **Current checkpoint:** RIL-055 synthetic chronological challenger studies with confidence intervals and assurance/owner promotion gates are implemented; real-source activation remains `BLOCKED_EXTERNAL_DEPENDENCY`.
-- **Next ticket:** RIL-056, approved OIDC production authentication.
+- **Current checkpoint:** RIL-057 local secret, frontend-secret, lockfile, SBOM and redaction controls are implemented; approved OIDC and real-source activation remain `BLOCKED_EXTERNAL_DEPENDENCY`.
+- **Next ticket:** RIL-058, observability, quotas, costs and provider kill switches.
 
 ## Normative reading order
 

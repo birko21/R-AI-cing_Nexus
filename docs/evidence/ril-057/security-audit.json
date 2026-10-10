@@ -1,0 +1,13 @@
+{
+  "frontend_secret_refs": [],
+  "lockfiles": {
+    "pnpm-lock.yaml": true,
+    "services/api/requirements.lock.txt": true
+  },
+  "log_redaction_control": "app.egress.redact_text",
+  "provider_keys": "SERVER_SIDE_ONLY",
+  "scanned_files": 248,
+  "schema_version": "security-audit-v1",
+  "secret_findings": [],
+  "status": "PASS"
+}

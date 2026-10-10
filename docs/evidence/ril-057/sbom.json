@@ -1,0 +1,201 @@
+{
+  "bomFormat": "CycloneDX",
+  "components": [
+    {
+      "ecosystem": "PyPI",
+      "name": "alembic",
+      "version": "1.16.5"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "annotated-types",
+      "version": "0.8.0"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "anyio",
+      "version": "4.15.1"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "certifi",
+      "version": "2026.7.22"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "click",
+      "version": "8.5.0"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "colorama",
+      "version": "0.4.6"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "fastapi",
+      "version": "0.116.1"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "greenlet",
+      "version": "3.5.6"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "h11",
+      "version": "0.16.0"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "httpcore",
+      "version": "1.0.9"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "httptools",
+      "version": "0.9.0"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "httpx",
+      "version": "0.28.1"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "idna",
+      "version": "3.20"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "iniconfig",
+      "version": "2.3.1"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "Mako",
+      "version": "1.4.3"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "MarkupSafe",
+      "version": "3.0.4"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "packaging",
+      "version": "26.3"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "pluggy",
+      "version": "1.6.0"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "psycopg",
+      "version": "3.2.10"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "psycopg-binary",
+      "version": "3.2.10"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "pydantic",
+      "version": "2.14.0"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "pydantic-core",
+      "version": "2.50.0"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "pydantic-settings",
+      "version": "2.10.1"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "Pygments",
+      "version": "2.21.0"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "pytest",
+      "version": "8.4.1"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "python-dotenv",
+      "version": "1.2.4"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "PyYAML",
+      "version": "6.0.3"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "ruff",
+      "version": "0.12.9"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "SQLAlchemy",
+      "version": "2.0.43"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "starlette",
+      "version": "0.47.3"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "typing-extensions",
+      "version": "4.16.0"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "typing-inspection",
+      "version": "0.4.4"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "tzdata",
+      "version": "2026.5"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "uvicorn",
+      "version": "0.35.0"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "watchfiles",
+      "version": "1.3.0"
+    },
+    {
+      "ecosystem": "PyPI",
+      "name": "websockets",
+      "version": "17.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@axe-core/playwright",
+      "version": "4.10.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@playwright/test",
+      "version": "1.64.0"
+    }
+  ],
+  "source_lockfiles": [
+    "pnpm-lock.yaml",
+    "services/api/requirements.lock.txt"
+  ],
+  "specVersion": "1.5",
+  "version": 1
+}

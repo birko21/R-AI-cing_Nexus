@@ -144,6 +144,7 @@ $required = @(
     'services/api/tests/test_greyhound_features.py',
     'services/api/tests/test_scenario_studio.py',
     'services/api/tests/test_challenger_study.py',
+    'services/api/tests/test_security_controls.py',
     'services/api/tests/test_forecast_invalidation.py',
     'docs/domain/ENTITY_DICTIONARY.md',
     'docs/domain/RACE_LIFECYCLE.md',
@@ -161,6 +162,8 @@ $required = @(
     'docs/evidence/ril-020/degraded-mobile.png',
     'docs/evidence/ril-040/market-workbench.png',
     'docs/evidence/ril-049/assistant-citations.png',
+    'docs/evidence/ril-057/security-audit.json',
+    'docs/evidence/ril-057/sbom.json',
     'docs/evidence/ril-023/probability-edge-cases.md',
     'docs/evidence/ril-025/forecast-invalidation-report.md',
     'docs/models/B0_UNIFORM_BASELINE.md',
@@ -195,6 +198,7 @@ $required = @(
     'docs/models/GREYHOUND_SPECIALIST_FEATURES.md',
     'docs/models/SCENARIO_STUDIO.md',
     'docs/models/CHALLENGER_STUDIES.md',
+    'docs/models/SECURITY_SUPPLY_CHAIN_CONTROLS.md',
     'alembic.ini',
     'migrations/env.py',
     'migrations/versions/001_offline_mvp.py',
@@ -247,6 +251,8 @@ $required = @(
     'scripts/generate_greyhound_feature_fixture.py',
     'scripts/generate_scenario_fixture.py',
     'scripts/generate_challenger_study_fixture.py',
+    'scripts/generate_sbom.py',
+    'scripts/security_audit.py',
     'scripts/record_migration_checksums.py',
     'scripts/verify_migration_checksums.py'
 )
