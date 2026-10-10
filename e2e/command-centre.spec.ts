@@ -12,8 +12,14 @@ test('command centre filters codes and distinguishes data states', async ({ page
   await page.getByRole('button', { name: 'Open research view' }).first().click();
   await expect(page.getByRole('region', { name: 'Race research view' })).toBeVisible();
   await expect(page.getByText('field-r2', { exact: true })).toBeVisible();
-  await expect(page.getByRole('table')).toBeVisible();
-  await expect(page.getByText('SCRATCHED')).toBeVisible();
+  await expect(page.getByRole('table', { name: 'Fictional entries and field state' })).toBeVisible();
+  await expect(page.getByText('SCRATCHED', { exact: true })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Runner compare' })).toBeVisible();
+  await expect(page.getByText('Compare 2 runners')).toBeVisible();
+  await page.getByRole('checkbox', { name: /Runner 4/ }).check();
+  await expect(page.getByText('Compare 3 runners')).toBeVisible();
+  await expect(page.getByText('Thoroughbred panel · pace and class')).toBeVisible();
+  await expect(page.getByText('No value is invented for the comparison.')).toBeVisible();
   await page.getByRole('tab', { name: 'Forecast archive' }).click();
   await expect(page.getByText('INVALIDATED BY FIELD REVISION')).toBeVisible();
   await page.getByRole('tab', { name: 'Provenance' }).click();
@@ -38,4 +44,22 @@ test('command centre filters codes and distinguishes data states', async ({ page
   await page.screenshot({ path: 'docs/evidence/ril-017/command-centre-desktop.png', fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.screenshot({ path: 'docs/evidence/ril-017/command-centre-mobile.png', fullPage: true });
+});
+
+test('code-specific research panels explain missing specialty inputs', async ({ page }) => {
+  const panels = [
+    { code: 'Thoroughbred', title: 'Thoroughbred panel · pace and class', file: 'thoroughbred-panel.png' },
+    { code: 'Harness', title: 'Harness panel · gait and sectionals', file: 'harness-panel.png' },
+    { code: 'Greyhound', title: 'Greyhound panel · box and interference', file: 'greyhound-panel.png' },
+  ];
+
+  for (const panel of panels) {
+    await page.goto('/');
+    await page.getByRole('button', { name: panel.code, exact: true }).click();
+    await page.getByRole('button', { name: 'Open research view' }).click();
+    const researchView = page.getByRole('region', { name: 'Race research view' });
+    await expect(researchView.getByText(panel.title)).toBeVisible();
+    await expect(researchView.getByText('No value is invented for the comparison.')).toBeVisible();
+    await page.screenshot({ path: `docs/evidence/ril-019/${panel.file}`, fullPage: true });
+  }
 });
