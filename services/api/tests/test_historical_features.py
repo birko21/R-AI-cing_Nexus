@@ -74,3 +74,13 @@ def test_cross_provider_join_requires_reconciled_identity_and_units_match() -> N
     assert any(item.reason == "UNIT_MISMATCH" for item in snapshot.exclusions)
     assert any(item.reason == "PROVIDER_FEATURE_CONFLICT" for item in snapshot.exclusions)
     assert "raw_speed" not in snapshot.records["p1"]
+
+
+def test_leakage_canary_post_race_value_cannot_change_snapshot() -> None:
+    future_one = obs("p1", "historical_performance", 1.0, "future", when=CUTOFF + timedelta(minutes=1))
+    future_two = obs("p1", "historical_performance", 999.0, "future", when=CUTOFF + timedelta(minutes=1))
+    first = generate_feature_snapshot(race_id="race-1", code="THOROUGHBRED", cutoff=CUTOFF, participant_ids=("p1",), definitions=definitions(), observations=(future_one,))
+    second = generate_feature_snapshot(race_id="race-1", code="THOROUGHBRED", cutoff=CUTOFF, participant_ids=("p1",), definitions=definitions(), observations=(future_two,))
+    assert first.snapshot_hash == second.snapshot_hash
+    assert first.critical_missing == ("p1:historical_performance",)
+    assert "historical_performance" not in first.records["p1"]
