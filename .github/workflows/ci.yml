@@ -67,6 +67,10 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Frontend typecheck
         run: pnpm run web:check
+      - name: Authenticated dashboard regression
+        env:
+          VITE_AUTH_REQUIRED: 'true'
+        run: pnpm run web:test
       - name: Frontend production build
         run: pnpm run web:build
 

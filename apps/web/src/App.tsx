@@ -316,22 +316,6 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
     return () => { active = false; };
   }, [apiRequest]);
 
-  if (import.meta.env.VITE_AUTH_REQUIRED === 'true') {
-    return (
-      <main className="shell">
-        <section className="intro" aria-labelledby="auth-required-title">
-          <p className="eyebrow">RACING INTELLIGENCE LAB</p>
-          <h1 id="auth-required-title">Protected staging configuration required</h1>
-          <p>
-            The Nexus research interface is fail-closed until the approved OIDC login flow,
-            callback and protected session are configured. No research data or provider
-            connectivity is available from this deployment.
-          </p>
-        </section>
-      </main>
-    );
-  }
-
   return (
     <main className="shell">
       <header className="topbar">
