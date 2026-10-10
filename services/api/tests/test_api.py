@@ -1,63 +1,95 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from app.auth import require_bearer
+from app.auth import validate_bind_configuration
 from app.main import app
 
 
 @pytest.fixture
-def authenticated_client():
-    app.dependency_overrides[require_bearer] = lambda: None
-    try:
-        yield TestClient(app)
-    finally:
-        app.dependency_overrides.clear()
+def authenticated_client(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setenv("APP_ENV", "development")
+    monkeypatch.setenv("ALLOW_LOCAL_AUTH", "true")
+    monkeypatch.setenv("API_HOST", "127.0.0.1")
+    monkeypatch.setenv("LOCAL_AUTH_TOKEN", "test-local-token")
+    monkeypatch.setenv("LOCAL_AUTH_SCOPES", "races:read,forecasts:read,selections:read,selections:write")
+    with TestClient(app) as client:
+        yield client
 
 
 def test_health_and_status_are_anonymous_and_correlated() -> None:
-    response = TestClient(app).get("/health/live", headers={"X-Correlation-ID": "corr-test-1"})
-    assert response.status_code == 200
-    assert response.json() == {"status": "ok"}
-    assert response.headers["X-Correlation-ID"] == "corr-test-1"
+    with TestClient(app) as client:
+        response = client.get("/health/live", headers={"X-Correlation-ID": "corr-test-1"})
+        assert response.status_code == 200
+        assert response.json() == {"status": "ok"}
+        assert response.headers["X-Correlation-ID"] == "corr-test-1"
 
-    status = TestClient(app).get("/v1/system/status")
-    assert status.status_code == 200
-    assert status.json()["data_mode"] == "SYNTHETIC_ONLY"
-    assert status.headers["X-Correlation-ID"]
+        status = client.get("/v1/system/status")
+        assert status.status_code == 200
+        assert status.json()["data_mode"] == "SYNTHETIC_ONLY"
+        assert status.headers["X-Correlation-ID"]
 
 
 def test_domain_routes_fail_closed_with_stable_error_envelope() -> None:
-    response = TestClient(app).get("/v1/codes")
-    assert response.status_code == 401
-    body = response.json()
-    assert body["error"]["code"] == "UNAUTHORIZED"
-    assert body["error"]["correlation_id"] == response.headers["X-Correlation-ID"]
+    with TestClient(app) as client:
+        response = client.get("/v1/codes")
+        assert response.status_code == 401
+        body = response.json()
+        assert body["error"]["code"] == "UNAUTHORIZED"
+        assert body["error"]["correlation_id"] == response.headers["X-Correlation-ID"]
 
 
 def test_codes_route_has_bounded_paging_and_synthetic_labels(authenticated_client: TestClient) -> None:
-    response = authenticated_client.get("/v1/codes?limit=100")
+    headers = {"Authorization": "Bearer test-local-token"}
+    response = authenticated_client.get("/v1/codes?limit=100", headers=headers)
     assert response.status_code == 200
     assert response.json()["meta"]["limit"] == 100
     assert [item["code"] for item in response.json()["items"]] == ["THOROUGHBRED", "HARNESS", "GREYHOUND"]
     assert all(item["data_mode"] == "SYNTHETIC_ONLY" for item in response.json()["items"])
 
-    invalid_limit = authenticated_client.get("/v1/codes?limit=101")
+    invalid_limit = authenticated_client.get("/v1/codes?limit=101", headers=headers)
     assert invalid_limit.status_code == 400
     assert invalid_limit.json()["error"]["code"] == "BAD_REQUEST"
 
-    invalid_cursor = authenticated_client.get("/v1/codes?cursor=forged")
+    invalid_cursor = authenticated_client.get("/v1/codes?cursor=forged", headers=headers)
     assert invalid_cursor.status_code == 400
     assert invalid_cursor.json()["error"]["code"] == "BAD_REQUEST"
 
 
 def test_missing_race_and_unimplemented_selection_are_stable_errors(authenticated_client: TestClient) -> None:
-    missing = authenticated_client.get("/v1/races/not-present")
+    headers = {"Authorization": "Bearer test-local-token"}
+    missing = authenticated_client.get("/v1/races/not-present", headers=headers)
     assert missing.status_code == 404
     assert missing.json()["error"]["code"] == "NOT_FOUND"
 
     pending = authenticated_client.post(
         "/v1/selections",
         json={"race_id": "race-1", "selection_type": "PASS", "rationale": "No evidence yet"},
+        headers=headers,
     )
     assert pending.status_code == 501
     assert pending.json()["error"]["code"] == "NOT_IMPLEMENTED"
+
+
+def test_invalid_token_and_missing_scope_fail_closed(authenticated_client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    invalid = authenticated_client.get("/v1/codes", headers={"Authorization": "Bearer wrong"})
+    assert invalid.status_code == 401
+
+    monkeypatch.setenv("LOCAL_AUTH_SCOPES", "races:read")
+    forbidden = authenticated_client.get(
+        "/v1/races/race-1/forecasts", headers={"Authorization": "Bearer test-local-token"}
+    )
+    assert forbidden.status_code == 403
+    assert forbidden.json()["error"]["code"] == "FORBIDDEN"
+
+
+def test_external_and_production_bind_modes_are_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("APP_ENV", "development")
+    monkeypatch.setenv("ALLOW_LOCAL_AUTH", "true")
+    monkeypatch.setenv("API_HOST", "0.0.0.0")
+    with pytest.raises(RuntimeError, match="External API binds"):
+        validate_bind_configuration()
+
+    monkeypatch.setenv("API_HOST", "127.0.0.1")
+    monkeypatch.setenv("APP_ENV", "production")
+    with pytest.raises(RuntimeError, match="Non-development"):
+        validate_bind_configuration()
