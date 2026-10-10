@@ -1,0 +1,62 @@
+{
+  "accepted": [
+    {
+      "claim_id": "claim-1",
+      "claim_type": "FACT",
+      "currentness_verified": false,
+      "data_mode": "SYNTHETIC_ONLY",
+      "limitations": [
+        "Synthetic implementation evidence; not a live racing fact."
+      ],
+      "model_ids": [
+        "B0_UNIFORM"
+      ],
+      "numeric_value": null,
+      "observed_at": "2026-01-15T00:00:00Z",
+      "probability_supported": false,
+      "source_assertion_verified": false,
+      "source_ids": [
+        "fixture:synthetic-v1"
+      ],
+      "text": "The synthetic fixture contains six races."
+    },
+    {
+      "claim_id": "claim-2",
+      "claim_type": "PROBABILITY",
+      "currentness_verified": false,
+      "data_mode": "SYNTHETIC_ONLY",
+      "limitations": [
+        "Synthetic implementation evidence; not a live racing fact."
+      ],
+      "model_ids": [
+        "B0_UNIFORM"
+      ],
+      "numeric_value": 0.42,
+      "observed_at": "2026-01-15T00:00:00Z",
+      "probability_supported": true,
+      "source_assertion_verified": false,
+      "source_ids": [
+        "fixture:synthetic-v1"
+      ],
+      "text": "Illustrative probability for entry-1 is 0.42."
+    }
+  ],
+  "fictional": true,
+  "note": "Evidence validator fixture only; no claim is licensed, official, current or validated real-world evidence.",
+  "rejected": [
+    {
+      "claim_type": "PROBABILITY",
+      "reason": "1 validation error for EvidenceClaim"
+    },
+    {
+      "claim_type": "CURRENTNESS",
+      "reason": "1 validation error for EvidenceClaim"
+    },
+    {
+      "claim_type": "SOURCE_ASSERTION",
+      "reason": "1 validation error for EvidenceClaim"
+    }
+  ],
+  "schema_version": "evidence-claims-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
