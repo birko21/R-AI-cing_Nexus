@@ -9,6 +9,18 @@ test('command centre filters codes and distinguishes data states', async ({ page
   await expect(page.getByText('Fictional Harness Circuit')).toBeVisible();
   await expect(page.getByText('Fictional Greyhound Track')).toBeVisible();
 
+  await page.getByRole('button', { name: 'Open research view' }).first().click();
+  await expect(page.getByRole('region', { name: 'Race research view' })).toBeVisible();
+  await expect(page.getByText('field-r2', { exact: true })).toBeVisible();
+  await expect(page.getByRole('table')).toBeVisible();
+  await expect(page.getByText('SCRATCHED')).toBeVisible();
+  await page.getByRole('tab', { name: 'Forecast archive' }).click();
+  await expect(page.getByText('INVALIDATED BY FIELD REVISION')).toBeVisible();
+  await page.getByRole('tab', { name: 'Provenance' }).click();
+  await expect(page.getByText('Receipt verified')).toBeVisible();
+  await page.screenshot({ path: 'docs/evidence/ril-018/race-research-view.png', fullPage: true });
+  await page.getByRole('button', { name: 'Close view' }).click();
+
   await page.getByRole('button', { name: 'Greyhound' }).click();
   await expect(page.getByRole('region', { name: 'Today command cards' }).getByText('No racing')).toBeVisible();
   await expect(page.getByText('Fictional Greyhound Track')).toBeVisible();

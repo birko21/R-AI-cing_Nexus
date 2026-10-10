@@ -55,6 +55,7 @@ $required = @(
     'docs/domain/RIGHTS_MATRIX.md',
     'docs/evidence/ril-017/command-centre-desktop.png',
     'docs/evidence/ril-017/command-centre-mobile.png',
+    'docs/evidence/ril-018/race-research-view.png',
     'alembic.ini',
     'migrations/env.py',
     'migrations/versions/001_offline_mvp.py',

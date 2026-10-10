@@ -15,6 +15,19 @@ type CommandItem = {
   note: string;
 };
 
+type EvidenceTab = 'FIELD' | 'PROVENANCE' | 'FORECAST';
+
+type ResearchRace = {
+  code: Exclude<Code, 'ALL'>;
+  meeting: string;
+  raceLabel: string;
+  fieldRevision: string;
+  fieldState: string;
+  observedAt: string;
+  publishedAt: string;
+  entries: Array<{ number: number; name: string; status: 'ACTIVE' | 'SCRATCHED' | 'RESERVE' }>;
+};
+
 const codes: Array<{ value: Code; label: string }> = [
   { value: 'ALL', label: 'All codes' },
   { value: 'THOROUGHBRED', label: 'Thoroughbred' },
@@ -60,6 +73,39 @@ const commandItems: CommandItem[] = [
   },
 ];
 
+const researchRaces: Record<Exclude<Code, 'ALL'>, ResearchRace> = {
+  THOROUGHBRED: {
+    code: 'THOROUGHBRED', meeting: 'Fictional Thoroughbred Park', raceLabel: 'Race 1 · Fictional Maiden',
+    fieldRevision: 'field-r2', fieldState: 'FINAL_FIELDS', observedAt: '15 Jan 2026, 14:00 AEDT', publishedAt: '15 Jan 2026, 13:50 AEDT',
+    entries: [
+      { number: 1, name: 'Fictional Thoroughbred Runner 1-1', status: 'ACTIVE' },
+      { number: 2, name: 'Fictional Thoroughbred Runner 1-2', status: 'SCRATCHED' },
+      { number: 3, name: 'Fictional Thoroughbred Runner 1-3', status: 'ACTIVE' },
+      { number: 4, name: 'Fictional Thoroughbred Runner 1-4', status: 'RESERVE' },
+    ],
+  },
+  HARNESS: {
+    code: 'HARNESS', meeting: 'Fictional Harness Circuit', raceLabel: 'Race 1 · Fictional Pace',
+    fieldRevision: 'field-r2', fieldState: 'FINAL_FIELDS', observedAt: '15 Jan 2026, 14:00 AEDT', publishedAt: '15 Jan 2026, 13:50 AEDT',
+    entries: [
+      { number: 1, name: 'Fictional Harness Runner 1-1', status: 'ACTIVE' },
+      { number: 2, name: 'Fictional Harness Runner 1-2', status: 'SCRATCHED' },
+      { number: 3, name: 'Fictional Harness Runner 1-3', status: 'ACTIVE' },
+      { number: 4, name: 'Fictional Harness Runner 1-4', status: 'RESERVE' },
+    ],
+  },
+  GREYHOUND: {
+    code: 'GREYHOUND', meeting: 'Fictional Greyhound Track', raceLabel: 'Race 1 · Fictional Sprint',
+    fieldRevision: 'field-r2', fieldState: 'FINAL_FIELDS', observedAt: '15 Jan 2026, 14:00 AEDT', publishedAt: '15 Jan 2026, 13:50 AEDT',
+    entries: [
+      { number: 1, name: 'Fictional Greyhound Runner 1-1', status: 'ACTIVE' },
+      { number: 2, name: 'Fictional Greyhound Runner 1-2', status: 'SCRATCHED' },
+      { number: 3, name: 'Fictional Greyhound Runner 1-3', status: 'ACTIVE' },
+      { number: 4, name: 'Fictional Greyhound Runner 1-4', status: 'RESERVE' },
+    ],
+  },
+};
+
 const statusText: Record<Status, string> = {
   DEMO: 'Fictional demo', NO_RACING: 'No racing', NO_DATA: 'No data', UNAVAILABLE: 'Unavailable',
 };
@@ -74,6 +120,8 @@ export default function App() {
   const [selectedCode, setSelectedCode] = useState<Code>('ALL');
   const [selectedStatus, setSelectedStatus] = useState<Status | 'ALL'>('ALL');
   const [showStateExamples, setShowStateExamples] = useState(true);
+  const [selectedRace, setSelectedRace] = useState<Exclude<Code, 'ALL'> | null>(null);
+  const [evidenceTab, setEvidenceTab] = useState<EvidenceTab>('FIELD');
   const visibleItems = useMemo(
     () => commandItems.filter((item) =>
       (selectedCode === 'ALL' || item.code === selectedCode) &&
@@ -112,11 +160,27 @@ export default function App() {
           <div className="card-topline"><span className="status-dot" aria-hidden="true" /><span className="status-pill">{statusText[item.status]}</span></div>
           <h3>{item.label}</h3>{item.meeting && <p className="meeting-name">{item.meeting}</p>}
           <dl className="card-facts">{item.races !== undefined && <><dt>Races</dt><dd>{item.races} fictional races</dd></>}{item.localTime && <><dt>Fixture time</dt><dd>{item.localTime}</dd></>}<dt>Source age</dt><dd>{item.sourceAge}</dd></dl>
-          <p className="card-note">{item.note}</p><span className="card-watermark">FICTIONAL · NOT LIVE · NO WAGERING</span>
+          <p className="card-note">{item.note}</p>
+          {item.status === 'DEMO' && <button className="research-button" onClick={() => { setSelectedRace(item.code); setEvidenceTab('FIELD'); }} type="button">Open research view</button>}
+          <span className="card-watermark">FICTIONAL · NOT LIVE · NO WAGERING</span>
         </article>)}
       </section>
       {visibleItems.length === 0 && <section className="empty-state" aria-live="polite"><p className="eyebrow">NO MATCHING STATES</p><h3>No cards match these filters.</h3><p>Change the code or data-state filter. No racing data is invented to fill an empty view.</p></section>}
+      {selectedRace && <ResearchView race={researchRaces[selectedRace]} evidenceTab={evidenceTab} onClose={() => setSelectedRace(null)} onTabChange={setEvidenceTab} />}
       <footer className="footer"><span>Local API: 127.0.0.1:8000</span><span>Data rights: synthetic fixture only</span><span>Model: not trained</span></footer>
     </main>
   );
+}
+
+function ResearchView({ race, evidenceTab, onClose, onTabChange }: { race: ResearchRace; evidenceTab: EvidenceTab; onClose: () => void; onTabChange: (tab: EvidenceTab) => void }) {
+  return <section className="research-view" aria-label="Race research view">
+    <div className="research-heading"><div><p className="eyebrow">RESEARCH VIEW · SYNTHETIC DEMO</p><h2>{race.meeting} · {race.raceLabel}</h2><p className="research-subtitle">Field revision <strong>{race.fieldRevision}</strong> · {race.fieldState} · fictional record</p></div><button className="close-button" onClick={onClose} type="button">Close view</button></div>
+    <div className="research-facts"><div><span>Observed</span><strong>{race.observedAt}</strong></div><div><span>Published</span><strong>{race.publishedAt}</strong></div><div><span>Data mode</span><strong>SYNTHETIC_ONLY</strong></div></div>
+    <div className="evidence-tabs" role="tablist" aria-label="Race evidence tabs">
+      {([['FIELD', 'Field'], ['PROVENANCE', 'Provenance'], ['FORECAST', 'Forecast archive']] as const).map(([value, label]) => <button aria-selected={evidenceTab === value} className={evidenceTab === value ? 'tab selected' : 'tab'} key={value} onClick={() => onTabChange(value)} role="tab" type="button">{label}</button>)}
+    </div>
+    {evidenceTab === 'FIELD' && <div className="evidence-panel" role="tabpanel"><div className="panel-heading"><h3>Entries at {race.fieldRevision}</h3><span className="status-pill">Current field</span></div><table><caption>Fictional entries and field state</caption><thead><tr><th scope="col">No.</th><th scope="col">Participant</th><th scope="col">State</th></tr></thead><tbody>{race.entries.map((entry) => <tr key={entry.number}><td>{entry.number}</td><td>{entry.name}</td><td><span className={`entry-state entry-${entry.status.toLowerCase()}`}>{entry.status}</span></td></tr>)}</tbody></table><p className="panel-note">A scratching created {race.fieldRevision}; the prior forecast is retained but no longer current.</p></div>}
+    {evidenceTab === 'PROVENANCE' && <div className="evidence-panel" role="tabpanel"><div className="panel-heading"><h3>Available evidence</h3><span className="status-pill">Receipt verified</span></div><dl className="provenance-facts"><dt>Source receipt</dt><dd>synthetic://{race.code.toLowerCase()}/race-001</dd><dt>First observed</dt><dd>{race.observedAt}</dd><dt>Publication proof</dt><dd>{race.publishedAt}</dd><dt>Rights state</dt><dd>SYNTHETIC · fictional fixture</dd><dt>External connectivity</dt><dd>Disabled</dd></dl></div>}
+    {evidenceTab === 'FORECAST' && <div className="evidence-panel" role="tabpanel"><div className="panel-heading"><h3>Archived forecast</h3><span className="invalidated-pill">INVALIDATED BY FIELD REVISION</span></div><dl className="provenance-facts"><dt>Forecast ID</dt><dd>forecast-{race.code.toLowerCase()}-r1</dd><dt>Model</dt><dd>B1 illustrative · not validated</dd><dt>Forecast field</dt><dd>field-r1 (superseded)</dd><dt>Current field</dt><dd>{race.fieldRevision}</dd><dt>Action</dt><dd>No reuse after scratching; archive remains immutable.</dd></dl></div>}
+  </section>;
 }
