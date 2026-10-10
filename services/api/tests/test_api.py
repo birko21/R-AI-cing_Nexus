@@ -55,19 +55,28 @@ def test_codes_route_has_bounded_paging_and_synthetic_labels(authenticated_clien
     assert invalid_cursor.json()["error"]["code"] == "BAD_REQUEST"
 
 
-def test_missing_race_and_unimplemented_selection_are_stable_errors(authenticated_client: TestClient) -> None:
+def test_missing_race_and_selection_journal_are_stable(authenticated_client: TestClient) -> None:
     headers = {"Authorization": "Bearer test-local-token"}
     missing = authenticated_client.get("/v1/races/not-present", headers=headers)
     assert missing.status_code == 404
     assert missing.json()["error"]["code"] == "NOT_FOUND"
 
-    pending = authenticated_client.post(
+    created = authenticated_client.post(
         "/v1/selections",
-        json={"race_id": "race-1", "selection_type": "PASS", "rationale": "No evidence yet"},
+        json={"race_id": "race-1", "field_revision": "field-r1", "selection_type": "PASS", "rationale": "No evidence yet"},
         headers=headers,
     )
-    assert pending.status_code == 501
-    assert pending.json()["error"]["code"] == "NOT_IMPLEMENTED"
+    assert created.status_code == 201
+    selection_id = created.json()["selection_id"]
+    listed = authenticated_client.get("/v1/selections", headers=headers)
+    assert listed.status_code == 200
+    assert any(item["selection_id"] == selection_id for item in listed.json()["items"])
+    addendum = authenticated_client.post(
+        f"/v1/selections/{selection_id}/addenda",
+        json={"note": "Recorded as an immutable correction addendum."},
+        headers=headers,
+    )
+    assert addendum.status_code == 201
 
 
 def test_invalid_token_and_missing_scope_fail_closed(authenticated_client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:

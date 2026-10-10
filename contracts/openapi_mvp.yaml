@@ -139,7 +139,29 @@ paths:
               schema: { $ref: '#/components/schemas/Selection' }
         '400': { $ref: '#/components/responses/BadRequest' }
         '401': { $ref: '#/components/responses/Unauthorized' }
-        '501': { $ref: '#/components/responses/NotImplemented' }
+  /v1/selections/{selection_id}/addenda:
+    post:
+      operationId: createSelectionAddendum
+      security: [{ bearerAuth: [selections:write] }]
+      parameters:
+        - name: selection_id
+          in: path
+          required: true
+          schema: { type: string, minLength: 1 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SelectionAddendumCreate' }
+      responses:
+        '201':
+          description: Immutable correction addendum created.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SelectionAddendum' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
 components:
   securitySchemes:
     bearerAuth:
@@ -307,22 +329,42 @@ components:
     SelectionCreate:
       type: object
       additionalProperties: false
-      required: [race_id, selection_type, rationale]
+      required: [race_id, field_revision, selection_type, rationale]
       properties:
         race_id: { type: string }
+        field_revision: { type: string }
         entry_id: { type: [string, 'null'] }
         selection_type: { type: string, enum: [WIN, PLACE, PASS] }
         rationale: { type: string, maxLength: 4000 }
         forecast_id: { type: [string, 'null'] }
+        quote_id: { type: [string, 'null'] }
     Selection:
       allOf:
         - $ref: '#/components/schemas/SelectionCreate'
         - type: object
-          required: [selection_id, created_at, data_mode]
+          required: [selection_id, user_id, created_at, decision_time, data_mode]
           properties:
             selection_id: { type: string }
+            user_id: { type: string }
             created_at: { type: string, format: date-time }
+            decision_time: { type: string, format: date-time }
             data_mode: { $ref: '#/components/schemas/DataMode' }
+    SelectionAddendumCreate:
+      type: object
+      additionalProperties: false
+      required: [note]
+      properties:
+        note: { type: string, minLength: 1, maxLength: 4000 }
+    SelectionAddendum:
+      allOf:
+        - $ref: '#/components/schemas/SelectionAddendumCreate'
+        - type: object
+          required: [addendum_id, selection_id, user_id, created_at]
+          properties:
+            addendum_id: { type: string }
+            selection_id: { type: string }
+            user_id: { type: string }
+            created_at: { type: string, format: date-time }
     CodeListResponse:
       type: object
       required: [items, meta]

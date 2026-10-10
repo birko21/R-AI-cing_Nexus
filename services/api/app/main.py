@@ -18,11 +18,14 @@ from app.contracts import (
     PageMeta,
     Race,
     Selection,
+    SelectionAddendum,
+    SelectionAddendumCreate,
     SelectionListResponse,
     SelectionCreate,
     SystemStatusResponse,
 )
 from app.pagination import paging_parameters
+from app.selection_journal import SelectionJournal, SelectionJournalError
 
 
 @asynccontextmanager
@@ -36,6 +39,8 @@ app = FastAPI(
     description="Local-only offline MVP API foundation.",
     lifespan=lifespan,
 )
+
+journal = SelectionJournal()
 
 
 def _correlation_id(request: Request) -> str:
@@ -126,12 +131,24 @@ def list_forecasts(race_id: str, paging: tuple[int, str | None, datetime] = Depe
     return ForecastListResponse(items=[], meta=_page_meta(limit, as_of))
 
 
-@app.get("/v1/selections", response_model=SelectionListResponse, tags=["selections"], dependencies=[Depends(selections_read)])
-def list_selections(paging: tuple[int, str | None, datetime] = Depends(paging_parameters)) -> SelectionListResponse:
+@app.get("/v1/selections", response_model=SelectionListResponse, tags=["selections"])
+def list_selections(auth: dict[str, object] = Depends(selections_read), paging: tuple[int, str | None, datetime] = Depends(paging_parameters)) -> SelectionListResponse:
     limit, _, as_of = paging
-    return SelectionListResponse(items=[], meta=_page_meta(limit, as_of))
+    return SelectionListResponse(items=journal.list_for_user(str(auth["subject"]))[:limit], meta=_page_meta(limit, as_of))
 
 
-@app.post("/v1/selections", response_model=Selection, status_code=201, tags=["selections"], dependencies=[Depends(selections_write)])
-def create_selection(_: SelectionCreate) -> Selection:
-    raise HTTPException(status_code=501, detail="selection persistence is scheduled for RIL-041")
+@app.post("/v1/selections", response_model=Selection, status_code=201, tags=["selections"])
+def create_selection(payload: SelectionCreate, auth: dict[str, object] = Depends(selections_write)) -> Selection:
+    try:
+        return journal.create(str(auth["subject"]), payload)
+    except SelectionJournalError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/v1/selections/{selection_id}/addenda", response_model=SelectionAddendum, status_code=201, tags=["selections"])
+def create_selection_addendum(selection_id: str, payload: SelectionAddendumCreate, auth: dict[str, object] = Depends(selections_write)) -> SelectionAddendum:
+    try:
+        return journal.addendum(str(auth["subject"]), selection_id, payload)
+    except SelectionJournalError as exc:
+        status = 404 if "not found" in str(exc) else 400
+        raise HTTPException(status_code=status, detail=str(exc)) from exc

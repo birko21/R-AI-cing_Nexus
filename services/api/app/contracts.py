@@ -105,16 +105,33 @@ class SelectionCreate(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     race_id: str
+    field_revision: str = Field(min_length=1)
     entry_id: str | None = None
     selection_type: Literal["WIN", "PLACE", "PASS"]
     rationale: str = Field(max_length=4000)
     forecast_id: str | None = None
+    quote_id: str | None = None
 
 
 class Selection(SelectionCreate):
     selection_id: str
+    user_id: str
     created_at: datetime
+    decision_time: datetime
     data_mode: Literal["SYNTHETIC_ONLY", "SCRAPED_PUBLIC", "LICENSED"]
+
+
+class SelectionAddendumCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    note: str = Field(min_length=1, max_length=4000)
+
+
+class SelectionAddendum(SelectionAddendumCreate):
+    addendum_id: str
+    selection_id: str
+    user_id: str
+    created_at: datetime
 
 
 T = TypeVar("T")
