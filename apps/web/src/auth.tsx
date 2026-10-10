@@ -12,6 +12,20 @@ export type AuthConfig = {
 };
 
 type AuthConfigResult = { required: false } | { required: true; config?: AuthConfig; error?: string };
+export type NexusAuthFailure = 'expired' | 'rejected';
+
+export function authFailureCopy(failure: NexusAuthFailure): { title: string; message: string } {
+  if (failure === 'rejected') {
+    return {
+      title: 'Nexus API authentication rejected',
+      message: 'The API did not accept the current access token. Sign in again before continuing.',
+    };
+  }
+  return {
+    title: 'Nexus session expired',
+    message: 'The Auth0 session or access token expired. Sign in again before continuing.',
+  };
+}
 
 export function readAuthConfig(): AuthConfigResult {
   if (import.meta.env.VITE_AUTH_REQUIRED !== 'true') {
@@ -70,13 +84,14 @@ function AuthenticationBoundary({ config }: { config: AuthConfig }) {
 }
 
 function AuthenticatedApp({ config, user }: { config: AuthConfig; user: User }) {
-  const [sessionExpired, setSessionExpired] = useState(false);
+  const [authFailure, setAuthFailure] = useState<NexusAuthFailure | null>(null);
   const { logout } = useAuth0();
-  const onSessionExpired = useCallback(() => setSessionExpired(true), []);
-  const request = useNexusApiRequest(config, onSessionExpired);
+  const onAuthFailure = useCallback((failure: NexusAuthFailure) => setAuthFailure(failure), []);
+  const request = useNexusApiRequest(config, onAuthFailure);
 
-  if (sessionExpired) {
-    return <AuthState title="Nexus session expired" message="Your API session expired. Sign in again before continuing." action={<button type="button" onClick={() => void logout({ logoutParams: { returnTo: window.location.origin } })}>Sign in again</button>} />;
+  if (authFailure) {
+    const copy = authFailureCopy(authFailure);
+    return <AuthState title={copy.title} message={copy.message} action={<button type="button" onClick={() => void logout({ logoutParams: { returnTo: window.location.origin } })}>Sign in again</button>} />;
   }
 
   return (
@@ -90,7 +105,7 @@ function AuthenticatedApp({ config, user }: { config: AuthConfig; user: User }) 
   );
 }
 
-function useNexusApiRequest(config: AuthConfig, onSessionExpired: () => void): NexusApiRequest {
+function useNexusApiRequest(config: AuthConfig, onAuthFailure: (failure: NexusAuthFailure) => void): NexusApiRequest {
   const { getAccessTokenSilently } = useAuth0();
   return useCallback(async (path, init, requiredScope = 'races:read') => {
     let token: string;
@@ -99,22 +114,21 @@ function useNexusApiRequest(config: AuthConfig, onSessionExpired: () => void): N
         authorizationParams: { audience: config.audience, scope: `openid ${requiredScope}` },
       });
       if (!resolvedToken) {
-        onSessionExpired();
         throw new Error('Nexus access token was not returned');
       }
       token = resolvedToken;
     } catch {
-      onSessionExpired();
+      onAuthFailure('expired');
       throw new Error('Nexus session expired');
     }
     const headers = new Headers(init?.headers);
     headers.set('Authorization', `Bearer ${token}`);
     const response = await fetch(`${config.apiBaseUrl}${path}`, { ...init, headers });
     if (response.status === 401) {
-      onSessionExpired();
+      onAuthFailure('rejected');
     }
     return response;
-  }, [config.apiBaseUrl, config.audience, getAccessTokenSilently, onSessionExpired]);
+  }, [config.apiBaseUrl, config.audience, getAccessTokenSilently, onAuthFailure]);
 }
 
 function AuthState({ title, message, action }: { title: string; message: string; action?: ReactNode }) {
