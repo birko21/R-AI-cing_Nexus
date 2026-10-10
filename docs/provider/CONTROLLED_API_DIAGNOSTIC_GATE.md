@@ -1,8 +1,8 @@
 # Controlled API diagnostic gate
 
-Status: **PREPARED, DISABLED**  
+Status: **TIER 1 AUTHORISATION RECORDED, DISABLED**  
 Scope: existing FormFav, PuntersEdge, Krok Odds and Betfair accounts only  
-PR governance: PR #75 remains unchanged at `8dce999194eb4e17a1404dba54d03fa18f749e6d`; this gate is developed on a separate local branch while independent review is pending.
+PR governance: PR #75 merged through the standard workflow at `75e12e125952ffef90a4412a083f2b9635b498c2`; this gate remains on separate PR #76 pending review and approval.
 
 ## Decision
 
@@ -45,10 +45,41 @@ was not modified.
 | Retries | Prohibited; a failed request consumes its ordinal and the session ends |
 | Current quota check | Must be request 1 and must expose plan/credits/quota fields; absence fails closed |
 | Credit ceiling | No open-ended credit use. The sanitized historical observation was 2,990 remaining; the current value is not assumed and must be read at request 1. The six-request ceiling is an additional hard limit. |
-| Credential custodian | **Pending named owner record**; only a server-side resolver may supply credentials |
+| Credential custodian | **Owner**; only a server-side resolver may supply credentials |
 | Kill switch | `DiagnosticPolicy(enabled=False)` plus the default registry having no transport or credential resolver |
 | Raw retention | Prohibited by diagnostic policy; only aggregate metadata may be retained |
 | Training/calibration/display | Prohibited until tier 3 approval |
+
+### Recorded Tier 1 authorisation
+
+The owner supplied a bounded authorisation for one metadata request, recorded here
+without any credential material:
+
+| Field | Authorised value |
+|---|---|
+| Credential custodian | Owner |
+| Provider | PuntersEdge |
+| Racing code | `THOROUGHBRED`, where applicable |
+| Operation | `ACCOUNT_METADATA_READ` |
+| Endpoint | `GET /v1/keys/info` |
+| Maximum live requests | 1 |
+| Automatic retries | None |
+| Raw response retention | None |
+| Credential exposure | Prohibited |
+| Additional expenditure | Prohibited |
+| Credential handling | Secure server-side only |
+| Kill switch | Must remain enforced after the request |
+
+The public provider terms and endpoint reference were checked on 10 October
+2026. The endpoint reference describes this operation as key metadata, with no
+parameters beyond authentication, and the terms require a confidential key,
+server-side handling, and compliance with plan limits. Account-specific
+operation access, current quota safety and credential configuration were not
+verified because no credential resolver is configured in this workspace; live
+execution therefore remains blocked. The implementation also requires an
+authentication-header reconciliation before use: the provider reference
+specifies `X-API-Key`, while the current adapter test path constructs a bearer
+`Authorization` header.
 
 The known sample is a diagnostic target, not permission to execute. The owner
 must supply distinct records for `ACCOUNT_METADATA_READ` and
@@ -96,4 +127,6 @@ Until tier 3 approval is recorded, Nexus must reject:
 - wagering, staking, trading or automated model promotion.
 
 The implementation and tests use only fake transport data. No live request was
-executed for this gate.
+executed for this gate; the Tier 1 request is explicitly fail-closed pending an
+approved implementation, a verified server-side credential resolver and an
+account-specific quota/access check.
