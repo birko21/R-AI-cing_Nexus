@@ -23,10 +23,13 @@ This matrix maps the supplied v1.1 source requirements to the implementation bac
 | Later public scraping/provider rights | Execution Prompt Authorisations / E6 | Source-specific entitlement and adapter checkpoint | RIL-031–035 |
 | No automatic model promotion | Master v1.1 Model and science | Independent assurance and registry tests | RIL-028–030, RIL-055 |
 | Pilot security, DR and cost controls | Master v1.1 Functional acceptance / E11 | Release checklist, restore and budget evidence | RIL-056–060 |
+| Four-provider capability and licensing evidence | User roadmap / provider audit | Four-provider matrix, architecture and licensing gap report | RIL-061–064 |
+| Synthetic Betfair market intelligence | User roadmap / Betfair read-only requirement | Contract adapter, catalogue/book fixture, exact runner mapping, historical prices, liquidity and SP leakage tests | RIL-065, RIL-067–068 |
+| Independent three-code specialist models | User roadmap / modelling requirements | Separate code manifests, form/market/combined inputs, walk-forward ablations, calibration and assurance | RIL-069–071 |
+| Historical feature and evaluation foundation | RIL-061 development gate | Versioned rights-aware features, B0–B4 contracts, synthetic walk-forward evidence, explainability and readiness verdicts | RIL-061, RIL-077 |
 
 ## Traceability status
 
 - Active G0 requirements: mapped.
 - G1–G3 requirements: mapped to backlog; contracts and tests not yet implemented.
 - G4–G11 requirements: retained as gated future work; no claim of completion.
-

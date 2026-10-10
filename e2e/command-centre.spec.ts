@@ -103,6 +103,27 @@ test('market workbench shows provenance and suppresses restricted exports', asyn
   await page.screenshot({ path: 'docs/evidence/ril-040/market-workbench.png', fullPage: true });
 });
 
+test('research workbench compares B0 to B4 and exposes synthetic evaluation evidence', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Open research view' }).first().click();
+  await page.getByRole('tab', { name: 'Forecast archive' }).click();
+
+  const workbench = page.getByRole('tabpanel', { name: 'Forecast comparison workbench' });
+  await expect(workbench.getByRole('heading', { name: 'Winning-probability assessments' })).toBeVisible();
+  await expect(workbench.getByText('B0 · Uniform')).toBeVisible();
+  await expect(workbench.getByText('B3 · LightGBM')).toBeVisible();
+  await expect(workbench.getByText('B4 · Combined')).toBeVisible();
+  await expect(workbench.getByText('Model disagreement:', { exact: false }).first()).toBeVisible();
+  await expect(workbench.getByRole('heading', { name: 'Walk-forward evaluation' })).toBeVisible();
+  await expect(workbench.getByText('Feature-family ablation')).toBeVisible();
+  await expect(workbench.getByRole('heading', { name: 'Feature availability and provenance' })).toBeVisible();
+  await expect(workbench.getByText('Starting price / post-race result')).toBeVisible();
+  await expect(workbench.getByText('Never eligible for pre-race forecasts')).toBeVisible();
+  await page.screenshot({ path: 'docs/evidence/ril-061/research-workbench.png', fullPage: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.screenshot({ path: 'docs/evidence/ril-061/research-workbench-mobile.png', fullPage: true });
+});
+
 test('bounded assistant cites evidence, explains discrepancies and requires note approval', async ({ page }) => {
   await page.goto('/');
   const assistant = page.getByRole('region', { name: 'Ask an evidence-grounded question.' });

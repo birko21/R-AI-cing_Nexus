@@ -46,6 +46,35 @@ type ResearchRace = {
   specialtyExplanation: string;
   entries: Array<{ number: number; name: string; status: 'ACTIVE' | 'SCRATCHED' | 'RESERVE' }>;
   comparisonRows: Array<{ number: number; name: string; status: 'ACTIVE' | 'SCRATCHED' | 'RESERVE'; distance: string; context: string; recentForm: string }>;
+  forecasts: ForecastAssessment[];
+  featureAvailability: FeatureAvailability[];
+  evaluation: EvaluationSummary;
+};
+
+type ForecastAssessment = {
+  modelId: string;
+  label: string;
+  family: 'FORM_ONLY' | 'MARKET_ONLY' | 'COMBINED';
+  status: 'READY' | 'ABSTAIN';
+  modelVersion: string;
+  probabilities: Record<number, number>;
+  uncertainty: string;
+  missing: string;
+  disagreement: string;
+};
+
+type FeatureAvailability = {
+  name: string;
+  source: string;
+  status: 'AVAILABLE' | 'MISSING' | 'RESTRICTED';
+  detail: string;
+};
+
+type EvaluationSummary = {
+  walkForward: string;
+  calibration: string;
+  metrics: Array<{ model: string; logLoss: string; brier: string; topRanked: string }>;
+  ablation: Array<{ family: string; delta: string; status: string }>;
 };
 
 const codes: Array<{ value: Code; label: string }> = [
@@ -67,6 +96,43 @@ const statuses: Array<{ value: Status | 'ALL'; label: string }> = [
   { value: 'UNAVAILABLE', label: 'Unavailable' },
   { value: 'AUTH_DENIED', label: 'Auth denied' },
 ];
+
+const syntheticForecasts: ForecastAssessment[] = [
+  { modelId: 'B0_UNIFORM', label: 'B0 · Uniform', family: 'FORM_ONLY', status: 'READY', modelVersion: 'b0-uniform-v2', probabilities: { 1: 0.5, 3: 0.5 }, uncertainty: 'No fitted uncertainty; uniform reference', missing: 'None', disagreement: 'Reference only' },
+  { modelId: 'B1_FORM_BASELINE', label: 'B1 · Form', family: 'FORM_ONLY', status: 'READY', modelVersion: 'b1-form-v2', probabilities: { 1: 0.62, 3: 0.38 }, uncertainty: 'Illustrative interval ±0.12', missing: 'Sectionals unavailable', disagreement: '+0.12 vs market for runner 1' },
+  { modelId: 'B2_MARKET_BASELINE', label: 'B2 · Market', family: 'MARKET_ONLY', status: 'READY', modelVersion: 'b2-market-v1', probabilities: { 1: 0.58, 3: 0.42 }, uncertainty: 'Market spread retained', missing: 'None in synthetic fixture', disagreement: 'Market reference' },
+  { modelId: 'B3_LIGHTGBM', label: 'B3 · LightGBM', family: 'FORM_ONLY', status: 'READY', modelVersion: 'b3-lightgbm-synthetic', probabilities: { 1: 0.64, 3: 0.36 }, uncertainty: 'Synthetic-only; not calibrated', missing: 'Sectionals unavailable', disagreement: '+0.06 vs B1 for runner 1' },
+  { modelId: 'B4_MARKET_INFORMED_ENSEMBLE', label: 'B4 · Combined', family: 'COMBINED', status: 'READY', modelVersion: 'b4-ensemble-v1', probabilities: { 1: 0.61, 3: 0.39 }, uncertainty: 'Synthetic-only; calibration pending', missing: 'Sectionals unavailable', disagreement: '+0.03 vs market for runner 1' },
+];
+
+const syntheticFeatureAvailability: FeatureAvailability[] = [
+  { name: 'Recent form and prior performance', source: 'synthetic://form/history-v1', status: 'AVAILABLE', detail: 'Pre-race receipt present' },
+  { name: 'Distance and track suitability', source: 'synthetic://context/suitability-v1', status: 'AVAILABLE', detail: 'Race-normalised fixture value' },
+  { name: 'Raw and adjusted speed', source: 'synthetic://speed/adjusted-v1', status: 'AVAILABLE', detail: 'Illustrative only' },
+  { name: 'Sectional and finishing speed', source: '—', status: 'MISSING', detail: 'No verified pre-race source' },
+  { name: 'Class, field strength and pace', source: 'synthetic://race/context-v1', status: 'AVAILABLE', detail: 'No post-race fields used' },
+  { name: 'Barrier, participant and fitness effects', source: 'synthetic://runner/context-v1', status: 'AVAILABLE', detail: 'Code-specific manifest' },
+  { name: 'Betfair price movement and liquidity', source: 'synthetic://betfair/mock-v1', status: 'AVAILABLE', detail: 'Read-only synthetic market' },
+  { name: 'Starting price / post-race result', source: '—', status: 'RESTRICTED', detail: 'Never eligible for pre-race forecasts' },
+];
+
+const syntheticEvaluation: EvaluationSummary = {
+  walkForward: 'READY · 3 synthetic test folds · no real historical claim',
+  calibration: 'Illustrative reliability bins only · calibration pending',
+  metrics: [
+    { model: 'B0', logLoss: '0.693', brier: '0.500', topRanked: '50.0%' },
+    { model: 'B1', logLoss: '0.313', brier: '0.145', topRanked: '100.0%' },
+    { model: 'B2', logLoss: '0.414', brier: '0.229', topRanked: '100.0%' },
+    { model: 'B3', logLoss: 'illustrative', brier: 'illustrative', topRanked: 'not validated' },
+    { model: 'B4', logLoss: '0.361', brier: '0.183', topRanked: '100.0%' },
+  ],
+  ablation: [
+    { family: 'Form features', delta: 'B1 reference', status: 'Synthetic only' },
+    { family: 'Market features', delta: 'B2 reference', status: 'Synthetic only' },
+    { family: 'Betfair liquidity', delta: 'Not isolated', status: 'Rights/history pending' },
+    { family: 'Sectionals', delta: 'Not available', status: 'No source evidence' },
+  ],
+};
 
 const commandItems: CommandItem[] = [
   {
@@ -136,6 +202,7 @@ const researchRaces: Record<Exclude<Code, 'ALL'>, ResearchRace> = {
       { number: 3, name: 'Fictional Thoroughbred Runner 1-3', status: 'ACTIVE', distance: '1200 m', context: 'Fictional maiden · dry track', recentForm: '2 starts · illustrative' },
       { number: 4, name: 'Fictional Thoroughbred Runner 1-4', status: 'RESERVE', distance: '1200 m', context: 'Fictional maiden · dry track', recentForm: 'Reserve · not started' },
     ],
+    forecasts: syntheticForecasts, featureAvailability: syntheticFeatureAvailability, evaluation: syntheticEvaluation,
   },
   HARNESS: {
     code: 'HARNESS', meeting: 'Fictional Harness Circuit', raceLabel: 'Race 1 · Fictional Pace',
@@ -154,6 +221,7 @@ const researchRaces: Record<Exclude<Code, 'ALL'>, ResearchRace> = {
       { number: 3, name: 'Fictional Harness Runner 1-3', status: 'ACTIVE', distance: '1800 m', context: 'Fictional pace · standing start', recentForm: '2 starts · illustrative' },
       { number: 4, name: 'Fictional Harness Runner 1-4', status: 'RESERVE', distance: '1800 m', context: 'Fictional pace · standing start', recentForm: 'Reserve · not started' },
     ],
+    forecasts: syntheticForecasts, featureAvailability: syntheticFeatureAvailability, evaluation: syntheticEvaluation,
   },
   GREYHOUND: {
     code: 'GREYHOUND', meeting: 'Fictional Greyhound Track', raceLabel: 'Race 1 · Fictional Sprint',
@@ -172,6 +240,7 @@ const researchRaces: Record<Exclude<Code, 'ALL'>, ResearchRace> = {
       { number: 3, name: 'Fictional Greyhound Runner 1-3', status: 'ACTIVE', distance: '520 m', context: 'Fictional sprint · boxed start', recentForm: '2 starts · illustrative' },
       { number: 4, name: 'Fictional Greyhound Runner 1-4', status: 'RESERVE', distance: '520 m', context: 'Fictional sprint · boxed start', recentForm: 'Reserve · not started' },
     ],
+    forecasts: syntheticForecasts, featureAvailability: syntheticFeatureAvailability, evaluation: syntheticEvaluation,
   },
 };
 
@@ -324,9 +393,28 @@ function ResearchView({ race, evidenceTab, onClose, onTabChange }: { race: Resea
     </div>
     {evidenceTab === 'FIELD' && <div className="evidence-panel" role="tabpanel"><div className="panel-heading"><h3>Entries at {race.fieldRevision}</h3><span className="status-pill">Current field</span></div><section className="compare-panel" aria-label="Runner compare"><div className="panel-heading"><div><h3>Runner compare</h3><p className="panel-note">Select 2–4 runners; all rows use the same distance and fixture context.</p></div><span className="compare-count">Compare {selectedRows.length} runners</span></div><div className="runner-picker">{race.entries.map((entry) => <label className="runner-option" key={entry.number}><input checked={selectedNumbers.includes(entry.number)} disabled={selectedNumbers.length === 2 && selectedNumbers.includes(entry.number)} onChange={() => toggleRunner(entry.number)} type="checkbox" /><span>Runner {entry.number} · {entry.status}</span></label>)}</div><table><caption>Matched comparison units</caption><thead><tr><th scope="col">Runner</th><th scope="col">Distance</th><th scope="col">Fixture context</th><th scope="col">Recent form</th></tr></thead><tbody>{selectedRows.map((row) => <tr key={row.number}><td>{row.name}</td><td>{row.distance}</td><td>{row.context}</td><td>{row.recentForm}</td></tr>)}</tbody></table><div className="code-panel"><h4>{race.codePanelTitle}</h4><p><strong>{race.specialtyLabel}:</strong> Not available in fixture.</p><p className="panel-note">{race.specialtyExplanation} No value is invented for the comparison.</p></div></section><table><caption>Fictional entries and field state</caption><thead><tr><th scope="col">No.</th><th scope="col">Participant</th><th scope="col">State</th></tr></thead><tbody>{race.entries.map((entry) => <tr key={entry.number}><td>{entry.number}</td><td>{entry.name}</td><td><span className={`entry-state entry-${entry.status.toLowerCase()}`}>{entry.status}</span></td></tr>)}</tbody></table><p className="panel-note">A scratching created {race.fieldRevision}; the prior forecast is retained but no longer current.</p></div>}
     {evidenceTab === 'PROVENANCE' && <div className="evidence-panel" role="tabpanel"><div className="panel-heading"><h3>Available evidence</h3><span className="status-pill">Receipt verified</span></div><dl className="provenance-facts"><dt>Source receipt</dt><dd>synthetic://{race.code.toLowerCase()}/race-001</dd><dt>First observed</dt><dd>{race.observedAt}</dd><dt>Publication proof</dt><dd>{race.publishedAt}</dd><dt>Rights state</dt><dd>SYNTHETIC · fictional fixture</dd><dt>External connectivity</dt><dd>Disabled</dd></dl></div>}
-    {evidenceTab === 'FORECAST' && <div className="evidence-panel" role="tabpanel"><div className="panel-heading"><h3>Archived forecast</h3><span className="invalidated-pill">INVALIDATED BY FIELD REVISION</span></div><dl className="provenance-facts"><dt>Forecast ID</dt><dd>forecast-{race.code.toLowerCase()}-r1</dd><dt>Model</dt><dd>B1 illustrative · not validated</dd><dt>Forecast field</dt><dd>field-r1 (superseded)</dd><dt>Current field</dt><dd>{race.fieldRevision}</dd><dt>Action</dt><dd>No reuse after scratching; archive remains immutable.</dd></dl></div>}
+    {evidenceTab === 'FORECAST' && <ForecastWorkbench race={race} />}
     {evidenceTab === 'MARKET' && <MarketWorkbench />}
   </section>;
+}
+
+function ForecastWorkbench({ race }: { race: ResearchRace }) {
+  const activeEntries = race.entries.filter((entry) => entry.status === 'ACTIVE');
+  return <div className="evidence-panel forecast-workbench" role="tabpanel" aria-label="Forecast comparison workbench">
+    <div className="panel-heading"><div><p className="eyebrow">MODEL COMPARISON · SYNTHETIC EVIDENCE</p><h3>Winning-probability assessments</h3></div><span className="status-pill">NOT VALIDATED</span></div>
+    <p className="panel-note">All probabilities, fair prices and metrics below are illustrative synthetic outputs. No result represents live racing accuracy, advice or profitability.</p>
+    <div className="forecast-grid">
+      {race.forecasts.map((forecast) => <article className="forecast-card" key={forecast.modelId}>
+        <div className="panel-heading"><div><h4>{forecast.label}</h4><span className="model-family">{forecast.family.replace('_', ' ')}</span></div><span className={forecast.status === 'READY' ? 'status-pill' : 'invalidated-pill'}>{forecast.status}</span></div>
+        <dl className="forecast-facts"><dt>Model version</dt><dd>{forecast.modelVersion}</dd><dt>Uncertainty</dt><dd>{forecast.uncertainty}</dd><dt>Missing evidence</dt><dd>{forecast.missing}</dd></dl>
+        <table><caption>Race-normalised probabilities</caption><thead><tr><th scope="col">Runner</th><th scope="col">Win probability</th><th scope="col">Fair price</th></tr></thead><tbody>{activeEntries.map((entry) => { const probability = forecast.probabilities[entry.number]; return <tr key={entry.number}><td>Runner {entry.number}</td><td>{probability === undefined ? 'NOT_AVAILABLE' : `${(probability * 100).toFixed(1)}%`}</td><td>{probability === undefined ? '—' : `${(1 / probability).toFixed(2)} decimal`}</td></tr>; })}</tbody></table>
+        <p className="model-disagreement"><strong>Model disagreement:</strong> {forecast.disagreement}</p>
+      </article>)}
+    </div>
+    <section className="evaluation-panel" aria-label="Historical evaluation summary"><div className="panel-heading"><div><h3>Walk-forward evaluation</h3><p className="panel-note">Metrics are reproduced from the synthetic research report.</p></div><span className="status-pill">{race.evaluation.walkForward.split(' · ')[0]}</span></div><p>{race.evaluation.walkForward}</p><p>{race.evaluation.calibration}</p><table><caption>Illustrative model metrics</caption><thead><tr><th scope="col">Model</th><th scope="col">Log loss</th><th scope="col">Brier</th><th scope="col">Top-ranked win</th></tr></thead><tbody>{race.evaluation.metrics.map((metric) => <tr key={metric.model}><td>{metric.model}</td><td>{metric.logLoss}</td><td>{metric.brier}</td><td>{metric.topRanked}</td></tr>)}</tbody></table><h4>Feature-family ablation</h4><table><caption>Incremental feature evidence</caption><thead><tr><th scope="col">Family</th><th scope="col">Change</th><th scope="col">Status</th></tr></thead><tbody>{race.evaluation.ablation.map((row) => <tr key={row.family}><td>{row.family}</td><td>{row.delta}</td><td>{row.status}</td></tr>)}</tbody></table></section>
+    <section className="feature-availability" aria-label="Feature availability"><div className="panel-heading"><div><h3>Feature availability and provenance</h3><p className="panel-note">Unavailable and restricted features remain unavailable; no values are inferred.</p></div></div><table><caption>Pre-race feature evidence</caption><thead><tr><th scope="col">Feature family</th><th scope="col">State</th><th scope="col">Source / dataset</th><th scope="col">Evidence note</th></tr></thead><tbody>{race.featureAvailability.map((feature) => <tr key={feature.name}><td>{feature.name}</td><td><span className={`entry-state entry-${feature.status.toLowerCase()}`}>{feature.status}</span></td><td>{feature.source}</td><td>{feature.detail}</td></tr>)}</tbody></table></section>
+    <section className="evidence-panel archived-forecast"><div className="panel-heading"><h3>Archived forecast</h3><span className="invalidated-pill">INVALIDATED BY FIELD REVISION</span></div><dl className="provenance-facts"><dt>Forecast ID</dt><dd>forecast-{race.code.toLowerCase()}-r1</dd><dt>Model</dt><dd>B1 illustrative · not validated</dd><dt>Forecast field</dt><dd>field-r1 (superseded)</dd><dt>Current field</dt><dd>{race.fieldRevision}</dd><dt>Action</dt><dd>No reuse after scratching; archive remains immutable.</dd></dl></section>
+  </div>;
 }
 
 function MarketWorkbench() {

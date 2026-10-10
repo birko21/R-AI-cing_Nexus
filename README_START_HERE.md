@@ -6,10 +6,11 @@ Racing Intelligence Lab is an independent, single-user, local-first research app
 
 - **Active delivery scope:** offline MVP gates G0–G3.
 - **Data mode:** synthetic-only for the active MVP; fictional fixtures must remain visibly labelled.
-- **Model status:** illustrative B0/B1 baselines only; no validated predictive claim.
+- **Model status:** RIL-061 B0–B4 contracts and synthetic evaluation are illustrative only; pinned LightGBM/CatBoost B3 training is available for synthetic reproducibility, but no validated predictive claim exists.
 - **Wagering:** permanently out of scope; no bookmaker credentials, order endpoints or automatic staking.
-- **Current checkpoint:** RIL-059 isolated synthetic backup/restore hash verification, retention planning and migration rollback runbooks are implemented; approved OIDC and real-source activation remain `BLOCKED_EXTERNAL_DEPENDENCY`.
-- **Next ticket:** RIL-060, performance/accessibility hardening and pilot sign-off.
+- **Current checkpoint:** RIL-061 historical feature contracts, B0–B4 benchmark interfaces, pinned B3 lifecycle, walk-forward evaluation, deterministic explanations and provider readiness evidence are implemented as a safe synthetic foundation; approved historical rights and real source activation remain `BLOCKED_EXTERNAL_DEPENDENCY`.
+- **Four-provider expansion:** FormFav, PuntersEdge, Krok Odds and Betfair Exchange are documented as separate, disabled-by-default provider candidates. Betfair has an offline, read-only synthetic market fixture; no real credentials or external connectivity are enabled.
+- **Next ticket:** RIL-077, approved historical dataset acquisition and ML backend/security decision; no real provider connectivity is enabled.
 
 ## Normative reading order
 
@@ -38,3 +39,8 @@ A gate is complete only when the code runs, the relevant tests actually execute,
 - [Ticket register](docs/backlog/TICKETS.md)
 - [Source manifest and missing baseline artifacts](docs/product/SOURCE_MANIFEST.md)
 - [Local development and validation](docs/LOCAL_DEVELOPMENT.md)
+- [Four-provider capability matrix](docs/provider/FOUR_PROVIDER_CAPABILITY_MATRIX.md)
+- [Four-provider architecture](docs/architecture/FOUR_PROVIDER_INTELLIGENCE_ARCHITECTURE.md)
+- [Feature catalogue](docs/models/FOUR_PROVIDER_FEATURE_CATALOGUE.md)
+- [Licensing gap report](docs/provider/SOURCE_LICENSING_GAP_REPORT.md)
+- [Four-provider backlog](docs/backlog/FOUR_PROVIDER_INTELLIGENCE_BACKLOG.md)

@@ -1,0 +1,1039 @@
+{
+  "b3_machine_learning": {
+    "backend": "lightgbm_or_catboost",
+    "reason": "Optional engine is not installed; no fallback is silently substituted.",
+    "status": "NOT_AVAILABLE"
+  },
+  "benchmarks": [
+    {
+      "abstention_reason": null,
+      "code": "THOROUGHBRED",
+      "cutoff": "2026-01-01T01:00:00Z",
+      "diagnostics": [
+        "EQUAL_ACTIVE_ELIGIBLE_RUNNERS"
+      ],
+      "missingness": [],
+      "model_id": "B0_UNIFORM",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b0-uniform-v2",
+      "overround": null,
+      "probabilities": {
+        "a": 0.5,
+        "b": 0.5
+      },
+      "race_id": "ril061-thoroughbred-1",
+      "spread_used": false,
+      "state": "READY"
+    },
+    {
+      "abstention_reason": null,
+      "code": "THOROUGHBRED",
+      "cutoff": "2026-01-01T01:00:00Z",
+      "diagnostics": [
+        "CODE_SPECIFIC_WEIGHTED_FORM",
+        "NO_IMPUTATION"
+      ],
+      "missingness": [],
+      "model_id": "B1_FORM_BASELINE",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b1-form-v2",
+      "overround": null,
+      "probabilities": {
+        "a": 0.7310585786300049,
+        "b": 0.2689414213699951
+      },
+      "race_id": "ril061-thoroughbred-1",
+      "spread_used": false,
+      "state": "READY"
+    },
+    {
+      "abstention_reason": null,
+      "code": "THOROUGHBRED",
+      "cutoff": "2026-01-01T01:00:00Z",
+      "diagnostics": [
+        "OVERROUND_NORMALISED",
+        "EXCHANGE_SPREAD_MIDPOINT"
+      ],
+      "missingness": [],
+      "model_id": "B2_MARKET_BASELINE",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b2-market-v1",
+      "overround": 0.7200929152148664,
+      "probabilities": {
+        "a": 0.6612903225806451,
+        "b": 0.33870967741935487
+      },
+      "race_id": "ril061-thoroughbred-1",
+      "spread_used": true,
+      "state": "READY"
+    },
+    {
+      "abstention_reason": null,
+      "code": "THOROUGHBRED",
+      "cutoff": "2026-01-01T01:00:00Z",
+      "diagnostics": [
+        "LOG_LINEAR_FORM_MARKET_COMBINATION",
+        "CALIBRATION_REQUIRED_BEFORE_PROMOTION"
+      ],
+      "missingness": [],
+      "model_id": "B4_MARKET_INFORMED_ENSEMBLE",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b4-ensemble-v1",
+      "overround": null,
+      "probabilities": {
+        "a": 0.6973108271376048,
+        "b": 0.30268917286239516
+      },
+      "race_id": "ril061-thoroughbred-1",
+      "spread_used": true,
+      "state": "READY"
+    },
+    {
+      "abstention_reason": null,
+      "code": "HARNESS",
+      "cutoff": "2026-01-02T01:00:00Z",
+      "diagnostics": [
+        "EQUAL_ACTIVE_ELIGIBLE_RUNNERS"
+      ],
+      "missingness": [],
+      "model_id": "B0_UNIFORM",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b0-uniform-v2",
+      "overround": null,
+      "probabilities": {
+        "a": 0.5,
+        "b": 0.5
+      },
+      "race_id": "ril061-harness-2",
+      "spread_used": false,
+      "state": "READY"
+    },
+    {
+      "abstention_reason": null,
+      "code": "HARNESS",
+      "cutoff": "2026-01-02T01:00:00Z",
+      "diagnostics": [
+        "CODE_SPECIFIC_WEIGHTED_FORM",
+        "NO_IMPUTATION"
+      ],
+      "missingness": [],
+      "model_id": "B1_FORM_BASELINE",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b1-form-v2",
+      "overround": null,
+      "probabilities": {
+        "a": 0.7310585786300049,
+        "b": 0.2689414213699951
+      },
+      "race_id": "ril061-harness-2",
+      "spread_used": false,
+      "state": "READY"
+    },
+    {
+      "abstention_reason": null,
+      "code": "HARNESS",
+      "cutoff": "2026-01-02T01:00:00Z",
+      "diagnostics": [
+        "OVERROUND_NORMALISED",
+        "EXCHANGE_SPREAD_MIDPOINT"
+      ],
+      "missingness": [],
+      "model_id": "B2_MARKET_BASELINE",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b2-market-v1",
+      "overround": 0.7200929152148664,
+      "probabilities": {
+        "a": 0.6612903225806451,
+        "b": 0.33870967741935487
+      },
+      "race_id": "ril061-harness-2",
+      "spread_used": true,
+      "state": "READY"
+    },
+    {
+      "abstention_reason": null,
+      "code": "HARNESS",
+      "cutoff": "2026-01-02T01:00:00Z",
+      "diagnostics": [
+        "LOG_LINEAR_FORM_MARKET_COMBINATION",
+        "CALIBRATION_REQUIRED_BEFORE_PROMOTION"
+      ],
+      "missingness": [],
+      "model_id": "B4_MARKET_INFORMED_ENSEMBLE",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b4-ensemble-v1",
+      "overround": null,
+      "probabilities": {
+        "a": 0.6973108271376048,
+        "b": 0.30268917286239516
+      },
+      "race_id": "ril061-harness-2",
+      "spread_used": true,
+      "state": "READY"
+    },
+    {
+      "abstention_reason": null,
+      "code": "GREYHOUND",
+      "cutoff": "2026-01-03T01:00:00Z",
+      "diagnostics": [
+        "EQUAL_ACTIVE_ELIGIBLE_RUNNERS"
+      ],
+      "missingness": [],
+      "model_id": "B0_UNIFORM",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b0-uniform-v2",
+      "overround": null,
+      "probabilities": {
+        "a": 0.5,
+        "b": 0.5
+      },
+      "race_id": "ril061-greyhound-3",
+      "spread_used": false,
+      "state": "READY"
+    },
+    {
+      "abstention_reason": null,
+      "code": "GREYHOUND",
+      "cutoff": "2026-01-03T01:00:00Z",
+      "diagnostics": [
+        "CODE_SPECIFIC_WEIGHTED_FORM",
+        "NO_IMPUTATION"
+      ],
+      "missingness": [],
+      "model_id": "B1_FORM_BASELINE",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b1-form-v2",
+      "overround": null,
+      "probabilities": {
+        "a": 0.7310585786300049,
+        "b": 0.2689414213699951
+      },
+      "race_id": "ril061-greyhound-3",
+      "spread_used": false,
+      "state": "READY"
+    },
+    {
+      "abstention_reason": null,
+      "code": "GREYHOUND",
+      "cutoff": "2026-01-03T01:00:00Z",
+      "diagnostics": [
+        "OVERROUND_NORMALISED",
+        "EXCHANGE_SPREAD_MIDPOINT"
+      ],
+      "missingness": [],
+      "model_id": "B2_MARKET_BASELINE",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b2-market-v1",
+      "overround": 0.7200929152148664,
+      "probabilities": {
+        "a": 0.6612903225806451,
+        "b": 0.33870967741935487
+      },
+      "race_id": "ril061-greyhound-3",
+      "spread_used": true,
+      "state": "READY"
+    },
+    {
+      "abstention_reason": null,
+      "code": "GREYHOUND",
+      "cutoff": "2026-01-03T01:00:00Z",
+      "diagnostics": [
+        "LOG_LINEAR_FORM_MARKET_COMBINATION",
+        "CALIBRATION_REQUIRED_BEFORE_PROMOTION"
+      ],
+      "missingness": [],
+      "model_id": "B4_MARKET_INFORMED_ENSEMBLE",
+      "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+      "model_version": "b4-ensemble-v1",
+      "overround": null,
+      "probabilities": {
+        "a": 0.6973108271376048,
+        "b": 0.30268917286239516
+      },
+      "race_id": "ril061-greyhound-3",
+      "spread_used": true,
+      "state": "READY"
+    }
+  ],
+  "evaluation": {
+    "excluded_cases": [],
+    "feature_family_ablation": {
+      "B0_UNIFORM": {
+        "brier": 0.5,
+        "calibration": [
+          {
+            "bin": 2,
+            "count": 6,
+            "empirical_rate": 0.5,
+            "mean_predicted": 0.5
+          }
+        ],
+        "confidence_intervals": {
+          "brier_95": [
+            0.5,
+            0.5
+          ],
+          "log_loss_95": [
+            0.6931471805599453,
+            0.6931471805599453
+          ]
+        },
+        "feature_family": "B0_UNIFORM",
+        "log_loss": 0.6931471805599453,
+        "missing_case_count": 0,
+        "n": 3,
+        "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
+        "top_ranked_win_accuracy": 1.0
+      },
+      "B1_FORM_BASELINE": {
+        "brier": 0.1446589762570265,
+        "calibration": [
+          {
+            "bin": 1,
+            "count": 3,
+            "empirical_rate": 0.0,
+            "mean_predicted": 0.2689414213699951
+          },
+          {
+            "bin": 3,
+            "count": 3,
+            "empirical_rate": 1.0,
+            "mean_predicted": 0.7310585786300049
+          }
+        ],
+        "confidence_intervals": {
+          "brier_95": [
+            0.1446589762570265,
+            0.1446589762570265
+          ],
+          "log_loss_95": [
+            0.3132616875182228,
+            0.3132616875182228
+          ]
+        },
+        "feature_family": "B1_FORM_BASELINE",
+        "log_loss": 0.3132616875182228,
+        "missing_case_count": 0,
+        "n": 3,
+        "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
+        "top_ranked_win_accuracy": 1.0
+      },
+      "B2_MARKET_BASELINE": {
+        "brier": 0.22944849115504687,
+        "calibration": [
+          {
+            "bin": 1,
+            "count": 3,
+            "empirical_rate": 0.0,
+            "mean_predicted": 0.3387096774193548
+          },
+          {
+            "bin": 3,
+            "count": 3,
+            "empirical_rate": 1.0,
+            "mean_predicted": 0.6612903225806451
+          }
+        ],
+        "confidence_intervals": {
+          "brier_95": [
+            0.22944849115504687,
+            0.22944849115504687
+          ],
+          "log_loss_95": [
+            0.4135623183407838,
+            0.4135623183407838
+          ]
+        },
+        "feature_family": "B2_MARKET_BASELINE",
+        "log_loss": 0.4135623183407838,
+        "missing_case_count": 0,
+        "n": 3,
+        "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
+        "top_ranked_win_accuracy": 1.0
+      },
+      "B4_MARKET_INFORMED_ENSEMBLE": {
+        "brier": 0.1832414707362419,
+        "calibration": [
+          {
+            "bin": 1,
+            "count": 3,
+            "empirical_rate": 0.0,
+            "mean_predicted": 0.30268917286239516
+          },
+          {
+            "bin": 3,
+            "count": 3,
+            "empirical_rate": 1.0,
+            "mean_predicted": 0.6973108271376048
+          }
+        ],
+        "confidence_intervals": {
+          "brier_95": [
+            0.1832414707362419,
+            0.1832414707362419
+          ],
+          "log_loss_95": [
+            0.3605240176455377,
+            0.3605240176455377
+          ]
+        },
+        "feature_family": "B4_MARKET_INFORMED_ENSEMBLE",
+        "log_loss": 0.3605240176455377,
+        "missing_case_count": 0,
+        "n": 3,
+        "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
+        "top_ranked_win_accuracy": 1.0
+      }
+    },
+    "input_case_count": 12,
+    "market_comparison": {
+      "B0_UNIFORM": {
+        "brier_delta_model_minus_market": 0.27055150884495316,
+        "log_loss_delta_model_minus_market": 0.2795848622191615,
+        "market_brier": 0.22944849115504687,
+        "market_log_loss": 0.4135623183407838,
+        "model_brier": 0.5,
+        "model_log_loss": 0.6931471805599453,
+        "n": 3,
+        "status": "ILLUSTRATIVE_SYNTHETIC_ONLY"
+      },
+      "B1_FORM_BASELINE": {
+        "brier_delta_model_minus_market": -0.08478951489802036,
+        "log_loss_delta_model_minus_market": -0.10030063082256097,
+        "market_brier": 0.22944849115504687,
+        "market_log_loss": 0.4135623183407838,
+        "model_brier": 0.1446589762570265,
+        "model_log_loss": 0.3132616875182228,
+        "n": 3,
+        "status": "ILLUSTRATIVE_SYNTHETIC_ONLY"
+      },
+      "B2_MARKET_BASELINE": {
+        "brier_delta_model_minus_market": 0.0,
+        "log_loss_delta_model_minus_market": 0.0,
+        "market_brier": 0.22944849115504687,
+        "market_log_loss": 0.4135623183407838,
+        "model_brier": 0.22944849115504687,
+        "model_log_loss": 0.4135623183407838,
+        "n": 3,
+        "status": "ILLUSTRATIVE_SYNTHETIC_ONLY"
+      },
+      "B4_MARKET_INFORMED_ENSEMBLE": {
+        "brier_delta_model_minus_market": -0.04620702041880498,
+        "log_loss_delta_model_minus_market": -0.053038300695246066,
+        "market_brier": 0.22944849115504687,
+        "market_log_loss": 0.4135623183407838,
+        "model_brier": 0.1832414707362419,
+        "model_log_loss": 0.3605240176455377,
+        "n": 3,
+        "status": "ILLUSTRATIVE_SYNTHETIC_ONLY"
+      }
+    },
+    "missing_input_sensitivity": {
+      "COMPLETE_INPUTS": {
+        "brier": 0.2643372345370788,
+        "calibration": [
+          {
+            "bin": 1,
+            "count": 9,
+            "empirical_rate": 0.0,
+            "mean_predicted": 0.30344675721724834
+          },
+          {
+            "bin": 2,
+            "count": 6,
+            "empirical_rate": 0.5,
+            "mean_predicted": 0.5
+          },
+          {
+            "bin": 3,
+            "count": 9,
+            "empirical_rate": 1.0,
+            "mean_predicted": 0.6965532427827515
+          }
+        ],
+        "confidence_intervals": {
+          "brier_95": [
+            0.19031305309329968,
+            0.339137169282358
+          ],
+          "log_loss_95": [
+            0.36244934116818145,
+            0.5328990509060558
+          ]
+        },
+        "log_loss": 0.4451238010161224,
+        "missing_case_count": 0,
+        "n": 12,
+        "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
+        "top_ranked_win_accuracy": 1.0
+      }
+    },
+    "models": {
+      "B0_UNIFORM": {
+        "brier": 0.5,
+        "calibration": [
+          {
+            "bin": 2,
+            "count": 6,
+            "empirical_rate": 0.5,
+            "mean_predicted": 0.5
+          }
+        ],
+        "confidence_intervals": {
+          "brier_95": [
+            0.5,
+            0.5
+          ],
+          "log_loss_95": [
+            0.6931471805599453,
+            0.6931471805599453
+          ]
+        },
+        "log_loss": 0.6931471805599453,
+        "missing_case_count": 0,
+        "n": 3,
+        "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
+        "top_ranked_win_accuracy": 1.0
+      },
+      "B1_FORM_BASELINE": {
+        "brier": 0.1446589762570265,
+        "calibration": [
+          {
+            "bin": 1,
+            "count": 3,
+            "empirical_rate": 0.0,
+            "mean_predicted": 0.2689414213699951
+          },
+          {
+            "bin": 3,
+            "count": 3,
+            "empirical_rate": 1.0,
+            "mean_predicted": 0.7310585786300049
+          }
+        ],
+        "confidence_intervals": {
+          "brier_95": [
+            0.1446589762570265,
+            0.1446589762570265
+          ],
+          "log_loss_95": [
+            0.3132616875182228,
+            0.3132616875182228
+          ]
+        },
+        "log_loss": 0.3132616875182228,
+        "missing_case_count": 0,
+        "n": 3,
+        "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
+        "top_ranked_win_accuracy": 1.0
+      },
+      "B2_MARKET_BASELINE": {
+        "brier": 0.22944849115504687,
+        "calibration": [
+          {
+            "bin": 1,
+            "count": 3,
+            "empirical_rate": 0.0,
+            "mean_predicted": 0.3387096774193548
+          },
+          {
+            "bin": 3,
+            "count": 3,
+            "empirical_rate": 1.0,
+            "mean_predicted": 0.6612903225806451
+          }
+        ],
+        "confidence_intervals": {
+          "brier_95": [
+            0.22944849115504687,
+            0.22944849115504687
+          ],
+          "log_loss_95": [
+            0.4135623183407838,
+            0.4135623183407838
+          ]
+        },
+        "log_loss": 0.4135623183407838,
+        "missing_case_count": 0,
+        "n": 3,
+        "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
+        "top_ranked_win_accuracy": 1.0
+      },
+      "B4_MARKET_INFORMED_ENSEMBLE": {
+        "brier": 0.1832414707362419,
+        "calibration": [
+          {
+            "bin": 1,
+            "count": 3,
+            "empirical_rate": 0.0,
+            "mean_predicted": 0.30268917286239516
+          },
+          {
+            "bin": 3,
+            "count": 3,
+            "empirical_rate": 1.0,
+            "mean_predicted": 0.6973108271376048
+          }
+        ],
+        "confidence_intervals": {
+          "brier_95": [
+            0.1832414707362419,
+            0.1832414707362419
+          ],
+          "log_loss_95": [
+            0.3605240176455377,
+            0.3605240176455377
+          ]
+        },
+        "log_loss": 0.3605240176455377,
+        "missing_case_count": 0,
+        "n": 3,
+        "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
+        "top_ranked_win_accuracy": 1.0
+      }
+    },
+    "report_version": "historical-evaluation-v1",
+    "scored_case_count": 12,
+    "segments": {
+      "code=GREYHOUND": {
+        "brier": 0.2643372345370788,
+        "calibration": [
+          {
+            "bin": 1,
+            "count": 3,
+            "empirical_rate": 0.0,
+            "mean_predicted": 0.3034467572172484
+          },
+          {
+            "bin": 2,
+            "count": 2,
+            "empirical_rate": 0.5,
+            "mean_predicted": 0.5
+          },
+          {
+            "bin": 3,
+            "count": 3,
+            "empirical_rate": 1.0,
+            "mean_predicted": 0.6965532427827515
+          }
+        ],
+        "confidence_intervals": {
+          "brier_95": [
+            0.16395022349663418,
+            0.4210991615616781
+          ],
+          "log_loss_95": [
+            0.3368928525818803,
+            0.6103228792106887
+          ]
+        },
+        "log_loss": 0.44512380101612237,
+        "missing_case_count": 0,
+        "n": 4,
+        "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
+        "top_ranked_win_accuracy": 1.0
+      },
+      "code=HARNESS": {
+        "brier": 0.2643372345370788,
+        "calibration": [
+          {
+            "bin": 1,
+            "count": 3,
+            "empirical_rate": 0.0,
+            "mean_predicted": 0.3034467572172484
+          },
+          {
+            "bin": 2,
+            "count": 2,
+            "empirical_rate": 0.5,
+            "mean_predicted": 0.5
+          },
+          {
+            "bin": 3,
+            "count": 3,
+            "empirical_rate": 1.0,
+            "mean_predicted": 0.6965532427827515
+          }
+        ],
+        "confidence_intervals": {
+          "brier_95": [
+            0.16395022349663418,
+            0.4210991615616781
+          ],
+          "log_loss_95": [
+            0.3368928525818803,
+            0.6103228792106887
+          ]
+        },
+        "log_loss": 0.44512380101612237,
+        "missing_case_count": 0,
+        "n": 4,
+        "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
+        "top_ranked_win_accuracy": 1.0
+      },
+      "code=THOROUGHBRED": {
+        "brier": 0.2643372345370788,
+        "calibration": [
+          {
+            "bin": 1,
+            "count": 3,
+            "empirical_rate": 0.0,
+            "mean_predicted": 0.3034467572172484
+          },
+          {
+            "bin": 2,
+            "count": 2,
+            "empirical_rate": 0.5,
+            "mean_predicted": 0.5
+          },
+          {
+            "bin": 3,
+            "count": 3,
+            "empirical_rate": 1.0,
+            "mean_predicted": 0.6965532427827515
+          }
+        ],
+        "confidence_intervals": {
+          "brier_95": [
+            0.16395022349663418,
+            0.4210991615616781
+          ],
+          "log_loss_95": [
+            0.3368928525818803,
+            0.6103228792106887
+          ]
+        },
+        "log_loss": 0.44512380101612237,
+        "missing_case_count": 0,
+        "n": 4,
+        "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
+        "top_ranked_win_accuracy": 1.0
+      },
+      "distance=1200": {
+        "brier": 0.2643372345370788,
+        "calibration": [
+          {
+            "bin": 1,
+            "count": 9,
+            "empirical_rate": 0.0,
+            "mean_predicted": 0.30344675721724834
+          },
+          {
+            "bin": 2,
+            "count": 6,
+            "empirical_rate": 0.5,
+            "mean_predicted": 0.5
+          },
+          {
+            "bin": 3,
+            "count": 9,
+            "empirical_rate": 1.0,
+            "mean_predicted": 0.6965532427827515
+          }
+        ],
+        "confidence_intervals": {
+          "brier_95": [
+            0.19031305309329968,
+            0.339137169282358
+          ],
+          "log_loss_95": [
+            0.36244934116818145,
+            0.5328990509060558
+          ]
+        },
+        "log_loss": 0.4451238010161224,
+        "missing_case_count": 0,
+        "n": 12,
+        "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
+        "top_ranked_win_accuracy": 1.0
+      },
+      "race_type=WIN": {
+        "brier": 0.2643372345370788,
+        "calibration": [
+          {
+            "bin": 1,
+            "count": 9,
+            "empirical_rate": 0.0,
+            "mean_predicted": 0.30344675721724834
+          },
+          {
+            "bin": 2,
+            "count": 6,
+            "empirical_rate": 0.5,
+            "mean_predicted": 0.5
+          },
+          {
+            "bin": 3,
+            "count": 9,
+            "empirical_rate": 1.0,
+            "mean_predicted": 0.6965532427827515
+          }
+        ],
+        "confidence_intervals": {
+          "brier_95": [
+            0.19031305309329968,
+            0.339137169282358
+          ],
+          "log_loss_95": [
+            0.36244934116818145,
+            0.5328990509060558
+          ]
+        },
+        "log_loss": 0.4451238010161224,
+        "missing_case_count": 0,
+        "n": 12,
+        "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
+        "top_ranked_win_accuracy": 1.0
+      },
+      "track=Synthetic": {
+        "brier": 0.2643372345370788,
+        "calibration": [
+          {
+            "bin": 1,
+            "count": 9,
+            "empirical_rate": 0.0,
+            "mean_predicted": 0.30344675721724834
+          },
+          {
+            "bin": 2,
+            "count": 6,
+            "empirical_rate": 0.5,
+            "mean_predicted": 0.5
+          },
+          {
+            "bin": 3,
+            "count": 9,
+            "empirical_rate": 1.0,
+            "mean_predicted": 0.6965532427827515
+          }
+        ],
+        "confidence_intervals": {
+          "brier_95": [
+            0.19031305309329968,
+            0.339137169282358
+          ],
+          "log_loss_95": [
+            0.36244934116818145,
+            0.5328990509060558
+          ]
+        },
+        "log_loss": 0.4451238010161224,
+        "missing_case_count": 0,
+        "n": 12,
+        "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
+        "top_ranked_win_accuracy": 1.0
+      }
+    },
+    "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
+    "validated_claim": false,
+    "walk_forward": {
+      "duplicate_fold_races": false,
+      "status": "READY",
+      "test_fold_ids": [
+        "fold-001",
+        "fold-002",
+        "fold-003"
+      ]
+    }
+  },
+  "limitations": [
+    "Synthetic fixture observations are not real racing history.",
+    "No provider rights, retention or model-training approval is established.",
+    "No predictive improvement, calibration or profitability claim is made.",
+    "Post-race starting price is not used as a pre-race feature."
+  ],
+  "provider_readiness": {
+    "available_and_approved": [],
+    "code_verdicts": [
+      {
+        "blockers": [
+          "No provider is approved for this application; historical depth and model-use rights remain open."
+        ],
+        "code": "THOROUGHBRED",
+        "evidence": [
+          "FormFav catalogue, PuntersEdge results/form, Krok enrichment/results probes and Betfair catalogue/book probes are evidenced."
+        ],
+        "status": "TECHNICALLY_AVAILABLE_RIGHTS_PENDING",
+        "supporting_providers": [
+          "FormFav",
+          "PuntersEdge",
+          "Krok Odds",
+          "Betfair Exchange"
+        ]
+      },
+      {
+        "blockers": [
+          "No audited provider establishes sufficient harness form, sectionals, ratings, results and market history."
+        ],
+        "code": "HARNESS",
+        "evidence": [
+          "Only synthetic three-code contract fixtures exist locally."
+        ],
+        "status": "INSUFFICIENT_FEATURE_COVERAGE",
+        "supporting_providers": []
+      },
+      {
+        "blockers": [
+          "No audited provider establishes sufficient greyhound form, split times, box/interference, results and market history."
+        ],
+        "code": "GREYHOUND",
+        "evidence": [
+          "Only synthetic three-code contract fixtures exist locally."
+        ],
+        "status": "INSUFFICIENT_FEATURE_COVERAGE",
+        "supporting_providers": []
+      }
+    ],
+    "external_connectivity": "DISABLED",
+    "provider_code_verdicts": [
+      {
+        "blockers": [
+          "R-AI-cing Nexus rights, retention, display and model-use approval is absent.",
+          "Real credentials and external connectivity are disabled."
+        ],
+        "code": "THOROUGHBRED",
+        "evidence": [
+          "Sibling adapter or sanitized validation evidence exists for Australian thoroughbred scope."
+        ],
+        "provider": "FormFav",
+        "status": "TECHNICALLY_AVAILABLE_RIGHTS_PENDING"
+      },
+      {
+        "blockers": [
+          "Do not infer code support from an Australian or horse-racing endpoint.",
+          "Independent data and rights evidence is required."
+        ],
+        "code": "HARNESS",
+        "evidence": [
+          "No provider-specific harness historical coverage is established in the audited implementation evidence."
+        ],
+        "provider": "FormFav",
+        "status": "INSUFFICIENT_FEATURE_COVERAGE"
+      },
+      {
+        "blockers": [
+          "Do not infer code support from an Australian or horse-racing endpoint.",
+          "Independent data and rights evidence is required."
+        ],
+        "code": "GREYHOUND",
+        "evidence": [
+          "No provider-specific greyhound historical coverage is established in the audited implementation evidence."
+        ],
+        "provider": "FormFav",
+        "status": "INSUFFICIENT_FEATURE_COVERAGE"
+      },
+      {
+        "blockers": [
+          "R-AI-cing Nexus rights, retention, display and model-use approval is absent.",
+          "Real credentials and external connectivity are disabled."
+        ],
+        "code": "THOROUGHBRED",
+        "evidence": [
+          "Sibling adapter or sanitized validation evidence exists for Australian thoroughbred scope."
+        ],
+        "provider": "PuntersEdge",
+        "status": "TECHNICALLY_AVAILABLE_RIGHTS_PENDING"
+      },
+      {
+        "blockers": [
+          "Do not infer code support from an Australian or horse-racing endpoint.",
+          "Independent data and rights evidence is required."
+        ],
+        "code": "HARNESS",
+        "evidence": [
+          "No provider-specific harness historical coverage is established in the audited implementation evidence."
+        ],
+        "provider": "PuntersEdge",
+        "status": "INSUFFICIENT_FEATURE_COVERAGE"
+      },
+      {
+        "blockers": [
+          "Do not infer code support from an Australian or horse-racing endpoint.",
+          "Independent data and rights evidence is required."
+        ],
+        "code": "GREYHOUND",
+        "evidence": [
+          "No provider-specific greyhound historical coverage is established in the audited implementation evidence."
+        ],
+        "provider": "PuntersEdge",
+        "status": "INSUFFICIENT_FEATURE_COVERAGE"
+      },
+      {
+        "blockers": [
+          "R-AI-cing Nexus rights, retention, display and model-use approval is absent.",
+          "Real credentials and external connectivity are disabled."
+        ],
+        "code": "THOROUGHBRED",
+        "evidence": [
+          "Sibling adapter or sanitized validation evidence exists for Australian thoroughbred scope."
+        ],
+        "provider": "Krok Odds",
+        "status": "TECHNICALLY_AVAILABLE_RIGHTS_PENDING"
+      },
+      {
+        "blockers": [
+          "Do not infer code support from an Australian or horse-racing endpoint.",
+          "Independent data and rights evidence is required."
+        ],
+        "code": "HARNESS",
+        "evidence": [
+          "No provider-specific harness historical coverage is established in the audited implementation evidence."
+        ],
+        "provider": "Krok Odds",
+        "status": "INSUFFICIENT_FEATURE_COVERAGE"
+      },
+      {
+        "blockers": [
+          "Do not infer code support from an Australian or horse-racing endpoint.",
+          "Independent data and rights evidence is required."
+        ],
+        "code": "GREYHOUND",
+        "evidence": [
+          "No provider-specific greyhound historical coverage is established in the audited implementation evidence."
+        ],
+        "provider": "Krok Odds",
+        "status": "INSUFFICIENT_FEATURE_COVERAGE"
+      },
+      {
+        "blockers": [
+          "R-AI-cing Nexus rights, retention, display and model-use approval is absent.",
+          "Real credentials and external connectivity are disabled."
+        ],
+        "code": "THOROUGHBRED",
+        "evidence": [
+          "Sibling adapter or sanitized validation evidence exists for Australian thoroughbred scope."
+        ],
+        "provider": "Betfair Exchange",
+        "status": "TECHNICALLY_AVAILABLE_RIGHTS_PENDING"
+      },
+      {
+        "blockers": [
+          "Do not infer code support from an Australian or horse-racing endpoint.",
+          "Independent data and rights evidence is required."
+        ],
+        "code": "HARNESS",
+        "evidence": [
+          "No provider-specific harness historical coverage is established in the audited implementation evidence."
+        ],
+        "provider": "Betfair Exchange",
+        "status": "INSUFFICIENT_FEATURE_COVERAGE"
+      },
+      {
+        "blockers": [
+          "Do not infer code support from an Australian or horse-racing endpoint.",
+          "Independent data and rights evidence is required."
+        ],
+        "code": "GREYHOUND",
+        "evidence": [
+          "No provider-specific greyhound historical coverage is established in the audited implementation evidence."
+        ],
+        "provider": "Betfair Exchange",
+        "status": "INSUFFICIENT_FEATURE_COVERAGE"
+      }
+    ],
+    "report_version": "provider-readiness-v1"
+  },
+  "schema_version": "ril-061-evidence-v1",
+  "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
+  "validated_claim": false
+}
