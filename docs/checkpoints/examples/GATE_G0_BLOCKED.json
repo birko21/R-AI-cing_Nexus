@@ -1,0 +1,43 @@
+{
+  "gate": "G0",
+  "title": "Discovery and repository baseline",
+  "status": "BLOCKED",
+  "completed": [
+    "V1.1 source documents imported and hashed",
+    "Decision, traceability and risk registers created",
+    "Architecture and safety ADRs recorded"
+  ],
+  "commands": [
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "observed_at_utc": "2026-10-10T03:00:00Z",
+      "result": "No whitespace errors"
+    }
+  ],
+  "security": [
+    "No application runtime or external provider credentials enabled"
+  ],
+  "data_mode": "NONE",
+  "data_rights": [
+    "No provider connected",
+    "No licensed data approved"
+  ],
+  "model_status": "NOT_TRAINED",
+  "evidence": [
+    "docs/product/SOURCE_MANIFEST.md",
+    "docs/DECISION_REGISTER.md",
+    "docs/TRACEABILITY.md",
+    "docs/RISK_REGISTER.md"
+  ],
+  "cost": {
+    "actual_aud": 0,
+    "planned_aud": 0,
+    "unknowns": ["Future provider, hosting and OIDC costs remain unapproved"]
+  },
+  "risks": [
+    "G0 is not complete until the remaining governance/workflow evidence is recorded"
+  ],
+  "owner_decisions": [],
+  "next_unblocked_gate": "G0"
+}
