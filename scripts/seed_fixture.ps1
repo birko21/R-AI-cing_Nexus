@@ -43,3 +43,5 @@ if ($LASTEXITCODE -ne 0) { throw "Result reconciliation fixture validation faile
 if ($LASTEXITCODE -ne 0) { throw "Watchlist fixture validation failed with exit code $LASTEXITCODE" }
 & '.venv\Scripts\python.exe' scripts/generate_alert_fixture.py
 if ($LASTEXITCODE -ne 0) { throw "Alert fixture validation failed with exit code $LASTEXITCODE" }
+& '.venv\Scripts\python.exe' scripts/generate_responsible_controls_fixture.py
+if ($LASTEXITCODE -ne 0) { throw "Responsible controls fixture validation failed with exit code $LASTEXITCODE" }

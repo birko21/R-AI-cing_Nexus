@@ -1,0 +1,35 @@
+{
+  "annotation_export": {
+    "addenda": [],
+    "data_mode": "SYNTHETIC_ONLY",
+    "export_type": "ANNOTATIONS_ONLY",
+    "forecast_payloads_included": false,
+    "raw_prices_included": false,
+    "selections": [
+      {
+        "decision_time": "2026-01-15T12:00:00+00:00",
+        "field_revision": "field-r1",
+        "race_id": "race-1",
+        "rationale": "Insufficient evidence",
+        "selection_id": "selection-1",
+        "selection_type": "PASS"
+      }
+    ]
+  },
+  "fictional": true,
+  "note": "Responsible-use control evidence only; raw prices and forecast payloads are excluded.",
+  "schema_version": "responsible-controls-v1",
+  "session_decision": {
+    "reason": "session is within the configured controls",
+    "status": "ALLOWED"
+  },
+  "summary": {
+    "forecast_reference_count": 0,
+    "paper_simulation_included": false,
+    "pass_count": 1,
+    "place_count": 0,
+    "selection_count": 1,
+    "win_count": 0
+  },
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
