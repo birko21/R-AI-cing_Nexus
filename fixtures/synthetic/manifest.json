@@ -1,8 +1,33 @@
 {
-  "fixture_id": "bootstrap-ril-006",
-  "seed": "RIL-006-bootstrap",
+  "codes": [
+    "THOROUGHBRED",
+    "HARNESS",
+    "GREYHOUND"
+  ],
   "data_mode": "SYNTHETIC_ONLY",
+  "demo_date": "2026-01-15",
   "fictional": true,
-  "races": [],
-  "note": "Bootstrap manifest only. Three-code race records are implemented by RIL-016."
+  "files": {
+    "fixture.json": {
+      "path": "fixtures/synthetic/fixture.json",
+      "sha256": "799fc4b9bb8d0c6a1c17ebd1c942ea56d78d73e9bdffd8b6a4fb5817d1073404"
+    }
+  },
+  "fixture_id": "ril-016-three-code-v1",
+  "record_counts": {
+    "codes": 3,
+    "corrections": 3,
+    "edge_cases": 12,
+    "entries": 24,
+    "historical_runs": 72,
+    "meetings": 3,
+    "quotes": 6,
+    "races": 6,
+    "reserves": 3,
+    "results": 3,
+    "scratchings": 3,
+    "sections": 6
+  },
+  "seed": "RIL-016-seed-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
 }

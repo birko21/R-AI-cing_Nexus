@@ -27,6 +27,7 @@ $required = @(
     'services/api/pyproject.toml',
     'services/api/requirements.lock.txt',
     'fixtures/synthetic/manifest.json',
+    'fixtures/synthetic/fixture.json',
     'contracts/openapi_mvp.yaml',
     'contracts/types.ts',
     'services/api/app/contracts.py',
@@ -44,6 +45,7 @@ $required = @(
     'services/api/tests/test_temporal.py',
     'services/api/tests/test_provenance.py',
     'services/api/tests/test_capabilities.py',
+    'services/api/tests/test_fixtures.py',
     'docs/domain/ENTITY_DICTIONARY.md',
     'docs/domain/RACE_LIFECYCLE.md',
     'docs/domain/BITEMPORAL_QUERIES.md',
@@ -58,6 +60,7 @@ $required = @(
     'migrations/versions/005_raw_envelopes_quarantine.py',
     'migrations/versions/006_capability_controls.py',
     'scripts/db_migrate.ps1',
+    'scripts/generate_synthetic_fixtures.py',
     'scripts/record_migration_checksums.py',
     'scripts/verify_migration_checksums.py'
 )
