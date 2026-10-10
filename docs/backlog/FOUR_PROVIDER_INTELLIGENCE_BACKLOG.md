@@ -4,11 +4,21 @@
 
 | ID | Item | State | Evidence |
 |---|---|---|---|
-| RIL-061 | Audit the four-provider implementations, contracts, tests and validation reports from The Long Straight. | DONE | `docs/provider/FOUR_PROVIDER_CAPABILITY_MATRIX.md` |
+| RIL-061 | Audit the four-provider implementations, contracts, tests and validation reports from The Long Straight; establish the historical modelling foundation. | PARTIAL_SAFE_FOUNDATION | `docs/evidence/ril-061/release-gate-checklist.md`, `docs/provider/FOUR_PROVIDER_CAPABILITY_MATRIX.md` |
 | RIL-062 | Add the four-provider capability matrix and licensing gap report. | DONE | `docs/provider/FOUR_PROVIDER_CAPABILITY_MATRIX.md`, `docs/provider/SOURCE_LICENSING_GAP_REPORT.md` |
 | RIL-063 | Define revised provider-neutral architecture with Betfair as a first-class market source. | DONE | `docs/architecture/FOUR_PROVIDER_INTELLIGENCE_ARCHITECTURE.md` |
 | RIL-064 | Define independent three-code form-only, market-only and combined feature catalogue and evaluation contract. | DONE | `docs/models/FOUR_PROVIDER_FEATURE_CATALOGUE.md` |
 | RIL-065 | Implement synthetic Betfair catalogue/book/runner/price-history/SP fixture through the existing rights-aware adapter contract. | DONE | `services/api/app/betfair_mock.py`, `services/api/tests/test_betfair_mock.py` |
+
+## RIL-061 implementation evidence
+
+The common `historical-features-v1` contract, B0–B4 offline benchmark interfaces, synthetic walk-forward evaluation report, deterministic forecast explanations and provider/code readiness verdicts are implemented. All generated results are `ILLUSTRATIVE_SYNTHETIC_ONLY`; B3 is explicitly unavailable until an approved LightGBM or CatBoost dependency is selected. Real provider credentials, external connectivity, wagering and trading remain disabled.
+
+## Next development gate
+
+| ID | Item | Acceptance |
+|---|---|---|
+| RIL-077 | Approve a historical dataset and ML backend for real walk-forward research. | Provider-specific rights permit retention, derived features, training and derived outputs; contemporaneous timestamps and identity evidence are sufficient; the dependency/security decision for LightGBM or CatBoost is recorded; no model promotion occurs automatically. |
 
 ## Next safe implementation
 

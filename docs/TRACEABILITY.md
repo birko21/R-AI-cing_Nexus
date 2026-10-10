@@ -26,6 +26,7 @@ This matrix maps the supplied v1.1 source requirements to the implementation bac
 | Four-provider capability and licensing evidence | User roadmap / provider audit | Four-provider matrix, architecture and licensing gap report | RIL-061–064 |
 | Synthetic Betfair market intelligence | User roadmap / Betfair read-only requirement | Contract adapter, catalogue/book fixture, exact runner mapping, historical prices, liquidity and SP leakage tests | RIL-065, RIL-067–068 |
 | Independent three-code specialist models | User roadmap / modelling requirements | Separate code manifests, form/market/combined inputs, walk-forward ablations, calibration and assurance | RIL-069–071 |
+| Historical feature and evaluation foundation | RIL-061 development gate | Versioned rights-aware features, B0–B4 contracts, synthetic walk-forward evidence, explainability and readiness verdicts | RIL-061, RIL-077 |
 
 ## Traceability status
 

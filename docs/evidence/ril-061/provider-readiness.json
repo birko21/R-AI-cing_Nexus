@@ -1,0 +1,191 @@
+{
+  "available_and_approved": [],
+  "code_verdicts": [
+    {
+      "blockers": [
+        "No provider is approved for this application; historical depth and model-use rights remain open."
+      ],
+      "code": "THOROUGHBRED",
+      "evidence": [
+        "FormFav catalogue, PuntersEdge results/form, Krok enrichment/results probes and Betfair catalogue/book probes are evidenced."
+      ],
+      "status": "TECHNICALLY_AVAILABLE_RIGHTS_PENDING",
+      "supporting_providers": [
+        "FormFav",
+        "PuntersEdge",
+        "Krok Odds",
+        "Betfair Exchange"
+      ]
+    },
+    {
+      "blockers": [
+        "No audited provider establishes sufficient harness form, sectionals, ratings, results and market history."
+      ],
+      "code": "HARNESS",
+      "evidence": [
+        "Only synthetic three-code contract fixtures exist locally."
+      ],
+      "status": "INSUFFICIENT_FEATURE_COVERAGE",
+      "supporting_providers": []
+    },
+    {
+      "blockers": [
+        "No audited provider establishes sufficient greyhound form, split times, box/interference, results and market history."
+      ],
+      "code": "GREYHOUND",
+      "evidence": [
+        "Only synthetic three-code contract fixtures exist locally."
+      ],
+      "status": "INSUFFICIENT_FEATURE_COVERAGE",
+      "supporting_providers": []
+    }
+  ],
+  "external_connectivity": "DISABLED",
+  "provider_code_verdicts": [
+    {
+      "blockers": [
+        "R-AI-cing Nexus rights, retention, display and model-use approval is absent.",
+        "Real credentials and external connectivity are disabled."
+      ],
+      "code": "THOROUGHBRED",
+      "evidence": [
+        "Sibling adapter or sanitized validation evidence exists for Australian thoroughbred scope."
+      ],
+      "provider": "FormFav",
+      "status": "TECHNICALLY_AVAILABLE_RIGHTS_PENDING"
+    },
+    {
+      "blockers": [
+        "Do not infer code support from an Australian or horse-racing endpoint.",
+        "Independent data and rights evidence is required."
+      ],
+      "code": "HARNESS",
+      "evidence": [
+        "No provider-specific harness historical coverage is established in the audited implementation evidence."
+      ],
+      "provider": "FormFav",
+      "status": "INSUFFICIENT_FEATURE_COVERAGE"
+    },
+    {
+      "blockers": [
+        "Do not infer code support from an Australian or horse-racing endpoint.",
+        "Independent data and rights evidence is required."
+      ],
+      "code": "GREYHOUND",
+      "evidence": [
+        "No provider-specific greyhound historical coverage is established in the audited implementation evidence."
+      ],
+      "provider": "FormFav",
+      "status": "INSUFFICIENT_FEATURE_COVERAGE"
+    },
+    {
+      "blockers": [
+        "R-AI-cing Nexus rights, retention, display and model-use approval is absent.",
+        "Real credentials and external connectivity are disabled."
+      ],
+      "code": "THOROUGHBRED",
+      "evidence": [
+        "Sibling adapter or sanitized validation evidence exists for Australian thoroughbred scope."
+      ],
+      "provider": "PuntersEdge",
+      "status": "TECHNICALLY_AVAILABLE_RIGHTS_PENDING"
+    },
+    {
+      "blockers": [
+        "Do not infer code support from an Australian or horse-racing endpoint.",
+        "Independent data and rights evidence is required."
+      ],
+      "code": "HARNESS",
+      "evidence": [
+        "No provider-specific harness historical coverage is established in the audited implementation evidence."
+      ],
+      "provider": "PuntersEdge",
+      "status": "INSUFFICIENT_FEATURE_COVERAGE"
+    },
+    {
+      "blockers": [
+        "Do not infer code support from an Australian or horse-racing endpoint.",
+        "Independent data and rights evidence is required."
+      ],
+      "code": "GREYHOUND",
+      "evidence": [
+        "No provider-specific greyhound historical coverage is established in the audited implementation evidence."
+      ],
+      "provider": "PuntersEdge",
+      "status": "INSUFFICIENT_FEATURE_COVERAGE"
+    },
+    {
+      "blockers": [
+        "R-AI-cing Nexus rights, retention, display and model-use approval is absent.",
+        "Real credentials and external connectivity are disabled."
+      ],
+      "code": "THOROUGHBRED",
+      "evidence": [
+        "Sibling adapter or sanitized validation evidence exists for Australian thoroughbred scope."
+      ],
+      "provider": "Krok Odds",
+      "status": "TECHNICALLY_AVAILABLE_RIGHTS_PENDING"
+    },
+    {
+      "blockers": [
+        "Do not infer code support from an Australian or horse-racing endpoint.",
+        "Independent data and rights evidence is required."
+      ],
+      "code": "HARNESS",
+      "evidence": [
+        "No provider-specific harness historical coverage is established in the audited implementation evidence."
+      ],
+      "provider": "Krok Odds",
+      "status": "INSUFFICIENT_FEATURE_COVERAGE"
+    },
+    {
+      "blockers": [
+        "Do not infer code support from an Australian or horse-racing endpoint.",
+        "Independent data and rights evidence is required."
+      ],
+      "code": "GREYHOUND",
+      "evidence": [
+        "No provider-specific greyhound historical coverage is established in the audited implementation evidence."
+      ],
+      "provider": "Krok Odds",
+      "status": "INSUFFICIENT_FEATURE_COVERAGE"
+    },
+    {
+      "blockers": [
+        "R-AI-cing Nexus rights, retention, display and model-use approval is absent.",
+        "Real credentials and external connectivity are disabled."
+      ],
+      "code": "THOROUGHBRED",
+      "evidence": [
+        "Sibling adapter or sanitized validation evidence exists for Australian thoroughbred scope."
+      ],
+      "provider": "Betfair Exchange",
+      "status": "TECHNICALLY_AVAILABLE_RIGHTS_PENDING"
+    },
+    {
+      "blockers": [
+        "Do not infer code support from an Australian or horse-racing endpoint.",
+        "Independent data and rights evidence is required."
+      ],
+      "code": "HARNESS",
+      "evidence": [
+        "No provider-specific harness historical coverage is established in the audited implementation evidence."
+      ],
+      "provider": "Betfair Exchange",
+      "status": "INSUFFICIENT_FEATURE_COVERAGE"
+    },
+    {
+      "blockers": [
+        "Do not infer code support from an Australian or horse-racing endpoint.",
+        "Independent data and rights evidence is required."
+      ],
+      "code": "GREYHOUND",
+      "evidence": [
+        "No provider-specific greyhound historical coverage is established in the audited implementation evidence."
+      ],
+      "provider": "Betfair Exchange",
+      "status": "INSUFFICIENT_FEATURE_COVERAGE"
+    }
+  ],
+  "report_version": "provider-readiness-v1"
+}

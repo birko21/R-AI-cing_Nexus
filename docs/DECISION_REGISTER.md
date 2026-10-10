@@ -31,6 +31,7 @@ Statuses: `DECIDED_BY_SPEC`, `OPEN_OWNER`, `BLOCKED_EXTERNAL`, `DEFERRED`.
 | D-021 | Four-provider intelligence expansion | BLOCKED_EXTERNAL | FormFav, PuntersEdge, Krok Odds and Betfair Exchange are separate candidates; Betfair is first-class market intelligence, but all real adapters remain disabled | Provider-specific access, cost, retention, display and model-use evidence |
 | D-022 | Synthetic Betfair development | DECIDED_BY_SPEC | Offline catalogue/book/runner/price-history/SP fixture may progress contracts and tests; no credentials, login, trading, staking or external connectivity | None |
 | D-023 | Specialist model promotion | DECIDED_BY_SPEC | Thoroughbred, harness and greyhound form-only/market-only/combined inputs remain illustrative until walk-forward evaluation, calibration and independent assurance pass | Owner approval after evidence review |
+| D-024 | RIL-061 historical modelling foundation | DECIDED_BY_SPEC | Shared feature provenance, strict as-of eligibility, explicit exclusions, B0–B4 benchmark contracts and synthetic-only evidence may progress offline; no B3 dependency or provider rights are assumed | Resolve RIL-077 before real historical modelling |
 
 ## Open decisions requiring owner attention
 

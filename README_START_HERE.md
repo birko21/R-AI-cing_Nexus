@@ -6,11 +6,11 @@ Racing Intelligence Lab is an independent, single-user, local-first research app
 
 - **Active delivery scope:** offline MVP gates G0–G3.
 - **Data mode:** synthetic-only for the active MVP; fictional fixtures must remain visibly labelled.
-- **Model status:** illustrative B0/B1 baselines only; no validated predictive claim.
+- **Model status:** RIL-061 B0/B1/B2/B4 contracts and synthetic evaluation are illustrative only; B3 awaits an approved LightGBM/CatBoost dependency and no validated predictive claim exists.
 - **Wagering:** permanently out of scope; no bookmaker credentials, order endpoints or automatic staking.
-- **Current checkpoint:** RIL-059 isolated synthetic backup/restore hash verification, retention planning and migration rollback runbooks are implemented; approved OIDC and real-source activation remain `BLOCKED_EXTERNAL_DEPENDENCY`.
+- **Current checkpoint:** RIL-061 historical feature contracts, B0–B4 benchmark interfaces, walk-forward evaluation, deterministic explanations and provider readiness evidence are implemented as a safe synthetic foundation; approved historical rights, real source activation and ML backend selection remain `BLOCKED_EXTERNAL_DEPENDENCY`.
 - **Four-provider expansion:** FormFav, PuntersEdge, Krok Odds and Betfair Exchange are documented as separate, disabled-by-default provider candidates. Betfair has an offline, read-only synthetic market fixture; no real credentials or external connectivity are enabled.
-- **Next ticket:** RIL-061–065, four-provider audit, capability/licensing matrix, architecture, feature catalogue and synthetic Betfair contract support.
+- **Next ticket:** RIL-077, approved historical dataset acquisition and ML backend/security decision; no real provider connectivity is enabled.
 
 ## Normative reading order
 
