@@ -7,124 +7,106 @@
     "excluded_cases": [],
     "feature_family_ablation": {
       "B3_GREYHOUND_FORM_ONLY": {
-        "brier": 0.16993891049172324,
+        "brier": 0.003515302928045218,
         "calibration": [
           {
             "bin": 0,
-            "count": 6,
+            "count": 18,
             "empirical_rate": 0.0,
-            "mean_predicted": 0.10532715241415268
-          },
-          {
-            "bin": 2,
-            "count": 1,
-            "empirical_rate": 1.0,
-            "mean_predicted": 0.517984820914921
+            "mean_predicted": 0.012050134340947614
           },
           {
             "bin": 4,
-            "count": 1,
+            "count": 6,
             "empirical_rate": 1.0,
-            "mean_predicted": 0.850052264600163
+            "mean_predicted": 0.9638495969771572
           }
         ],
         "confidence_intervals": {
           "brier_95": [
-            0.0299790978020527,
-            0.3098987231813938
+            0.001180715559614458,
+            0.006752095260726849
           ],
           "log_loss_95": [
-            0.16245744362317235,
-            0.6578093404050509
+            0.01259733357051808,
+            0.06454012111073883
           ]
         },
         "feature_family": "FORM_ONLY",
-        "log_loss": 0.41013339201411164,
+        "log_loss": 0.03752509661112621,
         "missing_case_count": 0,
-        "n": 2,
+        "n": 6,
         "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
         "top_ranked_win_accuracy": 1.0
       },
       "B3_HARNESS_FORM_ONLY": {
-        "brier": 0.16993891049172324,
+        "brier": 0.003515302928045218,
         "calibration": [
           {
             "bin": 0,
-            "count": 6,
+            "count": 18,
             "empirical_rate": 0.0,
-            "mean_predicted": 0.10532715241415268
-          },
-          {
-            "bin": 2,
-            "count": 1,
-            "empirical_rate": 1.0,
-            "mean_predicted": 0.517984820914921
+            "mean_predicted": 0.012050134340947614
           },
           {
             "bin": 4,
-            "count": 1,
+            "count": 6,
             "empirical_rate": 1.0,
-            "mean_predicted": 0.850052264600163
+            "mean_predicted": 0.9638495969771572
           }
         ],
         "confidence_intervals": {
           "brier_95": [
-            0.0299790978020527,
-            0.3098987231813938
+            0.001180715559614458,
+            0.006752095260726849
           ],
           "log_loss_95": [
-            0.16245744362317235,
-            0.6578093404050509
+            0.01259733357051808,
+            0.06454012111073883
           ]
         },
         "feature_family": "FORM_ONLY",
-        "log_loss": 0.41013339201411164,
+        "log_loss": 0.03752509661112621,
         "missing_case_count": 0,
-        "n": 2,
+        "n": 6,
         "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
         "top_ranked_win_accuracy": 1.0
       },
       "B3_THOROUGHBRED_FORM_ONLY": {
-        "brier": 0.16993891049172324,
+        "brier": 0.003515302928045218,
         "calibration": [
           {
             "bin": 0,
-            "count": 6,
+            "count": 18,
             "empirical_rate": 0.0,
-            "mean_predicted": 0.10532715241415268
-          },
-          {
-            "bin": 2,
-            "count": 1,
-            "empirical_rate": 1.0,
-            "mean_predicted": 0.517984820914921
+            "mean_predicted": 0.012050134340947614
           },
           {
             "bin": 4,
-            "count": 1,
+            "count": 6,
             "empirical_rate": 1.0,
-            "mean_predicted": 0.850052264600163
+            "mean_predicted": 0.9638495969771572
           }
         ],
         "confidence_intervals": {
           "brier_95": [
-            0.0299790978020527,
-            0.3098987231813938
+            0.001180715559614458,
+            0.006752095260726849
           ],
           "log_loss_95": [
-            0.16245744362317235,
-            0.6578093404050509
+            0.01259733357051808,
+            0.06454012111073883
           ]
         },
         "feature_family": "FORM_ONLY",
-        "log_loss": 0.41013339201411164,
+        "log_loss": 0.03752509661112621,
         "missing_case_count": 0,
-        "n": 2,
+        "n": 6,
         "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
         "top_ranked_win_accuracy": 1.0
       }
     },
-    "input_case_count": 6,
+    "input_case_count": 18,
     "market_comparison": {
       "B3_GREYHOUND_FORM_ONLY": {
         "reason": "NO_CONTEMPORANEOUS_MARKET_PROBABILITIES",
@@ -141,388 +123,328 @@
     },
     "missing_input_sensitivity": {
       "COMPLETE_INPUTS": {
-        "brier": 0.16993891049172324,
+        "brier": 0.003515302928045218,
         "calibration": [
           {
             "bin": 0,
-            "count": 18,
+            "count": 54,
             "empirical_rate": 0.0,
-            "mean_predicted": 0.10532715241415268
-          },
-          {
-            "bin": 2,
-            "count": 3,
-            "empirical_rate": 1.0,
-            "mean_predicted": 0.517984820914921
+            "mean_predicted": 0.012050134340947616
           },
           {
             "bin": 4,
-            "count": 3,
+            "count": 18,
             "empirical_rate": 1.0,
-            "mean_predicted": 0.850052264600163
+            "mean_predicted": 0.9638495969771572
           }
         ],
         "confidence_intervals": {
           "brier_95": [
-            0.07663236869860955,
-            0.26441178405725113
+            0.0019476358929363972,
+            0.005069676819716683
           ],
           "log_loss_95": [
-            0.2450160930868188,
-            0.5752506909414045
+            0.02450893996369108,
+            0.05510277059999587
           ]
         },
-        "log_loss": 0.41013339201411164,
+        "log_loss": 0.03752509661112621,
         "missing_case_count": 0,
-        "n": 6,
+        "n": 18,
         "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
         "top_ranked_win_accuracy": 1.0
       }
     },
     "models": {
       "B3_GREYHOUND_FORM_ONLY": {
-        "brier": 0.16993891049172324,
+        "brier": 0.003515302928045218,
         "calibration": [
           {
             "bin": 0,
-            "count": 6,
+            "count": 18,
             "empirical_rate": 0.0,
-            "mean_predicted": 0.10532715241415268
-          },
-          {
-            "bin": 2,
-            "count": 1,
-            "empirical_rate": 1.0,
-            "mean_predicted": 0.517984820914921
+            "mean_predicted": 0.012050134340947614
           },
           {
             "bin": 4,
-            "count": 1,
+            "count": 6,
             "empirical_rate": 1.0,
-            "mean_predicted": 0.850052264600163
+            "mean_predicted": 0.9638495969771572
           }
         ],
         "confidence_intervals": {
           "brier_95": [
-            0.0299790978020527,
-            0.3098987231813938
+            0.001180715559614458,
+            0.006752095260726849
           ],
           "log_loss_95": [
-            0.16245744362317235,
-            0.6578093404050509
+            0.01259733357051808,
+            0.06454012111073883
           ]
         },
-        "log_loss": 0.41013339201411164,
+        "log_loss": 0.03752509661112621,
         "missing_case_count": 0,
-        "n": 2,
+        "n": 6,
         "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
         "top_ranked_win_accuracy": 1.0
       },
       "B3_HARNESS_FORM_ONLY": {
-        "brier": 0.16993891049172324,
+        "brier": 0.003515302928045218,
         "calibration": [
           {
             "bin": 0,
-            "count": 6,
+            "count": 18,
             "empirical_rate": 0.0,
-            "mean_predicted": 0.10532715241415268
-          },
-          {
-            "bin": 2,
-            "count": 1,
-            "empirical_rate": 1.0,
-            "mean_predicted": 0.517984820914921
+            "mean_predicted": 0.012050134340947614
           },
           {
             "bin": 4,
-            "count": 1,
+            "count": 6,
             "empirical_rate": 1.0,
-            "mean_predicted": 0.850052264600163
+            "mean_predicted": 0.9638495969771572
           }
         ],
         "confidence_intervals": {
           "brier_95": [
-            0.0299790978020527,
-            0.3098987231813938
+            0.001180715559614458,
+            0.006752095260726849
           ],
           "log_loss_95": [
-            0.16245744362317235,
-            0.6578093404050509
+            0.01259733357051808,
+            0.06454012111073883
           ]
         },
-        "log_loss": 0.41013339201411164,
+        "log_loss": 0.03752509661112621,
         "missing_case_count": 0,
-        "n": 2,
+        "n": 6,
         "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
         "top_ranked_win_accuracy": 1.0
       },
       "B3_THOROUGHBRED_FORM_ONLY": {
-        "brier": 0.16993891049172324,
+        "brier": 0.003515302928045218,
         "calibration": [
           {
             "bin": 0,
-            "count": 6,
+            "count": 18,
             "empirical_rate": 0.0,
-            "mean_predicted": 0.10532715241415268
-          },
-          {
-            "bin": 2,
-            "count": 1,
-            "empirical_rate": 1.0,
-            "mean_predicted": 0.517984820914921
+            "mean_predicted": 0.012050134340947614
           },
           {
             "bin": 4,
-            "count": 1,
+            "count": 6,
             "empirical_rate": 1.0,
-            "mean_predicted": 0.850052264600163
+            "mean_predicted": 0.9638495969771572
           }
         ],
         "confidence_intervals": {
           "brier_95": [
-            0.0299790978020527,
-            0.3098987231813938
+            0.001180715559614458,
+            0.006752095260726849
           ],
           "log_loss_95": [
-            0.16245744362317235,
-            0.6578093404050509
+            0.01259733357051808,
+            0.06454012111073883
           ]
         },
-        "log_loss": 0.41013339201411164,
+        "log_loss": 0.03752509661112621,
         "missing_case_count": 0,
-        "n": 2,
+        "n": 6,
         "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
         "top_ranked_win_accuracy": 1.0
       }
     },
     "report_version": "historical-evaluation-v1",
-    "scored_case_count": 6,
+    "scored_case_count": 18,
     "segments": {
       "code=GREYHOUND": {
-        "brier": 0.16993891049172324,
+        "brier": 0.003515302928045218,
         "calibration": [
           {
             "bin": 0,
-            "count": 6,
+            "count": 18,
             "empirical_rate": 0.0,
-            "mean_predicted": 0.10532715241415268
-          },
-          {
-            "bin": 2,
-            "count": 1,
-            "empirical_rate": 1.0,
-            "mean_predicted": 0.517984820914921
+            "mean_predicted": 0.012050134340947614
           },
           {
             "bin": 4,
-            "count": 1,
+            "count": 6,
             "empirical_rate": 1.0,
-            "mean_predicted": 0.850052264600163
+            "mean_predicted": 0.9638495969771572
           }
         ],
         "confidence_intervals": {
           "brier_95": [
-            0.0299790978020527,
-            0.3098987231813938
+            0.001180715559614458,
+            0.006752095260726849
           ],
           "log_loss_95": [
-            0.16245744362317235,
-            0.6578093404050509
+            0.01259733357051808,
+            0.06454012111073883
           ]
         },
-        "log_loss": 0.41013339201411164,
+        "log_loss": 0.03752509661112621,
         "missing_case_count": 0,
-        "n": 2,
+        "n": 6,
         "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
         "top_ranked_win_accuracy": 1.0
       },
       "code=HARNESS": {
-        "brier": 0.16993891049172324,
+        "brier": 0.003515302928045218,
         "calibration": [
           {
             "bin": 0,
-            "count": 6,
+            "count": 18,
             "empirical_rate": 0.0,
-            "mean_predicted": 0.10532715241415268
-          },
-          {
-            "bin": 2,
-            "count": 1,
-            "empirical_rate": 1.0,
-            "mean_predicted": 0.517984820914921
+            "mean_predicted": 0.012050134340947614
           },
           {
             "bin": 4,
-            "count": 1,
+            "count": 6,
             "empirical_rate": 1.0,
-            "mean_predicted": 0.850052264600163
+            "mean_predicted": 0.9638495969771572
           }
         ],
         "confidence_intervals": {
           "brier_95": [
-            0.0299790978020527,
-            0.3098987231813938
+            0.001180715559614458,
+            0.006752095260726849
           ],
           "log_loss_95": [
-            0.16245744362317235,
-            0.6578093404050509
+            0.01259733357051808,
+            0.06454012111073883
           ]
         },
-        "log_loss": 0.41013339201411164,
+        "log_loss": 0.03752509661112621,
         "missing_case_count": 0,
-        "n": 2,
+        "n": 6,
         "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
         "top_ranked_win_accuracy": 1.0
       },
       "code=THOROUGHBRED": {
-        "brier": 0.16993891049172324,
+        "brier": 0.003515302928045218,
         "calibration": [
           {
             "bin": 0,
-            "count": 6,
+            "count": 18,
             "empirical_rate": 0.0,
-            "mean_predicted": 0.10532715241415268
-          },
-          {
-            "bin": 2,
-            "count": 1,
-            "empirical_rate": 1.0,
-            "mean_predicted": 0.517984820914921
+            "mean_predicted": 0.012050134340947614
           },
           {
             "bin": 4,
-            "count": 1,
+            "count": 6,
             "empirical_rate": 1.0,
-            "mean_predicted": 0.850052264600163
+            "mean_predicted": 0.9638495969771572
           }
         ],
         "confidence_intervals": {
           "brier_95": [
-            0.0299790978020527,
-            0.3098987231813938
+            0.001180715559614458,
+            0.006752095260726849
           ],
           "log_loss_95": [
-            0.16245744362317235,
-            0.6578093404050509
+            0.01259733357051808,
+            0.06454012111073883
           ]
         },
-        "log_loss": 0.41013339201411164,
+        "log_loss": 0.03752509661112621,
         "missing_case_count": 0,
-        "n": 2,
+        "n": 6,
         "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
         "top_ranked_win_accuracy": 1.0
       },
       "distance=UNKNOWN": {
-        "brier": 0.16993891049172324,
+        "brier": 0.003515302928045218,
         "calibration": [
           {
             "bin": 0,
-            "count": 18,
+            "count": 54,
             "empirical_rate": 0.0,
-            "mean_predicted": 0.10532715241415268
-          },
-          {
-            "bin": 2,
-            "count": 3,
-            "empirical_rate": 1.0,
-            "mean_predicted": 0.517984820914921
+            "mean_predicted": 0.012050134340947616
           },
           {
             "bin": 4,
-            "count": 3,
+            "count": 18,
             "empirical_rate": 1.0,
-            "mean_predicted": 0.850052264600163
+            "mean_predicted": 0.9638495969771572
           }
         ],
         "confidence_intervals": {
           "brier_95": [
-            0.07663236869860955,
-            0.26441178405725113
+            0.0019476358929363972,
+            0.005069676819716683
           ],
           "log_loss_95": [
-            0.2450160930868188,
-            0.5752506909414045
+            0.02450893996369108,
+            0.05510277059999587
           ]
         },
-        "log_loss": 0.41013339201411164,
+        "log_loss": 0.03752509661112621,
         "missing_case_count": 0,
-        "n": 6,
+        "n": 18,
         "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
         "top_ranked_win_accuracy": 1.0
       },
       "race_type=UNKNOWN": {
-        "brier": 0.16993891049172324,
+        "brier": 0.003515302928045218,
         "calibration": [
           {
             "bin": 0,
-            "count": 18,
+            "count": 54,
             "empirical_rate": 0.0,
-            "mean_predicted": 0.10532715241415268
-          },
-          {
-            "bin": 2,
-            "count": 3,
-            "empirical_rate": 1.0,
-            "mean_predicted": 0.517984820914921
+            "mean_predicted": 0.012050134340947616
           },
           {
             "bin": 4,
-            "count": 3,
+            "count": 18,
             "empirical_rate": 1.0,
-            "mean_predicted": 0.850052264600163
+            "mean_predicted": 0.9638495969771572
           }
         ],
         "confidence_intervals": {
           "brier_95": [
-            0.07663236869860955,
-            0.26441178405725113
+            0.0019476358929363972,
+            0.005069676819716683
           ],
           "log_loss_95": [
-            0.2450160930868188,
-            0.5752506909414045
+            0.02450893996369108,
+            0.05510277059999587
           ]
         },
-        "log_loss": 0.41013339201411164,
+        "log_loss": 0.03752509661112621,
         "missing_case_count": 0,
-        "n": 6,
+        "n": 18,
         "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
         "top_ranked_win_accuracy": 1.0
       },
       "track=UNKNOWN": {
-        "brier": 0.16993891049172324,
+        "brier": 0.003515302928045218,
         "calibration": [
           {
             "bin": 0,
-            "count": 18,
+            "count": 54,
             "empirical_rate": 0.0,
-            "mean_predicted": 0.10532715241415268
-          },
-          {
-            "bin": 2,
-            "count": 3,
-            "empirical_rate": 1.0,
-            "mean_predicted": 0.517984820914921
+            "mean_predicted": 0.012050134340947616
           },
           {
             "bin": 4,
-            "count": 3,
+            "count": 18,
             "empirical_rate": 1.0,
-            "mean_predicted": 0.850052264600163
+            "mean_predicted": 0.9638495969771572
           }
         ],
         "confidence_intervals": {
           "brier_95": [
-            0.07663236869860955,
-            0.26441178405725113
+            0.0019476358929363972,
+            0.005069676819716683
           ],
           "log_loss_95": [
-            0.2450160930868188,
-            0.5752506909414045
+            0.02450893996369108,
+            0.05510277059999587
           ]
         },
-        "log_loss": 0.41013339201411164,
+        "log_loss": 0.03752509661112621,
         "missing_case_count": 0,
-        "n": 6,
+        "n": 18,
         "status": "ILLUSTRATIVE_SYNTHETIC_ONLY",
         "top_ranked_win_accuracy": 1.0
       }
@@ -533,12 +455,7 @@
       "duplicate_fold_races": false,
       "status": "READY",
       "test_fold_ids": [
-        "fold-greyhound-catboost",
-        "fold-greyhound-lightgbm",
-        "fold-harness-catboost",
-        "fold-harness-lightgbm",
-        "fold-thoroughbred-catboost",
-        "fold-thoroughbred-lightgbm"
+        "fold-001"
       ]
     }
   },
@@ -549,118 +466,520 @@
   ],
   "models": [
     {
-      "artifact_id": "b3-b965af13cd6b5f2c",
-      "artifact_sha256": "b965af13cd6b5f2c9920123ccfe603100328eaff51057d766062ccf3ba760cd2",
+      "ablation": {
+        "removed_feature_family": "DISTANCE",
+        "retrained_model_artifact_id": "b3-d0df3e16a5bd85ed",
+        "schema_hash": "b002ed70dd7ee65465966423ab1c6b97757ea644838ec9e95fca0a38ae8def8b"
+      },
+      "artifact_id": "b3-02afcca25a7b0fb8",
+      "artifact_sha256": "02afcca25a7b0fb8a03f8b215dc6f8ef884c5f3908ed0b582a639a6a2a8b256b",
       "backend": "lightgbm",
+      "calibration": {
+        "artifact_id": "calibration-42140c9155db4b3e",
+        "calibration_race_ids": [
+          "thoroughbred-race-6"
+        ],
+        "status": "HELD_OUT_RACE_LEVEL_CALIBRATION",
+        "temperature": 0.25
+      },
       "code": "THOROUGHBRED",
       "data_mode": "SYNTHETIC_ONLY",
       "feature_schema_hash": "cbfd2c90c490469efa8b194d801a385ec08d7e9532f066befc4e9a4354373ca6",
+      "fold_assurance": {
+        "calibration_artifact_id": "calibration-42140c9155db4b3e",
+        "calibration_race_ids": [
+          "thoroughbred-race-6"
+        ],
+        "dataset_hash": "99d83e90386a1d9e0cf4dab517dc05898ec4fee74ec749228fd99162be52d4ee",
+        "fold_id": "fold-001",
+        "model_artifact_id": "b3-02afcca25a7b0fb8",
+        "record_hash": "71ef620236a94f64422ce5f37f35c99699bb284120e2f9e61bcfe2497e716bb3",
+        "test_artifact_id": "b3-02afcca25a7b0fb8",
+        "test_race_ids": [
+          "thoroughbred-race-7",
+          "thoroughbred-race-8",
+          "thoroughbred-race-9"
+        ],
+        "test_window": [
+          "2026-01-07T01:00:00Z",
+          "2026-01-10T01:00:00Z"
+        ],
+        "training_cutoff": "2026-01-06T01:00:00Z",
+        "training_feature_snapshot_hashes": [
+          "040a72e0b18d98002db260d0397bec5aea960b8d6e68d065c4c0b7fb4ae9346a",
+          "0b7c139e9727fbaaaab91159d53b50e938e4b171e13d3dc83fa58253f66c67ab",
+          "2e4dab768c9c7e0fa7645a0912f35c6df3ca37b11aaa4556d88e4c985d629e8b",
+          "30e92d64bd7239324d590f7b85213033973a3cd07cd85cceb348b7c8acab363d",
+          "34073e78527a4c626c7f0e79cbbac448a960bcfc3a1009899fda9c05280421cc",
+          "3c6a745a3a7a0d12bfe97ee07a67d13c4b0fda40e4505981a9e1a47ac5a30fad",
+          "67ce4381ffffcc5e3124fa7bb4e2169cc41923dcfa01e1a71af1eea570536997",
+          "90eb4a51601382805daeb3bd331944da7d273481019492f72408921c204723d6",
+          "98ce7e68e4b33e9b3ee3f8852688a6c0f048e10c7cec6df367478757d6180f56",
+          "9921eddd3ac10fae878457b531ebb206243286a1b5231163b3836bea258287c9",
+          "9be92a1dc11b05db90260d4cfee7248de06247587df1e42cb5782769427241c5",
+          "9f1b8e9cfa002db89baf2021136321f85f6fb9fe4647d0c0c1553d819da5b92e",
+          "a94151973167ec955bd58496af2185905bdb983d91ec2a476320f1fcd0c40696",
+          "ad6e01e0071b807c04237bba5ab73079d7c3ff5cd4f1d09a32f2a564fea39fa4",
+          "c10751fc470fdaf0f941d4d669080fc12594d453bc73bcd5b8150a8828077c59",
+          "c83a894ac30fc7251af71d23926360d6188d8c0275f09fe72931de54c38b9f9e",
+          "cf3e2535e2909582dcb646a5b67daec9cd4d5ddee9c4d11346c4db6737f9b8c3",
+          "e7e1cf2e58aa3b1c5f1b4934ef729fa6094712d0323740d7b00faf4c648f4237",
+          "f378a32f41918d0aa5633564248a51009d99642ba8fed7e14ea469d0e0d06097",
+          "fcfdf28aec26cbb3ba488b633edf5d4420f6a2b00c7bfd58acd3777c90cd74f3"
+        ],
+        "training_race_ids": [
+          "thoroughbred-race-1",
+          "thoroughbred-race-2",
+          "thoroughbred-race-3",
+          "thoroughbred-race-4",
+          "thoroughbred-race-5"
+        ],
+        "validation_window": [
+          "2026-01-06T01:00:00Z",
+          "2026-01-07T01:00:00Z"
+        ]
+      },
       "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
-      "model_version": "b3-lightgbm-b965af13cd6b",
+      "model_version": "b3-lightgbm-02afcca25a7b",
       "probabilities": {
-        "runner-0": 0.850052264600163,
-        "runner-1": 0.049982578466612346,
-        "runner-2": 0.049982578466612346,
-        "runner-3": 0.049982578466612346
+        "runner-0": 1.1952989483736986e-05,
+        "runner-1": 0.9999641410315487,
+        "runner-2": 1.1952989483736986e-05,
+        "runner-3": 1.1952989483736986e-05
       },
       "race_probability_sum": 1.0,
       "state": "READY",
-      "training_manifest_hash": "73a6d2334ad3687cfbfa508c57a95ccf2911e126ff02166b1a5f39d6e404d444"
+      "training_manifest_hash": "664771f1a0e891bbdb42e20ad489ec57b93ffb80e62088c460a600c5e57148ce"
     },
     {
-      "artifact_id": "b3-e7ac47209d7c7b5e",
-      "artifact_sha256": "e7ac47209d7c7b5e3094aea7e5ae9e2d3f00277ffbef1bd320ab1627e7ff8fc2",
+      "ablation": {
+        "removed_feature_family": "DISTANCE",
+        "retrained_model_artifact_id": "b3-b525ced592027560",
+        "schema_hash": "b002ed70dd7ee65465966423ab1c6b97757ea644838ec9e95fca0a38ae8def8b"
+      },
+      "artifact_id": "b3-47db0b4b1e22535e",
+      "artifact_sha256": "47db0b4b1e22535e889ccceca396eea90f0ead73480f4f105302788744010338",
       "backend": "catboost",
+      "calibration": {
+        "artifact_id": "calibration-42140c9155db4b3e",
+        "calibration_race_ids": [
+          "thoroughbred-race-6"
+        ],
+        "status": "HELD_OUT_RACE_LEVEL_CALIBRATION",
+        "temperature": 0.25
+      },
       "code": "THOROUGHBRED",
       "data_mode": "SYNTHETIC_ONLY",
       "feature_schema_hash": "cbfd2c90c490469efa8b194d801a385ec08d7e9532f066befc4e9a4354373ca6",
+      "fold_assurance": {
+        "calibration_artifact_id": "calibration-42140c9155db4b3e",
+        "calibration_race_ids": [
+          "thoroughbred-race-6"
+        ],
+        "dataset_hash": "99d83e90386a1d9e0cf4dab517dc05898ec4fee74ec749228fd99162be52d4ee",
+        "fold_id": "fold-001",
+        "model_artifact_id": "b3-47db0b4b1e22535e",
+        "record_hash": "c9dc8be445a18dbf42d5e38c5fd0ffebdec287d13ca5c6d3f9d509955f96b10b",
+        "test_artifact_id": "b3-47db0b4b1e22535e",
+        "test_race_ids": [
+          "thoroughbred-race-7",
+          "thoroughbred-race-8",
+          "thoroughbred-race-9"
+        ],
+        "test_window": [
+          "2026-01-07T01:00:00Z",
+          "2026-01-10T01:00:00Z"
+        ],
+        "training_cutoff": "2026-01-06T01:00:00Z",
+        "training_feature_snapshot_hashes": [
+          "040a72e0b18d98002db260d0397bec5aea960b8d6e68d065c4c0b7fb4ae9346a",
+          "0b7c139e9727fbaaaab91159d53b50e938e4b171e13d3dc83fa58253f66c67ab",
+          "2e4dab768c9c7e0fa7645a0912f35c6df3ca37b11aaa4556d88e4c985d629e8b",
+          "30e92d64bd7239324d590f7b85213033973a3cd07cd85cceb348b7c8acab363d",
+          "34073e78527a4c626c7f0e79cbbac448a960bcfc3a1009899fda9c05280421cc",
+          "3c6a745a3a7a0d12bfe97ee07a67d13c4b0fda40e4505981a9e1a47ac5a30fad",
+          "67ce4381ffffcc5e3124fa7bb4e2169cc41923dcfa01e1a71af1eea570536997",
+          "90eb4a51601382805daeb3bd331944da7d273481019492f72408921c204723d6",
+          "98ce7e68e4b33e9b3ee3f8852688a6c0f048e10c7cec6df367478757d6180f56",
+          "9921eddd3ac10fae878457b531ebb206243286a1b5231163b3836bea258287c9",
+          "9be92a1dc11b05db90260d4cfee7248de06247587df1e42cb5782769427241c5",
+          "9f1b8e9cfa002db89baf2021136321f85f6fb9fe4647d0c0c1553d819da5b92e",
+          "a94151973167ec955bd58496af2185905bdb983d91ec2a476320f1fcd0c40696",
+          "ad6e01e0071b807c04237bba5ab73079d7c3ff5cd4f1d09a32f2a564fea39fa4",
+          "c10751fc470fdaf0f941d4d669080fc12594d453bc73bcd5b8150a8828077c59",
+          "c83a894ac30fc7251af71d23926360d6188d8c0275f09fe72931de54c38b9f9e",
+          "cf3e2535e2909582dcb646a5b67daec9cd4d5ddee9c4d11346c4db6737f9b8c3",
+          "e7e1cf2e58aa3b1c5f1b4934ef729fa6094712d0323740d7b00faf4c648f4237",
+          "f378a32f41918d0aa5633564248a51009d99642ba8fed7e14ea469d0e0d06097",
+          "fcfdf28aec26cbb3ba488b633edf5d4420f6a2b00c7bfd58acd3777c90cd74f3"
+        ],
+        "training_race_ids": [
+          "thoroughbred-race-1",
+          "thoroughbred-race-2",
+          "thoroughbred-race-3",
+          "thoroughbred-race-4",
+          "thoroughbred-race-5"
+        ],
+        "validation_window": [
+          "2026-01-06T01:00:00Z",
+          "2026-01-07T01:00:00Z"
+        ]
+      },
       "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
-      "model_version": "b3-catboost-e7ac47209d7c",
+      "model_version": "b3-catboost-47db0b4b1e22",
       "probabilities": {
-        "runner-0": 0.517984820914921,
-        "runner-1": 0.15770629100393616,
-        "runner-2": 0.15505907066980412,
-        "runner-3": 0.16924981741133874
+        "runner-0": 0.030747959332417994,
+        "runner-1": 0.9273681013816473,
+        "runner-2": 0.01903395495408703,
+        "runner-3": 0.022849984331847654
       },
       "race_probability_sum": 1.0,
       "state": "READY",
-      "training_manifest_hash": "39a645baad28c634628546f6f6a4ca6742ff3f64ad1acd7d7ca22699284df5f8"
+      "training_manifest_hash": "e13c0284682e2c3c08e9e2efd83ca69c890a945077e6c92becd1f28ed5191d26"
     },
     {
-      "artifact_id": "b3-3d9182ed2eedba7d",
-      "artifact_sha256": "3d9182ed2eedba7de34e36ef3a0081ed865911cfa3c6484d6fe3e157c8710548",
+      "ablation": {
+        "removed_feature_family": "DISTANCE",
+        "retrained_model_artifact_id": "b3-82950085bf0faacf",
+        "schema_hash": "45f0dd0685c76faad85a8602703b46580354bf71d5005c710ae4301628512732"
+      },
+      "artifact_id": "b3-d0e1cd87efe9dc41",
+      "artifact_sha256": "d0e1cd87efe9dc413f1a9846f96e6c2b1d650da2d7298ee62eac0816734cf38d",
       "backend": "lightgbm",
+      "calibration": {
+        "artifact_id": "calibration-325efdc374d4e332",
+        "calibration_race_ids": [
+          "harness-race-6"
+        ],
+        "status": "HELD_OUT_RACE_LEVEL_CALIBRATION",
+        "temperature": 0.25
+      },
       "code": "HARNESS",
       "data_mode": "SYNTHETIC_ONLY",
       "feature_schema_hash": "002eeab8d7a950a754ec7c49b563e2fbb41ef226c0226c9dc1426fc3d9c825d9",
+      "fold_assurance": {
+        "calibration_artifact_id": "calibration-325efdc374d4e332",
+        "calibration_race_ids": [
+          "harness-race-6"
+        ],
+        "dataset_hash": "f8176d9fc62bcfc10826090247adfb4e081f94caa32fe0df3fc5d960b91e1367",
+        "fold_id": "fold-001",
+        "model_artifact_id": "b3-d0e1cd87efe9dc41",
+        "record_hash": "d20c70ce0210ca4a635036d61b740a6e9f786f04e341e257c9d24346874a580b",
+        "test_artifact_id": "b3-d0e1cd87efe9dc41",
+        "test_race_ids": [
+          "harness-race-7",
+          "harness-race-8",
+          "harness-race-9"
+        ],
+        "test_window": [
+          "2026-01-07T01:00:00Z",
+          "2026-01-10T01:00:00Z"
+        ],
+        "training_cutoff": "2026-01-06T01:00:00Z",
+        "training_feature_snapshot_hashes": [
+          "000a7b4534b9dacc19f1b58aee1ff682ed59b48591341d7f971ce92ecea09341",
+          "0fc04c61f898f4258e1546757b0905f79b33f5b156aac2b5d2208d8623b9b1d1",
+          "1095b1f3f9f4a8d3b7394a453a39627ea6b4895c32df8e9a754ee6882fcb700f",
+          "1b167515c03150299e96707cc256d79062d428e1648ac6bcbd252dd986a7aeb8",
+          "2e3c4a4f4587460e354fb6705eafa8a06a4743606276cb8d2e49a0783a5c47a3",
+          "3cb9c1f31992ed782b39928b11687ad2eb19d08b58dea52ccdf19be76f422559",
+          "4692959904eeaff04784f2cfde804de694a6a21d6295517de719bfc9f98f9afb",
+          "4cd9c04c1f1264a06281e46410bddc9788cd2b70c9cc425a84919e9f1b1a2d7b",
+          "5ede9c6d52ad1f9ec3b5d4849e2f6923f2389713aaac3d91a9bf57655f5a3090",
+          "5f4084afdd930bbb7356121473193c0f110327f0c76d9058a37dd333dc670f7d",
+          "5f7cc01248ae202c853c837c5058593f92db85171509f54dcb7f4c5fc158fa1c",
+          "97ff685a20885cf0b27339033dea54f43d275962d88641e380faa8b08dc3e4f5",
+          "a5f5a85539ea043f44a736f92a999683f54b573d86bfca7c90fb7537f223c59f",
+          "b0e49fe10fe3d8bfdc34b86daff9a180eb2a0dc269ab9e4081d5c526986b3e19",
+          "c2e767e55655ba9b78980f4d20313cbe9146b05771325f0e60c920eb1cba0e6b",
+          "d51d6dd503dae5401379fca6876d6f39d47542cf945d5adee29d738732e724c7",
+          "d96e355541ef9b941de522bb8329a6aa8bd318822969f8b68a1c77df21ba5b20",
+          "e33c97035be7326dee3474665892caff112f9a38b9ce75bf9a390a158cd5ccdc",
+          "ede39003c2b8f3c49831113a2cf81ac65c97d3773c6f72d0ac6f6ec94487462e",
+          "f5baacb92b7aa3f39f6b4359ffb6e986781552b31856f6066e3790b5f2548ca9"
+        ],
+        "training_race_ids": [
+          "harness-race-1",
+          "harness-race-2",
+          "harness-race-3",
+          "harness-race-4",
+          "harness-race-5"
+        ],
+        "validation_window": [
+          "2026-01-06T01:00:00Z",
+          "2026-01-07T01:00:00Z"
+        ]
+      },
       "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
-      "model_version": "b3-lightgbm-3d9182ed2eed",
+      "model_version": "b3-lightgbm-d0e1cd87efe9",
       "probabilities": {
-        "runner-0": 0.850052264600163,
-        "runner-1": 0.049982578466612346,
-        "runner-2": 0.049982578466612346,
-        "runner-3": 0.049982578466612346
+        "runner-0": 1.1952989483736986e-05,
+        "runner-1": 0.9999641410315487,
+        "runner-2": 1.1952989483736986e-05,
+        "runner-3": 1.1952989483736986e-05
       },
       "race_probability_sum": 1.0,
       "state": "READY",
-      "training_manifest_hash": "a4a25432d6e3ee06718f0a7e545bc9139ac56e347abc158b9999e9ff4116b198"
+      "training_manifest_hash": "fae4c439f0eef18a9ed948bfe1de25b4c39141f3572bf9c58c396bff831f867c"
     },
     {
-      "artifact_id": "b3-98c1ac04a1a453f2",
-      "artifact_sha256": "98c1ac04a1a453f2156c377b42940e54846784c5bb57a8de2f6a1c434fa03037",
+      "ablation": {
+        "removed_feature_family": "DISTANCE",
+        "retrained_model_artifact_id": "b3-34edd2d6306e7351",
+        "schema_hash": "45f0dd0685c76faad85a8602703b46580354bf71d5005c710ae4301628512732"
+      },
+      "artifact_id": "b3-4071bdcfd1183f3e",
+      "artifact_sha256": "4071bdcfd1183f3e53aff8e24b09bb7c93b63675b8b1dbb9ff10df9666e871c2",
       "backend": "catboost",
+      "calibration": {
+        "artifact_id": "calibration-325efdc374d4e332",
+        "calibration_race_ids": [
+          "harness-race-6"
+        ],
+        "status": "HELD_OUT_RACE_LEVEL_CALIBRATION",
+        "temperature": 0.25
+      },
       "code": "HARNESS",
       "data_mode": "SYNTHETIC_ONLY",
       "feature_schema_hash": "002eeab8d7a950a754ec7c49b563e2fbb41ef226c0226c9dc1426fc3d9c825d9",
+      "fold_assurance": {
+        "calibration_artifact_id": "calibration-325efdc374d4e332",
+        "calibration_race_ids": [
+          "harness-race-6"
+        ],
+        "dataset_hash": "f8176d9fc62bcfc10826090247adfb4e081f94caa32fe0df3fc5d960b91e1367",
+        "fold_id": "fold-001",
+        "model_artifact_id": "b3-4071bdcfd1183f3e",
+        "record_hash": "cd150ab9e16bb7c820d05f454e413150c2deef69c386ec5e4ff8bff04fcdf3d5",
+        "test_artifact_id": "b3-4071bdcfd1183f3e",
+        "test_race_ids": [
+          "harness-race-7",
+          "harness-race-8",
+          "harness-race-9"
+        ],
+        "test_window": [
+          "2026-01-07T01:00:00Z",
+          "2026-01-10T01:00:00Z"
+        ],
+        "training_cutoff": "2026-01-06T01:00:00Z",
+        "training_feature_snapshot_hashes": [
+          "000a7b4534b9dacc19f1b58aee1ff682ed59b48591341d7f971ce92ecea09341",
+          "0fc04c61f898f4258e1546757b0905f79b33f5b156aac2b5d2208d8623b9b1d1",
+          "1095b1f3f9f4a8d3b7394a453a39627ea6b4895c32df8e9a754ee6882fcb700f",
+          "1b167515c03150299e96707cc256d79062d428e1648ac6bcbd252dd986a7aeb8",
+          "2e3c4a4f4587460e354fb6705eafa8a06a4743606276cb8d2e49a0783a5c47a3",
+          "3cb9c1f31992ed782b39928b11687ad2eb19d08b58dea52ccdf19be76f422559",
+          "4692959904eeaff04784f2cfde804de694a6a21d6295517de719bfc9f98f9afb",
+          "4cd9c04c1f1264a06281e46410bddc9788cd2b70c9cc425a84919e9f1b1a2d7b",
+          "5ede9c6d52ad1f9ec3b5d4849e2f6923f2389713aaac3d91a9bf57655f5a3090",
+          "5f4084afdd930bbb7356121473193c0f110327f0c76d9058a37dd333dc670f7d",
+          "5f7cc01248ae202c853c837c5058593f92db85171509f54dcb7f4c5fc158fa1c",
+          "97ff685a20885cf0b27339033dea54f43d275962d88641e380faa8b08dc3e4f5",
+          "a5f5a85539ea043f44a736f92a999683f54b573d86bfca7c90fb7537f223c59f",
+          "b0e49fe10fe3d8bfdc34b86daff9a180eb2a0dc269ab9e4081d5c526986b3e19",
+          "c2e767e55655ba9b78980f4d20313cbe9146b05771325f0e60c920eb1cba0e6b",
+          "d51d6dd503dae5401379fca6876d6f39d47542cf945d5adee29d738732e724c7",
+          "d96e355541ef9b941de522bb8329a6aa8bd318822969f8b68a1c77df21ba5b20",
+          "e33c97035be7326dee3474665892caff112f9a38b9ce75bf9a390a158cd5ccdc",
+          "ede39003c2b8f3c49831113a2cf81ac65c97d3773c6f72d0ac6f6ec94487462e",
+          "f5baacb92b7aa3f39f6b4359ffb6e986781552b31856f6066e3790b5f2548ca9"
+        ],
+        "training_race_ids": [
+          "harness-race-1",
+          "harness-race-2",
+          "harness-race-3",
+          "harness-race-4",
+          "harness-race-5"
+        ],
+        "validation_window": [
+          "2026-01-06T01:00:00Z",
+          "2026-01-07T01:00:00Z"
+        ]
+      },
       "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
-      "model_version": "b3-catboost-98c1ac04a1a4",
+      "model_version": "b3-catboost-4071bdcfd118",
       "probabilities": {
-        "runner-0": 0.517984820914921,
-        "runner-1": 0.15770629100393616,
-        "runner-2": 0.15505907066980412,
-        "runner-3": 0.16924981741133874
+        "runner-0": 0.030747959332417994,
+        "runner-1": 0.9273681013816473,
+        "runner-2": 0.01903395495408703,
+        "runner-3": 0.022849984331847654
       },
       "race_probability_sum": 1.0,
       "state": "READY",
-      "training_manifest_hash": "af05765aff16ab8a567484d1d581c4402a1e6dfc9ad95eace0928c6aafd0451c"
+      "training_manifest_hash": "d89a23810837106ff089dc1d6d57f9c0fd9e6e5b5b5200380328f8916552e043"
     },
     {
-      "artifact_id": "b3-eb74a8d3ce897bc8",
-      "artifact_sha256": "eb74a8d3ce897bc838f10174c5445515370e30649c17df8c59973b977c57c748",
+      "ablation": {
+        "removed_feature_family": "DISTANCE",
+        "retrained_model_artifact_id": "b3-5fb7013c65ab9e16",
+        "schema_hash": "c31fb74d23240682e64e51de53011ee7ef529614e6c565bebfd4e19dae6395f7"
+      },
+      "artifact_id": "b3-d5a56868cdcc4e05",
+      "artifact_sha256": "d5a56868cdcc4e05eb420f472616f8e636e9fd2008cbbec2b514b0a4e4512a62",
       "backend": "lightgbm",
+      "calibration": {
+        "artifact_id": "calibration-a2941b966c2a73e1",
+        "calibration_race_ids": [
+          "greyhound-race-6"
+        ],
+        "status": "HELD_OUT_RACE_LEVEL_CALIBRATION",
+        "temperature": 0.25
+      },
       "code": "GREYHOUND",
       "data_mode": "SYNTHETIC_ONLY",
       "feature_schema_hash": "9b1bca2587cb14361bbe04e3ba0e6eaa654c4ad41abe14ad2fa27b43e943eefa",
+      "fold_assurance": {
+        "calibration_artifact_id": "calibration-a2941b966c2a73e1",
+        "calibration_race_ids": [
+          "greyhound-race-6"
+        ],
+        "dataset_hash": "4d133692fedf7bb3395062d94533fa5a6cb607ea62d11bb52358dc372fba7085",
+        "fold_id": "fold-001",
+        "model_artifact_id": "b3-d5a56868cdcc4e05",
+        "record_hash": "65d01053b60054047834e57e81380ccbb7a28472f67f0e2a243e998acf31085a",
+        "test_artifact_id": "b3-d5a56868cdcc4e05",
+        "test_race_ids": [
+          "greyhound-race-7",
+          "greyhound-race-8",
+          "greyhound-race-9"
+        ],
+        "test_window": [
+          "2026-01-07T01:00:00Z",
+          "2026-01-10T01:00:00Z"
+        ],
+        "training_cutoff": "2026-01-06T01:00:00Z",
+        "training_feature_snapshot_hashes": [
+          "01598335179eb917c3b635816bacbb7c7788daa63bef2a4dd3da66ed8f5c3144",
+          "03ee7d77e13f3ce5fba94eb403cdc6865ff497e9dcd0bdd709f777ba251764df",
+          "1b9e86f9671b944956b93941a2c9c89b153e249d5acfd18496bdcc4f045e535f",
+          "204c164629706752c960ade4634300c12d70a4467b0eaabe117bf62a59cd6c32",
+          "22a876474b02e1bbbc148b7a4e6c662efecef78662c02ec0fe35e6ed2b97a69d",
+          "32e0b9cb754c488a7edf63507f6bde311145a524f5bd0bac4ba1c65358f9cd6e",
+          "398f335709556aecfe60daf0db4cc3395d01486b7662ba6298a6b92f9828bfee",
+          "41db3f3190a08d8d0d44ae0093a1235827eb2996166180d9e27505d28ee88572",
+          "434194c17bb0c9a15ab2798274a98c0144fb2236747b384ba963fd43d3f89e9e",
+          "574b349dc0e3ea4f1023d4a6e5606e60c09d1a20fa6e01f127b6e4f442202418",
+          "763edcee438bb498e4ecff6c8b0c948cc11b531db25c17d1047997b7b765b561",
+          "7be3fab061b207a7b6f2589e9932b4ec9e9940d29d4469e46b35123aa05869e3",
+          "85a3bdaf997b1c5d96df569176755aff048e341789633e85a0a53c7b9dd32875",
+          "8ece1908c0fdea95feacf17fcb5f412a78032e2ab4ca94da3997a02e1b2ab406",
+          "927ff916a4d6ad1afb6d9cdbca5b4f39800c236bf4559cd1ffe52612c124dcc0",
+          "92feba5fdd10c46bc5a3e6301c06fefbc4b9c12349654a51749334e888d8e6c0",
+          "a263af91200b4f167bab224612d9749d4d728b8af0143a12ce538fd31e5b5a5f",
+          "af0f57a58d71d70ea8790485ec90e7130dd8446e57e1309ebae5d2ad09136339",
+          "b7111ddce4793e41f449c2dfe0f3dafb153a0e69f79926d07f40aa83815c19a3",
+          "ee7851ae743c690d126eb2ca6aed0f4ccb4f312e48fe7cbae9003fa61f65d901"
+        ],
+        "training_race_ids": [
+          "greyhound-race-1",
+          "greyhound-race-2",
+          "greyhound-race-3",
+          "greyhound-race-4",
+          "greyhound-race-5"
+        ],
+        "validation_window": [
+          "2026-01-06T01:00:00Z",
+          "2026-01-07T01:00:00Z"
+        ]
+      },
       "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
-      "model_version": "b3-lightgbm-eb74a8d3ce89",
+      "model_version": "b3-lightgbm-d5a56868cdcc",
       "probabilities": {
-        "runner-0": 0.850052264600163,
-        "runner-1": 0.049982578466612346,
-        "runner-2": 0.049982578466612346,
-        "runner-3": 0.049982578466612346
+        "runner-0": 1.1952989483736986e-05,
+        "runner-1": 0.9999641410315487,
+        "runner-2": 1.1952989483736986e-05,
+        "runner-3": 1.1952989483736986e-05
       },
       "race_probability_sum": 1.0,
       "state": "READY",
-      "training_manifest_hash": "699953d6e765b4659cf5d8d04cf8118a2b9ef9b95dbbd9911a4a7c6806e31774"
+      "training_manifest_hash": "6a50b8be79bc07891e807ae35e3e370e14f91f4decf4f1d2f6bcc7945aed990c"
     },
     {
-      "artifact_id": "b3-fc298144034f4349",
-      "artifact_sha256": "fc298144034f434963bd8a4ff6c906f1f37a63b5e2beb1bdef8f1ad32d9331c5",
+      "ablation": {
+        "removed_feature_family": "DISTANCE",
+        "retrained_model_artifact_id": "b3-d51760dd3634936e",
+        "schema_hash": "c31fb74d23240682e64e51de53011ee7ef529614e6c565bebfd4e19dae6395f7"
+      },
+      "artifact_id": "b3-306f2a0c7eb94afd",
+      "artifact_sha256": "306f2a0c7eb94afd442cea0e8e2e92c585835b78a2e4d898b099d09907a2f8fd",
       "backend": "catboost",
+      "calibration": {
+        "artifact_id": "calibration-a2941b966c2a73e1",
+        "calibration_race_ids": [
+          "greyhound-race-6"
+        ],
+        "status": "HELD_OUT_RACE_LEVEL_CALIBRATION",
+        "temperature": 0.25
+      },
       "code": "GREYHOUND",
       "data_mode": "SYNTHETIC_ONLY",
       "feature_schema_hash": "9b1bca2587cb14361bbe04e3ba0e6eaa654c4ad41abe14ad2fa27b43e943eefa",
+      "fold_assurance": {
+        "calibration_artifact_id": "calibration-a2941b966c2a73e1",
+        "calibration_race_ids": [
+          "greyhound-race-6"
+        ],
+        "dataset_hash": "4d133692fedf7bb3395062d94533fa5a6cb607ea62d11bb52358dc372fba7085",
+        "fold_id": "fold-001",
+        "model_artifact_id": "b3-306f2a0c7eb94afd",
+        "record_hash": "e788efbeb4b87330f79551ced7d9bc7ad6946771c8c9f5cb75b5c677aaa816d4",
+        "test_artifact_id": "b3-306f2a0c7eb94afd",
+        "test_race_ids": [
+          "greyhound-race-7",
+          "greyhound-race-8",
+          "greyhound-race-9"
+        ],
+        "test_window": [
+          "2026-01-07T01:00:00Z",
+          "2026-01-10T01:00:00Z"
+        ],
+        "training_cutoff": "2026-01-06T01:00:00Z",
+        "training_feature_snapshot_hashes": [
+          "01598335179eb917c3b635816bacbb7c7788daa63bef2a4dd3da66ed8f5c3144",
+          "03ee7d77e13f3ce5fba94eb403cdc6865ff497e9dcd0bdd709f777ba251764df",
+          "1b9e86f9671b944956b93941a2c9c89b153e249d5acfd18496bdcc4f045e535f",
+          "204c164629706752c960ade4634300c12d70a4467b0eaabe117bf62a59cd6c32",
+          "22a876474b02e1bbbc148b7a4e6c662efecef78662c02ec0fe35e6ed2b97a69d",
+          "32e0b9cb754c488a7edf63507f6bde311145a524f5bd0bac4ba1c65358f9cd6e",
+          "398f335709556aecfe60daf0db4cc3395d01486b7662ba6298a6b92f9828bfee",
+          "41db3f3190a08d8d0d44ae0093a1235827eb2996166180d9e27505d28ee88572",
+          "434194c17bb0c9a15ab2798274a98c0144fb2236747b384ba963fd43d3f89e9e",
+          "574b349dc0e3ea4f1023d4a6e5606e60c09d1a20fa6e01f127b6e4f442202418",
+          "763edcee438bb498e4ecff6c8b0c948cc11b531db25c17d1047997b7b765b561",
+          "7be3fab061b207a7b6f2589e9932b4ec9e9940d29d4469e46b35123aa05869e3",
+          "85a3bdaf997b1c5d96df569176755aff048e341789633e85a0a53c7b9dd32875",
+          "8ece1908c0fdea95feacf17fcb5f412a78032e2ab4ca94da3997a02e1b2ab406",
+          "927ff916a4d6ad1afb6d9cdbca5b4f39800c236bf4559cd1ffe52612c124dcc0",
+          "92feba5fdd10c46bc5a3e6301c06fefbc4b9c12349654a51749334e888d8e6c0",
+          "a263af91200b4f167bab224612d9749d4d728b8af0143a12ce538fd31e5b5a5f",
+          "af0f57a58d71d70ea8790485ec90e7130dd8446e57e1309ebae5d2ad09136339",
+          "b7111ddce4793e41f449c2dfe0f3dafb153a0e69f79926d07f40aa83815c19a3",
+          "ee7851ae743c690d126eb2ca6aed0f4ccb4f312e48fe7cbae9003fa61f65d901"
+        ],
+        "training_race_ids": [
+          "greyhound-race-1",
+          "greyhound-race-2",
+          "greyhound-race-3",
+          "greyhound-race-4",
+          "greyhound-race-5"
+        ],
+        "validation_window": [
+          "2026-01-06T01:00:00Z",
+          "2026-01-07T01:00:00Z"
+        ]
+      },
       "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
-      "model_version": "b3-catboost-fc298144034f",
+      "model_version": "b3-catboost-306f2a0c7eb9",
       "probabilities": {
-        "runner-0": 0.517984820914921,
-        "runner-1": 0.15770629100393616,
-        "runner-2": 0.15505907066980412,
-        "runner-3": 0.16924981741133874
+        "runner-0": 0.030747959332417994,
+        "runner-1": 0.9273681013816473,
+        "runner-2": 0.01903395495408703,
+        "runner-3": 0.022849984331847654
       },
       "race_probability_sum": 1.0,
       "state": "READY",
-      "training_manifest_hash": "63cbf4d20e2b9c2af3c0beba342c6c80a5b5ba1ea333958a1188853a096f767e"
+      "training_manifest_hash": "01e5af50f4fc464f052015cc34cb5e219e3d65f4cc2faf79b06f240edd462dde"
     }
   ],
   "schema_version": "ril-061-b3-evidence-v1",
