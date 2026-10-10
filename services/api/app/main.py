@@ -1,5 +1,6 @@
 from datetime import datetime
 from contextlib import asynccontextmanager
+import os
 from uuid import uuid4
 
 from fastapi import Depends, FastAPI, HTTPException, Request
@@ -85,7 +86,7 @@ def live() -> HealthResponse:
 def system_status() -> SystemStatusResponse:
     return SystemStatusResponse(
         app="racing-intelligence-lab",
-        environment="development",
+        environment=os.environ.get("APP_ENV", "development"),
         data_mode="SYNTHETIC_ONLY",
         external_connectivity=False,
         model_status="NOT_TRAINED",
