@@ -1,0 +1,25 @@
+{
+  "fictional": true,
+  "note": "Offline operations evidence only; provider is synthetic and no external work is enabled.",
+  "outbound": {
+    "critical_after_cap": true,
+    "disabled_provider": false,
+    "noncritical_after_cap": false
+  },
+  "schema_version": "operations-v1",
+  "snapshot": {
+    "alert_level": "CAP_100",
+    "budget_ratio": "1",
+    "disabled_providers": [
+      "synthetic-provider"
+    ],
+    "errors": 1,
+    "estimated_spend_aud": "1.00",
+    "input_tokens": 200,
+    "jobs": 2,
+    "latency_ms_avg": 150.0,
+    "noncritical_outbound_enabled": false,
+    "output_tokens": 200
+  },
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}

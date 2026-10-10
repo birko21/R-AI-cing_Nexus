@@ -67,3 +67,5 @@ if ($LASTEXITCODE -ne 0) { throw "Challenger study fixture validation failed wit
 if ($LASTEXITCODE -ne 0) { throw "SBOM generation failed with exit code $LASTEXITCODE" }
 & '.venv\Scripts\python.exe' scripts/security_audit.py --write-report
 if ($LASTEXITCODE -ne 0) { throw "Security audit failed with exit code $LASTEXITCODE" }
+& '.venv\Scripts\python.exe' scripts/generate_operations_fixture.py
+if ($LASTEXITCODE -ne 0) { throw "Operations fixture validation failed with exit code $LASTEXITCODE" }
