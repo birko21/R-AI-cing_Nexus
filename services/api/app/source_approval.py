@@ -7,6 +7,11 @@ from typing import Literal
 
 
 ApprovalStatus = Literal["APPROVED", "BLOCKED_EXTERNAL_DEPENDENCY"]
+ApprovalTier = Literal[
+    "ACCOUNT_METADATA_READ",
+    "EPHEMERAL_READ_ONLY_DIAGNOSTIC",
+    "HISTORICAL_RETENTION_AND_MODEL_TRAINING",
+]
 
 REQUIRED_APPROVALS = (
     "written_rights",
@@ -29,6 +34,11 @@ class SourceApprovalRecord:
     reconciliation_report: str | None = None
     approved_operations: tuple[str, ...] = ()
     approved_codes: tuple[str, ...] = ()
+    approval_tier: ApprovalTier | None = None
+    account_entitlement_evidence: str | None = None
+    credential_custodian: str | None = None
+    quota_ceiling: str | None = None
+    kill_switch_reference: str | None = None
 
     def __post_init__(self) -> None:
         if not self.source_id.strip():
@@ -36,6 +46,42 @@ class SourceApprovalRecord:
 
     def missing_requirements(self) -> tuple[str, ...]:
         return tuple(name for name in REQUIRED_APPROVALS if not getattr(self, name))
+
+
+TIER_REQUIREMENTS = (
+    "account_entitlement_evidence",
+    "credential_custodian",
+    "quota_ceiling",
+    "kill_switch_reference",
+)
+
+
+def evaluate_tiered_source_approval(
+    record: SourceApprovalRecord,
+    *,
+    required_tier: ApprovalTier,
+    operation: str,
+    code: str,
+) -> SourceCheckpoint:
+    """Evaluate a narrowly scoped approval without inferring stronger rights."""
+
+    missing = [name for name in TIER_REQUIREMENTS if not getattr(record, name)]
+    if record.approval_tier != required_tier:
+        missing.append("approval_tier")
+    if operation not in record.approved_operations:
+        missing.append("approved_operations")
+    if code not in record.approved_codes:
+        missing.append("approved_codes")
+    if required_tier == "HISTORICAL_RETENTION_AND_MODEL_TRAINING":
+        missing.extend(name for name in record.missing_requirements() if name not in missing)
+    if missing:
+        return SourceCheckpoint(
+            record.source_id,
+            "BLOCKED_EXTERNAL_DEPENDENCY",
+            tuple(missing),
+            "The named approval tier does not authorize this operation and racing code.",
+        )
+    return SourceCheckpoint(record.source_id, "APPROVED", (), "The exact approval tier, operation and racing code are recorded.")
 
 
 @dataclass(frozen=True)
