@@ -53,3 +53,5 @@ if ($LASTEXITCODE -ne 0) { throw "Evidence fixture validation failed with exit c
 if ($LASTEXITCODE -ne 0) { throw "Egress fixture validation failed with exit code $LASTEXITCODE" }
 & '.venv\Scripts\python.exe' scripts/generate_assistant_eval_fixture.py
 if ($LASTEXITCODE -ne 0) { throw "Assistant evaluation fixture validation failed with exit code $LASTEXITCODE" }
+& '.venv\Scripts\python.exe' scripts/generate_thoroughbred_feature_fixture.py
+if ($LASTEXITCODE -ne 0) { throw "Thoroughbred feature fixture validation failed with exit code $LASTEXITCODE" }

@@ -1,0 +1,80 @@
+{
+  "fictional": true,
+  "note": "Descriptive specialist feature evidence only; no causal attribution, validated model or live source claim.",
+  "record": {
+    "attribution_status": "DESCRIPTIVE_ASSOCIATION_ONLY",
+    "cutoff": "2026-01-15T03:30:00Z",
+    "data_mode": "SYNTHETIC_ONLY",
+    "excluded_future_receipt_ids": [],
+    "features": {
+      "barrier_position": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-tb-1"
+        ],
+        "value": 3.0
+      },
+      "class_match_rate": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-tb-1"
+        ],
+        "value": 1.0
+      },
+      "distance_match_rate": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-tb-1"
+        ],
+        "value": 1.0
+      },
+      "pace_rating": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-tb-1"
+        ],
+        "value": 81.0
+      },
+      "sectional_time": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-tb-1"
+        ],
+        "value": 34.2
+      },
+      "track_going_match_rate": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-tb-1"
+        ],
+        "value": 1.0
+      },
+      "weight_kg": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-tb-1"
+        ],
+        "value": 57.0
+      }
+    },
+    "included_receipt_ids": [
+      "receipt-tb-1"
+    ],
+    "participant_id": "p1",
+    "race_id": "race-1",
+    "schema_version": "thoroughbred-features-v1",
+    "snapshot_hash": "435cac735d734ff5cadacfdc53474d6d58ce68a1478c135b335c00a5464bfdf3",
+    "target_class": "BM",
+    "target_distance": 1200,
+    "target_track_going": "GOOD4"
+  },
+  "schema_version": "thoroughbred-features-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
