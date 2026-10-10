@@ -170,6 +170,8 @@ $required = @(
     'docs/evidence/ril-049/assistant-citations.png',
     'docs/evidence/ril-057/security-audit.json',
     'docs/evidence/ril-057/sbom.json',
+    'docs/evidence/ril-060/release-gate-checklist.md',
+    'docs/evidence/ril-060/release-gate.json',
     'docs/evidence/ril-023/probability-edge-cases.md',
     'docs/evidence/ril-025/forecast-invalidation-report.md',
     'docs/models/B0_UNIFORM_BASELINE.md',

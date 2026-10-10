@@ -1,0 +1,16 @@
+{
+  "ticket": "RIL-060",
+  "status": "LOCAL_EVIDENCE_COMPLETE_OWNER_APPROVAL_PENDING",
+  "pilot_scope": "LOCAL_SYNTHETIC_ONLY",
+  "playwright_passed": 5,
+  "api_tests_passed": 212,
+  "repository_required_files": 258,
+  "security_secret_findings": 0,
+  "security_frontend_secret_refs": 0,
+  "repository_checkpoint": "G0 / BLOCKED",
+  "owner_decision": "PENDING_OWNER_APPROVAL",
+  "blocked_dependencies": ["RIL-056_APPROVED_OIDC", "RIL-034_APPROVED_REAL_SOURCE"],
+  "wagering_enabled": false,
+  "external_connectivity_enabled": false,
+  "note": "Local evidence is complete; restricted pilot approval and external dependencies remain unresolved."
+}
