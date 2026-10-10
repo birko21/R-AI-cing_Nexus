@@ -13,3 +13,5 @@ if ($LASTEXITCODE -ne 0) { throw "Forecast archive validation failed with exit c
 if ($LASTEXITCODE -ne 0) { throw "Feature manifest validation failed with exit code $LASTEXITCODE" }
 & '.venv\Scripts\python.exe' scripts/generate_split_manifest.py
 if ($LASTEXITCODE -ne 0) { throw "Split manifest validation failed with exit code $LASTEXITCODE" }
+& '.venv\Scripts\python.exe' scripts/generate_metric_report.py
+if ($LASTEXITCODE -ne 0) { throw "Metric report validation failed with exit code $LASTEXITCODE" }

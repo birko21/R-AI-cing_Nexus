@@ -1,0 +1,77 @@
+{
+  "brier": 0.7487750045950503,
+  "calibration": [
+    {
+      "bin": 1,
+      "count": 12,
+      "empirical_rate": 0.25,
+      "mean_predicted": 0.25
+    }
+  ],
+  "codes": [
+    "GREYHOUND",
+    "HARNESS",
+    "THOROUGHBRED"
+  ],
+  "confidence_intervals": {
+    "brier_95": [
+      0.7487357762557312,
+      0.7488143120577145
+    ],
+    "log_loss_95": [
+      1.379781465111045,
+      1.380577801074929
+    ]
+  },
+  "conventions": {
+    "brier": "mean(sum((p_i-y_i)^2))",
+    "confidence_interval": "deterministic percentile bootstrap 2.5%-97.5%",
+    "log_loss": "mean(-ln(p_winner))"
+  },
+  "data_mode": "SYNTHETIC_ONLY",
+  "fixture_id": "ril-016-three-code-v1",
+  "horizon": "T+0",
+  "log_loss": 1.380154510395064,
+  "metric_status": "IMPLEMENTATION_METRICS_SYNTHETIC_ONLY",
+  "missingness": {},
+  "model_version": "b1-form-v1",
+  "n": 3,
+  "recorded_at": "2026-01-15T00:00:00Z",
+  "segments": {
+    "GREYHOUND": {
+      "brier": 0.7487749254717054,
+      "log_loss": 1.380104264999218,
+      "missingness": {},
+      "n": 1,
+      "time_range": {
+        "end": "2026-01-15T06:00:00Z",
+        "start": "2026-01-15T06:00:00Z"
+      }
+    },
+    "HARNESS": {
+      "brier": 0.7487357762557312,
+      "log_loss": 1.3805778010749292,
+      "missingness": {},
+      "n": 1,
+      "time_range": {
+        "end": "2026-01-15T06:00:00Z",
+        "start": "2026-01-15T06:00:00Z"
+      }
+    },
+    "THOROUGHBRED": {
+      "brier": 0.7488143120577144,
+      "log_loss": 1.379781465111045,
+      "missingness": {},
+      "n": 1,
+      "time_range": {
+        "end": "2026-01-15T06:00:00Z",
+        "start": "2026-01-15T06:00:00Z"
+      }
+    }
+  },
+  "time_range": {
+    "end": "2026-01-15T06:00:00Z",
+    "start": "2026-01-15T06:00:00Z"
+  },
+  "validated_claim": false
+}
