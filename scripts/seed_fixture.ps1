@@ -61,3 +61,5 @@ if ($LASTEXITCODE -ne 0) { throw "Harness scenario fixture validation failed wit
 if ($LASTEXITCODE -ne 0) { throw "Greyhound feature fixture validation failed with exit code $LASTEXITCODE" }
 & '.venv\Scripts\python.exe' scripts/generate_scenario_fixture.py
 if ($LASTEXITCODE -ne 0) { throw "Scenario fixture validation failed with exit code $LASTEXITCODE" }
+& '.venv\Scripts\python.exe' scripts/generate_challenger_study_fixture.py
+if ($LASTEXITCODE -ne 0) { throw "Challenger study fixture validation failed with exit code $LASTEXITCODE" }

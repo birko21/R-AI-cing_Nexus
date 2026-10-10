@@ -1,0 +1,71 @@
+{
+  "fictional": true,
+  "note": "Synthetic chronological holdout evidence only; promotion remains HOLD without independent assurance and owner approval.",
+  "preregistered_spec": {
+    "challenger_id": "TB_CHALLENGER_V1",
+    "data_mode": "SYNTHETIC_ONLY",
+    "holdout_end": "2026-01-01T00:00:00Z",
+    "holdout_start": "2025-12-01T00:00:00Z",
+    "metric": "BRIER",
+    "preregistered_at": "2025-11-01T00:00:00Z",
+    "study_id": "study-1"
+  },
+  "report": {
+    "metric": "BRIER",
+    "promotion": {
+      "independent_assurance": false,
+      "owner_approval": false,
+      "reason": "no champion without independent assurance and owner approval",
+      "status": "HOLD"
+    },
+    "ranking": [
+      "TB_CHALLENGER_V1",
+      "MARKET_BASELINE",
+      "B1_FORM_HEURISTIC",
+      "B0_UNIFORM"
+    ],
+    "scores": [
+      {
+        "ci_high": 0.32,
+        "ci_low": 0.27999999999999997,
+        "holdout_end": "2026-01-01T00:00:00Z",
+        "holdout_start": "2025-12-01T00:00:00Z",
+        "metric_value": 0.3,
+        "model_id": "B0_UNIFORM",
+        "sample_size": 100
+      },
+      {
+        "ci_high": 0.30000000000000004,
+        "ci_low": 0.26,
+        "holdout_end": "2026-01-01T00:00:00Z",
+        "holdout_start": "2025-12-01T00:00:00Z",
+        "metric_value": 0.28,
+        "model_id": "B1_FORM_HEURISTIC",
+        "sample_size": 100
+      },
+      {
+        "ci_high": 0.27,
+        "ci_low": 0.23,
+        "holdout_end": "2026-01-01T00:00:00Z",
+        "holdout_start": "2025-12-01T00:00:00Z",
+        "metric_value": 0.25,
+        "model_id": "MARKET_BASELINE",
+        "sample_size": 100
+      },
+      {
+        "ci_high": 0.22,
+        "ci_low": 0.18000000000000002,
+        "holdout_end": "2026-01-01T00:00:00Z",
+        "holdout_start": "2025-12-01T00:00:00Z",
+        "metric_value": 0.2,
+        "model_id": "TB_CHALLENGER_V1",
+        "sample_size": 100
+      }
+    ],
+    "status": "COMPLETE",
+    "study_id": "study-1",
+    "synthetic_only": true
+  },
+  "schema_version": "challenger-study-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
