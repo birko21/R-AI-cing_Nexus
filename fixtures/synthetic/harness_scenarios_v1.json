@@ -1,0 +1,125 @@
+{
+  "experimental": {
+    "cutoff": "2026-01-15T03:30:00Z",
+    "data_mode": "SYNTHETIC_ONLY",
+    "excluded_future_receipt_ids": [],
+    "hypotheses": [
+      "EXPERIMENTAL_RUNNING_LINE: MOBILE with MIDFIELD pacing",
+      "EXPERIMENTAL_POSITION: row/barrier may alter the descriptive position scenario"
+    ],
+    "included_receipt_ids": [
+      "receipt-h-1"
+    ],
+    "inputs": {
+      "barrier": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-h-1"
+        ],
+        "value": 3
+      },
+      "pacing": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-h-1"
+        ],
+        "value": "MIDFIELD"
+      },
+      "row": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-h-1"
+        ],
+        "value": 1
+      },
+      "running_line": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-h-1"
+        ],
+        "value": "settles behind leader"
+      },
+      "sectional_time": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-h-1"
+        ],
+        "value": 31.2
+      },
+      "start_type": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-h-1"
+        ],
+        "value": "MOBILE"
+      }
+    },
+    "participant_id": "p1",
+    "scenario_id": "scenario-1",
+    "scenario_label": "EXPERIMENTAL_UNCALIBRATED",
+    "schema_version": "harness-scenarios-v1",
+    "snapshot_hash": "e814b89ea645bdd5ebc5c5b530bf9941ce10c4c89409a7c50d3baa81d5ff656f",
+    "status": "EXPERIMENTAL"
+  },
+  "fictional": true,
+  "not_available": {
+    "cutoff": "2026-01-15T03:30:00Z",
+    "data_mode": "SYNTHETIC_ONLY",
+    "excluded_future_receipt_ids": [],
+    "hypotheses": [],
+    "included_receipt_ids": [],
+    "inputs": {
+      "barrier": {
+        "missing": true,
+        "missing_reason": "NO_PRE_CUTOFF_SUPPORT",
+        "source_receipt_ids": [],
+        "value": null
+      },
+      "pacing": {
+        "missing": true,
+        "missing_reason": "NO_PRE_CUTOFF_SUPPORT",
+        "source_receipt_ids": [],
+        "value": null
+      },
+      "row": {
+        "missing": true,
+        "missing_reason": "NO_PRE_CUTOFF_SUPPORT",
+        "source_receipt_ids": [],
+        "value": null
+      },
+      "running_line": {
+        "missing": true,
+        "missing_reason": "NO_PRE_CUTOFF_SUPPORT",
+        "source_receipt_ids": [],
+        "value": null
+      },
+      "sectional_time": {
+        "missing": true,
+        "missing_reason": "NO_PRE_CUTOFF_SUPPORT",
+        "source_receipt_ids": [],
+        "value": null
+      },
+      "start_type": {
+        "missing": true,
+        "missing_reason": "NO_PRE_CUTOFF_SUPPORT",
+        "source_receipt_ids": [],
+        "value": null
+      }
+    },
+    "participant_id": "p1",
+    "scenario_id": "scenario-empty",
+    "scenario_label": "EXPERIMENTAL_UNCALIBRATED",
+    "schema_version": "harness-scenarios-v1",
+    "snapshot_hash": "b14d695c4a011bcdbb28a2c39d51837cc7932d6e60ceb146677c491652f83c74",
+    "status": "NOT_AVAILABLE"
+  },
+  "note": "Experimental uncalibrated scenario evidence only; no causal, validated or wagering claim.",
+  "schema_version": "harness-scenarios-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
