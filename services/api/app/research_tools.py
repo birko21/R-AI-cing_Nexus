@@ -8,6 +8,8 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from app.egress import ToolAuditLog
+
 
 ToolName = Literal["races", "histories", "features", "markets", "forecasts", "backtests", "provenance"]
 ToolStatus = Literal["OK", "NOT_AVAILABLE", "NOT_ENTITLED"]
@@ -50,8 +52,9 @@ ToolHandler = Callable[[datetime, int, Mapping[str, object]], list[dict[str, obj
 
 
 class ResearchToolRegistry:
-    def __init__(self) -> None:
+    def __init__(self, audit_log: ToolAuditLog | None = None) -> None:
         self._handlers: dict[str, ToolHandler] = {}
+        self._audit_log = audit_log
 
     def register(self, tool: ToolName, handler: ToolHandler) -> None:
         self._handlers[tool] = handler
@@ -63,11 +66,29 @@ class ResearchToolRegistry:
         ]
 
     def execute(self, request: ResearchToolRequest, *, scopes: set[str]) -> ResearchToolResponse:
+        if self._audit_log is not None:
+            self._audit_log.record_call(
+                tool=request.tool, user_id=request.user_id, as_of=request.as_of,
+                limit=request.limit, argument_keys=tuple(request.arguments),
+            )
         required_scope = TOOL_SCOPES[request.tool]
         if required_scope not in scopes:
-            return ResearchToolResponse(tool=request.tool, status="NOT_ENTITLED", as_of=request.as_of, rows=[], limit=request.limit, reason=f"required scope {required_scope} is missing")
+            response = ResearchToolResponse(tool=request.tool, status="NOT_ENTITLED", as_of=request.as_of, rows=[], limit=request.limit, reason=f"required scope {required_scope} is missing")
+            self._audit_response(request, response)
+            return response
         handler = self._handlers.get(request.tool)
         if handler is None:
-            return ResearchToolResponse(tool=request.tool, status="NOT_AVAILABLE", as_of=request.as_of, rows=[], limit=request.limit, reason="tool capability is not available")
+            response = ResearchToolResponse(tool=request.tool, status="NOT_AVAILABLE", as_of=request.as_of, rows=[], limit=request.limit, reason="tool capability is not available")
+            self._audit_response(request, response)
+            return response
         rows = handler(request.as_of, request.limit, request.arguments)[:request.limit]
-        return ResearchToolResponse(tool=request.tool, status="OK", as_of=request.as_of, rows=rows, limit=request.limit, reason="bounded read-only result")
+        response = ResearchToolResponse(tool=request.tool, status="OK", as_of=request.as_of, rows=rows, limit=request.limit, reason="bounded read-only result")
+        self._audit_response(request, response)
+        return response
+
+    def _audit_response(self, request: ResearchToolRequest, response: ResearchToolResponse) -> None:
+        if self._audit_log is not None:
+            self._audit_log.record_response(
+                tool=request.tool, user_id=request.user_id, as_of=request.as_of,
+                limit=request.limit, status=response.status, row_count=len(response.rows),
+            )

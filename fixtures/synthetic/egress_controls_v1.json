@@ -1,0 +1,32 @@
+{
+  "blocked_licensed": {
+    "allowed": false,
+    "original_sha256": "325f20aa57237edfde1ad2ab120096a8f3c5551bf250de07218fac6cade9fd4b",
+    "payload": "",
+    "reason": "licensed-data transmission is not permitted",
+    "redaction_categories": [],
+    "request_id": "req-licensed"
+  },
+  "fictional": true,
+  "injection": {
+    "matched_rules": [
+      "IGNORE_INSTRUCTIONS",
+      "ROLE_SPOOFING",
+      "SECRET_REQUEST"
+    ],
+    "trusted": false
+  },
+  "note": "Offline control evidence only; no external provider, live scrape or licensed payload was transmitted.",
+  "redacted": {
+    "allowed": true,
+    "original_sha256": "5067000b3acdb45761060d9320968821e1370be9ca0ee47f1cca8ce6a468932f",
+    "payload": "fixture email [REDACTED_EMAIL]",
+    "reason": "redacted payload permitted by rights policy",
+    "redaction_categories": [
+      "EMAIL"
+    ],
+    "request_id": "req-synthetic"
+  },
+  "schema_version": "egress-controls-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
