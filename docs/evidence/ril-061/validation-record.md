@@ -22,4 +22,9 @@ The branch contains no provider credentials, no live network adapter activation,
 
 ## Remote evidence status
 
-The CI workflow is committed on the feature branch and is intended to run on push and pull request. A remote CI run and pull request URL are recorded only after GitHub accepts the branch publication; no branch protection is bypassed and no merge is automated.
+- Pull request: [#75](https://github.com/birko21/R-AI-cing_Nexus/pull/75)
+- Branch: `feature/ril-061-real-data-readiness`
+- Head commit: `7ef3bb2206303b75fa4430b7c20fca6aa0734356`
+- Latest PR workflow run: `38031485487`
+- Remote checks: backend, contracts-security-and-synthetic-evaluation, frontend and browser-smoke all `SUCCESS`.
+- PR state: `OPEN`, merge state `CLEAN`, review decision pending; no merge or branch-protection bypass was performed.
