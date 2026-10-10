@@ -4,7 +4,8 @@
 
 | Command | Exit code | Result |
 |---|---:|---|
-| `.venv\Scripts\python.exe -m pytest services/api/tests -q` | 0 | 235 backend tests passed; one existing Starlette/AnyIO deprecation warning |
+| `.venv\Scripts\python.exe -m pytest services/api/tests -q` | 0 | 241 backend tests passed; one existing Starlette/AnyIO deprecation warning |
+| `.venv\Scripts\python.exe -m pytest services/api/tests/test_ml_models.py services/api/tests/test_statistical_assurance.py services/api/tests/test_walk_forward.py -q` | 0 | 13 focused provenance, calibration, ablation, challenger and split tests passed |
 | `.venv\Scripts\python.exe -m ruff check services/api/app services/api/tests scripts` | 0 | Ruff passed |
 | `.venv\Scripts\python.exe scripts/validate_contracts.py` | 0 | 9 OpenAPI paths and 20 schemas validated |
 | `.venv\Scripts\python.exe scripts/security_audit.py` | 0 | No secret findings or frontend secret references |
@@ -24,7 +25,7 @@ The branch contains no provider credentials, no live network adapter activation,
 
 - Pull request: [#75](https://github.com/birko21/R-AI-cing_Nexus/pull/75)
 - Branch: `feature/ril-061-real-data-readiness`
-- Head commit: `7ef3bb2206303b75fa4430b7c20fca6aa0734356`
-- Latest PR workflow run: `38031485487`
+- Head commit under review: `411a4e7494d24ca16613efd5c7b6ff41612e175e`
+- Latest PR workflow run for that head: `38031589017`
 - Remote checks: backend, contracts-security-and-synthetic-evaluation, frontend and browser-smoke all `SUCCESS`.
 - PR state: `OPEN`, merge state `CLEAN`, review decision pending; no merge or branch-protection bypass was performed.

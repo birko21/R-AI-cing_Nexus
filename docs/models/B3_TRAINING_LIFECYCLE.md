@@ -1,5 +1,7 @@
 # B3 training lifecycle
 
+B3 artifacts now include complete per-row feature snapshot hashes, a sorted snapshot manifest hash and a full training-row hash. A loader may require an independently trusted `TrainingManifest`; any mismatch fails closed. Walk-forward assurance records separately bind exact training, calibration and test race membership, time windows, dataset hash and artifact IDs. These controls are provenance safeguards, not predictive-validation evidence.
+
 `services/api/app/ml_models.py` implements a real optional LightGBM B3 backend and a separate CatBoost challenger backend.
 
 The lifecycle is fail-closed:

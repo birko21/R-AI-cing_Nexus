@@ -39,7 +39,7 @@ def test_lightgbm_b3_trains_predicts_and_round_trips_an_immutable_artifact(tmp_p
 
     path = tmp_path / "b3.json"
     envelope = model.save_artifact(path)
-    restored = load_b3_artifact(path)
+    restored = load_b3_artifact(path, trusted_manifest=model.training_manifest)
     restored_prediction = restored.predict(race_id="race-3", entry_features={"a": {"recent_form": 2.0, "adjusted_speed": 1.8}, "b": {"recent_form": 0.1, "adjusted_speed": 0.2}}, cutoff=datetime(2026, 1, 25, tzinfo=UTC), eligible_at={"a": datetime(2026, 1, 25, tzinfo=UTC) - timedelta(minutes=2), "b": datetime(2026, 1, 25, tzinfo=UTC) - timedelta(minutes=2)})
     assert envelope["artifact_id"] == model.artifact_id
     assert restored_prediction.probabilities == pytest.approx(prediction.probabilities)
@@ -48,6 +48,23 @@ def test_lightgbm_b3_trains_predicts_and_round_trips_an_immutable_artifact(tmp_p
     tampered["model_version"] = "tampered"
     path.write_text(json.dumps(tampered), encoding="utf-8")
     with pytest.raises(ModelArtifactError, match="checksum"):
+        load_b3_artifact(path)
+
+
+def test_b3_artifact_requires_independently_trusted_feature_snapshot_manifest(tmp_path) -> None:
+    model = train_b3_model(rows=rows(), schema=SCHEMA, backend="lightgbm", seed=7, created_at=datetime(2026, 1, 20, tzinfo=UTC))
+    path = tmp_path / "b3.json"
+    model.save_artifact(path)
+    envelope = json.loads(path.read_text(encoding="utf-8"))
+    envelope["training_manifest"]["feature_snapshot_hashes"][-1] = "tampered"
+    envelope["training_manifest"]["feature_snapshot_manifest_hash"] = "0" * 64
+    payload = {key: value for key, value in envelope.items() if key not in {"artifact_id", "model_version", "artifact_sha256"}}
+    import hashlib
+    envelope["artifact_sha256"] = hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+    envelope["artifact_id"] = "b3-" + envelope["artifact_sha256"][:16]
+    envelope["model_version"] = "b3-lightgbm-" + envelope["artifact_sha256"][:12]
+    path.write_text(json.dumps(envelope), encoding="utf-8")
+    with pytest.raises(ModelArtifactError, match="feature snapshot manifest"):
         load_b3_artifact(path)
 
 

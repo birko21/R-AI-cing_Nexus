@@ -79,6 +79,7 @@ class TrainingRow:
     data_mode: str
     source_receipt_ids: tuple[str, ...]
     feature_schema_hash: str
+    feature_snapshot_hash: str | None = None
 
     def __post_init__(self) -> None:
         cutoff = _timestamp(self.cutoff)
@@ -94,6 +95,22 @@ class TrainingRow:
         for value in self.feature_values.values():
             if value is not None and not math.isfinite(value):
                 raise ValueError("training feature values must be finite or null")
+        expected = _hash({
+            "race_id": self.race_id,
+            "entry_id": self.entry_id,
+            "code": self.code,
+            "family": self.family,
+            "cutoff": cutoff,
+            "pre_race_eligible_at": eligible,
+            "feature_values": dict(sorted(self.feature_values.items())),
+            "winner": self.winner,
+            "data_mode": self.data_mode,
+            "source_receipt_ids": list(self.source_receipt_ids),
+            "feature_schema_hash": self.feature_schema_hash,
+        })
+        if self.feature_snapshot_hash is not None and self.feature_snapshot_hash != expected:
+            raise ValueError("training feature snapshot hash does not match complete row")
+        object.__setattr__(self, "feature_snapshot_hash", expected)
 
 
 @dataclass(frozen=True)
@@ -110,9 +127,18 @@ class TrainingManifest:
     training_row_hash: str
     created_at: str
     dependency_version: str
+    feature_snapshot_hashes: tuple[str, ...] = ()
+    feature_snapshot_manifest_hash: str = ""
 
     def to_dict(self) -> dict[str, object]:
-        return asdict(self)
+        payload = asdict(self)
+        payload["feature_snapshot_hashes"] = list(self.feature_snapshot_hashes)
+        return payload
+
+    def verify_feature_snapshot_manifest(self) -> None:
+        expected = _hash(list(self.feature_snapshot_hashes))
+        if self.feature_snapshot_manifest_hash != expected:
+            raise ModelArtifactError("feature snapshot manifest hash mismatch")
 
 
 @dataclass(frozen=True)
@@ -331,14 +357,18 @@ def train_b3_model(*, rows: tuple[TrainingRow, ...], schema: FeatureSchema, back
     targets = [int(row.winner) for row in rows]
     model, module = _fit_model(backend, feature_rows, targets, seed)
     dependency_version = str(getattr(module, "__version__", "UNKNOWN"))
+    snapshot_hashes = tuple(sorted(row.feature_snapshot_hash or "" for row in rows))
     row_hash = _hash([{
         "race_id": row.race_id, "entry_id": row.entry_id, "cutoff": _timestamp(row.cutoff),
         "pre_race_eligible_at": _timestamp(row.pre_race_eligible_at), "winner": row.winner,
         "source_receipt_ids": list(row.source_receipt_ids),
+        "feature_values": dict(sorted(row.feature_values.items())),
+        "feature_snapshot_hash": row.feature_snapshot_hash,
     } for row in sorted(rows, key=lambda value: (value.race_id, value.entry_id))])
     manifest = TrainingManifest(
         "b3-training-manifest-v1", backend, schema.code, schema.family, seed, next(iter(modes)),
         schema.schema_hash, len(rows), len(by_race), row_hash, _timestamp(created_at), dependency_version,
+        snapshot_hashes, _hash(list(snapshot_hashes)),
     )
     model_text = _model_text(backend, model)
     artifact_sha = _hash({
@@ -353,7 +383,7 @@ def train_b3_model(*, rows: tuple[TrainingRow, ...], schema: FeatureSchema, back
     )
 
 
-def load_b3_artifact(path: Path) -> TrainedB3Model:
+def load_b3_artifact(path: Path, *, trusted_manifest: TrainingManifest | None = None) -> TrainedB3Model:
     try:
         envelope = json.loads(path.read_text(encoding="utf-8"))
         artifact_sha = envelope["artifact_sha256"]
@@ -369,6 +399,11 @@ def load_b3_artifact(path: Path) -> TrainedB3Model:
         manifest = TrainingManifest(**envelope["training_manifest"])
         if manifest.feature_schema_hash != schema.schema_hash:
             raise ModelArtifactError("training manifest schema mismatch")
+        manifest.verify_feature_snapshot_manifest()
+        if trusted_manifest is not None:
+            trusted_manifest.verify_feature_snapshot_manifest()
+            if manifest.to_dict() != trusted_manifest.to_dict():
+                raise ModelArtifactError("artifact training manifest is not the independently trusted manifest")
         backend = envelope["backend"]
         model = _restore_model(backend, base64.b64decode(envelope["model_text_b64"]).decode("utf-8"))
         return TrainedB3Model(envelope["model_id"], envelope["model_version"], artifact_id, backend, schema, int(envelope["seed"]), envelope["data_mode"], manifest, model, base64.b64decode(envelope["model_text_b64"]).decode("utf-8"))
