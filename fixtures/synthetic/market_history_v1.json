@@ -1,0 +1,27 @@
+{
+  "after_closing": {
+    "availability": "CLOSING",
+    "cutoff": "2026-01-15T13:00:00Z",
+    "mapping_id": "map-1",
+    "quote_id": "closing",
+    "reason": "closing quote was available by the cutoff"
+  },
+  "before_closing": {
+    "availability": "AVAILABLE",
+    "cutoff": "2026-01-15T10:30:00Z",
+    "mapping_id": "map-1",
+    "quote_id": "live",
+    "reason": "latest eligible quote was available by the cutoff"
+  },
+  "fictional": true,
+  "missing_mapping": {
+    "availability": "MISSING",
+    "cutoff": "2026-01-15T13:00:00Z",
+    "mapping_id": "unknown-map",
+    "quote_id": null,
+    "reason": "no quote was available by the forecast cutoff"
+  },
+  "note": "Offline as-of replay evidence; closing prices are not substituted before their availability.",
+  "schema_version": "market-history-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
