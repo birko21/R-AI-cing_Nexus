@@ -1,0 +1,32 @@
+{
+  "fictional": true,
+  "healthy": {
+    "capabilities_disabled": false,
+    "checked_at": "2026-01-15T12:00:00Z",
+    "kill_switch_reason": null,
+    "signals": [],
+    "source_id": "synthetic-health-fixture",
+    "status": "HEALTHY"
+  },
+  "note": "Failure-injection dashboard evidence only; historical records are not mutated.",
+  "post_kill_switch": {
+    "enabled": false,
+    "kill_switch_reason": "source health kill switch: SCHEMA_DRIFT"
+  },
+  "schema_drift_failure": {
+    "capabilities_disabled": true,
+    "checked_at": "2026-01-15T12:00:00Z",
+    "kill_switch_reason": "SCHEMA_DRIFT",
+    "signals": [
+      {
+        "detail": "observed schema differs from the declared adapter schema",
+        "kind": "SCHEMA_DRIFT",
+        "severity": "CRITICAL"
+      }
+    ],
+    "source_id": "synthetic-health-fixture",
+    "status": "DISABLED"
+  },
+  "schema_version": "source-health-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}

@@ -27,3 +27,5 @@ if ($LASTEXITCODE -ne 0) { throw "Provider capability fixture validation failed 
 if ($LASTEXITCODE -ne 0) { throw "Scraped provenance fixture validation failed with exit code $LASTEXITCODE" }
 & '.venv\Scripts\python.exe' scripts/generate_source_checkpoint_fixture.py
 if ($LASTEXITCODE -ne 0) { throw "Source checkpoint fixture validation failed with exit code $LASTEXITCODE" }
+& '.venv\Scripts\python.exe' scripts/generate_source_health_fixture.py
+if ($LASTEXITCODE -ne 0) { throw "Source health fixture validation failed with exit code $LASTEXITCODE" }
