@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
 test('command centre filters codes and distinguishes data states', async ({ page }) => {
@@ -27,7 +28,7 @@ test('command centre filters codes and distinguishes data states', async ({ page
   await page.screenshot({ path: 'docs/evidence/ril-018/race-research-view.png', fullPage: true });
   await page.getByRole('button', { name: 'Close view' }).click();
 
-  await page.getByRole('button', { name: 'Greyhound' }).click();
+  await page.getByRole('button', { name: 'Greyhound', exact: true }).click();
   await expect(page.getByRole('region', { name: 'Today command cards' }).getByText('No racing')).toBeVisible();
   await expect(page.getByText('Fictional Greyhound Track')).toBeVisible();
 
@@ -56,10 +57,33 @@ test('code-specific research panels explain missing specialty inputs', async ({ 
   for (const panel of panels) {
     await page.goto('/');
     await page.getByRole('button', { name: panel.code, exact: true }).click();
-    await page.getByRole('button', { name: 'Open research view' }).click();
+    await page.getByRole('button', { name: /Open research view/ }).click();
     const researchView = page.getByRole('region', { name: 'Race research view' });
     await expect(researchView.getByText(panel.title)).toBeVisible();
     await expect(researchView.getByText('No value is invented for the comparison.')).toBeVisible();
     await page.screenshot({ path: `docs/evidence/ril-019/${panel.file}`, fullPage: true });
   }
+});
+
+test('degraded states and accessible controls remain explicit at desktop and mobile sizes', async ({ page }) => {
+  await page.goto('/');
+  for (const state of ['Loading', 'Stale snapshot', 'Quarantined', 'Unsupported', 'Auth denied']) {
+    await expect(page.getByRole('article', { name: new RegExp(`· ${state}$`) })).toBeVisible();
+  }
+  await expect(page.getByText('No partial values are displayed.', { exact: false })).toBeVisible();
+  await expect(page.getByText('No value is inferred', { exact: false })).not.toBeVisible();
+
+  const accessibility = await new AxeBuilder({ page }).analyze();
+  expect(accessibility.violations).toEqual([]);
+
+  const allCodes = page.getByRole('button', { name: 'All codes', exact: true });
+  await allCodes.focus();
+  await expect(allCodes).toBeFocused();
+  await expect(allCodes).toHaveAttribute('aria-pressed', 'true');
+  await page.getByLabel('Data state').selectOption('AUTH_DENIED');
+  await expect(page.getByRole('region', { name: 'Today command cards' }).getByText('Auth denied', { exact: true })).toBeVisible();
+
+  await page.screenshot({ path: 'docs/evidence/ril-020/degraded-desktop.png', fullPage: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.screenshot({ path: 'docs/evidence/ril-020/degraded-mobile.png', fullPage: true });
 });

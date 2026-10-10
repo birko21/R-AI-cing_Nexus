@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 
 type Code = 'ALL' | 'THOROUGHBRED' | 'HARNESS' | 'GREYHOUND';
-type Status = 'DEMO' | 'NO_RACING' | 'NO_DATA' | 'UNAVAILABLE';
+type Status = 'DEMO' | 'NO_RACING' | 'NO_DATA' | 'UNAVAILABLE' | 'LOADING' | 'STALE' | 'QUARANTINED' | 'UNSUPPORTED' | 'AUTH_DENIED';
 
 type CommandItem = {
   id: string;
@@ -42,9 +42,14 @@ const codes: Array<{ value: Code; label: string }> = [
 const statuses: Array<{ value: Status | 'ALL'; label: string }> = [
   { value: 'ALL', label: 'All states' },
   { value: 'DEMO', label: 'Demo fixture' },
+  { value: 'LOADING', label: 'Loading' },
+  { value: 'STALE', label: 'Stale snapshot' },
   { value: 'NO_RACING', label: 'No racing' },
   { value: 'NO_DATA', label: 'No data' },
+  { value: 'QUARANTINED', label: 'Quarantined' },
+  { value: 'UNSUPPORTED', label: 'Unsupported' },
   { value: 'UNAVAILABLE', label: 'Unavailable' },
+  { value: 'AUTH_DENIED', label: 'Auth denied' },
 ];
 
 const commandItems: CommandItem[] = [
@@ -74,6 +79,26 @@ const commandItems: CommandItem[] = [
   {
     id: 'unavailable', code: 'THOROUGHBRED', label: 'Thoroughbred', status: 'UNAVAILABLE',
     sourceAge: 'Source disabled', note: 'This state is used when a source is disabled or not entitled.',
+  },
+  {
+    id: 'loading', code: 'THOROUGHBRED', label: 'Thoroughbred', status: 'LOADING',
+    sourceAge: 'Request in progress', note: 'The source request is still running. No partial values are displayed.',
+  },
+  {
+    id: 'stale', code: 'HARNESS', label: 'Harness', status: 'STALE',
+    sourceAge: 'Last receipt 46 minutes ago', note: 'The last receipt is outside the freshness window. Treat this snapshot as stale.',
+  },
+  {
+    id: 'quarantined', code: 'GREYHOUND', label: 'Greyhound', status: 'QUARANTINED',
+    sourceAge: 'Receipt held for review', note: 'The receipt failed validation and is quarantined until its reason is resolved.',
+  },
+  {
+    id: 'unsupported', code: 'THOROUGHBRED', label: 'Thoroughbred', status: 'UNSUPPORTED',
+    sourceAge: 'Capability not supported', note: 'This requested view is outside the current synthetic fixture capability.',
+  },
+  {
+    id: 'auth-denied', code: 'HARNESS', label: 'Harness', status: 'AUTH_DENIED',
+    sourceAge: 'Scope not granted', note: 'The local capability scope does not permit this evidence view.',
   },
 ];
 
@@ -136,6 +161,7 @@ const researchRaces: Record<Exclude<Code, 'ALL'>, ResearchRace> = {
 
 const statusText: Record<Status, string> = {
   DEMO: 'Fictional demo', NO_RACING: 'No racing', NO_DATA: 'No data', UNAVAILABLE: 'Unavailable',
+  LOADING: 'Loading', STALE: 'Stale snapshot', QUARANTINED: 'Quarantined', UNSUPPORTED: 'Unsupported', AUTH_DENIED: 'Auth denied',
 };
 
 function localNow(): string {
@@ -171,7 +197,7 @@ export default function App() {
       </section>
       <section className="command-panel" aria-label="Command centre filters">
         <div className="filter-group"><span className="filter-label">Code</span><div className="filter-row" role="group" aria-label="Filter by racing code">
-          {codes.map((code) => <button className={`filter-button ${selectedCode === code.value ? 'selected' : ''}`} key={code.value} onClick={() => setSelectedCode(code.value)} type="button">{code.label}</button>)}
+          {codes.map((code) => <button aria-pressed={selectedCode === code.value} className={`filter-button ${selectedCode === code.value ? 'selected' : ''}`} key={code.value} onClick={() => setSelectedCode(code.value)} type="button">{code.label}</button>)}
         </div></div>
         <div className="filter-group"><label className="filter-label" htmlFor="state-filter">Data state</label><select id="state-filter" value={selectedStatus} onChange={(event) => setSelectedStatus(event.target.value as Status | 'ALL')}>
           {statuses.map((status) => <option key={status.value} value={status.value}>{status.label}</option>)}
@@ -184,12 +210,12 @@ export default function App() {
         <div><span className="summary-value">{localNow()}</span><span className="summary-label">local browser time · Australia/Sydney</span></div>
       </section>
       <section className="code-grid" aria-label="Today command cards">
-        {visibleItems.map((item) => <article className={`code-card status-${item.status.toLowerCase()}`} key={item.id}>
+        {visibleItems.map((item) => <article aria-label={`${item.label} · ${statusText[item.status]}`} className={`code-card status-${item.status.toLowerCase()}`} key={item.id}>
           <div className="card-topline"><span className="status-dot" aria-hidden="true" /><span className="status-pill">{statusText[item.status]}</span></div>
           <h3>{item.label}</h3>{item.meeting && <p className="meeting-name">{item.meeting}</p>}
           <dl className="card-facts">{item.races !== undefined && <><dt>Races</dt><dd>{item.races} fictional races</dd></>}{item.localTime && <><dt>Fixture time</dt><dd>{item.localTime}</dd></>}<dt>Source age</dt><dd>{item.sourceAge}</dd></dl>
           <p className="card-note">{item.note}</p>
-          {item.status === 'DEMO' && <button className="research-button" onClick={() => { setSelectedRace(item.code); setEvidenceTab('FIELD'); }} type="button">Open research view</button>}
+          {item.status === 'DEMO' && <button aria-label={`Open research view for ${item.label}`} className="research-button" onClick={() => { setSelectedRace(item.code); setEvidenceTab('FIELD'); }} type="button">Open research view</button>}
           <span className="card-watermark">FICTIONAL · NOT LIVE · NO WAGERING</span>
         </article>)}
       </section>

@@ -2,6 +2,8 @@
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; background: radial-gradient(circle at top right, #1b2d4a, #0d1524 50%); }
 button, select, input { font: inherit; }
+button:focus-visible, select:focus-visible, input:focus-visible { outline: 3px solid #9fd0ff; outline-offset: 2px; }
+button, select { min-height: 44px; }
 button { cursor: pointer; }
 .shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 32px 0 24px; }
 .topbar, .footer { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
@@ -38,10 +40,20 @@ select { min-width: 150px; }
 .status-no_racing .status-dot { background: #78b6ff; box-shadow: 0 0 0 5px rgba(120, 182, 255, 0.14); }
 .status-no_data .status-dot { background: #d7a94e; box-shadow: 0 0 0 5px rgba(215, 169, 78, 0.14); }
 .status-unavailable .status-dot { background: #d47777; box-shadow: 0 0 0 5px rgba(212, 119, 119, 0.14); }
+.status-loading .status-dot { background: #78b6ff; box-shadow: 0 0 0 5px rgba(120, 182, 255, 0.14); }
+.status-stale .status-dot { background: #d7a94e; box-shadow: 0 0 0 5px rgba(215, 169, 78, 0.14); }
+.status-quarantined .status-dot { background: #d47777; box-shadow: 0 0 0 5px rgba(212, 119, 119, 0.14); }
+.status-unsupported .status-dot { background: #9ba9bb; box-shadow: 0 0 0 5px rgba(155, 169, 187, 0.14); }
+.status-auth_denied .status-dot { background: #c39bff; box-shadow: 0 0 0 5px rgba(195, 155, 255, 0.14); }
 .status-pill { color: #9ff0c6; border: 1px solid #376a54; border-radius: 999px; font-size: 0.72rem; padding: 4px 8px; }
 .status-no_racing .status-pill { color: #a9d2ff; border-color: #396495; }
 .status-no_data .status-pill { color: #ffdc8a; border-color: #846a31; }
 .status-unavailable .status-pill { color: #ffb3b3; border-color: #7f4545; }
+.status-loading .status-pill { color: #a9d2ff; border-color: #396495; }
+.status-stale .status-pill { color: #ffdc8a; border-color: #846a31; }
+.status-quarantined .status-pill { color: #ffb3b3; border-color: #7f4545; }
+.status-unsupported .status-pill { color: #c5d4e6; border-color: #687b92; }
+.status-auth_denied .status-pill { color: #dfc9ff; border-color: #7659a5; }
 .meeting-name { color: #d5e0ee; margin-bottom: 13px; }
 .card-facts { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 0 0 16px; font-size: 0.86rem; }
 .card-facts dt { color: #7890ab; }
