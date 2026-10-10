@@ -1,6 +1,7 @@
-from typing import Literal
+from datetime import datetime
+from typing import Generic, Literal, TypeVar
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class HealthResponse(BaseModel):
@@ -18,3 +19,129 @@ class SystemStatusResponse(BaseModel):
     external_connectivity: Literal[False]
     model_status: Literal["NOT_TRAINED", "ILLUSTRATIVE_ONLY", "MODEL_VALIDATED"]
     wagering_enabled: Literal[False]
+
+
+class ErrorDetail(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    code: str
+    message: str
+    correlation_id: str
+    details: dict[str, object] | None = None
+
+
+class ErrorResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    error: ErrorDetail
+
+
+class PageMeta(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    limit: int = Field(ge=1, le=100)
+    next_cursor: str | None
+    as_of: datetime
+
+
+class CodeSummary(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    code: Literal["THOROUGHBRED", "HARNESS", "GREYHOUND"]
+    label: str
+    data_mode: Literal["SYNTHETIC_ONLY", "SCRAPED_PUBLIC", "LICENSED"]
+
+
+class Meeting(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    meeting_id: str
+    code: Literal["THOROUGHBRED", "HARNESS", "GREYHOUND"]
+    name: str
+    country: Literal["AUS"]
+    scheduled_date: datetime
+    data_mode: Literal["SYNTHETIC_ONLY", "SCRAPED_PUBLIC", "LICENSED"]
+
+
+class Race(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    race_id: str
+    meeting_id: str
+    race_number: int = Field(ge=1)
+    status: Literal["SCHEDULED", "ACCEPTANCES", "FINAL_FIELDS", "OFFICIAL", "ABANDONED", "POSTPONED"]
+    field_revision: str
+    data_mode: Literal["SYNTHETIC_ONLY", "SCRAPED_PUBLIC", "LICENSED"]
+    source_receipt_id: str | None = None
+    as_of: datetime | None = None
+
+
+class Entry(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    entry_id: str
+    race_id: str
+    participant_id: str
+    number: int = Field(ge=1)
+    name: str | None = None
+    status: Literal["ACTIVE", "SCRATCHED", "RESERVE", "COUPLED"]
+    data_mode: Literal["SYNTHETIC_ONLY", "SCRAPED_PUBLIC", "LICENSED"]
+
+
+class Forecast(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    forecast_id: str
+    race_id: str
+    field_revision: str
+    cutoff: datetime
+    model_version: str
+    probabilities: dict[str, float]
+    data_mode: Literal["SYNTHETIC_ONLY", "SCRAPED_PUBLIC", "LICENSED"]
+    diagnostic_flags: list[str] | None = None
+
+
+class SelectionCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    race_id: str
+    entry_id: str | None = None
+    selection_type: Literal["WIN", "PLACE", "PASS"]
+    rationale: str = Field(max_length=4000)
+    forecast_id: str | None = None
+
+
+class Selection(SelectionCreate):
+    selection_id: str
+    created_at: datetime
+    data_mode: Literal["SYNTHETIC_ONLY", "SCRAPED_PUBLIC", "LICENSED"]
+
+
+T = TypeVar("T")
+
+
+class Page(BaseModel, Generic[T]):
+    model_config = ConfigDict(extra="forbid")
+
+    items: list[T]
+    meta: PageMeta
+
+
+class CodeListResponse(Page[CodeSummary]):
+    pass
+
+
+class MeetingListResponse(Page[Meeting]):
+    pass
+
+
+class EntryListResponse(Page[Entry]):
+    pass
+
+
+class ForecastListResponse(Page[Forecast]):
+    pass
+
+
+class SelectionListResponse(Page[Selection]):
+    pass

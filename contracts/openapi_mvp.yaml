@@ -139,6 +139,7 @@ paths:
               schema: { $ref: '#/components/schemas/Selection' }
         '400': { $ref: '#/components/responses/BadRequest' }
         '401': { $ref: '#/components/responses/Unauthorized' }
+        '501': { $ref: '#/components/responses/NotImplemented' }
 components:
   securitySchemes:
     bearerAuth:
@@ -192,6 +193,11 @@ components:
           schema: { $ref: '#/components/schemas/ErrorResponse' }
     NotFound:
       description: Resource not found at the requested as-of instant.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+    NotImplemented:
+      description: Route shape exists but persistence is delivered by a later ticket.
       content:
         application/json:
           schema: { $ref: '#/components/schemas/ErrorResponse' }
