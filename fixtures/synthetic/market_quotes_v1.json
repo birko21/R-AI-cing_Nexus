@@ -1,0 +1,36 @@
+{
+  "accepted_quote": {
+    "data_mode": "SYNTHETIC_ONLY",
+    "entitlement_reference": "synthetic-fixture",
+    "in_play": false,
+    "liquidity": 1000.0,
+    "mapping": {
+      "code": "THOROUGHBRED",
+      "entry_id": "THOROUGHBRED:fixture:entry-1",
+      "field_revision": "field-r1",
+      "mapping_id": "map-1",
+      "market_id": "market-1",
+      "market_source": "fixture",
+      "race_id": "THOROUGHBRED:fixture:race-1",
+      "selection_id": "selection-1"
+    },
+    "market_type": "WIN",
+    "price": 3.5,
+    "price_type": "DECIMAL",
+    "quote_id": "quote-1",
+    "retrieved_at": "2026-01-15T10:00:00Z",
+    "rights_state": "SYNTHETIC",
+    "size": 100.0,
+    "source_receipt_id": "receipt-1",
+    "source_timestamp": "2026-01-15T10:00:00Z"
+  },
+  "fictional": true,
+  "mapping_quarantine": {
+    "detail": "quote requires exact code, race, field revision, entry, market and selection identifiers",
+    "quote_id": "quote-1",
+    "reason_code": "MISSING_EXACT_MAPPING"
+  },
+  "note": "Paper-analysis contract evidence only; no live odds or order path is enabled.",
+  "schema_version": "market-quotes-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
