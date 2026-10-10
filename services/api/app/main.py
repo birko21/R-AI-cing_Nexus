@@ -6,6 +6,7 @@ from uuid import uuid4
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.auth import forecasts_read, races_read, selections_read, selections_write, validate_bind_configuration
 from app.contracts import (
@@ -42,6 +43,26 @@ app = FastAPI(
 )
 
 journal = SelectionJournal()
+
+
+def _cors_origins() -> list[str]:
+    configured = [item.strip().rstrip("/") for item in os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",") if item.strip()]
+    if configured:
+        if "*" in configured or any("*" in origin for origin in configured):
+            raise RuntimeError("CORS_ALLOWED_ORIGINS must be an explicit origin allowlist")
+        return configured
+    if os.environ.get("APP_ENV", "development") == "development":
+        return ["http://127.0.0.1:5173", "http://localhost:5173"]
+    raise RuntimeError("CORS_ALLOWED_ORIGINS is required outside development")
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=_cors_origins(),
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "X-Correlation-ID"],
+)
 
 
 def _correlation_id(request: Request) -> str:

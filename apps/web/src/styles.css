@@ -15,6 +15,9 @@ h1 { font-size: clamp(1.7rem, 4vw, 2.8rem); letter-spacing: -0.04em; margin-bott
 h2 { font-size: clamp(1.4rem, 3vw, 2.2rem); letter-spacing: -0.03em; max-width: 720px; }
 .mode-badge { border: 1px solid #d7a94e; border-radius: 999px; color: #ffdc8a; font-size: 0.72rem; font-weight: 750; padding: 8px 12px; white-space: nowrap; }
 .mode-badge.subdued { border-color: #4f9b79; color: #9ff0c6; }
+.auth-toolbar { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 14px 0 0; display: flex; justify-content: flex-end; align-items: center; gap: 12px; color: #b6c4d7; font-size: 0.86rem; }
+.auth-toolbar button, .auth-action button { color: #d9e5f4; background: #245287; border: 1px solid #78b6ff; border-radius: 8px; padding: 9px 11px; }
+.auth-state { min-height: 100vh; }
 .intro { padding: 60px 0 30px; max-width: 780px; }
 .intro p:not(.eyebrow) { color: #b6c4d7; font-size: 1.05rem; line-height: 1.7; }
 .command-panel { display: flex; align-items: end; flex-wrap: wrap; gap: 20px; padding: 18px; background: rgba(24, 39, 63, 0.72); border: 1px solid #2a3c57; border-radius: 16px; }

@@ -54,6 +54,9 @@ def main() -> None:
     require(api_env.get("ALLOW_LOCAL_AUTH", {}).get("value") in {False, "false"}, "local bearer auth must be disabled")
     for key in ("OIDC_ISSUER", "OIDC_AUDIENCE", "OIDC_JWKS_URL"):
         require(api_env.get(key, {}).get("sync") is False, f"{key} must be entered as a Render secret/config value")
+    require(api_env.get("OIDC_ALLOWED_SUBJECTS", {}).get("sync") is False, "owner subject allowlist must be entered as a Render config value")
+    cors = str(api_env.get("CORS_ALLOWED_ORIGINS", {}).get("value", ""))
+    require(cors == "https://nexus-staging-frontend.onrender.com" and "*" not in cors, "API CORS must strictly allow the Nexus frontend origin")
     require(api_env.get("NEXUS_DIAGNOSTICS_ENABLED", {}).get("value") in {False, "false"}, "diagnostics must be disabled")
     for key in PROVIDER_FLAGS:
         require(api_env.get(key, {}).get("value") in {False, "false"}, f"{key} must default to false")
@@ -65,8 +68,15 @@ def main() -> None:
     require(frontend.get("type") == "web" and frontend.get("runtime") == "static", "frontend must be a static site")
     require(frontend.get("autoDeployTrigger") == "off", "frontend auto-deploy must remain disabled")
     require(frontend.get("staticPublishPath") == "apps/web/dist", "frontend must publish the Vite dist directory")
+    frontend_env = env_map(frontend)
+    require(frontend_env.get("VITE_API_BASE_URL", {}).get("value") == "https://nexus-staging-api.onrender.com", "frontend must use the Nexus staging API URL")
+    for key in ("VITE_AUTH0_DOMAIN", "VITE_AUTH0_CLIENT_ID", "VITE_AUTH0_AUDIENCE", "VITE_AUTH0_ALLOWED_SUBJECT"):
+        require(frontend_env.get(key, {}).get("sync") is False, f"{key} must be configured separately in Render")
     routes = frontend.get("routes", [])
     require(any(isinstance(route, dict) and route.get("type") == "rewrite" and route.get("source") == "/*" and route.get("destination") == "/index.html" for route in routes), "frontend must have an SPA fallback")
+    headers = frontend.get("headers", [])
+    csp = " ".join(str(item.get("value", "")) for item in headers if isinstance(item, dict) and item.get("name") == "Content-Security-Policy")
+    require("https://*.auth0.com" in csp and "https://nexus-staging-api.onrender.com" in csp, "frontend CSP must allow the configured Auth0 class and Nexus API")
     print("RENDER BLUEPRINT PASS: Nexus-only, free-plan, OIDC-gated, provider-disabled staging configuration")
 
 

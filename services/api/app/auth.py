@@ -37,6 +37,10 @@ def _oidc_settings() -> tuple[str, str, str]:
     return issuer, audience, jwks_url
 
 
+def _oidc_allowed_subjects() -> frozenset[str]:
+    return frozenset(item.strip() for item in os.environ.get("OIDC_ALLOWED_SUBJECTS", "").split(",") if item.strip())
+
+
 def _validate_oidc_settings(*, require_https: bool) -> None:
     issuer, _, jwks_url = _oidc_settings()
     for name, value in (("OIDC_ISSUER", issuer), ("OIDC_JWKS_URL", jwks_url)):
@@ -45,6 +49,8 @@ def _validate_oidc_settings(*, require_https: bool) -> None:
             raise RuntimeError(f"{name} must be an absolute URL")
         if require_https and parsed.scheme != "https":
             raise RuntimeError(f"{name} must use HTTPS outside loopback development")
+    if not _oidc_allowed_subjects():
+        raise RuntimeError("OIDC_ALLOWED_SUBJECTS must explicitly allow the owner identity")
 
 
 def validate_bind_configuration() -> None:
@@ -125,7 +131,14 @@ def _token_scopes(claims: Mapping[str, object]) -> set[str]:
     scp_claim = claims.get("scp")
     if isinstance(scp_claim, list):
         scopes.update(item for item in scp_claim if isinstance(item, str))
+    permissions_claim = claims.get("permissions")
+    if isinstance(permissions_claim, list):
+        scopes.update(item for item in permissions_claim if isinstance(item, str))
     return scopes
+
+
+class OwnerIdentityNotAllowed(PermissionError):
+    """Raised when a valid token is not for the explicitly allowlisted owner."""
 
 
 def _validate_oidc_bearer(token: str, required_scopes: tuple[str, ...]) -> dict[str, object]:
@@ -142,6 +155,8 @@ def _validate_oidc_bearer(token: str, required_scopes: tuple[str, ...]) -> dict[
     subject = claims.get("sub")
     if not isinstance(subject, str) or not subject:
         raise ValueError("OIDC subject is missing")
+    if subject not in _oidc_allowed_subjects():
+        raise OwnerIdentityNotAllowed("owner identity is not allowlisted")
     scopes = _token_scopes(claims)
     missing = sorted(set(required_scopes) - scopes)
     if missing:
@@ -164,6 +179,8 @@ def require_scopes(*required_scopes: str) -> Callable:
         if _auth_mode() == "oidc":
             try:
                 return _validate_oidc_bearer(supplied_token, required_scopes)
+            except OwnerIdentityNotAllowed as exc:
+                raise HTTPException(status_code=403, detail="owner identity is not allowlisted") from exc
             except PermissionError as exc:
                 raise HTTPException(status_code=403, detail=f"required scope is missing: {exc}") from exc
             except Exception as exc:
