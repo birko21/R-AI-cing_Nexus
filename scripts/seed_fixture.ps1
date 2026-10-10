@@ -21,3 +21,5 @@ if ($LASTEXITCODE -ne 0) { throw "Diagnostics fixture validation failed with exi
 if ($LASTEXITCODE -ne 0) { throw "Registry fixture validation failed with exit code $LASTEXITCODE" }
 & '.venv\Scripts\python.exe' scripts/generate_scraping_policy_fixture.py
 if ($LASTEXITCODE -ne 0) { throw "Scraping policy fixture validation failed with exit code $LASTEXITCODE" }
+& '.venv\Scripts\python.exe' scripts/generate_provider_capability_fixture.py
+if ($LASTEXITCODE -ne 0) { throw "Provider capability fixture validation failed with exit code $LASTEXITCODE" }

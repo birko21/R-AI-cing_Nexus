@@ -1,0 +1,52 @@
+{
+  "fictional": true,
+  "note": "Capability matrix evidence only; no external provider is enabled.",
+  "providers": [
+    {
+      "data_mode": "SYNTHETIC_ONLY",
+      "display_name": "Synthetic fixture adapter",
+      "enabled": true,
+      "pagination": {
+        "max_page_size": 100,
+        "style": "CURSOR",
+        "supported": true
+      },
+      "provider_id": "synthetic-fixture",
+      "quotas": {
+        "concurrent_requests": 2,
+        "daily_requests": 1000,
+        "notes": "",
+        "requests_per_minute": 60,
+        "unknown": false
+      },
+      "rights_state": "SYNTHETIC",
+      "supported_codes": [
+        "GREYHOUND",
+        "HARNESS",
+        "THOROUGHBRED"
+      ],
+      "supported_fields": [
+        "entry",
+        "meeting",
+        "race",
+        "result"
+      ],
+      "supported_operations": [
+        "GET_ENTRIES",
+        "GET_RACES",
+        "GET_RESULTS",
+        "LIST_MEETINGS"
+      ],
+      "timestamp_fields": [
+        "first_observed_at",
+        "published_at",
+        "retrieved_at"
+      ],
+      "unsupported_operations": [
+        "GET_MARKETS"
+      ]
+    }
+  ],
+  "schema_version": "provider-capability-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
