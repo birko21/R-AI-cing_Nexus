@@ -1,0 +1,112 @@
+{
+  "fictional": true,
+  "ledger": {
+    "assumptions": {
+      "commission_rate": 0.1,
+      "fee_rate": 0.02,
+      "fill_ratio": 0.5,
+      "max_exposure": 100
+    },
+    "guaranteed_returns": false,
+    "paper_only": true,
+    "positions": [
+      {
+        "exposure": 5.1,
+        "fee": 0.1,
+        "fill_status": "PARTIAL",
+        "liquidity": 20,
+        "matched_stake": 5.0,
+        "position_id": "p-win",
+        "price": 3,
+        "requested_stake": 10,
+        "selection_id": "selection-1"
+      },
+      {
+        "exposure": 2.04,
+        "fee": 0.04,
+        "fill_status": "PARTIAL",
+        "liquidity": 4,
+        "matched_stake": 2.0,
+        "position_id": "p-dead-heat",
+        "price": 5,
+        "requested_stake": 10,
+        "selection_id": "selection-2"
+      },
+      {
+        "exposure": 0.0,
+        "fee": 0.0,
+        "fill_status": "SCRATCHED",
+        "liquidity": 20,
+        "matched_stake": 0.0,
+        "position_id": "p-scratch",
+        "price": 4,
+        "requested_stake": 10,
+        "selection_id": "selection-3"
+      },
+      {
+        "exposure": 5.1,
+        "fee": 0.1,
+        "fill_status": "PARTIAL",
+        "liquidity": 20,
+        "matched_stake": 5.0,
+        "position_id": "p-void",
+        "price": 4,
+        "requested_stake": 10,
+        "selection_id": "selection-4"
+      }
+    ],
+    "settlements": [
+      {
+        "commission": 1.0,
+        "dead_heat_places": 1,
+        "fee": 0.1,
+        "gross_profit": 10.0,
+        "guaranteed": false,
+        "matched_stake": 5.0,
+        "net_result": 8.9,
+        "outcome": "WIN",
+        "position_id": "p-win",
+        "removal_factor": 0.0
+      },
+      {
+        "commission": 0.32,
+        "dead_heat_places": 2,
+        "fee": 0.04,
+        "gross_profit": 3.2,
+        "guaranteed": false,
+        "matched_stake": 2.0,
+        "net_result": 2.84,
+        "outcome": "DEAD_HEAT",
+        "position_id": "p-dead-heat",
+        "removal_factor": 0.2
+      },
+      {
+        "commission": 0.0,
+        "dead_heat_places": 1,
+        "fee": 0.0,
+        "gross_profit": 0.0,
+        "guaranteed": false,
+        "matched_stake": 0.0,
+        "net_result": 0.0,
+        "outcome": "SCRATCHED",
+        "position_id": "p-scratch",
+        "removal_factor": 0.0
+      },
+      {
+        "commission": 0.0,
+        "dead_heat_places": 1,
+        "fee": 0.1,
+        "gross_profit": 0.0,
+        "guaranteed": false,
+        "matched_stake": 5.0,
+        "net_result": -0.1,
+        "outcome": "VOID",
+        "position_id": "p-void",
+        "removal_factor": 0.0
+      }
+    ]
+  },
+  "note": "Scenario ledger evidence only; no external execution, guaranteed return or live wagering path exists.",
+  "schema_version": "paper-settlement-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_PAPER_ONLY_DO_NOT_TREAT_AS_LIVE"
+}

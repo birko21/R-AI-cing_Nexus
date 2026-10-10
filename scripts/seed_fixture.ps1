@@ -35,3 +35,5 @@ if ($LASTEXITCODE -ne 0) { throw "Market quote fixture validation failed with ex
 if ($LASTEXITCODE -ne 0) { throw "Market history fixture validation failed with exit code $LASTEXITCODE" }
 & '.venv\Scripts\python.exe' scripts/generate_market_math_fixture.py
 if ($LASTEXITCODE -ne 0) { throw "Market math fixture validation failed with exit code $LASTEXITCODE" }
+& '.venv\Scripts\python.exe' scripts/generate_paper_settlement_fixture.py
+if ($LASTEXITCODE -ne 0) { throw "Paper settlement fixture validation failed with exit code $LASTEXITCODE" }
