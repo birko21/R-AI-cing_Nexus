@@ -11,11 +11,18 @@ from app.domain import VALID_CODES
 from app.provenance import DataMode, RawEnvelope, RightsState
 
 
-ProviderOperation = Literal["LIST_MEETINGS", "GET_RACES", "GET_ENTRIES", "GET_RESULTS", "GET_MARKETS"]
+ProviderOperation = Literal[
+    "LIST_MEETINGS",
+    "GET_RACES",
+    "GET_ENTRIES",
+    "GET_RESULTS",
+    "GET_MARKETS",
+    "ACCOUNT_METADATA_READ",
+]
 TimestampField = Literal["retrieved_at", "first_observed_at", "published_at"]
 PaginationStyle = Literal["NONE", "CURSOR", "PAGE_NUMBER"]
 
-KNOWN_OPERATIONS = frozenset({"LIST_MEETINGS", "GET_RACES", "GET_ENTRIES", "GET_RESULTS", "GET_MARKETS"})
+KNOWN_OPERATIONS = frozenset({"LIST_MEETINGS", "GET_RACES", "GET_ENTRIES", "GET_RESULTS", "GET_MARKETS", "ACCOUNT_METADATA_READ"})
 KNOWN_TIMESTAMP_FIELDS = frozenset({"retrieved_at", "first_observed_at", "published_at"})
 
 

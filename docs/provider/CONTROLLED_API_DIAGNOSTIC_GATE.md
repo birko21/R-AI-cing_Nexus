@@ -73,13 +73,13 @@ without any credential material:
 The public provider terms and endpoint reference were checked on 10 October
 2026. The endpoint reference describes this operation as key metadata, with no
 parameters beyond authentication, and the terms require a confidential key,
-server-side handling, and compliance with plan limits. Account-specific
-operation access, current quota safety and credential configuration were not
-verified because no credential resolver is configured in this workspace; live
-execution therefore remains blocked. The implementation also requires an
-authentication-header reconciliation before use: the provider reference
-specifies `X-API-Key`, while the current adapter test path constructs a bearer
-`Authorization` header.
+server-side handling, and compliance with plan limits. The adapter now sends
+the required `X-API-Key` header and sends no query parameters to
+`/v1/keys/info`. Account-specific operation access, current quota safety and
+credential configuration were not verified because no credential resolver is
+configured in this workspace; live execution therefore remains blocked. A
+metadata response must contain a non-empty plan and usable non-negative quota
+or credit values before `quota_checked` can become true.
 
 The known sample is a diagnostic target, not permission to execute. The owner
 must supply distinct records for `ACCOUNT_METADATA_READ` and

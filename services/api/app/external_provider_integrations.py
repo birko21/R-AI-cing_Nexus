@@ -155,7 +155,7 @@ def _capabilities(
     )
 
 
-VALID_OPERATIONS = {"LIST_MEETINGS", "GET_RACES", "GET_ENTRIES", "GET_RESULTS", "GET_MARKETS"}
+VALID_OPERATIONS = {"LIST_MEETINGS", "GET_RACES", "GET_ENTRIES", "GET_RESULTS", "GET_MARKETS", "ACCOUNT_METADATA_READ"}
 
 
 def build_existing_provider_assets() -> dict[str, ExistingProviderAsset]:
@@ -179,7 +179,7 @@ def build_existing_provider_assets() -> dict[str, ExistingProviderAsset]:
                 EndpointSpec("GET_ENTRIES", "GET", "/v1/racing/horses/form", "horse history/form"),
                 EndpointSpec("ACCOUNT_METADATA_READ", "GET", "/v1/keys/info", "account metadata and quota"),
             ),
-            _capabilities("punters-edge", "PuntersEdge", frozenset({"race_id", "runner_id", "start_time", "resulted_at", "position", "dead_heat", "fixed_win_price", "fixed_place_price", "horse_form"}), frozenset({"GET_RESULTS", "GET_ENTRIES"}), QuotaCapability(unknown=True, notes="A sanitized sibling probe recorded remaining credits; exact current quota is not independently re-verified here.")),
+            _capabilities("punters-edge", "PuntersEdge", frozenset({"race_id", "runner_id", "start_time", "resulted_at", "position", "dead_heat", "fixed_win_price", "fixed_place_price", "horse_form"}), frozenset({"ACCOUNT_METADATA_READ", "GET_RESULTS", "GET_ENTRIES"}), QuotaCapability(unknown=True, notes="A sanitized sibling probe recorded remaining credits; exact current quota is not independently re-verified here.")),
             ("Sibling sanitized validation recorded 10 final AU thoroughbred races, 9 complete, with fixed Win/Place prices.", "Personal free-plan evidence is historical evidence, not a Nexus entitlement record."),
             ("Nexus retention, training and derived-display permission is not evidenced; no transfer from the sibling application is assumed."),
         ),
@@ -293,26 +293,48 @@ class GatedReadOnlyProviderAdapter:
         if not credentials:
             raise ProviderActivationError("credential resolver returned no credential")
         if isinstance(credentials, str):
-            return {"token": credentials}, {"Authorization": f"Bearer {credentials}"}
-        return credentials, {"Authorization": f"Bearer {credentials.get('token', '')}"}
+            normalized: Mapping[str, str] = {"token": credentials, "api_key": credentials}
+        else:
+            normalized = credentials
+        if self.asset.provider_id == "punters-edge":
+            api_key = normalized.get("api_key") or normalized.get("token")
+            if not api_key:
+                raise ProviderActivationError("PuntersEdge requires a server-side API key")
+            return normalized, {"X-API-Key": api_key}
+        return normalized, {"Authorization": f"Bearer {normalized.get('token', '')}"}
+
+    @staticmethod
+    def _request_params(
+        operation: str,
+        *,
+        code: str,
+        date: str | None,
+        venue: str | None,
+        race: int | None,
+        cursor: str | None = None,
+        page_size: int | None = None,
+    ) -> dict[str, object]:
+        if operation == "ACCOUNT_METADATA_READ":
+            if any(value is not None for value in (date, venue, race, cursor, page_size)):
+                raise ProviderActivationError("PuntersEdge account metadata accepts no query parameters")
+            return {}
+        params: dict[str, object] = {"code": code}
+        for key, value in (("date", date), ("venue", venue), ("race", race), ("cursor", cursor), ("limit", page_size)):
+            if value is not None:
+                params[key] = value
+        return params
 
     def fetch(self, operation: ProviderOperation, *, code: str, approval: SourceApprovalRecord | None = None, date: str | None = None, venue: str | None = None, race: int | None = None, view: MarketView = "catalogue", cursor: str | None = None, page_size: int | None = None) -> AdapterPage:
+        if operation == "ACCOUNT_METADATA_READ":
+            raise ProviderActivationError("account metadata must use the aggregate-only diagnostic path")
         approved = self._check_gate(operation, code, approval)
         if code not in self.capabilities.supported_codes:
             raise AdapterContractError(f"provider does not support racing code {code}")
         endpoint = self.asset.endpoint(operation, view=view)
         credentials, headers = self._credentials()
-        params: dict[str, object] = {"code": code}
-        if date is not None:
-            params["date"] = date
-        if venue is not None:
-            params["venue"] = venue
-        if race is not None:
-            params["race"] = race
-        if cursor is not None:
-            params["cursor"] = cursor
-        if page_size is not None:
-            params["limit"] = page_size
+        params = self._request_params(
+            operation, code=code, date=date, venue=venue, race=race, cursor=cursor, page_size=page_size,
+        )
         body: dict[str, object] | None = None
         if self.asset.provider_id == "betfair-exchange":
             app_key = credentials.get("app_key", "") if isinstance(credentials, Mapping) else ""
@@ -361,10 +383,7 @@ class GatedReadOnlyProviderAdapter:
             raise ProviderActivationError("diagnostic request ceiling must be between 1 and 6")
         endpoint = self.asset.endpoint(operation, view=view)
         credentials, headers = self._credentials()
-        params: dict[str, object] = {"code": code}
-        for key, value in (("date", date), ("venue", venue), ("race", race)):
-            if value is not None:
-                params[key] = value
+        params = self._request_params(operation, code=code, date=date, venue=venue, race=race)
         body: dict[str, object] | None = None
         if self.asset.provider_id == "betfair-exchange":
             app_key = credentials.get("app_key", "")
@@ -380,11 +399,13 @@ class GatedReadOnlyProviderAdapter:
             method=endpoint.method, url=f"{self.asset.base_url}{endpoint.path}", headers=headers,
             params=params, json_body=body, timeout_seconds=4.0,
         )
+        if response.status_code < 200 or response.status_code >= 300:
+            raise ProviderActivationError(f"provider returned HTTP {response.status_code}")
         fields = _field_presence(response.payload)
-        quota_fields = {"plan", "credits", "credits_remaining", "quota", "requests_remaining", "requests_per_minute"}
-        quota_checked = operation == "ACCOUNT_METADATA_READ" and bool(quota_fields.intersection(fields))
-        if operation == "ACCOUNT_METADATA_READ" and not quota_checked:
-            raise ProviderActivationError("account metadata response did not expose current quota or credit fields")
+        quota_checked = False
+        if operation == "ACCOUNT_METADATA_READ":
+            _validate_account_metadata(response.payload)
+            quota_checked = True
         return SanitizedDiagnostic(
             provider_id=self.asset.provider_id, operation=operation, code=code,
             request_ordinal=request_ordinal, request_ceiling=request_ceiling,
@@ -425,6 +446,59 @@ def _field_presence(value: object, *, _depth: int = 0) -> tuple[str, ...]:
             fields.add(key)
         fields.update(_field_presence(nested, _depth=_depth + 1))
     return tuple(sorted(fields))
+
+
+def _field_values(value: object, names: set[str], *, _depth: int = 0) -> tuple[object, ...]:
+    if _depth > 4:
+        return ()
+    if isinstance(value, list):
+        values: list[object] = []
+        for item in value[:100]:
+            values.extend(_field_values(item, names, _depth=_depth + 1))
+        return tuple(values)
+    if not isinstance(value, Mapping):
+        return ()
+    values: list[object] = []
+    for key, nested in value.items():
+        if isinstance(key, str) and key.lower() in names:
+            values.append(nested)
+        values.extend(_field_values(nested, names, _depth=_depth + 1))
+    return tuple(values)
+
+
+def _nonnegative_number(value: object) -> bool:
+    if isinstance(value, bool):
+        return False
+    if isinstance(value, (int, float)):
+        return value >= 0
+    if isinstance(value, str):
+        try:
+            return float(value.strip()) >= 0
+        except ValueError:
+            return False
+    return False
+
+
+def _validate_account_metadata(payload: Mapping[str, object]) -> None:
+    plans = _field_values(payload, {"plan"})
+    if not any(isinstance(value, str) and value.strip() for value in plans):
+        raise ProviderActivationError("account metadata response did not expose a plan")
+    quota_values = _field_values(
+        payload,
+        {"credits", "credits_limit", "credits_used", "credits_remaining", "quota", "requests_remaining", "requests_per_minute"},
+    )
+    if not quota_values:
+        raise ProviderActivationError("account metadata response did not expose quota or credit fields")
+    if any(not _nonnegative_number(value) and not isinstance(value, Mapping) for value in quota_values):
+        raise ProviderActivationError("account metadata response exposed an invalid quota or credit value")
+    nested_quota_values = [
+        nested
+        for value in quota_values
+        if isinstance(value, Mapping)
+        for nested in _field_values(value, {"limit", "used", "remaining", "credits", "requests"})
+    ]
+    if any(not _nonnegative_number(value) for value in nested_quota_values):
+        raise ProviderActivationError("account metadata response exposed an invalid nested quota value")
 
 
 def _aggregate_row_count(value: object) -> int:

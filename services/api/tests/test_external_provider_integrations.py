@@ -87,6 +87,7 @@ def test_audited_endpoint_inventory_is_read_only_and_scoped_to_thoroughbred() ->
 
     assert assets["formfav"].endpoint("GET_RACES").path == "/v1/form"
     assert assets["punters-edge"].endpoint("GET_RESULTS").path == "/v1/racing/results"
+    assert assets["punters-edge"].endpoint("ACCOUNT_METADATA_READ").path == "/v1/keys/info"
     assert assets["krok-odds"].endpoint("GET_ENTRIES").path == "/api/v1/racing/runner-form"
     assert assets["betfair-exchange"].endpoint("GET_MARKETS", view="book").description.startswith("listMarketBook")
     assert all(endpoint.read_only for asset in assets.values() for endpoint in asset.endpoints)
@@ -120,7 +121,7 @@ def test_full_named_approval_and_injected_transport_are_required() -> None:
     assert page.records[0].rights_state == "APPROVED"
     assert transport.calls[0]["method"] == "GET"
     assert transport.calls[0]["url"].endswith("/v1/racing/results")
-    assert "test-only-secret" in transport.calls[0]["headers"]["Authorization"]
+    assert transport.calls[0]["headers"]["X-API-Key"] == "test-only-secret"
 
 
 def test_betfair_adapter_uses_read_only_json_rpc_and_never_post_settlement_sp_as_pre_race_input() -> None:
@@ -158,6 +159,9 @@ def test_diagnostic_session_requires_metadata_first_and_retains_only_aggregate_o
     metadata = session.run("ACCOUNT_METADATA_READ")
     results = session.run("GET_RESULTS", date="2026-09-19", venue="Randwick")
 
+    assert transport.calls[0]["url"].endswith("/v1/keys/info")
+    assert transport.calls[0]["headers"] == {"X-API-Key": "test-only-secret"}
+    assert transport.calls[0]["params"] == {}
     assert metadata.quota_checked is True
     assert results.raw_payload_retained is False
     assert results.row_count > 0
@@ -165,6 +169,34 @@ def test_diagnostic_session_requires_metadata_first_and_retains_only_aggregate_o
     assert session.requests_used == 2
     assert "test-only-secret" not in str(metadata)
     assert "test-only-secret" not in str(results)
+
+
+def test_account_metadata_rejects_invalid_quota_values() -> None:
+    class InvalidQuotaTransport(FakeTransport):
+        def request(self, **kwargs: object) -> TransportResponse:
+            self.calls.append(kwargs)
+            return TransportResponse(200, {"plan": "free", "credits_remaining": -1}, NOW, NOW, "request-1")
+
+    transport = InvalidQuotaTransport()
+    base = build_disabled_provider_adapters()["punters-edge"]
+    adapter = base.__class__(base.asset, transport=transport, credential_resolver=lambda: "test-only-secret")
+    session = BoundedDiagnosticSession(
+        adapter,
+        approval=metadata_approval("punters-edge"),
+        code="THOROUGHBRED",
+        policy=DiagnosticPolicy(enabled=True, max_requests=1),
+    )
+
+    with pytest.raises(ProviderActivationError, match="invalid quota"):
+        session.run("ACCOUNT_METADATA_READ")
+
+
+def test_account_metadata_cannot_be_fetched_as_a_raw_envelope() -> None:
+    base = build_disabled_provider_adapters()["punters-edge"]
+    adapter = base.__class__(base.asset, transport=FakeTransport(), credential_resolver=lambda: "test-only-secret")
+
+    with pytest.raises(ProviderActivationError, match="aggregate-only"):
+        adapter.fetch("ACCOUNT_METADATA_READ", code="THOROUGHBRED", approval=metadata_approval("punters-edge"))
 
 
 def test_diagnostic_session_has_no_pagination_or_retry_path() -> None:
