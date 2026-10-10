@@ -69,3 +69,5 @@ if ($LASTEXITCODE -ne 0) { throw "SBOM generation failed with exit code $LASTEXI
 if ($LASTEXITCODE -ne 0) { throw "Security audit failed with exit code $LASTEXITCODE" }
 & '.venv\Scripts\python.exe' scripts/generate_operations_fixture.py
 if ($LASTEXITCODE -ne 0) { throw "Operations fixture validation failed with exit code $LASTEXITCODE" }
+& '.venv\Scripts\python.exe' scripts/generate_backup_fixture.py
+if ($LASTEXITCODE -ne 0) { throw "Backup fixture validation failed with exit code $LASTEXITCODE" }

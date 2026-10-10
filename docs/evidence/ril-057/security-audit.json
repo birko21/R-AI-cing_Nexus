@@ -6,7 +6,7 @@
   },
   "log_redaction_control": "app.egress.redact_text",
   "provider_keys": "SERVER_SIDE_ONLY",
-  "scanned_files": 254,
+  "scanned_files": 264,
   "schema_version": "security-audit-v1",
   "secret_findings": [],
   "status": "PASS"

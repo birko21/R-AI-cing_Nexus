@@ -1,0 +1,34 @@
+{
+  "checksum_failures_before_restore": [],
+  "deletion_performed": false,
+  "fictional": true,
+  "isolated_restore": true,
+  "manifest": [
+    {
+      "data_mode": "SYNTHETIC_ONLY",
+      "relative_path": "fixtures/synthetic/manifest.json",
+      "sha256": "5f721f37d6bea196d0193304d683681456fe1c022d95b111a192243a32ba595f",
+      "size_bytes": 756
+    },
+    {
+      "data_mode": "SYNTHETIC_ONLY",
+      "relative_path": "fixtures/synthetic/research_tools_v1.json",
+      "sha256": "d7a830cfcd4ce503cdc3ee264dc8aa5ad0c9c7fa7efe31837cc6b7a029200b0b",
+      "size_bytes": 1922
+    }
+  ],
+  "migration_rollback_steps": [
+    "record_current_revision",
+    "apply_migration_in_isolated_database",
+    "run_checksum_and_fixture_checks",
+    "downgrade_one_revision",
+    "verify_previous_revision",
+    "promote_only_after_owner_review"
+  ],
+  "note": "Synthetic backup/restore and retention-plan evidence; no production database or user data was modified.",
+  "retention_delete_plan": [
+    "restricted-expired"
+  ],
+  "schema_version": "backup-restore-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
