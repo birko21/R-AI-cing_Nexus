@@ -1,0 +1,322 @@
+{
+  "fictional": true,
+  "fixture_id": "ril-016-three-code-v1",
+  "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+  "records": [
+    {
+      "active_runner_hash": "e67621c1ff97b89cf52ece6ae728ed00b1fd0d0d28279a0d82de2bb6577dec47",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostic_flags": [
+        "PRE_CUTOFF_RUNS_ONLY",
+        "MINIMUM_SUPPORT=2",
+        "NORMALIZED_PROBABILITIES"
+      ],
+      "feature_snapshot": {
+        "runners": {
+          "THOROUGHBRED:synthetic:entry-001-01-01": {
+            "distance_match": 0.5,
+            "form_score": 0.5277777777777778,
+            "raw_score": 0.4883551284267592,
+            "recency_score": 0.32051567099320954,
+            "smoothed_score": 0.5883551284267592,
+            "support_count": 3
+          },
+          "THOROUGHBRED:synthetic:entry-001-01-02": {
+            "distance_match": 0.5,
+            "form_score": 0.5833333333333334,
+            "raw_score": 0.5189106839823148,
+            "recency_score": 0.32051567099320954,
+            "smoothed_score": 0.6189106839823147,
+            "support_count": 3
+          },
+          "THOROUGHBRED:synthetic:entry-001-01-03": {
+            "distance_match": 0.5,
+            "form_score": 0.611111111111111,
+            "raw_score": 0.5341884617600925,
+            "recency_score": 0.32051567099320954,
+            "smoothed_score": 0.6341884617600925,
+            "support_count": 3
+          },
+          "THOROUGHBRED:synthetic:entry-001-01-04": {
+            "distance_match": 0.5,
+            "form_score": 0.3611111111111111,
+            "raw_score": 0.39668846176009254,
+            "recency_score": 0.32051567099320954,
+            "smoothed_score": 0.4966884617600925,
+            "support_count": 3
+          }
+        },
+        "target_distance": 1200
+      },
+      "feature_snapshot_hash": "6fe246787a55583855002d2e90f1681d1729a382b15886a91c45264fc87508e3",
+      "field_revision": "THOROUGHBRED:synthetic:race-001-01:field-r1",
+      "forecast_id": "b1-bfb0f748b887d2e3",
+      "manifest_hash": "1cd8240ebfb729b845d7eb2ebd2ffdb72db8a8e49703a1fdec958b8459419ced",
+      "model_hash": "e39795f97fa506c82b0c3638879ac3881f06efa312b07e6441435f020cf24431",
+      "output": {
+        "probabilities": {
+          "THOROUGHBRED:synthetic:entry-001-01-01": 0.2516335377587316,
+          "THOROUGHBRED:synthetic:entry-001-01-02": 0.26470183982858436,
+          "THOROUGHBRED:synthetic:entry-001-01-03": 0.27123599086351075,
+          "THOROUGHBRED:synthetic:entry-001-01-04": 0.2124286315491733
+        }
+      },
+      "race_id": "THOROUGHBRED:synthetic:race-001-01"
+    },
+    {
+      "active_runner_hash": "5120fd0100de3ccc099e1c01489d6cf7e153a8542d619af7e586585a8cd4e531",
+      "cutoff": "2026-01-15T04:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostic_flags": [
+        "PRE_CUTOFF_RUNS_ONLY",
+        "MINIMUM_SUPPORT=2",
+        "NORMALIZED_PROBABILITIES"
+      ],
+      "feature_snapshot": {
+        "runners": {
+          "THOROUGHBRED:synthetic:entry-001-02-01": {
+            "distance_match": 0.6666666666666666,
+            "form_score": 0.5277777777777778,
+            "raw_score": 0.5382884006780766,
+            "recency_score": 0.32007081933532516,
+            "smoothed_score": 0.6382884006780766,
+            "support_count": 3
+          },
+          "THOROUGHBRED:synthetic:entry-001-02-03": {
+            "distance_match": 0.6666666666666666,
+            "form_score": 0.611111111111111,
+            "raw_score": 0.5841217340114099,
+            "recency_score": 0.32007081933532516,
+            "smoothed_score": 0.6841217340114099,
+            "support_count": 3
+          }
+        },
+        "target_distance": 1400
+      },
+      "feature_snapshot_hash": "924577a4843bc4de3a43ac769c498d409a2f036c00453908419f09c003967a55",
+      "field_revision": "THOROUGHBRED:synthetic:race-001-02:field-r1",
+      "forecast_id": "b1-2e2de2f170b88322",
+      "manifest_hash": "1f34916bef8eb5518fa86733a8a6720dc0c751bedc61c1f4e6c0cc4615bd343a",
+      "model_hash": "e39795f97fa506c82b0c3638879ac3881f06efa312b07e6441435f020cf24431",
+      "output": {
+        "probabilities": {
+          "THOROUGHBRED:synthetic:entry-001-02-01": 0.48267053006815647,
+          "THOROUGHBRED:synthetic:entry-001-02-03": 0.5173294699318436
+        }
+      },
+      "race_id": "THOROUGHBRED:synthetic:race-001-02"
+    },
+    {
+      "active_runner_hash": "5a78af0d060879d786e6ebeb63429c0b9d8d214b15e30bd65bd8e41dc95d922f",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostic_flags": [
+        "PRE_CUTOFF_RUNS_ONLY",
+        "MINIMUM_SUPPORT=2",
+        "NORMALIZED_PROBABILITIES"
+      ],
+      "feature_snapshot": {
+        "runners": {
+          "HARNESS:synthetic:entry-001-01-01": {
+            "distance_match": 0.5,
+            "form_score": 0.5277777777777778,
+            "raw_score": 0.5091349052554321,
+            "recency_score": 0.4683067757769554,
+            "smoothed_score": 0.6091349052554321,
+            "support_count": 3
+          },
+          "HARNESS:synthetic:entry-001-01-02": {
+            "distance_match": 0.5,
+            "form_score": 0.5833333333333334,
+            "raw_score": 0.5369126830332099,
+            "recency_score": 0.4683067757769554,
+            "smoothed_score": 0.6369126830332099,
+            "support_count": 3
+          },
+          "HARNESS:synthetic:entry-001-01-03": {
+            "distance_match": 0.5,
+            "form_score": 0.611111111111111,
+            "raw_score": 0.5508015719220988,
+            "recency_score": 0.4683067757769554,
+            "smoothed_score": 0.6508015719220988,
+            "support_count": 3
+          },
+          "HARNESS:synthetic:entry-001-01-04": {
+            "distance_match": 0.5,
+            "form_score": 0.3611111111111111,
+            "raw_score": 0.42580157192209883,
+            "recency_score": 0.4683067757769554,
+            "smoothed_score": 0.5258015719220989,
+            "support_count": 3
+          }
+        },
+        "target_distance": 1200
+      },
+      "feature_snapshot_hash": "0fb5f40381bc6555a974cf1d387d9488a21389e777a4dc945d9953f753c407bd",
+      "field_revision": "HARNESS:synthetic:race-001-01:field-r1",
+      "forecast_id": "b1-1c3c8ac8ec02f846",
+      "manifest_hash": "cb2e782fd9a4be7e702dc4db19081035dd7418b7c6f11ba7cabd94bad31668fe",
+      "model_hash": "4ec4f18a3ff498ec9014a64da5352ee71007629bec5769e479e5ac7e75c16c7e",
+      "output": {
+        "probabilities": {
+          "HARNESS:synthetic:entry-001-01-01": 0.2514332326885458,
+          "HARNESS:synthetic:entry-001-01-02": 0.26289909419691226,
+          "HARNESS:synthetic:entry-001-01-03": 0.2686320249510955,
+          "HARNESS:synthetic:entry-001-01-04": 0.21703564816344642
+        }
+      },
+      "race_id": "HARNESS:synthetic:race-001-01"
+    },
+    {
+      "active_runner_hash": "a7c77ebc680cd24825c1c14375d6ffe93ab448fa0a0f80656f273860d3131a29",
+      "cutoff": "2026-01-15T04:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostic_flags": [
+        "PRE_CUTOFF_RUNS_ONLY",
+        "MINIMUM_SUPPORT=2",
+        "NORMALIZED_PROBABILITIES"
+      ],
+      "feature_snapshot": {
+        "runners": {
+          "HARNESS:synthetic:entry-001-02-01": {
+            "distance_match": 0.6666666666666666,
+            "form_score": 0.5277777777777778,
+            "raw_score": 0.5674032260840454,
+            "recency_score": 0.4678733590788209,
+            "smoothed_score": 0.6674032260840453,
+            "support_count": 3
+          },
+          "HARNESS:synthetic:entry-001-02-03": {
+            "distance_match": 0.6666666666666666,
+            "form_score": 0.611111111111111,
+            "raw_score": 0.609069892750712,
+            "recency_score": 0.4678733590788209,
+            "smoothed_score": 0.709069892750712,
+            "support_count": 3
+          }
+        },
+        "target_distance": 1400
+      },
+      "feature_snapshot_hash": "4efc5c04e26a11db0fa43444db27109b609fe3a34c8394d79144c4cac2e11e52",
+      "field_revision": "HARNESS:synthetic:race-001-02:field-r1",
+      "forecast_id": "b1-76f3daecf528f958",
+      "manifest_hash": "dd0dd144db574a4a5c4ee8b5158588af97d4f0a76948ff300ad9d82081df605a",
+      "model_hash": "4ec4f18a3ff498ec9014a64da5352ee71007629bec5769e479e5ac7e75c16c7e",
+      "output": {
+        "probabilities": {
+          "HARNESS:synthetic:entry-001-02-01": 0.48486470019046235,
+          "HARNESS:synthetic:entry-001-02-03": 0.5151352998095375
+        }
+      },
+      "race_id": "HARNESS:synthetic:race-001-02"
+    },
+    {
+      "active_runner_hash": "99e8136866a454417930aad9c14ca66ea7ea518f64ef9ec5756852779c579028",
+      "cutoff": "2026-01-15T03:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostic_flags": [
+        "PRE_CUTOFF_RUNS_ONLY",
+        "MINIMUM_SUPPORT=2",
+        "NORMALIZED_PROBABILITIES"
+      ],
+      "feature_snapshot": {
+        "runners": {
+          "GREYHOUND:synthetic:entry-001-01-01": {
+            "distance_match": 0.5,
+            "form_score": 0.5277777777777778,
+            "raw_score": 0.4064027993320577,
+            "recency_score": 0.1968651409487363,
+            "smoothed_score": 0.5064027993320577,
+            "support_count": 3
+          },
+          "GREYHOUND:synthetic:entry-001-01-02": {
+            "distance_match": 0.5,
+            "form_score": 0.5833333333333334,
+            "raw_score": 0.4314027993320577,
+            "recency_score": 0.1968651409487363,
+            "smoothed_score": 0.5314027993320577,
+            "support_count": 3
+          },
+          "GREYHOUND:synthetic:entry-001-01-03": {
+            "distance_match": 0.5,
+            "form_score": 0.611111111111111,
+            "raw_score": 0.4439027993320577,
+            "recency_score": 0.1968651409487363,
+            "smoothed_score": 0.5439027993320577,
+            "support_count": 3
+          },
+          "GREYHOUND:synthetic:entry-001-01-04": {
+            "distance_match": 0.5,
+            "form_score": 0.3611111111111111,
+            "raw_score": 0.33140279933205774,
+            "recency_score": 0.1968651409487363,
+            "smoothed_score": 0.4314027993320577,
+            "support_count": 3
+          }
+        },
+        "target_distance": 1200
+      },
+      "feature_snapshot_hash": "d3e22f051e5bbf75ca622bc22ff01c1416ca8afc9dc0dda63367f7487fec10e4",
+      "field_revision": "GREYHOUND:synthetic:race-001-01:field-r1",
+      "forecast_id": "b1-9d1c013bb97d4093",
+      "manifest_hash": "9dc61b9e22d8a02e064ad4ebd0d7e37cba3313154f54a293fbf8c18f6a01c8d0",
+      "model_hash": "ff4a4a43a40a0fa1474f5e11d29009fd0454350d5b74b44367b84e1614d11825",
+      "output": {
+        "probabilities": {
+          "GREYHOUND:synthetic:entry-001-01-01": 0.2515523235895501,
+          "GREYHOUND:synthetic:entry-001-01-02": 0.26397091230595066,
+          "GREYHOUND:synthetic:entry-001-01-03": 0.27018020666415093,
+          "GREYHOUND:synthetic:entry-001-01-04": 0.21429655744034842
+        }
+      },
+      "race_id": "GREYHOUND:synthetic:race-001-01"
+    },
+    {
+      "active_runner_hash": "8ffafe4e1e1c30ccf566a793f2cfb25e99530c54f771e66c3c1d386b1074c497",
+      "cutoff": "2026-01-15T04:30:00Z",
+      "data_mode": "SYNTHETIC_ONLY",
+      "diagnostic_flags": [
+        "PRE_CUTOFF_RUNS_ONLY",
+        "MINIMUM_SUPPORT=2",
+        "NORMALIZED_PROBABILITIES"
+      ],
+      "feature_snapshot": {
+        "runners": {
+          "GREYHOUND:synthetic:entry-001-02-01": {
+            "distance_match": 0.6666666666666666,
+            "form_score": 0.5277777777777778,
+            "raw_score": 0.4395995562991869,
+            "recency_score": 0.19647492275958167,
+            "smoothed_score": 0.5395995562991869,
+            "support_count": 3
+          },
+          "GREYHOUND:synthetic:entry-001-02-03": {
+            "distance_match": 0.6666666666666666,
+            "form_score": 0.611111111111111,
+            "raw_score": 0.4770995562991869,
+            "recency_score": 0.19647492275958167,
+            "smoothed_score": 0.5770995562991869,
+            "support_count": 3
+          }
+        },
+        "target_distance": 1400
+      },
+      "feature_snapshot_hash": "10a940bc050e56bceb8b2bb016400d97539cc2b603679558e991654fd61d46b4",
+      "field_revision": "GREYHOUND:synthetic:race-001-02:field-r1",
+      "forecast_id": "b1-ef58385513724758",
+      "manifest_hash": "b0888bb6510e281d1eaa777e5387ff924085ea93e981db04d51d20d8756bcbab",
+      "model_hash": "ff4a4a43a40a0fa1474f5e11d29009fd0454350d5b74b44367b84e1614d11825",
+      "output": {
+        "probabilities": {
+          "GREYHOUND:synthetic:entry-001-02-01": 0.48320944309128006,
+          "GREYHOUND:synthetic:entry-001-02-03": 0.5167905569087199
+        }
+      },
+      "race_id": "GREYHOUND:synthetic:race-001-02"
+    }
+  ],
+  "schema_version": "ril-024-forecast-archive-v1",
+  "source_b1_manifest_sha256": "799fc4b9bb8d0c6a1c17ebd1c942ea56d78d73e9bdffd8b6a4fb5817d1073404",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
