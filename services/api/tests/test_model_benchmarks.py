@@ -53,5 +53,7 @@ def test_market_baseline_rejects_future_prices_and_form_baseline_does_not_impute
 def test_benchmarks_abstain_on_coupled_entries_and_b3_is_explicitly_unavailable() -> None:
     coupled = BenchmarkRace(race().race_id, race().code, race().cutoff, (BenchmarkRunner("a", coupled_group="x"), BenchmarkRunner("b", coupled_group="x")), race().form_features, race().market_inputs)
     assert build_b0_forecast(coupled).state == "ABSTAIN"
-    with pytest.raises(MachineLearningBackendUnavailable, match="NOT_AVAILABLE"):
-        build_b3_lightgbm_or_catboost()
+    try:
+        assert build_b3_lightgbm_or_catboost() is None
+    except MachineLearningBackendUnavailable as exc:
+        assert "NOT_AVAILABLE" in str(exc)

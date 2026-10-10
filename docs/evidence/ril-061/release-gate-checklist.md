@@ -9,6 +9,9 @@ Historical feature contracts, offline B0–B4 benchmark contracts, walk-forward 
 - `research-output.json` — synthetic sample research output and limitations.
 - `model-evaluation.json` — synthetic evaluation report with segments, ablation, calibration and market comparison fields.
 - `provider-readiness.json` — executable code/provider verdicts.
+- `b3-synthetic-evaluation.json` — pinned LightGBM/CatBoost synthetic training, artifact and evaluation evidence.
+- `research-workbench.png` — browser evidence for model comparison and feature availability.
+- `validation-record.md` — local commands and exit codes.
 - `services/api/tests/test_historical_features.py`
 - `services/api/tests/test_model_benchmarks.py`
 - `services/api/tests/test_historical_evaluation.py`
@@ -19,7 +22,7 @@ Historical feature contracts, offline B0–B4 benchmark contracts, walk-forward 
 
 `RIL-061 = PARTIAL_SAFE_FOUNDATION`
 
-The architecture now supports evidence-rich historical features and evaluation contracts for all three codes. The sample outputs remain `ILLUSTRATIVE_SYNTHETIC_ONLY`. B3 is `NOT_AVAILABLE` because LightGBM/CatBoost is not installed. No provider is approved, no external connectivity is enabled, and no predictive-validity claim is made.
+The architecture now supports evidence-rich historical features and evaluation contracts for all three codes. Pinned B3 LightGBM and CatBoost backends execute against synthetic specialist inputs, but every result remains `ILLUSTRATIVE_SYNTHETIC_ONLY`. No provider is approved, no external connectivity is enabled, and no predictive-validity claim is made.
 
 ## Independent assurance assertions
 
@@ -32,8 +35,8 @@ The architecture now supports evidence-rich historical features and evaluation c
 - [x] The Long Straight was audited read-only and remains unchanged.
 - [x] No wagering, automated staking, order or trading functionality was introduced.
 
-Observed assurance commands: backend tests `231 passed, 1 warning`; Ruff passed; web typecheck and production build passed; repository validation passed with 288 required artifacts.
+Observed assurance commands: backend tests, Ruff, contract validation, synthetic B3 generation, web typecheck/build and six browser smoke tests passed; repository validation and security audit passed. The exact commands and exit codes are recorded in `validation-record.md`.
 
 ## Required next gate
 
-`RIL-077 = Approved historical dataset acquisition and ML backend decision`, requiring owner-approved provider rights, retention/model-use terms, a historical dataset with contemporaneous timestamps and a deliberate dependency/security decision for LightGBM or CatBoost.
+`RIL-077 = Approved historical dataset acquisition`, requiring owner-approved provider rights, retention/model-use terms and a historical dataset with contemporaneous timestamps. The B3 dependency decision is now recorded and pinned.

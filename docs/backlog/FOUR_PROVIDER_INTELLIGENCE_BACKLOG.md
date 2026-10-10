@@ -18,7 +18,7 @@ The common `historical-features-v1` contract, B0–B4 offline benchmark interfac
 
 | ID | Item | Acceptance |
 |---|---|---|
-| RIL-077 | Approve a historical dataset and ML backend for real walk-forward research. | Provider-specific rights permit retention, derived features, training and derived outputs; contemporaneous timestamps and identity evidence are sufficient; the dependency/security decision for LightGBM or CatBoost is recorded; no model promotion occurs automatically. |
+| RIL-077 | Approve a historical dataset for real walk-forward research. | Provider-specific rights permit retention, derived features, training and derived outputs; contemporaneous timestamps and identity evidence are sufficient; the pinned LightGBM/CatBoost dependency decision is already recorded; no model promotion occurs automatically. |
 
 ## Next safe implementation
 
