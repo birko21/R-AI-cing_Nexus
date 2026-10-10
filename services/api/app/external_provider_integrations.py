@@ -1,0 +1,324 @@
+"""Fail-closed, read-only adapters for the existing provider assets.
+
+This module deliberately contains endpoint contracts, not credentials.  The
+default factory returns disabled adapters.  A caller must supply an explicit
+operation/code approval record and an injected server-side transport before a
+request can be made.  This keeps auditability and testing possible without
+turning application startup into an external network operation.
+"""
+
+from __future__ import annotations
+
+from collections.abc import Callable, Mapping
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from typing import Literal, Protocol
+from uuid import uuid4
+
+import httpx
+
+from app.domain import VALID_CODES
+from app.provenance import RawEnvelope, payload_sha256
+from app.providers import (
+    AdapterContractError,
+    AdapterPage,
+    ProviderCapabilities,
+    ProviderOperation,
+    QuotaCapability,
+    PaginationCapability,
+    validate_adapter_page,
+)
+from app.source_approval import SourceApprovalRecord, evaluate_source_approval
+
+
+ProviderId = Literal["formfav", "punters-edge", "krok-odds", "betfair-exchange"]
+MarketView = Literal["catalogue", "book"]
+CredentialMaterial = str | Mapping[str, str]
+CredentialResolver = Callable[[], CredentialMaterial | None]
+
+
+class ProviderActivationError(RuntimeError):
+    """Raised when a provider request is not explicitly eligible to run."""
+
+
+@dataclass(frozen=True)
+class EndpointSpec:
+    operation: ProviderOperation
+    method: str
+    path: str
+    description: str
+    read_only: bool = True
+
+
+@dataclass(frozen=True)
+class TransportResponse:
+    status_code: int
+    payload: Mapping[str, object]
+    retrieved_at: datetime
+    published_at: datetime | None = None
+    request_id: str = ""
+
+
+class ReadOnlyTransport(Protocol):
+    def request(
+        self,
+        *,
+        method: str,
+        url: str,
+        headers: Mapping[str, str],
+        params: Mapping[str, object],
+        json_body: Mapping[str, object] | None,
+        timeout_seconds: float,
+    ) -> TransportResponse: ...
+
+
+class HttpxReadOnlyTransport:
+    """Small HTTP transport; it is only reachable through an active adapter."""
+
+    def __init__(self, client: httpx.Client | None = None) -> None:
+        self._client = client or httpx.Client(follow_redirects=False)
+
+    def request(
+        self,
+        *,
+        method: str,
+        url: str,
+        headers: Mapping[str, str],
+        params: Mapping[str, object],
+        json_body: Mapping[str, object] | None,
+        timeout_seconds: float,
+    ) -> TransportResponse:
+        response = self._client.request(
+            method,
+            url,
+            headers=dict(headers),
+            params=dict(params),
+            json=json_body,
+            timeout=timeout_seconds,
+        )
+        response.raise_for_status()
+        body = response.json()
+        if not isinstance(body, dict):
+            raise ProviderActivationError("provider response must be a JSON object")
+        retrieved_at = datetime.now(timezone.utc)
+        return TransportResponse(
+            status_code=response.status_code,
+            payload=body,
+            retrieved_at=retrieved_at,
+            request_id=response.headers.get("x-request-id", ""),
+        )
+
+
+@dataclass(frozen=True)
+class ExistingProviderAsset:
+    provider_id: ProviderId
+    display_name: str
+    base_url: str
+    endpoints: tuple[EndpointSpec, ...]
+    capabilities: ProviderCapabilities
+    evidence_summary: tuple[str, ...]
+    rights_summary: tuple[str, ...]
+
+    def endpoint(self, operation: ProviderOperation, *, view: MarketView = "catalogue") -> EndpointSpec:
+        candidates = tuple(item for item in self.endpoints if item.operation == operation)
+        if self.provider_id == "betfair-exchange" and operation == "GET_MARKETS":
+            wanted = "listMarketBook" if view == "book" else "listMarketCatalogue"
+            candidates = tuple(item for item in candidates if item.description.startswith(wanted))
+        if not candidates:
+            raise AdapterContractError(f"{self.provider_id} does not declare {operation}")
+        endpoint = candidates[0]
+        if not endpoint.read_only:
+            raise ProviderActivationError("non-read-only endpoint rejected")
+        return endpoint
+
+
+def _capabilities(
+    provider_id: ProviderId,
+    display_name: str,
+    fields: frozenset[str],
+    operations: frozenset[str],
+    quota: QuotaCapability,
+) -> ProviderCapabilities:
+    return ProviderCapabilities(
+        provider_id=provider_id,
+        display_name=display_name,
+        supported_codes=frozenset({"THOROUGHBRED"}),
+        supported_fields=fields,
+        timestamp_fields=frozenset({"retrieved_at", "first_observed_at", "published_at"}),
+        data_mode="LICENSED",
+        rights_state="UNASSESSED",
+        pagination=PaginationCapability(False),
+        quotas=quota,
+        supported_operations=operations,
+        unsupported_operations=frozenset(VALID_OPERATIONS - operations),
+        enabled=False,
+    )
+
+
+VALID_OPERATIONS = {"LIST_MEETINGS", "GET_RACES", "GET_ENTRIES", "GET_RESULTS", "GET_MARKETS"}
+
+
+def build_existing_provider_assets() -> dict[str, ExistingProviderAsset]:
+    """Return endpoint/capability evidence with external access disabled."""
+
+    return {
+        "formfav": ExistingProviderAsset(
+            "formfav", "FormFav", "https://api.formfav.com",
+            (
+                EndpointSpec("LIST_MEETINGS", "GET", "/v1/form/meetings", "meeting catalogue"),
+                EndpointSpec("GET_RACES", "GET", "/v1/form", "race card and runner form"),
+            ),
+            _capabilities("formfav", "FormFav", frozenset({"meeting", "race", "distance_m", "barrier", "jockey", "trainer", "weight", "form", "scratch_flag"}), frozenset({"LIST_MEETINGS", "GET_RACES"}), QuotaCapability(unknown=True, notes="Plan and quota not evidenced in the audited sibling records.")),
+            ("Sibling adapter hard-codes AU gallops/thoroughbred and provides meeting/race-card fields.", "No committed sanitized live response was found in the audit snapshot."),
+            ("Account access was confirmed by the owner; plan, retention and model-use terms for Nexus remain unrecorded."),
+        ),
+        "punters-edge": ExistingProviderAsset(
+            "punters-edge", "PuntersEdge", "https://api.puntersedge.online",
+            (
+                EndpointSpec("GET_RESULTS", "GET", "/v1/racing/results", "historical results and settled fixed prices"),
+                EndpointSpec("GET_ENTRIES", "GET", "/v1/racing/horses/form", "horse history/form"),
+            ),
+            _capabilities("punters-edge", "PuntersEdge", frozenset({"race_id", "runner_id", "start_time", "resulted_at", "position", "dead_heat", "fixed_win_price", "fixed_place_price", "horse_form"}), frozenset({"GET_RESULTS", "GET_ENTRIES"}), QuotaCapability(unknown=True, notes="A sanitized sibling probe recorded remaining credits; exact current quota is not independently re-verified here.")),
+            ("Sibling sanitized validation recorded 10 final AU thoroughbred races, 9 complete, with fixed Win/Place prices.", "Personal free-plan evidence is historical evidence, not a Nexus entitlement record."),
+            ("Nexus retention, training and derived-display permission is not evidenced; no transfer from the sibling application is assumed."),
+        ),
+        "krok-odds": ExistingProviderAsset(
+            "krok-odds", "Krok Odds", "https://krokodds.com.au",
+            (
+                EndpointSpec("LIST_MEETINGS", "GET", "/api/v1/racing/meetings", "racing meetings"),
+                EndpointSpec("GET_MARKETS", "GET", "/api/v1/odds-feed/racing", "odds enrichment"),
+                EndpointSpec("GET_ENTRIES", "GET", "/api/v1/racing/runner-form", "runner form"),
+                EndpointSpec("GET_RESULTS", "GET", "/api/v1/racing/results/{date}", "date-scoped results"),
+            ),
+            _capabilities("krok-odds", "Krok Odds", frozenset({"meeting", "race", "runner_id", "distance_m", "barrier", "jockey", "trainer", "win_price", "place_price", "win_bsp", "source_classification", "recent_finishes", "result_position", "sectionals", "response_timestamp"}), frozenset({"LIST_MEETINGS", "GET_MARKETS", "GET_ENTRIES", "GET_RESULTS"}), QuotaCapability(requests_per_minute=5, daily_requests=50, unknown=False, notes="Sibling docs report free-tier limits; observed api tier and current commercial terms require account evidence.")),
+            ("Sibling probes returned AU thoroughbred finishing rows and runner/form/odds shapes.", "The recheck did not establish complete numeric tote/BSP evidence or durable historical depth."),
+            ("Non-transferable key and intended-use review are documented in the sibling; Nexus retention/training/display rights remain open."),
+        ),
+        "betfair-exchange": ExistingProviderAsset(
+            "betfair-exchange", "Betfair Exchange", "https://api-au.betfair.com/exchange/betting/json-rpc/v1",
+            (
+                EndpointSpec("GET_MARKETS", "POST", "", "listMarketCatalogue read-only market identity"),
+                EndpointSpec("GET_MARKETS", "POST", "", "listMarketBook read-only prices and volume"),
+            ),
+            _capabilities("betfair-exchange", "Betfair Exchange", frozenset({"market_id", "market_start_time", "selection_id", "runner_name", "runner_status", "pre_race_prices", "available_volume", "matched_volume", "starting_price"}), frozenset({"GET_MARKETS"}), QuotaCapability(unknown=True, notes="API/app-key limits and market-data charges are not evidenced in the audited records.")),
+            ("Sibling evidence validates AU horse event type 7 catalogue/book shapes and delayed SP projections.", "Historical movement/liquidity retention is not established; catalogue capture and book reads remain separate phases."),
+            ("Betfair market-data, retention, training and derived-display permissions for Nexus are unresolved."),
+        ),
+    }
+
+
+@dataclass(frozen=True)
+class BoundedProbePlan:
+    provider_id: str
+    code: str
+    date: str
+    venue: str | None
+    max_requests: int
+    operations: tuple[str, ...]
+    persistence: str
+    validation_checks: tuple[str, ...]
+
+
+def build_bounded_probe_plan(provider_id: str, *, code: str, date: str, venue: str | None = None) -> BoundedProbePlan:
+    assets = build_existing_provider_assets()
+    if provider_id not in assets:
+        raise ValueError(f"unknown provider asset: {provider_id}")
+    if code not in VALID_CODES:
+        raise ValueError(f"unsupported racing code: {code}")
+    if code != "THOROUGHBRED":
+        raise ValueError("audited provider assets do not establish this racing code")
+    operations = {
+        "formfav": ("LIST_MEETINGS", "GET_RACES"),
+        "punters-edge": ("GET_RESULTS", "GET_ENTRIES"),
+        "krok-odds": ("LIST_MEETINGS", "GET_ENTRIES", "GET_MARKETS", "GET_RESULTS"),
+        "betfair-exchange": ("GET_MARKETS",),
+    }[provider_id]
+    return BoundedProbePlan(
+        provider_id, code, date, venue, len(operations), operations,
+        "DO_NOT_PERSIST_UNTIL_RETENTION_AND_MODEL_USE_ARE_APPROVED",
+        ("source identity and runner identity", "observation/publication timestamps", "pre-race eligibility", "duplicate and post-race fields", "quota and response-size limits"),
+    )
+
+
+class GatedReadOnlyProviderAdapter:
+    """Provider-specific request builder with an explicit activation gate."""
+
+    def __init__(self, asset: ExistingProviderAsset, *, transport: ReadOnlyTransport | None = None, credential_resolver: CredentialResolver | None = None) -> None:
+        self.asset = asset
+        self._transport = transport
+        self._credential_resolver = credential_resolver
+
+    @property
+    def capabilities(self) -> ProviderCapabilities:
+        return self.asset.capabilities
+
+    def _check_gate(self, operation: ProviderOperation, code: str, approval: SourceApprovalRecord | None) -> SourceApprovalRecord:
+        if approval is None:
+            raise ProviderActivationError("external provider access is disabled until a named approval record is supplied")
+        checkpoint = evaluate_source_approval(approval)
+        if checkpoint.status != "APPROVED":
+            raise ProviderActivationError(f"source approval is incomplete: {','.join(checkpoint.missing_requirements)}")
+        if approval.source_id != self.asset.provider_id:
+            raise ProviderActivationError("approval source does not match provider")
+        if operation not in approval.approved_operations or code not in approval.approved_codes:
+            raise ProviderActivationError("approval does not name this operation and racing code")
+        if self._transport is None or self._credential_resolver is None:
+            raise ProviderActivationError("server-side transport and credential resolver are required")
+        return approval
+
+    def fetch(self, operation: ProviderOperation, *, code: str, approval: SourceApprovalRecord | None = None, date: str | None = None, venue: str | None = None, race: int | None = None, view: MarketView = "catalogue", cursor: str | None = None, page_size: int | None = None) -> AdapterPage:
+        approved = self._check_gate(operation, code, approval)
+        if code not in self.capabilities.supported_codes:
+            raise AdapterContractError(f"provider does not support racing code {code}")
+        endpoint = self.asset.endpoint(operation, view=view)
+        credentials = self._credential_resolver()
+        if not credentials:
+            raise ProviderActivationError("credential resolver returned no credential")
+        params: dict[str, object] = {"code": code}
+        if date is not None:
+            params["date"] = date
+        if venue is not None:
+            params["venue"] = venue
+        if race is not None:
+            params["race"] = race
+        if cursor is not None:
+            params["cursor"] = cursor
+        if page_size is not None:
+            params["limit"] = page_size
+        body: dict[str, object] | None = None
+        if isinstance(credentials, str):
+            headers = {"Authorization": f"Bearer {credentials}"}
+        else:
+            headers = {"Authorization": f"Bearer {credentials.get('token', '')}"}
+        if self.asset.provider_id == "betfair-exchange":
+            app_key = credentials.get("app_key", "") if isinstance(credentials, Mapping) else ""
+            session_token = credentials.get("session_token", "") if isinstance(credentials, Mapping) else ""
+            if not app_key or not session_token:
+                raise ProviderActivationError("Betfair requires server-side app key and session token")
+            headers = {"X-Application": app_key, "X-Authentication": session_token, "Content-Type": "application/json"}
+            method_name = endpoint.description.split(" ", 1)[0]
+            body = {"jsonrpc": "2.0", "method": f"SportsAPING/v1.0/{method_name}", "params": params, "id": 1}
+            params = {}
+        response = self._transport.request(method=endpoint.method, url=f"{self.asset.base_url}{endpoint.path}", headers=headers, params=params, json_body=body, timeout_seconds=4.0)
+        if response.status_code < 200 or response.status_code >= 300:
+            raise ProviderActivationError(f"provider returned HTTP {response.status_code}")
+        retrieved_at = response.retrieved_at
+        payload = dict(response.payload)
+        payload["_request"] = {"provider": self.asset.provider_id, "operation": operation, "code": code, "date": date, "venue": venue, "race": race, "view": view}
+        envelope = RawEnvelope(
+            envelope_id=str(uuid4()), source_identifier=f"{self.asset.provider_id}:{operation}", payload=payload,
+            payload_sha256=payload_sha256(payload), schema_version="provider-response-v1", retrieved_at=retrieved_at,
+            first_observed_at=response.published_at or retrieved_at, published_at=response.published_at,
+            data_mode="LICENSED", rights_state="APPROVED", licence_reference=approved.source_id,
+            retrieval_metadata={"http_status": response.status_code, "request_id": response.request_id, "credentials": "server-side"},
+        )
+        enabled = ProviderCapabilities(**{**self.capabilities.to_dict(), "supported_codes": frozenset(self.capabilities.supported_codes), "supported_fields": frozenset(self.capabilities.supported_fields), "timestamp_fields": frozenset(self.capabilities.timestamp_fields), "data_mode": "LICENSED", "rights_state": "APPROVED", "pagination": PaginationCapability(False), "quotas": self.capabilities.quotas, "supported_operations": frozenset(self.capabilities.supported_operations), "unsupported_operations": frozenset(self.capabilities.unsupported_operations), "enabled": True})
+        page = AdapterPage((envelope,), as_of=retrieved_at)
+        validate_adapter_page(enabled, page)
+        return page
+
+
+def build_disabled_provider_adapters() -> dict[str, GatedReadOnlyProviderAdapter]:
+    """Application-safe registry: no transport and no credentials are loaded."""
+
+    return {provider_id: GatedReadOnlyProviderAdapter(asset) for provider_id, asset in build_existing_provider_assets().items()}

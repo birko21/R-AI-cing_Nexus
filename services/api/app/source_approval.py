@@ -27,6 +27,8 @@ class SourceApprovalRecord:
     model_training_permission: str | None = None
     display_permission: str | None = None
     reconciliation_report: str | None = None
+    approved_operations: tuple[str, ...] = ()
+    approved_codes: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if not self.source_id.strip():
