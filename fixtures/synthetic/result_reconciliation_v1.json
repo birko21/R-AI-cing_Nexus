@@ -1,0 +1,73 @@
+{
+  "corrected_outcome": {
+    "outcome": "PLACE",
+    "reconciled_at": "2026-01-15 01:00:00+00:00",
+    "result_id": "result-2",
+    "selection_id": "selection-1"
+  },
+  "fictional": true,
+  "latest_result_id": "result-2",
+  "note": "Official-result revision evidence only; paper simulation and model rankings are separate.",
+  "original_outcome": {
+    "outcome": "WIN",
+    "reconciled_at": "2026-01-15 00:00:00+00:00",
+    "result_id": "result-1",
+    "selection_id": "selection-1"
+  },
+  "registry": {
+    "model_rankings_included": false,
+    "paper_simulation_included": false,
+    "reconciliations": [
+      {
+        "outcome": "WIN",
+        "reconciled_at": "2026-01-15 00:00:00+00:00",
+        "result_id": "result-1",
+        "selection_id": "selection-1"
+      },
+      {
+        "outcome": "PLACE",
+        "reconciled_at": "2026-01-15 01:00:00+00:00",
+        "result_id": "result-2",
+        "selection_id": "selection-1"
+      }
+    ],
+    "results": [
+      {
+        "correction_of": null,
+        "data_mode": "SYNTHETIC_ONLY",
+        "dead_heat_groups": [],
+        "field_revision": "field-r2",
+        "observed_at": "2026-01-15T00:00:00Z",
+        "official_at": "2026-01-15T00:00:00Z",
+        "placings": {
+          "entry-1": 1,
+          "entry-2": 2
+        },
+        "race_id": "race-1",
+        "result_id": "result-1",
+        "scratched_entries": [],
+        "source_receipt_id": "receipt-1",
+        "status": "OFFICIAL"
+      },
+      {
+        "correction_of": "result-1",
+        "data_mode": "SYNTHETIC_ONLY",
+        "dead_heat_groups": [],
+        "field_revision": "field-r2",
+        "observed_at": "2026-01-15T01:00:00Z",
+        "official_at": "2026-01-15T00:00:00Z",
+        "placings": {
+          "entry-1": 2,
+          "entry-2": 1
+        },
+        "race_id": "race-1",
+        "result_id": "result-2",
+        "scratched_entries": [],
+        "source_receipt_id": "receipt-1",
+        "status": "CORRECTED"
+      }
+    ]
+  },
+  "schema_version": "result-reconciliation-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
