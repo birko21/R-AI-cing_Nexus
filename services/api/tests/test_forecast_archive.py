@@ -63,6 +63,8 @@ def test_committed_archive_contains_all_forecast_metadata() -> None:
     archive = json.loads((ROOT / "fixtures" / "synthetic" / "forecast_archive.json").read_text(encoding="utf-8"))
 
     assert archive["schema_version"] == "ril-024-forecast-archive-v1"
+    assert archive["invalidation_policy"]["SCRATCHING"] == "INVALIDATE_PRIOR_CREATE_NEW_REVISION"
+    assert archive["invalidation_policy"]["COUPLED_ENTRY"] == "ABSTAIN"
     assert len(archive["records"]) == 6
     for record in archive["records"]:
         assert record["field_revision"]
@@ -73,4 +75,3 @@ def test_committed_archive_contains_all_forecast_metadata() -> None:
         assert record["data_mode"] == "SYNTHETIC_ONLY"
         assert record["diagnostic_flags"]
         verify_manifest(record)
-

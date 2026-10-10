@@ -13,6 +13,28 @@ class ImmutableArchiveError(ValueError):
     """Raised when an existing forecast ID is changed or a manifest is invalid."""
 
 
+@dataclass(frozen=True)
+class ForecastInvalidation:
+    forecast_id: str
+    race_id: str
+    prior_field_revision: str
+    new_field_revision: str
+    event_type: str
+    reason: str
+    invalidated_at: str
+
+    def to_dict(self) -> dict[str, str]:
+        return {
+            "forecast_id": self.forecast_id,
+            "race_id": self.race_id,
+            "prior_field_revision": self.prior_field_revision,
+            "new_field_revision": self.new_field_revision,
+            "event_type": self.event_type,
+            "reason": self.reason,
+            "invalidated_at": self.invalidated_at,
+        }
+
+
 def _canonical(value: object) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
 
@@ -123,6 +145,7 @@ class ForecastArchive:
 
     def __init__(self) -> None:
         self._records: dict[str, str] = {}
+        self._invalidations: dict[str, str] = {}
 
     def append(self, manifest: ForecastManifest) -> None:
         payload = _canonical(manifest.to_dict())
@@ -130,6 +153,11 @@ class ForecastArchive:
         if existing is not None and existing != payload:
             raise ImmutableArchiveError(f"forecast {manifest.forecast_id} is immutable")
         self._records[manifest.forecast_id] = payload
+
+    def append_ready(self, manifest: ForecastManifest, *, forecast_status: str) -> None:
+        if forecast_status != "READY":
+            raise ImmutableArchiveError("abstained forecast cannot become an active archive record")
+        self.append(manifest)
 
     def get(self, forecast_id: str) -> dict[str, object]:
         if forecast_id not in self._records:
@@ -142,6 +170,39 @@ class ForecastArchive:
         archived = self.get(forecast_id)
         return _canonical(archived["output"]) == _canonical(output)
 
+    def invalidate(
+        self,
+        forecast_id: str,
+        *,
+        new_field_revision: str,
+        reason: str,
+        invalidated_at: str,
+        event_type: str = "SCRATCHING",
+    ) -> ForecastInvalidation:
+        record = self.get(forecast_id)
+        prior_revision = record["field_revision"]
+        if prior_revision == new_field_revision:
+            raise ImmutableArchiveError("forecast invalidation requires a new field revision")
+        event = ForecastInvalidation(
+            forecast_id=forecast_id, race_id=record["race_id"], prior_field_revision=prior_revision,
+            new_field_revision=new_field_revision, event_type=event_type, reason=reason,
+            invalidated_at=invalidated_at,
+        )
+        payload = _canonical(event.to_dict())
+        existing = self._invalidations.get(forecast_id)
+        if existing is not None and existing != payload:
+            raise ImmutableArchiveError(f"forecast {forecast_id} invalidation is immutable")
+        self._invalidations[forecast_id] = payload
+        return event
+
+    def get_invalidation(self, forecast_id: str) -> dict[str, str]:
+        if forecast_id not in self._invalidations:
+            raise KeyError(forecast_id)
+        return json.loads(self._invalidations[forecast_id])
+
+    def is_current(self, forecast_id: str, current_field_revision: str) -> bool:
+        record = self.get(forecast_id)
+        return record["field_revision"] == current_field_revision and forecast_id not in self._invalidations
+
     def __len__(self) -> int:
         return len(self._records)
-

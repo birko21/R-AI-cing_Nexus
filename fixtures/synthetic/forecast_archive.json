@@ -1,6 +1,13 @@
 {
   "fictional": true,
   "fixture_id": "ril-016-three-code-v1",
+  "invalidation_policy": {
+    "CORRECTION": "INVALIDATE_PRIOR_CREATE_NEW_REVISION",
+    "COUPLED_ENTRY": "ABSTAIN",
+    "DEAD_HEAT": "ABSTAIN_OR_EXCLUDE_PRIMARY_SCORING",
+    "RESERVE": "INVALIDATE_PRIOR_CREATE_NEW_REVISION",
+    "SCRATCHING": "INVALIDATE_PRIOR_CREATE_NEW_REVISION"
+  },
   "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
   "records": [
     {

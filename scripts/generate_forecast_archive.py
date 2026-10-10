@@ -54,6 +54,13 @@ def build_archive() -> dict[str, object]:
         "fixture_id": b1["fixture_id"],
         "source_b1_manifest_sha256": b1["source_fixture_sha256"],
         "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
+        "invalidation_policy": {
+            "SCRATCHING": "INVALIDATE_PRIOR_CREATE_NEW_REVISION",
+            "RESERVE": "INVALIDATE_PRIOR_CREATE_NEW_REVISION",
+            "CORRECTION": "INVALIDATE_PRIOR_CREATE_NEW_REVISION",
+            "COUPLED_ENTRY": "ABSTAIN",
+            "DEAD_HEAT": "ABSTAIN_OR_EXCLUDE_PRIMARY_SCORING",
+        },
         "records": records,
         "fictional": True,
         "watermark": WATERMARK,
