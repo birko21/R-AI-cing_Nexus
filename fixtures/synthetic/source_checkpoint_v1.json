@@ -1,0 +1,26 @@
+{
+  "checkpoint": {
+    "missing_requirements": [
+      "written_rights",
+      "credential_policy",
+      "retention_terms",
+      "model_training_permission",
+      "display_permission",
+      "reconciliation_report"
+    ],
+    "reason": "Written source rights, credential policy, retention, model-use, display and reconciliation evidence are incomplete.",
+    "source_id": "first-real-source-pending",
+    "status": "BLOCKED_EXTERNAL_DEPENDENCY"
+  },
+  "fictional": true,
+  "note": "No provider rights, credentials, or external source are recorded.",
+  "schema_version": "source-checkpoint-v1",
+  "unavailable_response": {
+    "checkpoint": "BLOCKED_EXTERNAL_DEPENDENCY",
+    "operation": "LIST_MEETINGS",
+    "reason": "Written source rights, credential policy, retention, model-use, display and reconciliation evidence are incomplete.",
+    "source_id": "first-real-source-pending",
+    "status": "NOT_AVAILABLE"
+  },
+  "watermark": "BLOCKED_EXTERNAL_DEPENDENCY_DO_NOT_TREAT_AS_APPROVED"
+}
