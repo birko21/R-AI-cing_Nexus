@@ -26,7 +26,11 @@ $required = @(
     'apps/web/package.json',
     'services/api/pyproject.toml',
     'services/api/requirements.lock.txt',
-    'fixtures/synthetic/manifest.json'
+    'fixtures/synthetic/manifest.json',
+    'contracts/openapi_mvp.yaml',
+    'contracts/types.ts',
+    'services/api/app/contracts.py',
+    'services/api/tests/test_contract.py'
 )
 
 foreach ($path in $required) {

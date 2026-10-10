@@ -45,7 +45,8 @@ Frontend checks and the repository baseline check are:
 ```powershell
 pnpm web:check
 pnpm web:build
+pnpm api:test
 pnpm validate
 ```
 
-The fixture command only verifies the bootstrap manifest. Full three-code synthetic records are delivered by RIL-016.
+The API contract is in `contracts/openapi_mvp.yaml`; its hand-checked TypeScript types are in `contracts/types.ts`. The fixture command only verifies the bootstrap manifest. Full three-code synthetic records are delivered by RIL-016.

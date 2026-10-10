@@ -9,6 +9,7 @@
     "seed:fixture": "powershell -ExecutionPolicy Bypass -File scripts/seed_fixture.ps1",
     "validate": "powershell -ExecutionPolicy Bypass -File scripts/validate_repository.ps1",
     "web:build": "pnpm --filter @racing-intelligence/web build",
-    "web:check": "pnpm --filter @racing-intelligence/web typecheck"
+    "web:check": "pnpm --filter @racing-intelligence/web typecheck",
+    "api:test": "powershell -ExecutionPolicy Bypass -Command \".\\.venv\\Scripts\\python.exe -m pytest services/api/tests -q\""
   }
 }

@@ -1,0 +1,349 @@
+openapi: 3.1.0
+info:
+  title: Racing Intelligence Lab MVP API
+  version: 1.0.0
+  description: >-
+    Versioned contract for the local, synthetic-only and non-wagering MVP.
+    Timestamps are UTC instants; the UI renders Australia/Sydney local time.
+servers:
+  - url: http://127.0.0.1:8000
+    description: Loopback development server only
+security:
+  - bearerAuth: []
+paths:
+  /health/live:
+    get:
+      operationId: healthLive
+      security: []
+      responses:
+        '200':
+          description: Process is alive.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/HealthResponse' }
+  /v1/system/status:
+    get:
+      operationId: systemStatus
+      security: []
+      responses:
+        '200':
+          description: Non-sensitive configuration status.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SystemStatusResponse' }
+  /v1/codes:
+    get:
+      operationId: listCodes
+      security: [{ bearerAuth: [races:read] }]
+      parameters:
+        - { $ref: '#/components/parameters/AsOf' }
+      responses:
+        '200':
+          description: Supported racing codes.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CodeListResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /v1/meetings:
+    get:
+      operationId: listMeetings
+      security: [{ bearerAuth: [races:read] }]
+      parameters:
+        - { $ref: '#/components/parameters/Code' }
+        - { $ref: '#/components/parameters/AsOf' }
+        - { $ref: '#/components/parameters/Limit' }
+        - { $ref: '#/components/parameters/Cursor' }
+      responses:
+        '200':
+          description: Bounded meeting page.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/MeetingListResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /v1/races/{race_id}:
+    get:
+      operationId: getRace
+      security: [{ bearerAuth: [races:read] }]
+      parameters:
+        - { $ref: '#/components/parameters/RaceId' }
+        - { $ref: '#/components/parameters/AsOf' }
+      responses:
+        '200':
+          description: Race detail at the requested as-of instant.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Race' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /v1/races/{race_id}/entries:
+    get:
+      operationId: listEntries
+      security: [{ bearerAuth: [races:read] }]
+      parameters:
+        - { $ref: '#/components/parameters/RaceId' }
+        - { $ref: '#/components/parameters/AsOf' }
+      responses:
+        '200':
+          description: Entries for one race revision.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EntryListResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /v1/races/{race_id}/forecasts:
+    get:
+      operationId: listForecasts
+      security: [{ bearerAuth: [forecasts:read] }]
+      parameters:
+        - { $ref: '#/components/parameters/RaceId' }
+        - { $ref: '#/components/parameters/AsOf' }
+      responses:
+        '200':
+          description: Immutable forecast archive for the race.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ForecastListResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /v1/selections:
+    get:
+      operationId: listSelections
+      security: [{ bearerAuth: [selections:read] }]
+      parameters:
+        - { $ref: '#/components/parameters/Limit' }
+        - { $ref: '#/components/parameters/Cursor' }
+      responses:
+        '200':
+          description: Immutable personal selections and PASS records.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SelectionListResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+    post:
+      operationId: createSelection
+      security: [{ bearerAuth: [selections:write] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SelectionCreate' }
+      responses:
+        '201':
+          description: Selection or deliberate PASS created.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Selection' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: oauth2
+      description: Local scoped bearer token in development; production OIDC is a later gate.
+      flows:
+        clientCredentials:
+          tokenUrl: http://127.0.0.1:8000/v1/auth/token
+          scopes:
+            races:read: Read code, meeting, race and entry records.
+            forecasts:read: Read immutable forecast archives.
+            selections:read: Read the private selection journal.
+            selections:write: Create selections and deliberate PASS records.
+  parameters:
+    AsOf:
+      name: as_of
+      in: query
+      required: false
+      description: UTC instant for a historical snapshot.
+      schema: { type: string, format: date-time }
+    Code:
+      name: code
+      in: query
+      required: false
+      schema: { $ref: '#/components/schemas/RacingCode' }
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, maximum: 100, default: 25 }
+    Cursor:
+      name: cursor
+      in: query
+      required: false
+      schema: { type: string }
+    RaceId:
+      name: race_id
+      in: path
+      required: true
+      schema: { type: string, minLength: 1 }
+  responses:
+    BadRequest:
+      description: Invalid input or cursor bound to different filters.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+    Unauthorized:
+      description: Missing or invalid bearer credentials.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+    NotFound:
+      description: Resource not found at the requested as-of instant.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+  schemas:
+    HealthResponse:
+      type: object
+      additionalProperties: false
+      required: [status]
+      properties:
+        status: { type: string, const: ok }
+    SystemStatusResponse:
+      type: object
+      additionalProperties: false
+      required: [app, environment, data_mode, external_connectivity, model_status, wagering_enabled]
+      properties:
+        app: { type: string, const: racing-intelligence-lab }
+        environment: { type: string }
+        data_mode: { $ref: '#/components/schemas/DataMode' }
+        external_connectivity: { type: boolean, const: false }
+        model_status: { type: string, enum: [NOT_TRAINED, ILLUSTRATIVE_ONLY, MODEL_VALIDATED] }
+        wagering_enabled: { type: boolean, const: false }
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required: [error]
+      properties:
+        error:
+          type: object
+          additionalProperties: false
+          required: [code, message, correlation_id]
+          properties:
+            code: { type: string }
+            message: { type: string }
+            correlation_id: { type: string }
+            details: { type: object, additionalProperties: true }
+    PageMeta:
+      type: object
+      additionalProperties: false
+      required: [limit, next_cursor, as_of]
+      properties:
+        limit: { type: integer, minimum: 1, maximum: 100 }
+        next_cursor: { type: [string, 'null'] }
+        as_of: { type: string, format: date-time }
+    DataMode:
+      type: string
+      enum: [SYNTHETIC_ONLY, SCRAPED_PUBLIC, LICENSED]
+    RacingCode:
+      type: string
+      enum: [THOROUGHBRED, HARNESS, GREYHOUND]
+    CodeSummary:
+      type: object
+      additionalProperties: false
+      required: [code, label, data_mode]
+      properties:
+        code: { $ref: '#/components/schemas/RacingCode' }
+        label: { type: string }
+        data_mode: { $ref: '#/components/schemas/DataMode' }
+    Meeting:
+      type: object
+      additionalProperties: false
+      required: [meeting_id, code, name, country, scheduled_date, data_mode]
+      properties:
+        meeting_id: { type: string }
+        code: { $ref: '#/components/schemas/RacingCode' }
+        name: { type: string }
+        country: { type: string, const: AUS }
+        scheduled_date: { type: string, format: date-time }
+        data_mode: { $ref: '#/components/schemas/DataMode' }
+    Race:
+      type: object
+      additionalProperties: false
+      required: [race_id, meeting_id, race_number, status, field_revision, data_mode]
+      properties:
+        race_id: { type: string }
+        meeting_id: { type: string }
+        race_number: { type: integer, minimum: 1 }
+        status: { type: string, enum: [SCHEDULED, ACCEPTANCES, FINAL_FIELDS, OFFICIAL, ABANDONED, POSTPONED] }
+        field_revision: { type: string }
+        data_mode: { $ref: '#/components/schemas/DataMode' }
+        source_receipt_id: { type: string }
+        as_of: { type: string, format: date-time }
+    Entry:
+      type: object
+      additionalProperties: false
+      required: [entry_id, race_id, participant_id, number, status, data_mode]
+      properties:
+        entry_id: { type: string }
+        race_id: { type: string }
+        participant_id: { type: string }
+        number: { type: integer, minimum: 1 }
+        name: { type: string }
+        status: { type: string, enum: [ACTIVE, SCRATCHED, RESERVE, COUPLED] }
+        data_mode: { $ref: '#/components/schemas/DataMode' }
+    Forecast:
+      type: object
+      additionalProperties: false
+      required: [forecast_id, race_id, field_revision, cutoff, model_version, probabilities, data_mode]
+      properties:
+        forecast_id: { type: string }
+        race_id: { type: string }
+        field_revision: { type: string }
+        cutoff: { type: string, format: date-time }
+        model_version: { type: string }
+        probabilities: { type: object, additionalProperties: { type: number, minimum: 0, maximum: 1 } }
+        data_mode: { $ref: '#/components/schemas/DataMode' }
+        diagnostic_flags: { type: array, items: { type: string } }
+    SelectionCreate:
+      type: object
+      additionalProperties: false
+      required: [race_id, selection_type, rationale]
+      properties:
+        race_id: { type: string }
+        entry_id: { type: [string, 'null'] }
+        selection_type: { type: string, enum: [WIN, PLACE, PASS] }
+        rationale: { type: string, maxLength: 4000 }
+        forecast_id: { type: [string, 'null'] }
+    Selection:
+      allOf:
+        - $ref: '#/components/schemas/SelectionCreate'
+        - type: object
+          required: [selection_id, created_at, data_mode]
+          properties:
+            selection_id: { type: string }
+            created_at: { type: string, format: date-time }
+            data_mode: { $ref: '#/components/schemas/DataMode' }
+    CodeListResponse:
+      type: object
+      required: [items, meta]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/CodeSummary' } }
+        meta: { $ref: '#/components/schemas/PageMeta' }
+    MeetingListResponse:
+      type: object
+      required: [items, meta]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/Meeting' } }
+        meta: { $ref: '#/components/schemas/PageMeta' }
+    EntryListResponse:
+      type: object
+      required: [items, meta]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/Entry' } }
+        meta: { $ref: '#/components/schemas/PageMeta' }
+    ForecastListResponse:
+      type: object
+      required: [items, meta]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/Forecast' } }
+        meta: { $ref: '#/components/schemas/PageMeta' }
+    SelectionListResponse:
+      type: object
+      required: [items, meta]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/Selection' } }
+        meta: { $ref: '#/components/schemas/PageMeta' }
