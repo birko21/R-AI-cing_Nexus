@@ -2,13 +2,13 @@
 
 ## Review scope and verdict
 
-Reviewed PR #75 at the requested commit `411a4e7494d24ca16613efd5c7b6ff41612e175e` against `origin/main` (`d36fdd5d9bfe2c541ff2c40d95c2b4d0b4227a7a`), then reviewed follow-up assurance commits `a89c163676b8a0cf77abf257486ca1a641c0eabc` and `69a6c7b7b4ab53c8760a7d201fdb9630ebc254ae`. The comparison contains the reported 59 changed files before the follow-ups. The PR is open, unmerged and has no recorded approval decision. The review verdict is **CONDITIONAL PASS FOR INDEPENDENT REVIEW; DO NOT MERGE UNTIL REQUIRED APPROVALS**.
+Reviewed PR #75 at the requested commit `411a4e7494d24ca16613efd5c7b6ff41612e175e` against `origin/main` (`d36fdd5d9bfe2c541ff2c40d95c2b4d0b4227a7a`), then reviewed follow-up assurance commits `a89c163676b8a0cf77abf257486ca1a641c0eabc`, `69a6c7b7b4ab53c8760a7d201fdb9630ebc254ae` and final evidence commit `87642bd0dc3eef1cf4f95ebb59d6f3236e6f5f3d`. The comparison contains the reported 59 changed files before the follow-ups. The PR is open, unmerged and has no recorded approval decision. The review verdict is **CONDITIONAL PASS FOR INDEPENDENT REVIEW; DO NOT MERGE UNTIL REQUIRED APPROVALS**.
 
 The branch remains safe for synthetic-only development. It is not evidence of real-world predictive validity and must not be promoted to `MODEL_VALIDATED`.
 
 ## CI and release evidence
 
-Latest PR workflow run: `38032495669` (10 October 2026 UTC). The four required jobs completed successfully: `backend`, `contracts-security-and-synthetic-evaluation`, `frontend` and `browser-smoke`. Duplicate push run `38032492744` also completed successfully. The recorded head, workflow and backend count are corrected in `validation-record.md`.
+Latest PR workflow run: `38032587231` (10 October 2026 UTC). The four required jobs completed successfully: `backend`, `contracts-security-and-synthetic-evaluation`, `frontend` and `browser-smoke`. Duplicate push run `38032584755` also completed successfully. The recorded head, workflow and backend count are corrected in `validation-record.md`.
 
 Local backend validation after the assurance changes: `241 passed, 1 existing Starlette/AnyIO deprecation warning`; Ruff passed. The exact commands and exit codes are retained in the validation record.
 
@@ -16,7 +16,7 @@ Local backend validation after the assurance changes: `241 passed, 1 existing St
 
 | ID | Severity | Finding | Resolution | Residual risk |
 |---|---|---|---|---|
-| PR75-001 | High | Release evidence named an earlier head (`7ef3bb2`), earlier workflow run (`38031485487`) and stale backend count (`235`). | Corrected to final follow-up head `69a6c7b`, PR run `38032495669` and the current local count. | Future changes must refresh the evidence record again. |
+| PR75-001 | High | Release evidence named an earlier head (`7ef3bb2`), earlier workflow run (`38031485487`) and stale backend count (`235`). | Corrected to final follow-up head `87642bd`, PR run `38032587231` and the current local count. | Future changes must refresh the evidence record again. |
 | PR75-002 | High | Existing evaluation reported fold labels but did not independently bind exact race membership, dataset hashes, feature snapshots and model artifacts. | Added `FoldAssuranceRecord` with exact train/calibration/test membership, cutoff/windows, dataset hash, snapshot hashes and artifact IDs. | Real historical dataset hashes and provider receipts are still unavailable. |
 | PR75-003 | High | Prior “ablation” grouped already-scored cases rather than retraining challengers without a feature family. | Added `ablate_and_retrain`; tests assert a new schema and retraining callback are used. | Synthetic ablation results remain illustrative. |
 | PR75-004 | High | Race-level calibration was described but not enforced as a separate held-out calibration operation. | Added deterministic race-level temperature scaling fitted only from unique calibration races. | Calibration cannot be assessed until licensed contemporaneous history exists. |
