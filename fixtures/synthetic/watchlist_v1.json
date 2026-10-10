@@ -1,0 +1,48 @@
+{
+  "current": {
+    "code": "THOROUGHBRED",
+    "entity_id": "THOROUGHBRED:stable:runner-1",
+    "kind": "RUNNER",
+    "name": "Updated Name",
+    "source_id": "runner-1-new",
+    "source_system": "source-b",
+    "state": "PAUSED",
+    "watch_id": "watch-1"
+  },
+  "fictional": true,
+  "history": [
+    {
+      "detail": "watch target created",
+      "event_id": "watch-event-1",
+      "kind": "CREATED",
+      "name": "Old Name",
+      "observed_at": "2026-01-15 00:00:00+00:00",
+      "source_id": "runner-1",
+      "source_system": "source-a",
+      "watch_id": "watch-1"
+    },
+    {
+      "detail": "provider migration",
+      "event_id": "watch-event-2",
+      "kind": "SOURCE_CHANGED",
+      "name": "Updated Name",
+      "observed_at": "2026-01-15 00:00:00+00:00",
+      "source_id": "runner-1-new",
+      "source_system": "source-b",
+      "watch_id": "watch-1"
+    },
+    {
+      "detail": "watch target paused",
+      "event_id": "watch-event-3",
+      "kind": "PAUSED",
+      "name": "Updated Name",
+      "observed_at": "2026-01-15 00:00:00+00:00",
+      "source_id": "runner-1-new",
+      "source_system": "source-b",
+      "watch_id": "watch-1"
+    }
+  ],
+  "note": "Identity continuity evidence only; no alert or external execution path is enabled.",
+  "schema_version": "watchlist-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
