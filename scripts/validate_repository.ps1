@@ -118,6 +118,7 @@ $required = @(
     'docs/evidence/ril-020/accessibility-report.md',
     'docs/evidence/ril-020/degraded-desktop.png',
     'docs/evidence/ril-020/degraded-mobile.png',
+    'docs/evidence/ril-040/market-workbench.png',
     'docs/evidence/ril-023/probability-edge-cases.md',
     'docs/evidence/ril-025/forecast-invalidation-report.md',
     'docs/models/B0_UNIFORM_BASELINE.md',

@@ -87,3 +87,18 @@ test('degraded states and accessible controls remain explicit at desktop and mob
   await page.setViewportSize({ width: 390, height: 844 });
   await page.screenshot({ path: 'docs/evidence/ril-020/degraded-mobile.png', fullPage: true });
 });
+
+test('market workbench shows provenance and suppresses restricted exports', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Open research view' }).first().click();
+  await page.getByRole('tab', { name: 'Market workbench' }).click();
+
+  const workbench = page.getByRole('tabpanel', { name: 'Market workbench' });
+  await expect(workbench.getByText('synthetic-fixture')).toBeVisible();
+  await expect(workbench.getByText('AVAILABLE · 5 min')).toBeVisible();
+  await expect(workbench.getByText('1.1250')).toBeVisible();
+  await expect(workbench.getByText('NOT_COMPARABLE', { exact: true })).toBeVisible();
+  await expect(workbench.getByText('SUPPRESSED · RESTRICTED')).toBeVisible();
+  await expect(workbench.getByRole('button', { name: 'Export restricted prices' })).toBeDisabled();
+  await page.screenshot({ path: 'docs/evidence/ril-040/market-workbench.png', fullPage: true });
+});
