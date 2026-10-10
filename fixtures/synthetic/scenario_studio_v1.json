@@ -1,0 +1,72 @@
+{
+  "abstain": {
+    "abstention_reason": "CALIBRATION_ABSENT",
+    "assumptions": [
+      "Synthetic field is complete"
+    ],
+    "data_mode": "SYNTHETIC_ONLY",
+    "hypotheses": [
+      "Experimental pace scenario"
+    ],
+    "model_version": "scenario-v1",
+    "observed_fact_ids": [
+      "receipt-1"
+    ],
+    "output_hash": "8517e6dfa2d61b689b1bbe818f91587694d12d468e80ebebbecd1693e1a699e7",
+    "outputs": [],
+    "sample_size": 25,
+    "scenario_id": "scenario-uncalibrated",
+    "seed": 42,
+    "status": "ABSTAIN"
+  },
+  "fictional": true,
+  "note": "Seed replay and abstention evidence only; outputs are not calibrated predictions or wagering advice.",
+  "schema_version": "scenario-studio-v1",
+  "simulated": {
+    "abstention_reason": null,
+    "assumptions": [
+      "Synthetic field is complete"
+    ],
+    "data_mode": "SYNTHETIC_ONLY",
+    "hypotheses": [
+      "Experimental pace scenario"
+    ],
+    "model_version": "scenario-v1",
+    "observed_fact_ids": [
+      "receipt-1"
+    ],
+    "output_hash": "1e6f7aa36456e507cfb074ac56c06a26839a8c1c8ce46a453eabb4a620d4e44c",
+    "outputs": [
+      0.639426798458,
+      0.025010755223,
+      0.275029318369,
+      0.223210738149,
+      0.736471214164,
+      0.676699487423,
+      0.892179567705,
+      0.086938832629,
+      0.421921819685,
+      0.029797219438,
+      0.218637974804,
+      0.505355288103,
+      0.026535969684,
+      0.198837650687,
+      0.64988443778,
+      0.544941480603,
+      0.220440622041,
+      0.589265683876,
+      0.809430456678,
+      0.006498759678,
+      0.805819251833,
+      0.698139394988,
+      0.340250516518,
+      0.155479499812,
+      0.957213072207
+    ],
+    "sample_size": 25,
+    "scenario_id": "scenario-1",
+    "seed": 42,
+    "status": "SIMULATED"
+  },
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
