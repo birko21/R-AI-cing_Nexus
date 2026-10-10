@@ -8,8 +8,8 @@ Racing Intelligence Lab is an independent, single-user, local-first research app
 - **Data mode:** synthetic-only for the active MVP; fictional fixtures must remain visibly labelled.
 - **Model status:** illustrative B0/B1 baselines only; no validated predictive claim.
 - **Wagering:** permanently out of scope; no bookmaker credentials, order endpoints or automatic staking.
-- **Current checkpoint:** RIL-009 typed FastAPI route and error foundations are implemented; domain routes fail closed until RIL-010 installs scoped owner authentication.
-- **Next ticket:** RIL-010, after the RIL-009 evidence is accepted.
+- **Current checkpoint:** RIL-011 canonical three-code domain identifiers and exact market-selection mapping guards are implemented and tested.
+- **Next ticket:** RIL-012, after the RIL-011 evidence is accepted.
 
 ## Normative reading order
 
