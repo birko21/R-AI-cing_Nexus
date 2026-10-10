@@ -57,3 +57,5 @@ if ($LASTEXITCODE -ne 0) { throw "Assistant evaluation fixture validation failed
 if ($LASTEXITCODE -ne 0) { throw "Thoroughbred feature fixture validation failed with exit code $LASTEXITCODE" }
 & '.venv\Scripts\python.exe' scripts/generate_harness_scenario_fixture.py
 if ($LASTEXITCODE -ne 0) { throw "Harness scenario fixture validation failed with exit code $LASTEXITCODE" }
+& '.venv\Scripts\python.exe' scripts/generate_greyhound_feature_fixture.py
+if ($LASTEXITCODE -ne 0) { throw "Greyhound feature fixture validation failed with exit code $LASTEXITCODE" }

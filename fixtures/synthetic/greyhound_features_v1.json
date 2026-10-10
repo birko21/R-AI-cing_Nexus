@@ -1,0 +1,151 @@
+{
+  "fictional": true,
+  "note": "Greyhound specialist and authorised-recompute evidence only; no causal, validated or wagering claim.",
+  "original": {
+    "cutoff": "2026-01-15T03:30:00Z",
+    "data_mode": "SYNTHETIC_ONLY",
+    "excluded_future_receipt_ids": [],
+    "features": {
+      "bend_run_line": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-g-1"
+        ],
+        "value": "wide"
+      },
+      "box": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-g-1"
+        ],
+        "value": 4
+      },
+      "early_acceleration": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-g-1"
+        ],
+        "value": 0.7
+      },
+      "first_split": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-g-1"
+        ],
+        "value": 5.8
+      },
+      "grade": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-g-1"
+        ],
+        "value": "G5"
+      },
+      "interference": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-g-1"
+        ],
+        "value": "none"
+      },
+      "trouble": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-g-1"
+        ],
+        "value": "none"
+      }
+    },
+    "included_receipt_ids": [
+      "receipt-g-1"
+    ],
+    "participant_id": "p1",
+    "race_id": "race-1",
+    "recomputed_features": [],
+    "schema_version": "greyhound-features-v1",
+    "snapshot_hash": "c3048ff21a53fcfd9d40fd7880d96109a89bbc0e9a268449fa61b63f58bd9073"
+  },
+  "reserve_activation": {
+    "cutoff": "2026-01-15T03:30:00Z",
+    "data_mode": "SYNTHETIC_ONLY",
+    "excluded_future_receipt_ids": [],
+    "features": {
+      "bend_run_line": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-g-1"
+        ],
+        "value": "wide"
+      },
+      "box": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-g-reserve"
+        ],
+        "value": 1
+      },
+      "early_acceleration": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-g-1"
+        ],
+        "value": 0.7
+      },
+      "first_split": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-g-1"
+        ],
+        "value": 5.8
+      },
+      "grade": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-g-1"
+        ],
+        "value": "G5"
+      },
+      "interference": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-g-1"
+        ],
+        "value": "none"
+      },
+      "trouble": {
+        "missing": false,
+        "missing_reason": null,
+        "source_receipt_ids": [
+          "receipt-g-reserve"
+        ],
+        "value": "crowded"
+      }
+    },
+    "included_receipt_ids": [
+      "receipt-g-1"
+    ],
+    "participant_id": "p1",
+    "race_id": "race-1",
+    "recomputed_features": [
+      "box",
+      "trouble"
+    ],
+    "schema_version": "greyhound-features-v1",
+    "snapshot_hash": "95b3085686698761a33aa1dc5293a57db1c52ee3c6812716b69215fda1432c29"
+  },
+  "schema_version": "greyhound-features-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}
