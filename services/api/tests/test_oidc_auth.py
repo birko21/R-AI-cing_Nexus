@@ -21,7 +21,7 @@ def make_token(
     *,
     scopes: str = "races:read",
     subject: str = "owner-123",
-    issuer: str = "https://issuer.example.test",
+    issuer: str = "https://issuer.example.test/",
     audience: str = "nexus-staging",
     lifetime: timedelta = timedelta(minutes=5),
     permissions: list[str] | None = None,
@@ -49,7 +49,7 @@ def configure_oidc(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("APP_ENV", "staging")
     monkeypatch.setenv("API_HOST", "0.0.0.0")
     monkeypatch.setenv("AUTH_MODE", "oidc")
-    monkeypatch.setenv("OIDC_ISSUER", "https://issuer.example.test")
+    monkeypatch.setenv("OIDC_ISSUER", "https://issuer.example.test/")
     monkeypatch.setenv("OIDC_AUDIENCE", "nexus-staging")
     monkeypatch.setenv("OIDC_JWKS_URL", "https://issuer.example.test/.well-known/jwks.json")
     monkeypatch.setenv("OIDC_ALLOWED_SUBJECTS", "owner-123")
@@ -58,6 +58,7 @@ def configure_oidc(monkeypatch: pytest.MonkeyPatch) -> None:
 
 def test_oidc_validates_signature_issuer_audience_and_scope(monkeypatch: pytest.MonkeyPatch, oidc_key: rsa.RSAPrivateKey) -> None:
     configure_oidc(monkeypatch)
+    assert auth._oidc_settings()[0] == "https://issuer.example.test/"
     public_jwk = json.loads(jwt.algorithms.RSAAlgorithm.to_jwk(oidc_key.public_key()))
     public_jwk["kid"] = "test-key"
     monkeypatch.setattr(auth, "_jwks", lambda force_refresh=False: (public_jwk,))
@@ -99,7 +100,7 @@ def test_oidc_rejects_a_valid_non_owner_identity(monkeypatch: pytest.MonkeyPatch
 
 @pytest.mark.parametrize(
     "overrides",
-    ({"issuer": "https://other.example.test"}, {"audience": "other-audience"}, {"lifetime": timedelta(seconds=-1)}),
+    ({"issuer": "https://other.example.test/"}, {"audience": "other-audience"}, {"lifetime": timedelta(seconds=-1)}),
 )
 def test_oidc_rejects_invalid_issuer_audience_and_expiry(
     monkeypatch: pytest.MonkeyPatch,
@@ -114,6 +115,52 @@ def test_oidc_rejects_invalid_issuer_audience_and_expiry(
     with pytest.raises(HTTPException) as denied:
         auth.races_read("Bearer " + make_token(oidc_key, **overrides))
     assert denied.value.status_code == 401
+
+
+def test_oidc_rejects_tokens_missing_issuer_or_audience_claims(
+    monkeypatch: pytest.MonkeyPatch,
+    oidc_key: rsa.RSAPrivateKey,
+) -> None:
+    configure_oidc(monkeypatch)
+    public_jwk = json.loads(jwt.algorithms.RSAAlgorithm.to_jwk(oidc_key.public_key()))
+    public_jwk["kid"] = "test-key"
+    monkeypatch.setattr(auth, "_jwks", lambda force_refresh=False: (public_jwk,))
+    now = datetime.now(timezone.utc)
+
+    for omitted in ("iss", "aud"):
+        claims: dict[str, object] = {
+            "iss": "https://issuer.example.test/",
+            "aud": "nexus-staging",
+            "sub": "owner-123",
+            "scope": "races:read",
+            "iat": now,
+            "exp": now + timedelta(minutes=5),
+        }
+        claims.pop(omitted)
+        token = jwt.encode(claims, oidc_key, algorithm="RS256", headers={"kid": "test-key"})
+
+        with pytest.raises(HTTPException) as denied:
+            auth.races_read("Bearer " + token)
+        assert denied.value.status_code == 401
+
+
+def test_oidc_rejection_logs_reason_code_without_token_contents(
+    monkeypatch: pytest.MonkeyPatch,
+    oidc_key: rsa.RSAPrivateKey,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    configure_oidc(monkeypatch)
+    public_jwk = json.loads(jwt.algorithms.RSAAlgorithm.to_jwk(oidc_key.public_key()))
+    public_jwk["kid"] = "test-key"
+    monkeypatch.setattr(auth, "_jwks", lambda force_refresh=False: (public_jwk,))
+    token = make_token(oidc_key, issuer="https://wrong.example.test/")
+    caplog.set_level("WARNING", logger=auth.__name__)
+
+    with pytest.raises(HTTPException):
+        auth.races_read("Bearer " + token)
+
+    assert "reason=issuer_mismatch" in caplog.text
+    assert token not in caplog.text
 
 
 def test_external_bind_requires_complete_https_oidc_configuration(monkeypatch: pytest.MonkeyPatch) -> None:

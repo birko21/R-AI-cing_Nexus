@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hmac
 import json
+import logging
 import os
 import threading
 import time
@@ -18,6 +19,7 @@ OIDC_ALGORITHMS = ("RS256", "RS384", "RS512")
 JWKS_CACHE_SECONDS = 300
 _jwks_cache: tuple[float, tuple[Mapping[str, object], ...]] | None = None
 _jwks_lock = threading.Lock()
+logger = logging.getLogger(__name__)
 
 
 def _is_true(value: str | None) -> bool:
@@ -29,7 +31,9 @@ def _auth_mode() -> str:
 
 
 def _oidc_settings() -> tuple[str, str, str]:
-    issuer = os.environ.get("OIDC_ISSUER", "").strip().rstrip("/")
+    # Auth0 publishes and signs tokens with the canonical trailing-slash issuer.
+    # Keep the configured issuer exact so PyJWT performs strict claim validation.
+    issuer = os.environ.get("OIDC_ISSUER", "").strip()
     audience = os.environ.get("OIDC_AUDIENCE", "").strip()
     jwks_url = os.environ.get("OIDC_JWKS_URL", "").strip()
     if not issuer or not audience or not jwks_url:
@@ -141,6 +145,26 @@ class OwnerIdentityNotAllowed(PermissionError):
     """Raised when a valid token is not for the explicitly allowlisted owner."""
 
 
+def _oidc_reason_code(error: BaseException) -> str:
+    """Return a safe diagnostic code without including token or claim contents."""
+
+    if isinstance(error, OwnerIdentityNotAllowed):
+        return "owner_not_allowlisted"
+    if isinstance(error, PermissionError):
+        return "missing_scope"
+    if isinstance(error, jwt.ExpiredSignatureError):
+        return "token_expired"
+    if isinstance(error, jwt.InvalidIssuerError):
+        return "issuer_mismatch"
+    if isinstance(error, jwt.InvalidAudienceError):
+        return "audience_mismatch"
+    if isinstance(error, jwt.InvalidSignatureError):
+        return "signature_invalid"
+    if isinstance(error, jwt.MissingRequiredClaimError):
+        return "required_claim_missing"
+    return "invalid_token"
+
+
 def _validate_oidc_bearer(token: str, required_scopes: tuple[str, ...]) -> dict[str, object]:
     issuer, audience, _ = _oidc_settings()
     key, algorithm = _signing_key(token)
@@ -150,7 +174,7 @@ def _validate_oidc_bearer(token: str, required_scopes: tuple[str, ...]) -> dict[
         algorithms=[algorithm],
         audience=audience,
         issuer=issuer,
-        options={"require": ["exp", "iat", "sub"]},
+        options={"require": ["exp", "iat", "sub", "iss", "aud"]},
     )
     subject = claims.get("sub")
     if not isinstance(subject, str) or not subject:
@@ -180,10 +204,13 @@ def require_scopes(*required_scopes: str) -> Callable:
             try:
                 return _validate_oidc_bearer(supplied_token, required_scopes)
             except OwnerIdentityNotAllowed as exc:
+                logger.warning("OIDC authentication rejected reason=%s", _oidc_reason_code(exc))
                 raise HTTPException(status_code=403, detail="owner identity is not allowlisted") from exc
             except PermissionError as exc:
+                logger.warning("OIDC authentication rejected reason=%s", _oidc_reason_code(exc))
                 raise HTTPException(status_code=403, detail=f"required scope is missing: {exc}") from exc
             except Exception as exc:
+                logger.warning("OIDC authentication rejected reason=%s", _oidc_reason_code(exc))
                 raise HTTPException(status_code=401, detail="OIDC bearer token is invalid") from exc
 
         configured_token = _configured_local_token()
