@@ -12,8 +12,8 @@
 | Safe repository and GitHub discovery | COMPLETE | Existing work preserved; no tracked local changes before this branch; GitHub CLI authenticated with repository write permission. |
 | Full V7 handoff validation | COMPLETE | `validate_pack.py` passed: 38 hashed sources, 5 epics, 27 tickets, valid dependencies, V7 golden set, three-code fixture, and importer dry run. |
 | E12-E16 / NXD-001-NXD-027 import | COMPLETE | 32 canonical issues are open; URLs are listed below. |
-| Design baseline documentation PR | NOT STARTED | Must remain documentation-only and draft. |
-| Tactical Track renderer feasibility | NOT STARTED | No product route or full-app redesign has been changed. |
+| Design baseline documentation PR | COMPLETE / DRAFT | Draft PR #177 contains documentation and reference-manifest changes only. |
+| Tactical Track renderer feasibility | HOLD | Standalone lab captured six browser screenshots; candidate is below V7 realism and has unresolved asset rights. |
 | Human visual review / owner approval | NOT STARTED | No automated result is treated as artistic approval. |
 
 ## Protected handoff material
@@ -68,6 +68,14 @@ Tickets:
 
 The first importer process continued after a tool timeout, while a second invocation was started. This created two extra copies of each planned record. A third complete set was retained as the canonical set above. The 64 extras were closed, not deleted, with comments linking each to its canonical issue. The importer result map was written by the handoff script in its temporary extracted directory; the canonical URLs are recorded here.
 
-## Next executable checkpoint
+## Tactical Track evidence
 
-Create a documentation-only design-baseline change on this branch containing the protected reference manifest, rights/design-state constraints, and the V7 review template. Keep it as a draft PR if published. Do not implement the production Tactical Track or touch deployment/provider/Auth0/The Long Straight until the baseline is reviewable.
+- Lab review: `docs/design-rescue/TACTICAL_TRACK_LAB_REVIEW.md`
+- Standalone entry: `apps/web/public/tactical-track-lab.html`
+- Synthetic backdrop: `apps/web/public/tactical-track-lab-backdrop.png` (rights pending; not production-approved)
+- Screenshots: `docs/design-rescue/evidence/tactical-track/`
+- Recommendation: **HOLD** for Tactical Track implementation.
+
+## Next checkpoint
+
+Stop for owner and independent review. Do not rebuild the full application, merge the draft PR, deploy, activate providers, change Auth0, enable wagering/trading, or modify The Long Straight until the Tactical Track HOLD is resolved through a new evidence package and genuine human decisions.
