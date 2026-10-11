@@ -32,7 +32,7 @@ The common `historical-features-v1` contract, B0–B4 offline benchmark interfac
 |---|---|---|
 | T-C / RIL-060 | Aggregate release evidence into a fail-closed gate. | Synthetic local evidence, automated checks, owner review, external dependencies and prohibited capabilities are represented in one hashed report with no activation or promotion authority. |
 | T-A / G1 | Execute disposable PostgreSQL apply/rollback/verify smoke. | The guarded `pnpm db:smoke` harness validates a loopback/disposable target, then verifies migration checksums, ingestion schema and upgrade/downgrade/re-upgrade behavior when a user-supplied `DATABASE_URL` is available. |
-| T-A / RIL-068 | Broaden provider as-of reconciliation coverage. | Timestamp, retention, rights and cutoff edge cases remain quarantined before historical materialization; no real provider rows are required. |
+| T-A / RIL-068 | Broaden provider as-of reconciliation coverage. | Timestamp, retention, rights and cutoff edge cases remain quarantined before historical materialization; no real provider rows are required. The current bridge and expanded synthetic edge-case suite provide the safe foundation; owner-approved historical reconciliation remains separate. |
 
 RIL-069–071 now have safe synthetic foundations in this branch. Their remaining
 acceptance is independent review and owner/model decision evidence; they cannot

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 from pathlib import Path
 import sys
@@ -25,6 +26,7 @@ def main() -> None:
     parser.add_argument("--page-size", type=int, default=100)
     parser.add_argument("--replay-id", default="postgres-smoke")
     parser.add_argument("--worker-id", default="synthetic-postgres-local-worker")
+    parser.add_argument("--enqueue-only", action="store_true", help="enqueue jobs and exit without consuming them")
     args = parser.parse_args()
     try:
         validate_disposable_database_url()
@@ -38,10 +40,16 @@ def main() -> None:
             store=PostgresIngestionStore(connection),
             worker_id=args.worker_id,
         )
-        for code in args.codes or ("THOROUGHBRED", "HARNESS", "GREYHOUND"):
+        jobs = [
             worker.enqueue(code=code, page_size=args.page_size, replay_id=args.replay_id)
-        summary = worker.run_until_idle()
-    print(summary.model_dump_json(indent=2))
+            for code in args.codes or ("THOROUGHBRED", "HARNESS", "GREYHOUND")
+        ]
+        result = (
+            {"enqueued_job_ids": [job.job_id for job in jobs], "count": len(jobs)}
+            if args.enqueue_only
+            else worker.run_until_idle().model_dump(mode="json")
+        )
+    print(json.dumps(result, indent=2))
 
 
 if __name__ == "__main__":

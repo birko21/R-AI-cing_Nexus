@@ -37,8 +37,10 @@ This matrix maps the supplied v1.1 source requirements to the implementation bac
   the durable ingestion lease migration, and synthetic worker tests are present.
   The disposable PostgreSQL smoke harness now validates loopback/disposable
   targeting before connecting, verifies the ingestion schema and checksums,
-  runs the durable synthetic worker, and performs upgrade/downgrade/re-upgrade. Its actual execution remains
-  outstanding because no approved `DATABASE_URL` has been supplied.
+  runs the durable synthetic worker, and performs upgrade/downgrade/re-upgrade.
+  The queue also has a separate producer-only path and signal-aware consumer
+  runtime for local background processing. Its actual database execution
+  remains outstanding because no approved `DATABASE_URL` has been supplied.
 - G2 requirements: the synthetic three-code UI and Tactical Track proof have
   browser evidence, but the complete 14-workspace responsive atlas and
   independent accessibility review remain open.

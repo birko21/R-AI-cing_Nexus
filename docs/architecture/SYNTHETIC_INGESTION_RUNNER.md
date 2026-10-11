@@ -36,6 +36,9 @@ For a long-lived local consumer, first enqueue work with the finite runner and
 then start the signal-aware poll loop:
 
 ```powershell
+$env:DATABASE_URL = 'postgresql+psycopg://user:password@127.0.0.1:5432/racing_intelligence_dev'
+$env:RACING_INTELLIGENCE_DB_DISPOSABLE = '1'
+.\.venv\Scripts\python.exe scripts/run_postgres_synthetic_ingestion.py --enqueue-only --replay-id worker-run
 .\.venv\Scripts\python.exe scripts/run_postgres_synthetic_worker.py
 ```
 
@@ -46,6 +49,11 @@ closed, and the process exits cleanly. Use `--once` for a single poll or
 `--max-jobs N` for a finite local verification run. The disposable-target
 guard remains mandatory, so this command cannot be pointed at a production or
 remote database by accident.
+
+The producer and consumer are deliberately separate: `--enqueue-only` commits
+durable jobs and exits, while the long-lived worker leases and processes them.
+The default finite command still enqueues and drains jobs in one local smoke
+run; `pnpm db:enqueue:synthetic` exposes the producer-only form.
 
 The worker consumes a `ContractedProviderAdapter`, one bounded page at a time,
 and performs the following sequence:
