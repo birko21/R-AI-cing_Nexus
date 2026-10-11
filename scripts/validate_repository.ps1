@@ -61,6 +61,8 @@ $required = @(
     'fixtures/synthetic/scenario_studio_v1.json',
     'fixtures/synthetic/challenger_study_v1.json',
     'fixtures/synthetic/operations_v1.json',
+    'fixtures/synthetic/betfair_market_replay_manifest_v1.json',
+    'fixtures/synthetic/specialist_models_v1.json',
     'docs/evidence/ril-059/backup-restore-transcript.json',
     'playwright.config.ts',
     '.github/workflows/ci.yml',
@@ -110,6 +112,7 @@ $required = @(
     'services/api/app/operations.py',
     'services/api/app/backup_controls.py',
     'services/api/app/betfair_mock.py',
+    'services/api/app/ingestion.py',
     'services/api/app/specialist_models.py',
     'services/api/app/historical_features.py',
     'services/api/app/model_benchmarks.py',
@@ -162,6 +165,7 @@ $required = @(
     'services/api/tests/test_operations.py',
     'services/api/tests/test_backup_controls.py',
     'services/api/tests/test_betfair_mock.py',
+    'services/api/tests/test_ingestion.py',
     'services/api/tests/test_specialist_models.py',
     'services/api/tests/test_historical_features.py',
     'services/api/tests/test_model_benchmarks.py',
@@ -267,6 +271,7 @@ $required = @(
     'migrations/versions/016_watchlists.py',
     'migrations/versions/017_alert_events.py',
     'migrations/versions/018_responsible_controls.py',
+    'migrations/versions/019_ingestion_jobs.py',
     'scripts/db_migrate.ps1',
     'scripts/generate_synthetic_fixtures.py',
     'scripts/generate_b0_forecast_manifest.py',
@@ -306,7 +311,10 @@ $required = @(
     'scripts/record_migration_checksums.py',
     'scripts/verify_migration_checksums.py',
     'scripts/generate_ril061_evidence.py',
-    'scripts/generate_b3_synthetic_evidence.py'
+    'scripts/generate_b3_synthetic_evidence.py',
+    'scripts/generate_betfair_replay_manifest.py',
+    'scripts/generate_specialist_model_manifest.py',
+    'scripts/run_synthetic_ingestion.py'
 )
 
 foreach ($path in $required) {
