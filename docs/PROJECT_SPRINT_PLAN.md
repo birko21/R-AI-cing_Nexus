@@ -159,6 +159,7 @@ neutral data plane**. The current branch contains:
 - PostgreSQL job leasing and migration 019;
 - deterministic synthetic Betfair replay-manifest generation;
 - replay-manifest reconciliation that detects checksum/page/count drift;
+- typed provider-evidence records with no activation authority;
 - provider-neutral capability and raw-envelope boundaries; and
 - the current API regression suite passing.
 
