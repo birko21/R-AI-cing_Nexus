@@ -48,20 +48,17 @@ enqueue → claim → bounded adapter fetch → envelope validation
 ## Deliberate scope boundary
 
 `InMemoryIngestionStore` is an offline reference implementation for the worker
-contract and tests. It is not a claim of durable production storage. The next
-repository implementation should map the same operations to the existing
-append-only PostgreSQL tables:
+contract and tests. `PostgresIngestionStore` maps the same operations to the
+existing append-only PostgreSQL tables:
 
 - `raw_envelopes` and `quarantine_records` from migration 005;
 - `source_capability_controls` from migration 006;
 - bitemporal revisions from migration 004;
 - source health events from migration 009.
 
-That PostgreSQL repository, job leasing, and an external scheduler belong to a
-the next implementation increment. Migration `019_ingestion_jobs` defines the
-durable queue state and lease columns; `PostgresIngestionStore` provides the
-transaction-scoped repository operations. The v1.1 active MVP explicitly does
-not require an external broker or background queue in G0–G3.
+Migration `019_ingestion_jobs` defines the durable queue state and lease
+columns. A separate external scheduler or broker remains a later increment;
+the v1.1 active MVP explicitly does not require one in G0–G3.
 
 The lease protocol is bounded and restart-safe: a worker claims one eligible
 job with `FOR UPDATE SKIP LOCKED`, sets a lease owner and expiry, and a later
