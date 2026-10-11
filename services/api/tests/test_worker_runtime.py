@@ -46,9 +46,40 @@ def test_worker_runtime_stops_without_dequeuing_after_signal() -> None:
 
 
 @pytest.mark.parametrize(
-    ("poll_seconds", "max_jobs"),
-    ((0, None), (-1, None), (1, 0)),
+    ("poll_seconds", "max_jobs", "max_polls"),
+    ((0, None, None), (-1, None, None), (1, 0, None), (1, None, 0)),
 )
-def test_worker_runtime_rejects_invalid_limits(poll_seconds: float, max_jobs: int | None) -> None:
+def test_worker_runtime_rejects_invalid_limits(
+    poll_seconds: float,
+    max_jobs: int | None,
+    max_polls: int | None,
+) -> None:
     with pytest.raises(ValueError):
-        run_until_stopped(lambda: None, stop_event=Event(), poll_seconds=poll_seconds, max_jobs=max_jobs)
+        run_until_stopped(
+            lambda: None,
+            stop_event=Event(),
+            poll_seconds=poll_seconds,
+            max_jobs=max_jobs,
+            max_polls=max_polls,
+        )
+
+
+def test_worker_runtime_once_mode_can_exit_on_an_empty_queue() -> None:
+    calls = 0
+
+    def step() -> None:
+        nonlocal calls
+        calls += 1
+        return None
+
+    summary = run_until_stopped(
+        step,
+        stop_event=Event(),
+        poll_seconds=10,
+        max_polls=1,
+        wait=lambda _seconds: False,
+    )
+
+    assert calls == 1
+    assert summary.jobs_processed == 0
+    assert summary.idle_polls == 1

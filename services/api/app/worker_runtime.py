@@ -26,6 +26,7 @@ def run_until_stopped(
     stop_event: Event,
     poll_seconds: float,
     max_jobs: int | None = None,
+    max_polls: int | None = None,
     wait: Callable[[float], bool] | None = None,
 ) -> WorkerLoopSummary:
     """Run bounded steps until shutdown, an optional cap, or test completion.
@@ -41,11 +42,19 @@ def run_until_stopped(
         raise ValueError("poll_seconds must be positive")
     if max_jobs is not None and max_jobs < 1:
         raise ValueError("max_jobs must be positive when provided")
+    if max_polls is not None and max_polls < 1:
+        raise ValueError("max_polls must be positive when provided")
 
     wait_for_stop = wait or stop_event.wait
     jobs_processed = 0
     idle_polls = 0
-    while not stop_event.is_set() and (max_jobs is None or jobs_processed < max_jobs):
+    polls = 0
+    while (
+        not stop_event.is_set()
+        and (max_jobs is None or jobs_processed < max_jobs)
+        and (max_polls is None or polls < max_polls)
+    ):
+        polls += 1
         result = step()
         if result is None:
             idle_polls += 1

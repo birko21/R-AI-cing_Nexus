@@ -65,6 +65,7 @@ def run_worker(
     poll_seconds: float,
     stop_event: Event,
     max_jobs: int | None = None,
+    max_polls: int | None = None,
 ) -> WorkerLoopSummary:
     """Consume one bounded job per transaction until the loop exits."""
 
@@ -85,6 +86,7 @@ def run_worker(
         stop_event=stop_event,
         poll_seconds=poll_seconds,
         max_jobs=max_jobs,
+        max_polls=max_polls,
     )
 
 
@@ -92,7 +94,8 @@ def main() -> None:
     args = _parser().parse_args()
     if args.once and args.max_jobs is not None:
         raise SystemExit("use either --once or --max-jobs, not both")
-    max_jobs = 1 if args.once else args.max_jobs
+    max_jobs = args.max_jobs
+    max_polls = 1 if args.once else None
     try:
         validate_disposable_database_url()
     except ValueError as exc:
@@ -109,6 +112,7 @@ def main() -> None:
                 poll_seconds=args.poll_seconds,
                 stop_event=stop_event,
                 max_jobs=max_jobs,
+                max_polls=max_polls,
             )
     finally:
         engine.dispose()
