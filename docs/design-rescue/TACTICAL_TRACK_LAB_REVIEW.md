@@ -34,8 +34,8 @@ All screenshots are real Chromium captures at DPR 1. Mobile captures scroll the 
 | Base | 1440×900 | `evidence/tactical-track/base-desktop.png` | `EDD02E10D86D4742BD96325B77346A13F42BF3CD74C21D7C55B0916549038121` |
 | Base | 768×1024 | `evidence/tactical-track/base-tablet.png` | `EE8FAFE8824C80F0B6A4C27A9D229D1F87ED65028E808A0680F6566CBF6C3C30` |
 | Base | 390×844 | `evidence/tactical-track/base-mobile.png` | `2BD87D8358164F7FDB333E5ED112E02B452AD059BC192A03AAB1F749BEFC95FB` |
-| Contested lead | 1440×900 | `evidence/tactical-track/contested-desktop.png` | `CB13C0F64E8D41DB94859587BE7614592951F736AD42D08182402444A3D52BF1` |
-| Contested lead | 768×1024 | `evidence/tactical-track/contested-tablet.png` | `3F0443C0B6EEF64F190588E7135A17BB1F6B2A223BE77DE4A899A698C7CD4CA7` |
+| Contested lead | 1440×900 | `evidence/tactical-track/contested-desktop.png` | `6DD9101AF5A533F0E4127F5E094E65B0ED01B95EB274A897C7F0A62E0ACA267E` |
+| Contested lead | 768×1024 | `evidence/tactical-track/contested-tablet.png` | `B63BBE33BC1FDB129EAB5EBE766A7AF9BBA6A871821DECDAD267E5296093A641` |
 | Contested lead | 390×844 | `evidence/tactical-track/contested-mobile.png` | `EA8235DAD578442FD6685B2267B89B60102217A85B4FB98B2440D9916C75F3AE` |
 
 ## Validation
@@ -45,6 +45,7 @@ All screenshots are real Chromium captures at DPR 1. Mobile captures scroll the 
 - Playwright load measurement — PASS: 1,577 ms in the measured local run.
 - `@axe-core/playwright` — PASS: 0 violations after landmark correction.
 - Direct-file smoke test — PASS: `file://` opening loads the backdrop and all 11 runner images; axe reports 0 violations.
+- Fixture contract check — PASS: `nexus.tactical-track.fixture.v1` loads from HTTP and `file://`; changing a runner's `silks.asset` changes its rendered image without renderer code changes.
 - V7 handoff pack validator — PASS before lab work.
 
 ## Comparative visual review against V7

@@ -71,6 +71,11 @@ The first importer process continued after a tool timeout, while a second invoca
 ## Tactical Track evidence
 
 - Lab review: `docs/design-rescue/TACTICAL_TRACK_LAB_REVIEW.md`
+- Metadata contract: `docs/design-rescue/TACTICAL_TRACK_METADATA_CONTRACT.md`
+- Synthetic Betfair-shaped fixture: `apps/web/public/tactical-track-fixture.js`
+- Asset status: `docs/design-rescue/TACTICAL_TRACK_ASSET_STATUS.md`
+- Human review packet: `docs/design-rescue/TACTICAL_TRACK_REVIEW_PACKET.md`
+- Next-workspace handoff: `docs/design-rescue/PHASE0_NEXT_WORKSPACE_HANDOFF.md`
 - Standalone entry: `apps/web/public/tactical-track-lab.html`
 - Synthetic backdrop: `apps/web/public/tactical-track-lab-backdrop.png` (rights pending; not production-approved)
 - Synthetic runner layers: `apps/web/public/tactical-track-runners/` (generated feasibility assets; rights pending; not production-approved)
