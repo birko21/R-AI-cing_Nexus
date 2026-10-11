@@ -32,8 +32,8 @@ The design programme retains all fourteen workspaces: Command Centre; Meetings &
 
 For any changed UI, the eventual evidence package must include real browser screenshots at 1440×900, 768×1024, and 390×844; a pinned V7 reference; the same synthetic fixture across views; rights/design-state declarations; and a distinct human reviewer plus owner decision. Automated checks can validate file integrity and declared evidence, but cannot provide artistic approval, legal clearance, race-domain validation, or owner sign-off.
 
-The current Phase 0 state is HOLD for Tactical Track implementation: no renderer candidate, screenshots, independent review, or owner decision has yet been produced.
+The current Phase 0 state is a visual candidate advanced for review with production HOLD: a standalone Tactical Track lab, real desktop/tablet/mobile screenshots, and automated evidence now exist, while independent reviewer/owner decisions and asset rights clearance remain outstanding.
 
 ## Next reviewable increment
 
-The next implementation increment is an isolated Tactical Track design laboratory behind a feature flag or standalone route. It must compare a layered 2D/sprite candidate with a practical GPU/3D challenger where feasible, use one synthetic fixture, and stop at REVISE/HOLD if the result is visually weaker than V7.
+The isolated Tactical Track design laboratory is the current reviewable increment. It uses one synthetic fixture, a side-on layered 2D/sprite candidate, and a V7-style analytical speed map. The next gate is rights/design-state resolution plus distinct human reviewer and owner decisions; no production route, provider activation, wagering capability, or deployment is implied.

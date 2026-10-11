@@ -13,7 +13,7 @@
 | Full V7 handoff validation | COMPLETE | `validate_pack.py` passed: 38 hashed sources, 5 epics, 27 tickets, valid dependencies, V7 golden set, three-code fixture, and importer dry run. |
 | E12-E16 / NXD-001-NXD-027 import | COMPLETE | 32 canonical issues are open; URLs are listed below. |
 | Design baseline documentation PR | COMPLETE / DRAFT | Draft PR #177 contains documentation and reference-manifest changes only. |
-| Tactical Track renderer feasibility | IN PROGRESS / PRODUCTION HOLD | Standalone lab now uses realistic independently placeable synthetic horse-and-jockey layers; six refreshed browser screenshots pass the automated visual/interaction checks, while asset rights and human approval remain unresolved. |
+| Tactical Track renderer feasibility | IN PROGRESS / PRODUCTION HOLD | Standalone lab now uses realistic independently placeable, equal-scale synthetic horse-and-jockey layers plus a V7-style linked analytical speed map; six refreshed browser screenshots pass the automated visual/interaction checks, while Betfair/provider wiring, asset rights, and human approval remain unresolved. |
 | Human visual review / owner approval | NOT STARTED | No automated result is treated as artistic approval. |
 
 ## Protected handoff material

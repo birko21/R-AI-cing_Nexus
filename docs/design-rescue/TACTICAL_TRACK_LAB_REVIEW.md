@@ -15,11 +15,13 @@ The lab is a standalone public HTML entry, not a production route. It uses one s
 - responsive desktop, tablet, and mobile layouts;
 - explicit synthetic/illustrative and rights-pending labels.
 
-The runner field was iterated after the first review: the geometric SVG treatment was removed, photorealistic synthetic horse-and-jockey layers were added, and dense name pills were reduced to a selected-runner label plus numbered identity markers. Full runner names remain in the linked groups and detail panel so the track remains readable at mobile width.
+The runner field was iterated after the first review: the geometric SVG treatment was removed, photorealistic synthetic horse-and-jockey layers were added, and dense name pills were reduced to a selected-runner label plus numbered identity markers. All runners now use one shared visual scale per viewport so the side-on field reads consistently. Full runner names remain in the linked groups and detail panel so the track remains readable at mobile width.
+
+The renderer now consumes a per-runner `silks` metadata object. This lab supplies synthetic local assets only; it does not activate or call Betfair. A production adapter can populate the same field from a rights-cleared provider-normalized silk asset or colour/pattern manifest.
 
 The backdrop was then iterated from a bend to a straightaway, and finally to the correct side-on race view for the side-profile runner layers. Horizontal parallel rails now sit behind the field, leaving the compositing zone open so runners do not visually intersect the fence.
 
-The analytical pace map was also corrected. It now renders all eleven field members from the main track DOM, follows Base/Contested scenario movement, and highlights the same selected runner instead of showing an unrelated four-dot placeholder.
+The analytical pace map was also corrected to follow the V7 golden language: four labelled settling bands, a gridded distance-to-finish axis, all eleven field members from the main track DOM, Base/Contested scenario movement, and the same selected-runner highlight instead of an unrelated four-dot placeholder.
 
 The backdrop is an AI-generated side-on straightaway feasibility asset, not a licensed production asset. Its workspace SHA-256 is `E2465ADC12BACD63437EE79F5724C8B52AD3531576C24764DF7E947F730A741E`; rights clearance is unresolved.
 
@@ -29,12 +31,12 @@ All screenshots are real Chromium captures at DPR 1. Mobile captures scroll the 
 
 | Scenario | Viewport | Screenshot | SHA-256 |
 | --- | ---: | --- | --- |
-| Base | 1440×900 | `evidence/tactical-track/base-desktop.png` | `D1A958A128A56B351B41CE7EA1D8EE39F707BA777A91E6E8B1FCBC709E2311B7` |
-| Base | 768×1024 | `evidence/tactical-track/base-tablet.png` | `F253312AAEBE6559FF5C548C72ACA587BBF05B6BC9F2162C9F0392387852DCE4` |
-| Base | 390×844 | `evidence/tactical-track/base-mobile.png` | `999E4FAF8AC145A4BF0F05051C31F4E66958696D5E69BA349DF0EF7524DD1AB6` |
-| Contested lead | 1440×900 | `evidence/tactical-track/contested-desktop.png` | `D5C3559B00CED6BB455F7A27C4222D5EC8C65D1C7382AED6B74B9307B037BCC2` |
-| Contested lead | 768×1024 | `evidence/tactical-track/contested-tablet.png` | `BFDAF86C51CCBCFC1714AA1FF33286D31A024D4587127B48B1AE6202D9C856B5` |
-| Contested lead | 390×844 | `evidence/tactical-track/contested-mobile.png` | `B4FB3EEADEEA7478300B1D631C382886837F9B1EC2C66CD00C562CA3CFD71D16` |
+| Base | 1440×900 | `evidence/tactical-track/base-desktop.png` | `EDD02E10D86D4742BD96325B77346A13F42BF3CD74C21D7C55B0916549038121` |
+| Base | 768×1024 | `evidence/tactical-track/base-tablet.png` | `EE8FAFE8824C80F0B6A4C27A9D229D1F87ED65028E808A0680F6566CBF6C3C30` |
+| Base | 390×844 | `evidence/tactical-track/base-mobile.png` | `2BD87D8358164F7FDB333E5ED112E02B452AD059BC192A03AAB1F749BEFC95FB` |
+| Contested lead | 1440×900 | `evidence/tactical-track/contested-desktop.png` | `CB13C0F64E8D41DB94859587BE7614592951F736AD42D08182402444A3D52BF1` |
+| Contested lead | 768×1024 | `evidence/tactical-track/contested-tablet.png` | `3F0443C0B6EEF64F190588E7135A17BB1F6B2A223BE77DE4A899A698C7CD4CA7` |
+| Contested lead | 390×844 | `evidence/tactical-track/contested-mobile.png` | `EA8235DAD578442FD6685B2267B89B60102217A85B4FB98B2440D9916C75F3AE` |
 
 ## Validation
 

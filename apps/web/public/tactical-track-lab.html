@@ -16,7 +16,10 @@
       .runner-label{top:-18px;background:#081525ed;opacity:0;pointer-events:none;transition:opacity .2s}
       .runner:hover .runner-label,.runner.selected .runner-label{opacity:1}
       .runner .runner-dot{width:16px;height:16px;line-height:16px}
-      @media(max-width:520px){.runner-label{top:-14px;font-size:7px}.runner .runner-dot{width:12px;height:12px;line-height:12px}}
+      .runner,.runner.selected{transform:translate(-50%,-50%) !important}
+      .runner{width:116px}
+      @media(max-width:1080px){.runner{width:96px}}
+      @media(max-width:520px){.runner{width:78px}.runner-label{top:-14px;font-size:7px}.runner .runner-dot{width:12px;height:12px;line-height:12px}}
     </style>
     <style>
       .pace-map{height:146px;background:linear-gradient(180deg,#102f47,#081b2b)}
@@ -27,7 +30,15 @@
       .pace-map-caption{position:absolute;left:13px;top:9px;color:#9db8ca;font-size:8px;letter-spacing:.08em;text-transform:uppercase}
       .pace-runner-dot{position:absolute;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:var(--c);border:2px solid #071525;box-shadow:0 0 0 1px #d9ecf455;z-index:2;color:#071525;font-size:7px;font-weight:800;line-height:8px;text-align:center}
       .pace-runner-dot.selected{width:16px;height:16px;margin:-8px 0 0 -8px;line-height:12px;box-shadow:0 0 0 2px #fff,0 0 0 4px var(--c)}
-      @media(max-width:520px){.pace-map{height:142px}.pace-map-caption{font-size:7px}.pace-runner-dot{width:11px;height:11px;margin:-5px 0 0 -5px;font-size:6px;line-height:7px}.pace-runner-dot.selected{width:14px;height:14px;margin:-7px 0 0 -7px;line-height:10px}}
+      .pace-map{height:166px;padding:0}
+      .pace-map:before,.pace-map:after{display:none}
+      .pace-map-chart{position:absolute;left:68px;right:12px;top:24px;bottom:30px;border:1px dotted #2c5872;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(25% - 1px),#244b63 calc(25% - 1px),#244b63 25%),repeating-linear-gradient(0deg,transparent 0,transparent calc(25% - 1px),#244b63 calc(25% - 1px),#244b63 25%)}
+      .pace-map-band{position:absolute;left:-59px;width:54px;height:25%;top:calc(var(--row) * 25%);display:flex;align-items:center;padding-left:7px;border-left:2px solid var(--band);background:color-mix(in srgb,var(--band) 22%,#0a2235);color:#f4f7fb;font-size:8px;font-weight:700;z-index:1}
+      .pace-map-band.leaders{--band:#43e2a0}.pace-map-band.on-pace{--band:#edbc46}.pace-map-band.midfield{--band:#55bbf8}.pace-map-band.backmarkers{--band:#ff5281}
+      .pace-runner-dot{left:var(--x);top:calc((var(--row) + .5) * 25%);background:var(--c)}
+      .pace-map-axis{position:absolute;left:68px;right:12px;bottom:8px;display:flex;justify-content:space-between;color:#9db8ca;font-size:8px}
+      .pace-map-caption{top:7px}
+      @media(max-width:520px){.pace-map{height:158px}.pace-map-caption{font-size:7px}.pace-map-chart{left:61px;right:9px}.pace-map-band{left:-53px;width:49px;font-size:7px;padding-left:5px}.pace-map-axis{left:61px;right:9px;font-size:7px}.pace-runner-dot{width:11px;height:11px;margin:-5px 0 0 -5px;font-size:6px;line-height:7px}.pace-runner-dot.selected{width:14px;height:14px;margin:-7px 0 0 -7px;line-height:10px}}
     </style>
   </head>
   <body>
@@ -47,7 +58,7 @@
         </section>
         <aside class="side">
           <section class="panel detail" id="detail"></section>
-          <section class="panel map-panel"><h3>Analytical pace map · linked field</h3><div class="pace-map" id="paceMap" role="img" aria-label="Side-on linked pace map"></div><p class="footer-note">Projected settling bands are illustrative, not validated position predictions.</p></section>
+          <section class="panel map-panel"><h3>Speed Map (Analytical View) · linked field</h3><div class="pace-map" id="paceMap" role="img" aria-label="V7-style linked analytical speed map"></div><p class="footer-note">Same synthetic field data as the track view; settling bands are illustrative.</p></section>
           <div class="notice"><b>Quality gate status: HOLD.</b><br />This lab tests layer independence and responsive composition. It is not a production route, licensed artwork, live-data view, or owner approval.</div>
         </aside>
       </main>
@@ -67,19 +78,21 @@
         {n:10,name:'Midnight Storm',color:'#78b9ef',group:'MIDFIELD',detail:'Midfield settling band',factor:'Synthetic fixture'},
         {n:11,name:'Silver Vale',color:'#fb4b78',group:'BACKMARKERS',detail:'Rear group · no precise trajectory claimed',factor:'Synthetic fixture'}
       ];
-      const base={1:[78,60,1.05],2:[73,69,.92],3:[67,58,.98],5:[63,72,.9],4:[55,61,.92],6:[52,72,.82],10:[47,67,.78],7:[36,59,.76],8:[30,72,.7],9:[25,67,.66],11:[20,77,.62]};
-      const contested={1:[82,58,1.08],2:[74,69,.9],3:[76,73,.93],5:[70,58,1],4:[58,64,.88],6:[53,73,.8],10:[47,70,.76],7:[34,61,.74],8:[28,74,.68],9:[23,68,.64],11:[18,77,.6]};
+      const syntheticSilks={1:{asset:"/tactical-track-runners/emerald-gold.png",label:"Emerald and gold"},2:{asset:"/tactical-track-runners/navy-cyan.png",label:"Navy and cyan"},3:{asset:"/tactical-track-runners/crimson-ivory.png",label:"Crimson and ivory"},4:{asset:"/tactical-track-runners/navy-cyan.png",label:"Navy and cyan"},5:{asset:"/tactical-track-runners/crimson-ivory.png",label:"Crimson and ivory"},6:{asset:"/tactical-track-runners/emerald-gold.png",label:"Emerald and gold"},7:{asset:"/tactical-track-runners/crimson-ivory.png",label:"Crimson and ivory"},8:{asset:"/tactical-track-runners/navy-cyan.png",label:"Navy and cyan"},9:{asset:"/tactical-track-runners/emerald-gold.png",label:"Emerald and gold"},10:{asset:"/tactical-track-runners/navy-cyan.png",label:"Navy and cyan"},11:{asset:"/tactical-track-runners/crimson-ivory.png",label:"Crimson and ivory"}};
+      runners.forEach(r=>{r.silks=syntheticSilks[r.n]});
+      const base={1:[78,60,1],2:[73,69,1],3:[67,58,1],5:[63,72,1],4:[55,61,1],6:[52,72,1],10:[47,67,1],7:[36,59,1],8:[30,72,1],9:[25,67,1],11:[20,77,1]};
+      const contested={1:[82,58,1],2:[74,69,1],3:[76,73,1],5:[70,58,1],4:[58,64,1],6:[53,73,1],10:[47,70,1],7:[34,61,1],8:[28,74,1],9:[23,68,1],11:[18,77,1]};
       let scenario='base',selected=1;
       const stage=document.querySelector('#trackStage'), groups=document.querySelector('#groups'), detail=document.querySelector('#detail');
-      function horse(r){const spriteBySilk={emerald:"/tactical-track-runners/emerald-gold.png",navy:"/tactical-track-runners/navy-cyan.png",crimson:"/tactical-track-runners/crimson-ivory.png"};const silk=r.n%3===1?"emerald":r.n%3===2?"navy":"crimson";return `<div class="runner-label">${r.n} · ${r.name}</div><span class="runner-dot">${r.n}</span><img src="${spriteBySilk[silk]}" alt="" draggable="false" />`}
-      function render(){const positions=scenario==='base'?base:contested;stage.querySelectorAll('.runner').forEach(el=>el.remove());runners.forEach(r=>{const el=document.createElement('div');el.className='runner'+(r.n===selected?' selected':'');el.dataset.n=r.n;el.style.cssText=`--runner-color:${r.color};left:${positions[r.n][0]}%;top:${positions[r.n][1]}%;transform:translate(-50%,-50%) scale(${positions[r.n][2]})`;el.innerHTML=horse(r);el.addEventListener('click',()=>{selected=r.n;render()});stage.appendChild(el)});renderGroups();renderDetail()}
+      function horse(r){const silk=r.silks||{asset:"/tactical-track-runners/emerald-gold.png",label:"Synthetic silk"};return `<div class="runner-label">${r.n} · ${r.name}</div><span class="runner-dot">${r.n}</span><img src="${silk.asset}" alt="${r.n} ${r.name} · ${silk.label} silks" draggable="false" />`}
+      function render(){const positions=scenario==='base'?base:contested;stage.querySelectorAll('.runner').forEach(el=>el.remove());runners.forEach(r=>{const el=document.createElement('div');el.className='runner'+(r.n===selected?' selected':'');el.dataset.n=r.n;el.dataset.group=r.group;el.style.cssText=`--runner-color:${r.color};left:${positions[r.n][0]}%;top:${positions[r.n][1]}%;transform:translate(-50%,-50%) scale(${positions[r.n][2]})`;el.innerHTML=horse(r);el.addEventListener('click',()=>{selected=r.n;render()});stage.appendChild(el)});renderGroups();renderDetail()}
       function renderGroups(){const order=['LEAD','ON PACE','MIDFIELD','BACKMARKERS'];groups.innerHTML=order.map(g=>`<section class="group"><h3>${g==='LEAD'?'LEADERS':g[0]+g.slice(1).toLowerCase()} (${runners.filter(r=>r.group===g).length})</h3><ul>${runners.filter(r=>r.group===g).map(r=>`<li><span class="num" style="--c:${r.color}">${r.n}</span><span>${r.name}</span></li>`).join('')}</ul></section>`).join('')}
       function renderDetail(){const r=runners.find(x=>x.n===selected);detail.innerHTML=`<div class="detail-top"><div class="runner-id"><span class="num" style="--c:${r.color}">${r.n}</span><div><b>${r.name}</b><small>Fictional runner · ${r.group.toLowerCase()}</small></div></div><button class="close" aria-label="Selected runner">×</button></div><div class="tabs"><button class="active">Overview</button><button>Pace & Position</button><button>Form</button><button>Evidence</button></div><div class="metric"><label><span>Expected settling band</span><strong style="color:${r.color}">${r.group}</strong></label><div class="bar"><i style="width:${r.group==='LEAD'?88:r.group==='ON PACE'?69:r.group==='MIDFIELD'?46:22}%"></i></div></div><div class="factor"><strong>✦</strong><span>${r.factor}</span></div><div class="factor"><strong>◈</strong><span>${r.detail}</span></div><div class="metric"><label><span>Model confidence</span><span>Illustrative only</span></label><div class="bar"><i style="width:52%;background:linear-gradient(90deg,#e8b33c,#f35e6c)"></i></div></div>`}
       document.querySelectorAll('[data-scenario]').forEach(btn=>btn.addEventListener('click',()=>{scenario=btn.dataset.scenario;document.querySelectorAll('[data-scenario]').forEach(b=>b.classList.toggle('active',b===btn));render()}));render();
     </script>
     <script>
       const paceMap=document.querySelector('#paceMap');
-      function renderPaceMap(){const dots=[...document.querySelectorAll('#trackStage .runner')];paceMap.innerHTML='<span class="pace-map-caption">SIDE-ON EARLY SETTLING · LIVE PROOF</span><span class="pace-map-line upper"></span><span class="pace-map-line lower"></span>'+dots.map(el=>{const x=parseFloat(el.style.left),y=parseFloat(el.style.top),top=25+(y-50)*1.5,label=el.querySelector('.runner-label')?.textContent||`Runner ${el.dataset.n}`,color=getComputedStyle(el).getPropertyValue('--runner-color').trim();return `<span class="pace-runner-dot${el.classList.contains('selected')?' selected':''}" style="--c:${color};left:${x}%;top:${top}%" title="${label}" aria-label="${label}">${el.dataset.n}</span>`}).join('')}
+      function renderPaceMap(){const dots=[...document.querySelectorAll('#trackStage .runner')],rows=[['LEAD','Leaders','leaders'],['ON PACE','On Pace','on-pace'],['MIDFIELD','Midfield','midfield'],['BACKMARKERS','Backmarkers','backmarkers']];paceMap.innerHTML='<span class="pace-map-caption">Same data as track view · expected position</span><div class="pace-map-chart">'+rows.map((row,index)=>`<span class="pace-map-band ${row[2]}" style="--row:${index}">${row[1]}</span>`).join('')+dots.map(el=>{const x=parseFloat(el.style.left),row=Math.max(0,rows.findIndex(item=>item[0]===el.dataset.group)),label=el.querySelector('.runner-label')?.textContent||`Runner ${el.dataset.n}`,color=getComputedStyle(el).getPropertyValue('--runner-color').trim();return `<span class="pace-runner-dot${el.classList.contains('selected')?' selected':''}" style="--c:${color};--x:${x}%;--row:${row}" title="${label}" aria-label="${label}">${el.dataset.n}</span>`}).join('')+'</div><div class="pace-map-axis"><span>800m</span><span>600m</span><span>400m</span><span>200m</span><span>Finish</span></div>'}
       document.querySelectorAll('[data-scenario]').forEach(btn=>btn.addEventListener('click',()=>requestAnimationFrame(renderPaceMap)));
       document.querySelector('#trackStage').addEventListener('click',()=>requestAnimationFrame(renderPaceMap));
       renderPaceMap();
