@@ -95,6 +95,13 @@ jobs:
         run: python scripts/validate_contracts.py
       - name: Security and secret scan
         run: python scripts/security_audit.py
+      - name: Validate operational, backup, budget and egress controls
+        run: |
+          python scripts/generate_sbom.py
+          python scripts/generate_operations_fixture.py
+          python scripts/generate_backup_fixture.py
+          python scripts/generate_assistant_eval_fixture.py
+          python scripts/generate_egress_fixture.py
       - name: Synthetic RIL-061 evidence
         run: python scripts/generate_ril061_evidence.py
       - name: Synthetic replay and specialist manifests

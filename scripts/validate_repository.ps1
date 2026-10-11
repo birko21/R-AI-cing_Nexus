@@ -305,6 +305,7 @@ $required = @(
     'scripts/run_postgres_synthetic_ingestion.py',
     'scripts/run_postgres_synthetic_worker.py',
     'docs/evidence/ril-011/postgres-smoke.md',
+    'docs/evidence/ril-057/operational-controls-ci.md',
     'scripts/generate_synthetic_fixtures.py',
     'scripts/generate_b0_forecast_manifest.py',
     'scripts/generate_b1_forecast_manifest.py',
