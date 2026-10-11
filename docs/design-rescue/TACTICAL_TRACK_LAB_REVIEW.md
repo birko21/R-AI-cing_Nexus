@@ -17,9 +17,9 @@ The lab is a standalone public HTML entry, not a production route. It uses one s
 
 The runner field was iterated after the first review: the geometric SVG treatment was removed, photorealistic synthetic horse-and-jockey layers were added, and dense name pills were reduced to a selected-runner label plus numbered identity markers. Full runner names remain in the linked groups and detail panel so the track remains readable at mobile width.
 
-The backdrop was then iterated again from a bend to a straightaway. Parallel rails now sit behind the field, leaving the compositing zone open so runners do not visually intersect the fence.
+The backdrop was then iterated from a bend to a straightaway, and finally to the correct side-on race view for the side-profile runner layers. Horizontal parallel rails now sit behind the field, leaving the compositing zone open so runners do not visually intersect the fence.
 
-The backdrop is an AI-generated straightaway feasibility asset, not a licensed production asset. Its workspace SHA-256 is `A3AFFDC12F88471F92047BFA060BA11D86BA615216CC095E894F15C2D0F8DE14`; rights clearance is unresolved.
+The backdrop is an AI-generated side-on straightaway feasibility asset, not a licensed production asset. Its workspace SHA-256 is `E2465ADC12BACD63437EE79F5724C8B52AD3531576C24764DF7E947F730A741E`; rights clearance is unresolved.
 
 ## Browser evidence
 
@@ -27,12 +27,12 @@ All screenshots are real Chromium captures at DPR 1. Mobile captures scroll the 
 
 | Scenario | Viewport | Screenshot | SHA-256 |
 | --- | ---: | --- | --- |
-| Base | 1440×900 | `evidence/tactical-track/base-desktop.png` | `89AA1835AC4F2ABEB0870534D67D275C951B9F41BDD4A4B845C0EF346C78AB17` |
-| Base | 768×1024 | `evidence/tactical-track/base-tablet.png` | `C7C3B435BA92AF357ABB46F5222C07CF863889C1845BA89590556B05C20284C3` |
-| Base | 390×844 | `evidence/tactical-track/base-mobile.png` | `EFEA5FB806457069A15B0A543DA8609D58C9EA2A9383B56CE44F9044C3EDB221` |
-| Contested lead | 1440×900 | `evidence/tactical-track/contested-desktop.png` | `5E120C9F680F2796EE29250526A54B8CBCA379409E70CC78F3D633568CB31B3B` |
-| Contested lead | 768×1024 | `evidence/tactical-track/contested-tablet.png` | `079CF29DC8460BBB2E684C11ED2AC5095907F9F3086A6FD2AB6767DFA2CA83D2` |
-| Contested lead | 390×844 | `evidence/tactical-track/contested-mobile.png` | `CEA17BA23580669195007AA5EB791A9C3065418F4B7A50A6CAF97ED613D45125` |
+| Base | 1440×900 | `evidence/tactical-track/base-desktop.png` | `ECF37657E8F1728D6FF4281A4CFE78521D6A74765E43B2CCFACAE63BD3A4CBFE` |
+| Base | 768×1024 | `evidence/tactical-track/base-tablet.png` | `F253312AAEBE6559FF5C548C72ACA587BBF05B6BC9F2162C9F0392387852DCE4` |
+| Base | 390×844 | `evidence/tactical-track/base-mobile.png` | `119E2A29D8F3ED0867A137090802A5175B562739A48BAB39C7D23F6CCE171CFA` |
+| Contested lead | 1440×900 | `evidence/tactical-track/contested-desktop.png` | `C8253F37A4AAD602F847A30BD8117B65FC3A4F9ED360D834F8ECFE6175B7481D` |
+| Contested lead | 768×1024 | `evidence/tactical-track/contested-tablet.png` | `BFDAF86C51CCBCFC1714AA1FF33286D31A024D4587127B48B1AE6202D9C856B5` |
+| Contested lead | 390×844 | `evidence/tactical-track/contested-mobile.png` | `706B32F0F0D1EEFF4644970FBD2A729433EA258E6125A7EE680B5A6EE255AA62` |
 
 ## Validation
 
