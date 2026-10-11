@@ -19,6 +19,8 @@ The runner field was iterated after the first review: the geometric SVG treatmen
 
 The backdrop was then iterated from a bend to a straightaway, and finally to the correct side-on race view for the side-profile runner layers. Horizontal parallel rails now sit behind the field, leaving the compositing zone open so runners do not visually intersect the fence.
 
+The analytical pace map was also corrected. It now renders all eleven field members from the main track DOM, follows Base/Contested scenario movement, and highlights the same selected runner instead of showing an unrelated four-dot placeholder.
+
 The backdrop is an AI-generated side-on straightaway feasibility asset, not a licensed production asset. Its workspace SHA-256 is `E2465ADC12BACD63437EE79F5724C8B52AD3531576C24764DF7E947F730A741E`; rights clearance is unresolved.
 
 ## Browser evidence
@@ -27,17 +29,17 @@ All screenshots are real Chromium captures at DPR 1. Mobile captures scroll the 
 
 | Scenario | Viewport | Screenshot | SHA-256 |
 | --- | ---: | --- | --- |
-| Base | 1440×900 | `evidence/tactical-track/base-desktop.png` | `ECF37657E8F1728D6FF4281A4CFE78521D6A74765E43B2CCFACAE63BD3A4CBFE` |
+| Base | 1440×900 | `evidence/tactical-track/base-desktop.png` | `D1A958A128A56B351B41CE7EA1D8EE39F707BA777A91E6E8B1FCBC709E2311B7` |
 | Base | 768×1024 | `evidence/tactical-track/base-tablet.png` | `F253312AAEBE6559FF5C548C72ACA587BBF05B6BC9F2162C9F0392387852DCE4` |
-| Base | 390×844 | `evidence/tactical-track/base-mobile.png` | `119E2A29D8F3ED0867A137090802A5175B562739A48BAB39C7D23F6CCE171CFA` |
-| Contested lead | 1440×900 | `evidence/tactical-track/contested-desktop.png` | `C8253F37A4AAD602F847A30BD8117B65FC3A4F9ED360D834F8ECFE6175B7481D` |
+| Base | 390×844 | `evidence/tactical-track/base-mobile.png` | `999E4FAF8AC145A4BF0F05051C31F4E66958696D5E69BA349DF0EF7524DD1AB6` |
+| Contested lead | 1440×900 | `evidence/tactical-track/contested-desktop.png` | `D5C3559B00CED6BB455F7A27C4222D5EC8C65D1C7382AED6B74B9307B037BCC2` |
 | Contested lead | 768×1024 | `evidence/tactical-track/contested-tablet.png` | `BFDAF86C51CCBCFC1714AA1FF33286D31A024D4587127B48B1AE6202D9C856B5` |
-| Contested lead | 390×844 | `evidence/tactical-track/contested-mobile.png` | `706B32F0F0D1EEFF4644970FBD2A729433EA258E6125A7EE680B5A6EE255AA62` |
+| Contested lead | 390×844 | `evidence/tactical-track/contested-mobile.png` | `B4FB3EEADEEA7478300B1D631C382886837F9B1EC2C66CD00C562CA3CFD71D16` |
 
 ## Validation
 
 - `pnpm --filter @racing-intelligence/web build` — PASS.
-- Playwright interaction check — PASS: 11 runners present; Base → Contested lead changes runner position styles.
+- Playwright interaction check — PASS: 11 runners present; Base → Contested lead changes runner position styles and linked pace-map positions; selecting runner 5 selects pace-map runner 5.
 - Playwright load measurement — PASS: 1,577 ms in the measured local run.
 - `@axe-core/playwright` — PASS: 0 violations after landmark correction.
 - V7 handoff pack validator — PASS before lab work.

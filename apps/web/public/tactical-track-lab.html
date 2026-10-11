@@ -18,6 +18,17 @@
       .runner .runner-dot{width:16px;height:16px;line-height:16px}
       @media(max-width:520px){.runner-label{top:-14px;font-size:7px}.runner .runner-dot{width:12px;height:12px;line-height:12px}}
     </style>
+    <style>
+      .pace-map{height:146px;background:linear-gradient(180deg,#102f47,#081b2b)}
+      .pace-map:before{content:'';position:absolute;left:12px;right:12px;top:50%;height:1px;border:0;border-top:1px solid #7f9caf;background:transparent;border-radius:0;transform:none;opacity:.75}
+      .pace-map:after{content:'START 0m                                      400m EARLY SETTLING';left:13px;right:13px;bottom:8px;color:#9db8ca;font-size:8px}
+      .pace-map-line{position:absolute;left:12px;right:12px;height:1px;background:#2f5871;opacity:.75}
+      .pace-map-line.upper{top:35%}.pace-map-line.lower{top:65%}
+      .pace-map-caption{position:absolute;left:13px;top:9px;color:#9db8ca;font-size:8px;letter-spacing:.08em;text-transform:uppercase}
+      .pace-runner-dot{position:absolute;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:var(--c);border:2px solid #071525;box-shadow:0 0 0 1px #d9ecf455;z-index:2;color:#071525;font-size:7px;font-weight:800;line-height:8px;text-align:center}
+      .pace-runner-dot.selected{width:16px;height:16px;margin:-8px 0 0 -8px;line-height:12px;box-shadow:0 0 0 2px #fff,0 0 0 4px var(--c)}
+      @media(max-width:520px){.pace-map{height:142px}.pace-map-caption{font-size:7px}.pace-runner-dot{width:11px;height:11px;margin:-5px 0 0 -5px;font-size:6px;line-height:7px}.pace-runner-dot.selected{width:14px;height:14px;margin:-7px 0 0 -7px;line-height:10px}}
+    </style>
   </head>
   <body>
     <div class="app">
@@ -36,7 +47,7 @@
         </section>
         <aside class="side">
           <section class="panel detail" id="detail"></section>
-          <section class="panel map-panel"><h3>Analytical pace map · linked fixture</h3><div class="pace-map"><i class="map-dot one" style="--c:#35e2a0"></i><i class="map-dot three" style="--c:#f0b638"></i><i class="map-dot five" style="--c:#f0b638"></i><i class="map-dot seven" style="--c:#fb4b78"></i></div><p class="footer-note">Projected settling bands are illustrative, not validated position predictions.</p></section>
+          <section class="panel map-panel"><h3>Analytical pace map · linked field</h3><div class="pace-map" id="paceMap" role="img" aria-label="Side-on linked pace map"></div><p class="footer-note">Projected settling bands are illustrative, not validated position predictions.</p></section>
           <div class="notice"><b>Quality gate status: HOLD.</b><br />This lab tests layer independence and responsive composition. It is not a production route, licensed artwork, live-data view, or owner approval.</div>
         </aside>
       </main>
@@ -65,6 +76,13 @@
       function renderGroups(){const order=['LEAD','ON PACE','MIDFIELD','BACKMARKERS'];groups.innerHTML=order.map(g=>`<section class="group"><h3>${g==='LEAD'?'LEADERS':g[0]+g.slice(1).toLowerCase()} (${runners.filter(r=>r.group===g).length})</h3><ul>${runners.filter(r=>r.group===g).map(r=>`<li><span class="num" style="--c:${r.color}">${r.n}</span><span>${r.name}</span></li>`).join('')}</ul></section>`).join('')}
       function renderDetail(){const r=runners.find(x=>x.n===selected);detail.innerHTML=`<div class="detail-top"><div class="runner-id"><span class="num" style="--c:${r.color}">${r.n}</span><div><b>${r.name}</b><small>Fictional runner · ${r.group.toLowerCase()}</small></div></div><button class="close" aria-label="Selected runner">×</button></div><div class="tabs"><button class="active">Overview</button><button>Pace & Position</button><button>Form</button><button>Evidence</button></div><div class="metric"><label><span>Expected settling band</span><strong style="color:${r.color}">${r.group}</strong></label><div class="bar"><i style="width:${r.group==='LEAD'?88:r.group==='ON PACE'?69:r.group==='MIDFIELD'?46:22}%"></i></div></div><div class="factor"><strong>✦</strong><span>${r.factor}</span></div><div class="factor"><strong>◈</strong><span>${r.detail}</span></div><div class="metric"><label><span>Model confidence</span><span>Illustrative only</span></label><div class="bar"><i style="width:52%;background:linear-gradient(90deg,#e8b33c,#f35e6c)"></i></div></div>`}
       document.querySelectorAll('[data-scenario]').forEach(btn=>btn.addEventListener('click',()=>{scenario=btn.dataset.scenario;document.querySelectorAll('[data-scenario]').forEach(b=>b.classList.toggle('active',b===btn));render()}));render();
+    </script>
+    <script>
+      const paceMap=document.querySelector('#paceMap');
+      function renderPaceMap(){const dots=[...document.querySelectorAll('#trackStage .runner')];paceMap.innerHTML='<span class="pace-map-caption">SIDE-ON EARLY SETTLING · LIVE PROOF</span><span class="pace-map-line upper"></span><span class="pace-map-line lower"></span>'+dots.map(el=>{const x=parseFloat(el.style.left),y=parseFloat(el.style.top),top=25+(y-50)*1.5,label=el.querySelector('.runner-label')?.textContent||`Runner ${el.dataset.n}`,color=getComputedStyle(el).getPropertyValue('--runner-color').trim();return `<span class="pace-runner-dot${el.classList.contains('selected')?' selected':''}" style="--c:${color};left:${x}%;top:${top}%" title="${label}" aria-label="${label}">${el.dataset.n}</span>`}).join('')}
+      document.querySelectorAll('[data-scenario]').forEach(btn=>btn.addEventListener('click',()=>requestAnimationFrame(renderPaceMap)));
+      document.querySelector('#trackStage').addEventListener('click',()=>requestAnimationFrame(renderPaceMap));
+      renderPaceMap();
     </script>
   </body>
 </html>
