@@ -7,6 +7,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 $required = @(
+    '.gitattributes',
     'README.md',
     'README_START_HERE.md',
     'docs/product/MASTER_SPEC_V1_1.md',

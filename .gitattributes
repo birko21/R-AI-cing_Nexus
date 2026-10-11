@@ -1,0 +1,4 @@
+# Synthetic JSON is byte-addressed by backup evidence; keep its line endings
+# stable across Windows and Linux checkouts.
+fixtures/synthetic/*.json text eol=lf
+docs/evidence/ril-059/*.json text eol=lf

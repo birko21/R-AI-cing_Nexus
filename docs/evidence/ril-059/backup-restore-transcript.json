@@ -7,8 +7,8 @@
     {
       "data_mode": "SYNTHETIC_ONLY",
       "relative_path": "fixtures/synthetic/manifest.json",
-      "sha256": "5f721f37d6bea196d0193304d683681456fe1c022d95b111a192243a32ba595f",
-      "size_bytes": 756
+      "sha256": "16a6cd4e71b260a3755047bd40926025999bcadcd3dd580497b187d67a0b9048",
+      "size_bytes": 723
     },
     {
       "data_mode": "SYNTHETIC_ONLY",
