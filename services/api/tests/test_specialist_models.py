@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+import hashlib
 import json
 from pathlib import Path
 
@@ -48,6 +49,9 @@ def test_committed_specialist_manifest_covers_all_code_and_family_lanes() -> Non
         for family in ("COMBINED", "FORM_ONLY", "MARKET_ONLY")
     }
     assert all("independent_assurance" in item["validation_required"] for item in manifest["models"])
+    body = {key: value for key, value in manifest.items() if key != "manifest_hash"}
+    expected_hash = hashlib.sha256(json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode("utf-8")).hexdigest()
+    assert manifest["manifest_hash"] == expected_hash
 
 
 def test_inputs_are_race_normalised_and_future_or_unapproved_observations_are_excluded() -> None:
