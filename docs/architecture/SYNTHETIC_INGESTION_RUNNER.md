@@ -58,8 +58,15 @@ append-only PostgreSQL tables:
 - source health events from migration 009.
 
 That PostgreSQL repository, job leasing, and an external scheduler belong to a
-later implementation increment. The v1.1 active MVP explicitly does not
-require background queues in G0–G3.
+the next implementation increment. Migration `019_ingestion_jobs` defines the
+durable queue state and lease columns; `PostgresIngestionStore` provides the
+transaction-scoped repository operations. The v1.1 active MVP explicitly does
+not require an external broker or background queue in G0–G3.
+
+The lease protocol is bounded and restart-safe: a worker claims one eligible
+job with `FOR UPDATE SKIP LOCKED`, sets a lease owner and expiry, and a later
+worker may reclaim an expired lease. The caller must commit the transaction;
+the repository does not hide transaction boundaries.
 
 ## Evidence
 

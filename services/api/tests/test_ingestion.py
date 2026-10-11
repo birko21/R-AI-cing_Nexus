@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 import pytest
 
 from app.betfair_mock import SyntheticBetfairExchangeAdapter, synthetic_betfair_markets
-from app.ingestion import InMemoryIngestionStore, SyntheticIngestionWorker
+from app.ingestion import InMemoryIngestionStore, IngestionJob, PostgresIngestionStore, SyntheticIngestionWorker
 from app.providers import ContractedProviderAdapter
 
 
@@ -96,3 +96,23 @@ def test_store_quarantines_same_id_with_changed_payload() -> None:
     assert disposition == "QUARANTINED"
     assert len(store.quarantine_records) == 1
     assert next(iter(store.quarantine_records.values())).reason_code == "UNRESOLVED_IDENTITY"
+
+
+def test_postgres_store_job_mapping_is_round_trip_safe() -> None:
+    now = datetime(2026, 1, 15, 2, 0, tzinfo=timezone.utc)
+    job = IngestionJob(
+        idempotency_key="synthetic|GET_MARKETS|THOROUGHBRED|run|ROOT",
+        provider_id="betfair-exchange-synthetic",
+        operation="GET_MARKETS",
+        code="THOROUGHBRED",
+        replay_id="run",
+        available_at=now,
+        created_at=now,
+        lease_owner="worker-a",
+        lease_until=now,
+        status="RUNNING",
+        attempt=1,
+    )
+
+    mapped = PostgresIngestionStore._job_from_row(job.model_dump())
+    assert mapped == job
