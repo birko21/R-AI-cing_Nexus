@@ -14,6 +14,7 @@
 | RIL-068 | Extend as-of feature materialization to provider observations. | SAFE_FOUNDATION | `services/api/app/provider_feature_bridge.py`, `services/api/tests/test_provider_feature_bridge.py`; provider rows with unknown timestamps, missing retention, unapproved rights or post-cutoff timing are quarantined before materialization. |
 | RIL-069 | Build independent code-specialist model scaffolds and nine-lane manifest. | SAFE_FOUNDATION | `services/api/app/specialist_models.py`, `fixtures/synthetic/specialist_models_v1.json`, `services/api/tests/test_specialist_models.py` |
 | RIL-070 | Add deterministic feature/provider ablation report. | SAFE_FOUNDATION | `services/api/app/ablation.py`, `fixtures/synthetic/ablation_v1.json`, `services/api/tests/test_ablation.py`; same-holdout metrics, coverage, uncertainty, hash and HOLD promotion status are verified offline. |
+| RIL-071 | Add independent model-assurance workflow contract. | SAFE_FOUNDATION | `services/api/app/assurance.py`, `fixtures/synthetic/assurance_packet_v1.json`, `services/api/tests/test_assurance.py`; leakage, split and calibration checks remain HOLD until independent and owner references exist. |
 
 ## RIL-061 implementation evidence
 

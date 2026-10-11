@@ -133,6 +133,8 @@ remain synthetic-only until T-D approvals exist.
    market, and combined input contracts.
    The deterministic T-B ablation report now compares a baseline with one
    incremental synthetic feature/provider lane and remains explicitly HOLD.
+   The model-assurance packet is also present, but has no promotion authority
+   and remains HOLD without real independent-review and owner references.
 3. **T-C:** add secret/dependency scans, operational budgets and kill switches,
    backup/restore transcripts, retention deletion tests, and release checklists.
 4. **T-D:** do not implement or activate real provider transports until every
