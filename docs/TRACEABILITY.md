@@ -49,8 +49,9 @@ This matrix maps the supplied v1.1 source requirements to the implementation bac
   open.
 - G3 requirements: deterministic B0/B1 forecasts, archive/replay, scoring,
   feature cutoffs, walk-forward evidence, diagnostics and registry controls are
-  present for synthetic data. They are not validated live performance and still
-  require the specified independent assurance/owner gates.
+  present for synthetic data and B0/B1 derivation is CI-checked. They are not
+  validated live performance and still require the specified independent
+  assurance/owner gates.
 - RIL-069–071: specialist manifests, synthetic ablation metrics and the
   independent-assurance packet are present. They remain synthetic-only and
   explicitly HOLD until independent review and owner decision references exist.

@@ -82,7 +82,7 @@ provider, or production gate.
 |---|---|---|
 | NXD-001 | Immutable V7 source manifest and hashes | Baseline verified; retain as evidence and obtain creative-owner confirmation. |
 | NXD-002 | 14-screen reference and feature-retention matrix | Prepare matrix; owner approval required. |
-| NXD-003 | Three-code identity and synthetic fixture contract | Synthetic fixture and canonical identity foundations exist; add replay/edge-state coverage. |
+| NXD-003 | Three-code identity and synthetic fixture contract | Canonical identity, replay manifests, three-code edge states, and deterministic B0/B1 fixture derivation are implemented and CI-checked. |
 | NXD-004 | Asset, rights, and accessibility ledger | Rights-pending ledger exists; legal/owner clearance remains open. |
 | NXD-005 | Quality charter, variance rubric, and approval rules | Evidence packet exists; creative/QA acceptance remains open. |
 
@@ -94,7 +94,7 @@ provider, or production gate.
 | NXD-007 | Isolated cinematic racecourse backdrop | Side-on synthetic backdrop exists; production rights remain HOLD. |
 | NXD-008 | Independent realistic runner layers and code asset rules | Equal-scale synthetic runner layers exist; production asset clearance remains HOLD. |
 | NXD-009 | Spatial grouping and honest confidence-band contract | Four-band V7 grouping is implemented; specialist review remains required. |
-| NXD-010 | Matched mobile Tactical View and analytical pace map | Next implementation target after the current visual decision gate. |
+| NXD-010 | Matched mobile Tactical View and analytical pace map | Side-on Tactical Track, equal-scale runners, linked analytical pace map, responsive atlas evidence, and shared synthetic context are implemented; visual-owner, accessibility, and racing-domain review remain open. |
 | NXD-011 | Thoroughbred, harness, and greyhound mechanics review | Requires named independent racing specialists; no approval inferred. |
 
 ### S2 — Design system and supporting workspaces
