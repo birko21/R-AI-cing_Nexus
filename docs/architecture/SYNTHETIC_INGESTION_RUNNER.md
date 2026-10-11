@@ -32,6 +32,21 @@ provider, credentials or external network. `pnpm db:smoke` runs this durable
 worker path as part of the disposable upgrade/checksum/schema/
 downgrade/re-upgrade sequence.
 
+For a long-lived local consumer, first enqueue work with the finite runner and
+then start the signal-aware poll loop:
+
+```powershell
+.\.venv\Scripts\python.exe scripts/run_postgres_synthetic_worker.py
+```
+
+The loop opens one PostgreSQL transaction per bounded job, polls again after an
+idle interval, and stops accepting new jobs when it receives `SIGTERM` or
+`SIGINT`. The current bounded page is allowed to finish, its transaction is
+closed, and the process exits cleanly. Use `--once` for a single poll or
+`--max-jobs N` for a finite local verification run. The disposable-target
+guard remains mandatory, so this command cannot be pointed at a production or
+remote database by accident.
+
 The worker consumes a `ContractedProviderAdapter`, one bounded page at a time,
 and performs the following sequence:
 
@@ -78,6 +93,11 @@ The lease protocol is bounded and restart-safe: a worker claims one eligible
 job with `FOR UPDATE SKIP LOCKED`, sets a lease owner and expiry, and a later
 worker may reclaim an expired lease. The caller must commit the transaction;
 the repository does not hide transaction boundaries.
+
+The hosted Render worker remains a separate deployment gate. No worker,
+database, Key Value instance, credential, or paid resource is declared in
+`render.yaml` until the owner approves the persistence topology, shutdown
+window, authentication/secret handling, and operational monitoring.
 
 ## Evidence
 

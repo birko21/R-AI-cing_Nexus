@@ -299,6 +299,7 @@ $required = @(
     'scripts/validate_database_target.py',
     'scripts/verify_ingestion_schema.py',
     'scripts/run_postgres_synthetic_ingestion.py',
+    'scripts/run_postgres_synthetic_worker.py',
     'scripts/generate_synthetic_fixtures.py',
     'scripts/generate_b0_forecast_manifest.py',
     'scripts/generate_b1_forecast_manifest.py',
