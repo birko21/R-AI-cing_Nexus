@@ -71,3 +71,36 @@ def test_bridge_quarantines_unknown_timestamps_rights_and_post_cutoff_rows() -> 
     )
     assert impossible.observations == ()
     assert impossible.quarantines[0].reason == "INVALID_PROVIDER_FEATURE"
+
+
+def test_bridge_quarantines_missing_retention_and_unavailable_receipt_times() -> None:
+    missing_retention = bridge_provider_feature_observations(
+        envelope([row(retention_class="")]), provider_id="synthetic", dataset_reference="provider-features-v1",
+        code="THOROUGHBRED", race_id="race-1", cutoff=CUTOFF,
+    )
+    assert missing_retention.observations == ()
+    assert missing_retention.quarantines[0].reason == "RETENTION_UNSPECIFIED"
+
+    retrieved_after_cutoff = bridge_provider_feature_observations(
+        envelope([row()], retrieved_at=CUTOFF + datetime.resolution), provider_id="synthetic",
+        dataset_reference="provider-features-v1", code="THOROUGHBRED", race_id="race-1", cutoff=CUTOFF,
+    )
+    assert retrieved_after_cutoff.observations == ()
+    assert retrieved_after_cutoff.quarantines[0].reason == "POST_CUTOFF"
+
+    published_after_cutoff = bridge_provider_feature_observations(
+        envelope([row(published_at="2026-01-15T01:00:01Z")]), provider_id="synthetic",
+        dataset_reference="provider-features-v1", code="THOROUGHBRED", race_id="race-1", cutoff=CUTOFF,
+    )
+    assert published_after_cutoff.observations == ()
+    assert published_after_cutoff.quarantines[0].reason == "POST_CUTOFF"
+
+
+def test_bridge_quarantines_eligibility_after_retrieval() -> None:
+    result = bridge_provider_feature_observations(
+        envelope([row(pre_race_eligible_at="2026-01-15T00:45:00Z")]), provider_id="synthetic",
+        dataset_reference="provider-features-v1", code="THOROUGHBRED", race_id="race-1", cutoff=CUTOFF,
+    )
+
+    assert result.observations == ()
+    assert result.quarantines[0].reason == "INVALID_PROVIDER_FEATURE"
