@@ -11,6 +11,7 @@
 | RIL-065 | Implement synthetic Betfair catalogue/book/runner/price-history/SP fixture through the existing rights-aware adapter contract. | DONE | `services/api/app/betfair_mock.py`, `services/api/tests/test_betfair_mock.py` |
 | RIL-066 | Add typed provider-evidence records to the capability registry without granting activation authority. | DONE | `services/api/app/provider_evidence.py`, `fixtures/synthetic/provider_evidence_v1.json`, `services/api/tests/test_provider_evidence.py` |
 | RIL-067 | Add Betfair synthetic fixture generation, replay manifest and drift reconciliation. | DONE | `scripts/generate_betfair_replay_manifest.py`, `fixtures/synthetic/betfair_market_replay_manifest_v1.json`, `services/api/tests/test_betfair_mock.py` |
+| RIL-068 | Extend as-of feature materialization to provider observations. | SAFE_FOUNDATION | `services/api/app/provider_feature_bridge.py`, `services/api/tests/test_provider_feature_bridge.py`; provider rows with unknown timestamps, missing retention, unapproved rights or post-cutoff timing are quarantined before materialization. |
 | RIL-069 | Build independent code-specialist model scaffolds and nine-lane manifest. | SAFE_FOUNDATION | `services/api/app/specialist_models.py`, `fixtures/synthetic/specialist_models_v1.json`, `services/api/tests/test_specialist_models.py` |
 
 ## RIL-061 implementation evidence
@@ -28,7 +29,6 @@ The common `historical-features-v1` contract, B0–B4 offline benchmark interfac
 | ID | Item | Acceptance |
 |---|---|---|
 | RIL-066 | Add provider-evidence records to the capability registry. | Matrix values are typed, versioned, source-linked and cannot enable a provider by themselves. |
-| RIL-068 | Extend as-of feature materialization to provider observations. | Existing `historical_features-v1` enforces source/retrieval/publication cutoffs, duplicate conflicts, identity evidence, units and rights exclusions; add provider-payload bridge coverage next. |
 | RIL-070 | Add feature/provider ablation reports. | Walk-forward evaluation compares baseline and one incremental family/provider with log loss, Brier, calibration, coverage and uncertainty. |
 | RIL-071 | Add independent model assurance workflow. | Leakage audit, split-manifest review, calibration review and manual registry decision are required before any promotion. |
 

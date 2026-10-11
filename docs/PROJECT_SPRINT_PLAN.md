@@ -160,6 +160,8 @@ neutral data plane**. The current branch contains:
 - deterministic synthetic Betfair replay-manifest generation;
 - replay-manifest reconciliation that detects checksum/page/count drift;
 - typed provider-evidence records with no activation authority;
+- strict provider-feature bridge quarantine for timestamp, retention, rights,
+  and cutoff failures;
 - provider-neutral capability and raw-envelope boundaries; and
 - the current API regression suite passing.
 
