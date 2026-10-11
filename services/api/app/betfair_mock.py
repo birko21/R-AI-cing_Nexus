@@ -283,3 +283,56 @@ class SyntheticBetfairExchangeAdapter:
                 data_mode="SYNTHETIC_ONLY", rights_state="SYNTHETIC",
             ))
         return tuple(quotes)
+
+
+def build_synthetic_betfair_replay_manifest(
+    adapter: SyntheticBetfairExchangeAdapter | None = None,
+    *,
+    page_size: int = 100,
+) -> dict[str, object]:
+    """Build deterministic page/checksum evidence for offline replay."""
+
+    if page_size < 1 or page_size > 100:
+        raise ValueError("synthetic Betfair replay page_size must be between 1 and 100")
+    source = adapter or SyntheticBetfairExchangeAdapter()
+    pages: list[dict[str, object]] = []
+    for code in sorted(VALID_CODES):
+        cursor: str | None = None
+        page_number = 0
+        while True:
+            page = source.fetch("GET_MARKETS", code=code, cursor=cursor, page_size=page_size)
+            pages.append(
+                {
+                    "code": code,
+                    "page_number": page_number,
+                    "cursor": cursor,
+                    "next_cursor": page.next_cursor,
+                    "as_of": page.as_of.isoformat().replace("+00:00", "Z") if page.as_of else None,
+                    "envelopes": [
+                        {
+                            "envelope_id": record.envelope_id,
+                            "source_identifier": record.source_identifier,
+                            "payload_sha256": record.payload_sha256,
+                            "schema_version": record.schema_version,
+                        }
+                        for record in page.records
+                    ],
+                }
+            )
+            page_number += 1
+            cursor = page.next_cursor
+            if cursor is None:
+                break
+    return {
+        "schema_version": "betfair-market-replay-manifest-v1",
+        "fixture_id": "ril-067-betfair-replay-v1",
+        "provider_id": BETFAIR_SYNTHETIC_PROVIDER_ID,
+        "page_size": page_size,
+        "pages": pages,
+        "record_count": sum(len(page["envelopes"]) for page in pages),
+        "fictional": True,
+        "data_mode": "SYNTHETIC_ONLY",
+        "rights_state": "SYNTHETIC",
+        "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE",
+        "note": "Deterministic offline replay manifest; no external provider was contacted.",
+    }

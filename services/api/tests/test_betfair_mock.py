@@ -7,6 +7,7 @@ from app.betfair_mock import (
     SyntheticBetfairExchangeAdapter,
     SyntheticBetfairMarket,
     SyntheticBetfairRunner,
+    build_synthetic_betfair_replay_manifest,
     synthetic_betfair_markets,
 )
 from app.market_history import MarketHistory
@@ -63,6 +64,19 @@ def test_synthetic_betfair_supports_all_three_local_racing_codes() -> None:
         page = adapter.fetch("GET_MARKETS", code=code)
         assert len(page.records) == 1
         assert page.records[0].payload["market_catalogue"]["code"] == code
+
+
+def test_synthetic_betfair_replay_manifest_is_deterministic_and_complete() -> None:
+    manifest = build_synthetic_betfair_replay_manifest()
+
+    assert manifest["fixture_id"] == "ril-067-betfair-replay-v1"
+    assert manifest["data_mode"] == "SYNTHETIC_ONLY"
+    assert manifest["rights_state"] == "SYNTHETIC"
+    assert manifest["record_count"] == 3
+    assert [page["code"] for page in manifest["pages"]] == ["GREYHOUND", "HARNESS", "THOROUGHBRED"]
+    assert all(page["next_cursor"] is None for page in manifest["pages"])
+    assert all(page["envelopes"][0]["payload_sha256"] for page in manifest["pages"])
+    assert manifest == build_synthetic_betfair_replay_manifest()
 
 
 def test_synthetic_betfair_rejects_future_source_points_and_duplicate_runner_ids() -> None:
