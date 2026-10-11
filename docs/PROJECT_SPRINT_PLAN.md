@@ -41,6 +41,28 @@ staking, weaken authentication, deploy the product, or alter The Long Straight.
 | T-C | Operations and release controls | RIL-056–060 | Authentication, supply-chain, observability, backup/restore, retention, performance, and pilot evidence pass their gates. |
 | T-D | Approved external sources | RIL-072–076 | **Blocked until written provider rights, credentials, retention, display, model-use, cost, and security approvals exist.** |
 
+## Legacy technical epic alignment
+
+The original RIL-001–060 backlog is executed through the following dependency
+ordered technical sprints. “Evidence present” means the local implementation
+and automated proof exist; it does not replace a required human, legal,
+provider, or production gate.
+
+| Sprint | RIL scope | Current state | Remaining exit gate |
+|---|---|---|---|
+| T0 | RIL-001–005 governance and evidence | Evidence present | Owner/source confirmation where required |
+| T1 | RIL-006–010 local foundation, API, auth | Implementation present | Disposable PostgreSQL apply/rollback smoke |
+| T2 | RIL-011–015 domain, provenance, entitlement | Synthetic/offline implementation present | Rights-aware production evidence remains gated |
+| T3 | RIL-016–020 synthetic UX and degraded states | Tactical Track and core synthetic UI evidence present | Full 14-workspace atlas and independent accessibility review |
+| T4 | RIL-021–025 baselines and forecast archive | Synthetic implementation and replay evidence present | No validated/live claim; owner/model assurance gate |
+| T5 | RIL-026–030 backtesting and model assurance | Synthetic feature, walk-forward, metrics and registry evidence present | Independent assurance and promotion decision |
+| T6 | RIL-031–035 scraping/provider framework | Provider-neutral framework present | Real source remains blocked by rights/credentials |
+| T7 | RIL-036–040 market and paper analysis | Read-only paper-analysis foundation present | Market-workbench completeness and licence-aware export review |
+| T8 | RIL-041–045 selections and responsible use | Backend controls and fixtures present | UX/accessibility and owner pilot review |
+| T9 | RIL-046–050 research assistant | Bounded tools, citation/egress and offline evaluation evidence present | Provider/model policy approval before activation |
+| T10 | RIL-051–055 specialist models and scenarios | Synthetic code-specific modules and scenario evidence present | Independent challenger/model review |
+| T11 | RIL-056–060 operations and pilot | Security, backup, retention and release foundations present | Approved OIDC, production operations and owner sign-off |
+
 ## Detailed ticket plan
 
 ### S0 — Recovery and baseline

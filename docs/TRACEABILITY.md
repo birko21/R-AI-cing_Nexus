@@ -30,6 +30,19 @@ This matrix maps the supplied v1.1 source requirements to the implementation bac
 
 ## Traceability status
 
-- Active G0 requirements: mapped.
-- G1–G3 requirements: mapped to backlog; contracts and tests not yet implemented.
-- G4–G11 requirements: retained as gated future work; no claim of completion.
+- Active G0 requirements: mapped, with repository baseline and checkpoint
+  validation passing; owner/source decisions remain explicit where required.
+- G1 requirements: API, contracts, authentication boundary, migrations through
+  the durable ingestion lease migration, and synthetic worker tests are present.
+  A disposable PostgreSQL apply/rollback smoke remains outstanding because no
+  `DATABASE_URL` or local PostgreSQL service is configured in this environment.
+- G2 requirements: the synthetic three-code UI and Tactical Track proof have
+  browser evidence, but the complete 14-workspace responsive atlas and
+  independent accessibility review remain open.
+- G3 requirements: deterministic B0/B1 forecasts, archive/replay, scoring,
+  feature cutoffs, walk-forward evidence, diagnostics and registry controls are
+  present for synthetic data. They are not validated live performance and still
+  require the specified independent assurance/owner gates.
+- G4–G11 requirements: retained as gated future work; external providers,
+  production OIDC, production deployment and final pilot approval are not
+  claimed.
