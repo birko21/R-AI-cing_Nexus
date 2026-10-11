@@ -128,7 +128,9 @@ remain synthetic-only until T-D approvals exist.
    quarantine reports, and PostgreSQL-backed ingestion smoke tests.
 2. **T-B:** verify deterministic B0/B1 forecast manifests, leakage defenses,
    walk-forward evaluation, uncertainty/coverage diagnostics, paper-market
-   calculations, and experimental three-code modules.
+   calculations, and experimental three-code modules. The current branch now
+   includes a hashed nine-lane specialist manifest covering each code's form,
+   market, and combined input contracts.
 3. **T-C:** add secret/dependency scans, operational budgets and kill switches,
    backup/restore transcripts, retention deletion tests, and release checklists.
 4. **T-D:** do not implement or activate real provider transports until every

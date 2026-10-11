@@ -1,4 +1,6 @@
 from datetime import datetime, timedelta, timezone
+import json
+from pathlib import Path
 
 import pytest
 
@@ -12,6 +14,7 @@ from app.specialist_models import (
 
 
 CUTOFF = datetime(2026, 1, 15, 1, 0, tzinfo=timezone.utc)
+ROOT = Path(__file__).resolve().parents[3]
 
 
 def observation(participant: str, feature: str, value: float, receipt: str, *, when: datetime = CUTOFF - timedelta(minutes=10), rights: str = "SYNTHETIC") -> FeatureObservation:
@@ -31,6 +34,20 @@ def test_each_code_has_independent_form_market_and_combined_manifests() -> None:
     assert "jockey_effect" in model_feature_set("THOROUGHBRED", "FORM_ONLY")
     assert "driver_effect" in model_feature_set("HARNESS", "FORM_ONLY")
     assert "box" in model_feature_set("GREYHOUND", "FORM_ONLY")
+
+
+def test_committed_specialist_manifest_covers_all_code_and_family_lanes() -> None:
+    manifest = json.loads((ROOT / "fixtures" / "synthetic" / "specialist_models_v1.json").read_text(encoding="utf-8"))
+
+    assert manifest["schema_version"] == "specialist-model-manifests-v1"
+    assert manifest["data_mode"] == "SYNTHETIC_ONLY"
+    assert manifest["model_status"] == "ILLUSTRATIVE_NOT_VALIDATED"
+    assert len(manifest["models"]) == 9
+    assert {(item["code"], item["family"]) for item in manifest["models"]} == {
+        (code, family) for code in ("GREYHOUND", "HARNESS", "THOROUGHBRED")
+        for family in ("COMBINED", "FORM_ONLY", "MARKET_ONLY")
+    }
+    assert all("independent_assurance" in item["validation_required"] for item in manifest["models"])
 
 
 def test_inputs_are_race_normalised_and_future_or_unapproved_observations_are_excluded() -> None:
