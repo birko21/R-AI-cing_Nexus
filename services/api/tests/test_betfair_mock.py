@@ -8,6 +8,7 @@ from app.betfair_mock import (
     SyntheticBetfairMarket,
     SyntheticBetfairRunner,
     build_synthetic_betfair_replay_manifest,
+    reconcile_synthetic_betfair_replay_manifest,
     synthetic_betfair_markets,
 )
 from app.market_history import MarketHistory
@@ -77,6 +78,22 @@ def test_synthetic_betfair_replay_manifest_is_deterministic_and_complete() -> No
     assert all(page["next_cursor"] is None for page in manifest["pages"])
     assert all(page["envelopes"][0]["payload_sha256"] for page in manifest["pages"])
     assert manifest == build_synthetic_betfair_replay_manifest()
+
+    report = reconcile_synthetic_betfair_replay_manifest(manifest)
+    assert report.status == "MATCH"
+    assert report.mismatches == ()
+    assert report.observed_pages == report.expected_pages == 3
+    assert report.observed_records == report.expected_records == 3
+
+
+def test_synthetic_betfair_replay_reconciliation_detects_tampering() -> None:
+    manifest = build_synthetic_betfair_replay_manifest()
+    manifest["record_count"] = 99
+
+    report = reconcile_synthetic_betfair_replay_manifest(manifest)
+
+    assert report.status == "MISMATCH"
+    assert report.mismatches == ("record_count differs from deterministic source",)
 
 
 def test_synthetic_betfair_rejects_future_source_points_and_duplicate_runner_ids() -> None:

@@ -134,10 +134,11 @@ neutral data plane**. The current branch contains:
 - idempotent replay, pagination, retry, and quarantine behavior;
 - PostgreSQL job leasing and migration 019;
 - deterministic synthetic Betfair replay-manifest generation;
+- replay-manifest reconciliation that detects checksum/page/count drift;
 - provider-neutral capability and raw-envelope boundaries; and
 - the current API regression suite passing.
 
 The next T-A increment is a local PostgreSQL migration/ingestion smoke test
-when a disposable `DATABASE_URL` is provided, followed by as-of reconciliation
-coverage. The visual sprint remains READY for human review, not silently
-advanced.
+when a disposable `DATABASE_URL` is provided, followed by broader as-of
+reconciliation coverage. The visual sprint remains READY for human review,
+not silently advanced.
