@@ -41,9 +41,10 @@ This matrix maps the supplied v1.1 source requirements to the implementation bac
   The queue also has a separate producer-only path and signal-aware consumer
   runtime for local background processing. Its actual database execution
   remains outstanding because no approved `DATABASE_URL` has been supplied.
-- G2 requirements: the synthetic three-code UI and Tactical Track proof have
-  browser evidence, but the complete 14-workspace responsive atlas and
-  independent accessibility review remain open.
+- G2 requirements: the synthetic three-code UI, Tactical Track proof and the
+  14-entry responsive workspace atlas have browser evidence, but real-device,
+  independent accessibility, visual-owner and racing-domain review remain
+  open.
 - G3 requirements: deterministic B0/B1 forecasts, archive/replay, scoring,
   feature cutoffs, walk-forward evidence, diagnostics and registry controls are
   present for synthetic data. They are not validated live performance and still

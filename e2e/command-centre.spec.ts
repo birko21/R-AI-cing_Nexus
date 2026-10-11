@@ -148,3 +148,35 @@ test('bounded assistant cites evidence, explains discrepancies and requires note
   await expect(assistant.getByText('will not estimate a current value')).toBeVisible();
   await page.screenshot({ path: 'docs/evidence/ril-049/assistant-citations.png', fullPage: true });
 });
+
+test('workspace atlas preserves shared synthetic context across the research story', async ({ page }) => {
+  await page.goto('/');
+  const atlas = page.getByRole('navigation', { name: 'Research workspaces' });
+  await expect(atlas.getByRole('button')).toHaveCount(14);
+
+  await atlas.getByRole('button', { name: /Meeting discovery/ }).click();
+  await expect(page.getByRole('region', { name: 'Meeting discovery workspace' }).getByRole('heading', { name: 'Meeting discovery' })).toBeVisible();
+  await expect(page.getByText('Shared context · Thoroughbred · Fictional Thoroughbred Park · Race 1 · field-r2')).toBeVisible();
+
+  await atlas.getByRole('button', { name: /Tactical track/ }).click();
+  await expect(page.getByRole('region', { name: 'Tactical track workspace' }).getByRole('heading', { name: 'Tactical track' })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Analytical pace map' })).toBeVisible();
+  await expect(page.getByText('Quality gate:', { exact: false })).toBeVisible();
+
+  await atlas.getByRole('button', { name: /Model laboratory/ }).click();
+  await expect(page.getByRole('region', { name: 'Model laboratory workspace' }).getByRole('heading', { name: 'Model laboratory' })).toBeVisible();
+  await expect(page.getByText('synthetic metrics cannot promote a model')).toBeVisible();
+
+  await atlas.getByRole('button', { name: /Evidence$/ }).click();
+  await expect(page.getByRole('region', { name: 'Evidence workspace' }).getByRole('heading', { name: 'Evidence' })).toBeVisible();
+  await expect(page.getByText('a receipt proves fixture provenance')).toBeVisible();
+
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.screenshot({ path: 'docs/evidence/ril-018/workspace-atlas-desktop.png', fullPage: true });
+  await page.setViewportSize({ width: 768, height: 1024 });
+  await page.screenshot({ path: 'docs/evidence/ril-018/workspace-atlas-tablet.png', fullPage: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  const accessibility = await new AxeBuilder({ page }).analyze();
+  expect(accessibility.violations).toEqual([]);
+  await page.screenshot({ path: 'docs/evidence/ril-018/workspace-atlas-mobile.png', fullPage: true });
+});

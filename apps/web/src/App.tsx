@@ -4,6 +4,7 @@ export type NexusApiRequest = (path: string, init?: RequestInit, requiredScope?:
 
 type Code = 'ALL' | 'THOROUGHBRED' | 'HARNESS' | 'GREYHOUND';
 type Status = 'DEMO' | 'NO_RACING' | 'NO_DATA' | 'UNAVAILABLE' | 'LOADING' | 'STALE' | 'QUARANTINED' | 'UNSUPPORTED' | 'AUTH_DENIED';
+type WorkspaceId = 'COMMAND' | 'MEETINGS' | 'RACE' | 'TACTICAL' | 'RUNNER' | 'COMPARE' | 'MODEL' | 'SCENARIO' | 'MARKETS' | 'EVIDENCE' | 'ASSISTANT' | 'NOTEBOOK' | 'WATCHLISTS' | 'REPORTS_SETTINGS';
 
 type CommandItem = {
   id: string;
@@ -84,6 +85,23 @@ const codes: Array<{ value: Code; label: string }> = [
   { value: 'THOROUGHBRED', label: 'Thoroughbred' },
   { value: 'HARNESS', label: 'Harness' },
   { value: 'GREYHOUND', label: 'Greyhound' },
+];
+
+const workspaces: Array<{ value: WorkspaceId; label: string; short: string }> = [
+  { value: 'COMMAND', label: 'Command Centre', short: 'Today' },
+  { value: 'MEETINGS', label: 'Meeting discovery', short: 'Meetings' },
+  { value: 'RACE', label: 'Race intelligence', short: 'Race' },
+  { value: 'TACTICAL', label: 'Tactical track', short: 'Tactical' },
+  { value: 'RUNNER', label: 'Runner intelligence', short: 'Runner' },
+  { value: 'COMPARE', label: 'Runner comparison', short: 'Compare' },
+  { value: 'MODEL', label: 'Model laboratory', short: 'Models' },
+  { value: 'SCENARIO', label: 'Scenario studio', short: 'Scenarios' },
+  { value: 'MARKETS', label: 'Markets', short: 'Markets' },
+  { value: 'EVIDENCE', label: 'Evidence', short: 'Evidence' },
+  { value: 'ASSISTANT', label: 'Research assistant', short: 'Assistant' },
+  { value: 'NOTEBOOK', label: 'Notebook', short: 'Notebook' },
+  { value: 'WATCHLISTS', label: 'Watchlists and alerts', short: 'Watchlists' },
+  { value: 'REPORTS_SETTINGS', label: 'Reports and settings', short: 'Reports' },
 ];
 
 const statuses: Array<{ value: Status | 'ALL'; label: string }> = [
@@ -287,6 +305,7 @@ function answerAssistantQuestion(question: string): AssistantAnswer {
 }
 
 export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {}) {
+  const [activeWorkspace, setActiveWorkspace] = useState<WorkspaceId>('COMMAND');
   const [selectedCode, setSelectedCode] = useState<Code>('ALL');
   const [selectedStatus, setSelectedStatus] = useState<Status | 'ALL'>('ALL');
   const [showStateExamples, setShowStateExamples] = useState(true);
@@ -319,9 +338,13 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
   return (
     <main className="shell">
       <header className="topbar">
-        <div><p className="eyebrow">RACING INTELLIGENCE LAB</p><h1>Today / Command Centre</h1></div>
+        <div><p className="eyebrow">RACING INTELLIGENCE LAB</p><h1>{activeWorkspace === 'COMMAND' ? 'Today / Command Centre' : workspaces.find((workspace) => workspace.value === activeWorkspace)?.label}</h1></div>
         <div className="header-badges"><span className="mode-badge">DEMO ONLY</span><span className="mode-badge subdued">SYNTHETIC_ONLY</span>{apiStatus !== 'idle' && <span className="mode-badge subdued">API {apiStatus.toUpperCase()}</span>}</div>
       </header>
+      <nav className="workspace-nav" aria-label="Research workspaces">
+        {workspaces.map((workspace) => <button aria-current={activeWorkspace === workspace.value ? 'page' : undefined} className={activeWorkspace === workspace.value ? 'workspace-link active' : 'workspace-link'} key={workspace.value} onClick={() => setActiveWorkspace(workspace.value)} type="button"><span>{workspace.short}</span><small>{workspace.label}</small></button>)}
+      </nav>
+      {activeWorkspace === 'COMMAND' ? <>
       <section className="intro" aria-labelledby="intro-title">
         <p className="eyebrow">LOCAL RESEARCH WORKSPACE</p>
         <h2 id="intro-title">Three racing codes, one honest evidence view.</h2>
@@ -354,9 +377,78 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
       </section>
       {visibleItems.length === 0 && <section className="empty-state" aria-live="polite"><p className="eyebrow">NO MATCHING STATES</p><h3>No cards match these filters.</h3><p>Change the code or data-state filter. No racing data is invented to fill an empty view.</p></section>}
       {selectedRace && <ResearchView key={selectedRace} race={researchRaces[selectedRace]} evidenceTab={evidenceTab} onClose={() => setSelectedRace(null)} onTabChange={setEvidenceTab} />}
+      </> : <WorkspacePanel workspace={activeWorkspace} onOpenRace={() => { setActiveWorkspace('COMMAND'); setSelectedRace('THOROUGHBRED'); setEvidenceTab('FIELD'); }} />}
       <footer className="footer"><span>Local API: 127.0.0.1:8000</span><span>Data rights: synthetic fixture only</span><span>Model: not trained</span></footer>
     </main>
   );
+}
+
+function WorkspacePanel({ workspace, onOpenRace }: { workspace: WorkspaceId; onOpenRace: () => void }) {
+  const metadata = workspaces.find((item) => item.value === workspace) ?? workspaces[0];
+  const race = researchRaces.THOROUGHBRED;
+
+  return <section className="workspace-panel" aria-label={`${metadata.label} workspace`}>
+    <div className="workspace-heading"><div><p className="eyebrow">WORKSPACE ATLAS · SYNTHETIC DEMO</p><h2>{metadata.label}</h2><p className="workspace-subtitle">Shared context · Thoroughbred · Fictional Thoroughbred Park · Race 1 · field-r2</p></div><span className="mode-badge subdued">SYNTHETIC_ONLY</span></div>
+    <div className="workspace-context" aria-label="Shared research context"><div><span>Code</span><strong>THOROUGHBRED</strong></div><div><span>Race</span><strong>Race 1 · Fictional Maiden</strong></div><div><span>Field</span><strong>field-r2 · FINAL_FIELDS</strong></div><div><span>Model state</span><strong>ILLUSTRATIVE_ONLY</strong></div></div>
+    {workspace === 'MEETINGS' && <MeetingDiscovery onOpenRace={onOpenRace} />}
+    {workspace === 'RACE' && <RaceIntelligence onOpenRace={onOpenRace} race={race} />}
+    {workspace === 'TACTICAL' && <TacticalWorkspace onOpenRace={onOpenRace} />}
+    {workspace === 'RUNNER' && <RunnerWorkspace />}
+    {workspace === 'COMPARE' && <CompareWorkspace race={race} />}
+    {workspace === 'MODEL' && <ModelWorkspace />}
+    {workspace === 'SCENARIO' && <ScenarioWorkspace />}
+    {workspace === 'MARKETS' && <MarketWorkbench />}
+    {workspace === 'EVIDENCE' && <EvidenceWorkspace race={race} />}
+    {workspace === 'ASSISTANT' && <AssistantWorkbench />}
+    {workspace === 'NOTEBOOK' && <NotebookWorkspace />}
+    {workspace === 'WATCHLISTS' && <WatchlistWorkspace />}
+    {workspace === 'REPORTS_SETTINGS' && <ReportsSettingsWorkspace />}
+  </section>;
+}
+
+function MeetingDiscovery({ onOpenRace }: { onOpenRace: () => void }) {
+  return <div className="workspace-content"><div className="workspace-intro"><p>Meeting → race in one clear action. The catalogue is synthetic and intentionally small so every state remains inspectable.</p><button className="research-button" onClick={onOpenRace} type="button">Open selected race</button></div><div className="workspace-card-grid">{Object.values(researchRaces).map((race) => <article className="workspace-card" key={race.code}><span className="status-pill">DEMO FIXTURE</span><h3>{race.meeting}</h3><p>{race.raceLabel} · {race.fieldState}</p><dl className="workspace-facts"><dt>Local time</dt><dd>{race.observedAt}</dd><dt>Races</dt><dd>2 fictional races</dd><dt>Source</dt><dd>synthetic://fixture-v1</dd></dl><button className="secondary-action" onClick={onOpenRace} type="button">Open race card</button></article>)}</div></div>;
+}
+
+function RaceIntelligence({ onOpenRace, race }: { onOpenRace: () => void; race: ResearchRace }) {
+  return <div className="workspace-content"><div className="workspace-intro"><p>One field revision follows the race through tactical, runner, model and evidence views. Scratching and reserve states remain explicit.</p><button className="research-button" onClick={onOpenRace} type="button">Open full research view</button></div><div className="workspace-table-wrap"><table><caption>Current synthetic field · {race.fieldRevision}</caption><thead><tr><th scope="col">No.</th><th scope="col">Participant</th><th scope="col">State</th><th scope="col">Context</th></tr></thead><tbody>{race.comparisonRows.map((entry) => <tr key={entry.number}><td>{entry.number}</td><td>{entry.name}</td><td><span className={`entry-state entry-${entry.status.toLowerCase()}`}>{entry.status}</span></td><td>{entry.context}</td></tr>)}</tbody></table></div><div className="state-callout"><strong>Revision-aware:</strong> archived forecasts reference field-r1 and cannot be silently reused after field-r2.</div></div>;
+}
+
+function TacticalWorkspace({ onOpenRace }: { onOpenRace: () => void }) {
+  const bands = [['LEAD', '1 · Coastal Strike', 'Contesting / leading'], ['ON PACE', '3 · Maple Ridge', '2–5 lengths'], ['MIDFIELD', '4 · Ocean Circuit', '4–8 lengths'], ['BACKMARKERS', '7 · Eagle Farm', '4+ lengths']];
+  return <div className="workspace-content"><div className="workspace-intro"><p>Side-on tactical view and analytical pace map share one synthetic runner-position contract. The visualization is illustrative, not a validated position prediction.</p><button className="research-button" onClick={onOpenRace} type="button">Open linked race evidence</button></div><div className="tactical-board" role="region" aria-label="Analytical pace map"><div className="tactical-track-line"><span>START · 0m</span><span>200m</span><span>400m</span><span>FINISH</span></div>{bands.map(([group, runner, detail]) => <div className={`tactical-band ${group.toLowerCase().replace(' ', '-')}`} key={group}><span>{group}</span><strong>{runner}</strong><small>{detail}</small></div>)}</div><div className="state-callout"><strong>Quality gate:</strong> HOLD pending owner visual verdict, accessibility review, racing-domain review and rights clearance.</div></div>;
+}
+
+function RunnerWorkspace() {
+  return <div className="workspace-content"><div className="workspace-intro"><p>Runner intelligence keeps code-specific context, silk metadata and evidence caveats together. No missing specialty input is inferred.</p></div><div className="runner-summary-grid"><article className="workspace-card"><span className="runner-number green">1</span><h3>Coastal Strike</h3><p>Thoroughbred · LEAD</p><dl className="workspace-facts"><dt>Silks</dt><dd>Emerald and gold · synthetic metadata</dd><dt>Form</dt><dd>Available · illustrative</dd><dt>Specialty</dt><dd>Early speed unavailable</dd></dl></article><article className="workspace-card"><span className="runner-number gold">3</span><h3>Maple Ridge</h3><p>Thoroughbred · ON PACE</p><dl className="workspace-facts"><dt>Silks</dt><dd>Crimson and ivory · synthetic metadata</dd><dt>Form</dt><dd>Available · illustrative</dd><dt>Specialty</dt><dd>Sectionals unavailable</dd></dl></article></div></div>;
+}
+
+function CompareWorkspace({ race }: { race: ResearchRace }) {
+  return <div className="workspace-content"><div className="workspace-intro"><p>Comparison units share the same distance, field revision and synthetic fixture context. Differences are shown as evidence gaps, not filled with guesses.</p></div><div className="workspace-table-wrap"><table><caption>Matched comparison · field-r2</caption><thead><tr><th scope="col">Runner</th><th scope="col">Distance</th><th scope="col">Fixture context</th><th scope="col">Recent form</th></tr></thead><tbody>{race.comparisonRows.filter((entry) => entry.status === 'ACTIVE').map((entry) => <tr key={entry.number}><td>{entry.name}</td><td>{entry.distance}</td><td>{entry.context}</td><td>{entry.recentForm}</td></tr>)}</tbody></table></div><div className="state-callout"><strong>Comparable:</strong> two active runners are aligned to the same synthetic race context.</div></div>;
+}
+
+function ModelWorkspace() {
+  return <div className="workspace-content"><div className="workspace-intro"><p>Model laboratory shows deterministic baselines, feature families and the current assurance boundary. Every result remains illustrative and non-promoting.</p></div><div className="workspace-card-grid">{syntheticForecasts.slice(0, 4).map((forecast) => <article className="workspace-card" key={forecast.modelId}><div className="panel-heading"><h3>{forecast.label}</h3><span className={forecast.status === 'READY' ? 'status-pill' : 'invalidated-pill'}>{forecast.status}</span></div><p>{forecast.family.replace('_', ' ')} · {forecast.modelVersion}</p><dl className="workspace-facts"><dt>Uncertainty</dt><dd>{forecast.uncertainty}</dd><dt>Missing</dt><dd>{forecast.missing}</dd><dt>Promotion</dt><dd>NONE · assurance required</dd></dl></article>)}</div><div className="state-callout"><strong>Assurance:</strong> synthetic metrics cannot promote a model or establish live performance.</div></div>;
+}
+
+function ScenarioWorkspace() {
+  return <div className="workspace-content"><div className="workspace-intro"><p>Scenario analysis changes the illustrative settling narrative while preserving the same field identity and evidence limitations.</p></div><div className="scenario-grid"><article className="workspace-card"><span className="status-pill">BASE CASE</span><h3>Coastal Strike leads</h3><p>One early leader · stable on-pace group · backmarkers held.</p></article><article className="workspace-card"><span className="invalidated-pill">CONTESTED LEAD</span><h3>Early pressure increases</h3><p>Two leaders contest · midfield compresses · no probability update is implied.</p></article></div><div className="state-callout"><strong>Scenario boundary:</strong> these are synthetic narrative branches, not forecasts or wagering advice.</div></div>;
+}
+
+function EvidenceWorkspace({ race }: { race: ResearchRace }) {
+  return <div className="workspace-content"><div className="workspace-intro"><p>Evidence is append-only and source-labelled. Provenance, rights state, timestamps and limitations stay attached to every view.</p></div><dl className="provenance-facts"><dt>Source receipt</dt><dd>synthetic://{race.code.toLowerCase()}/race-001</dd><dt>First observed</dt><dd>{race.observedAt}</dd><dt>Published</dt><dd>{race.publishedAt}</dd><dt>Rights</dt><dd>SYNTHETIC · fictional fixture</dd><dt>External transport</dt><dd>Disabled</dd><dt>Model claim</dt><dd>ILLUSTRATIVE_NOT_VALIDATED</dd></dl><div className="state-callout"><strong>Not live:</strong> a receipt proves fixture provenance, not official racing status or source licensing.</div></div>;
+}
+
+function NotebookWorkspace() {
+  return <div className="workspace-content"><div className="workspace-intro"><p>Notebook entries are local annotations only. External transmission is unavailable until a separate egress and rights decision exists.</p></div><label className="workspace-label" htmlFor="notebook-note">Local research note</label><textarea className="workspace-textarea" id="notebook-note" placeholder="Write a local observation…" /><div className="approval-row"><input type="checkbox" id="notebook-approval" /> <label htmlFor="notebook-approval">I approve saving this note to the local journal.</label></div><button className="secondary-action" disabled type="button">Save requires the local journal integration</button></div>;
+}
+
+function WatchlistWorkspace() {
+  return <div className="workspace-content"><div className="workspace-card-grid"><article className="workspace-card"><span className="status-pill">WATCHLIST</span><h3>Coastal Strike</h3><p>Fictional runner · field-r2</p><dl className="workspace-facts"><dt>Trigger</dt><dd>Field revision only</dd><dt>Urgency</dt><dd>None · non-urgent</dd></dl></article><article className="workspace-card"><span className="invalidated-pill">ALERTS DISABLED</span><h3>No live notifications</h3><p>Alerts remain quiet while the source is synthetic-only.</p><dl className="workspace-facts"><dt>Transport</dt><dd>External delivery disabled</dd><dt>State</dt><dd>NOT_AVAILABLE</dd></dl></article></div><div className="state-callout"><strong>Responsible use:</strong> watchlists and alerts cannot trigger orders, staking, wagering or urgency cues.</div></div>;
+}
+
+function ReportsSettingsWorkspace() {
+  return <div className="workspace-content"><div className="workspace-card-grid"><article className="workspace-card"><span className="status-pill">REPORTS</span><h3>Synthetic evidence report</h3><p>Release gate, model status, source receipts and unresolved decisions.</p><dl className="workspace-facts"><dt>Export</dt><dd>Local only</dd><dt>Rights</dt><dd>Synthetic fixture</dd></dl></article><article className="workspace-card"><span className="status-pill">SETTINGS</span><h3>Safety configuration</h3><p>Provider flags are disabled; local auth and OIDC remain fail-closed by environment.</p><dl className="workspace-facts"><dt>Providers</dt><dd>All disabled</dd><dt>Data mode</dt><dd>SYNTHETIC_ONLY</dd></dl></article></div><div className="state-callout"><strong>Deployment boundary:</strong> no hosted database, worker, credentials or automatic deploy is enabled by this workspace.</div></div>;
 }
 
 function AssistantWorkbench() {
