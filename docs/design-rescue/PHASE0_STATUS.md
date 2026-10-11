@@ -13,7 +13,7 @@
 | Full V7 handoff validation | COMPLETE | `validate_pack.py` passed: 38 hashed sources, 5 epics, 27 tickets, valid dependencies, V7 golden set, three-code fixture, and importer dry run. |
 | E12-E16 / NXD-001-NXD-027 import | COMPLETE | 32 canonical issues are open; URLs are listed below. |
 | Design baseline documentation PR | COMPLETE / DRAFT | Draft PR #177 contains documentation and reference-manifest changes only. |
-| Tactical Track renderer feasibility | HOLD | Standalone lab captured six browser screenshots; candidate is below V7 realism and has unresolved asset rights. |
+| Tactical Track renderer feasibility | IN PROGRESS / PRODUCTION HOLD | Standalone lab now uses realistic independently placeable synthetic horse-and-jockey layers; six refreshed browser screenshots pass the automated visual/interaction checks, while asset rights and human approval remain unresolved. |
 | Human visual review / owner approval | NOT STARTED | No automated result is treated as artistic approval. |
 
 ## Protected handoff material
@@ -73,9 +73,10 @@ The first importer process continued after a tool timeout, while a second invoca
 - Lab review: `docs/design-rescue/TACTICAL_TRACK_LAB_REVIEW.md`
 - Standalone entry: `apps/web/public/tactical-track-lab.html`
 - Synthetic backdrop: `apps/web/public/tactical-track-lab-backdrop.png` (rights pending; not production-approved)
+- Synthetic runner layers: `apps/web/public/tactical-track-runners/` (generated feasibility assets; rights pending; not production-approved)
 - Screenshots: `docs/design-rescue/evidence/tactical-track/`
-- Recommendation: **HOLD** for Tactical Track implementation.
+- Recommendation: **Continue Phase 0 review; production HOLD** until rights clearance and genuine human decisions.
 
 ## Next checkpoint
 
-Stop for owner and independent review. Do not rebuild the full application, merge the draft PR, deploy, activate providers, change Auth0, enable wagering/trading, or modify The Long Straight until the Tactical Track HOLD is resolved through a new evidence package and genuine human decisions.
+Continue the Tactical Track evidence loop with the refreshed candidate. Do not rebuild the full application, merge the draft PR, deploy, activate providers, change Auth0, enable wagering/trading, or modify The Long Straight. Production remains held until the synthetic assets are replaced or rights-cleared and genuine independent reviewer plus owner decisions are recorded.

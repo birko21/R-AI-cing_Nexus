@@ -1,19 +1,21 @@
 # Tactical Track Feasibility Lab Review
 
-**Status:** HOLD
+**Status:** VISUAL CANDIDATE ADVANCED · PRODUCTION HOLD
 **Scope:** Tactical Track only; no approval for the remaining 13 workspaces.
 **Draft PR:** https://github.com/birko21/R-AI-cing_Nexus/pull/177
 **Lab URL:** `http://127.0.0.1:5173/tactical-track-lab.html`
 
 ## Candidate delivered
 
-The lab is a standalone public HTML entry, not a production route. It uses one synthetic fixture with eleven independently positioned SVG runner layers over a runner-free generated turf backdrop. The same fixture supports:
+The lab is a standalone public HTML entry, not a production route. It uses one synthetic fixture with eleven independently positioned transparent horse-and-jockey image layers over a runner-free generated turf backdrop. The same fixture supports:
 
 - Base case and Contested lead scenarios;
 - visible inside rail, start/finish axis, 0–400 m early-settling framing, and two- to three-abreast groups;
 - selected-runner detail, evidence caveat, and linked analytical pace-map treatment;
 - responsive desktop, tablet, and mobile layouts;
 - explicit synthetic/illustrative and rights-pending labels.
+
+The runner field was iterated after the first review: the geometric SVG treatment was removed, photorealistic synthetic horse-and-jockey layers were added, and dense name pills were reduced to a selected-runner label plus numbered identity markers. Full runner names remain in the linked groups and detail panel so the track remains readable at mobile width.
 
 The backdrop is an AI-generated feasibility asset, not a licensed production asset. Its workspace SHA-256 is `C23F7D0D8426B683C27C4B2EFF7194F1D21FBAB6A47AC213FDFB32F048BFA8F9`; rights clearance is unresolved.
 
@@ -23,18 +25,18 @@ All screenshots are real Chromium captures at DPR 1. Mobile captures scroll the 
 
 | Scenario | Viewport | Screenshot | SHA-256 |
 | --- | ---: | --- | --- |
-| Base | 1440×900 | `evidence/tactical-track/base-desktop.png` | `62CD94C4F54BA149A827876A36B75BEFD7B9E5FDE4BA2435A9DEAFF7A7C06F9B` |
-| Base | 768×1024 | `evidence/tactical-track/base-tablet.png` | `F8EADF941D70B953FD18B8F61C8B560C52DAB829A7E5877B78E5757993D45BB4` |
-| Base | 390×844 | `evidence/tactical-track/base-mobile.png` | `BCF457C0D09F082D5B083486B878E6F9A9D29CB59B43DC2A0694A7ACD7C85B35` |
-| Contested lead | 1440×900 | `evidence/tactical-track/contested-desktop.png` | `C13A71D2F86523A06832D240A486E309B63DB04BE057DDB239C856B46F15A42B` |
-| Contested lead | 768×1024 | `evidence/tactical-track/contested-tablet.png` | `D84B6FB135EC6D243257151F6AC9EA0F955CCE2C66938A5817DC60C20C03D643` |
-| Contested lead | 390×844 | `evidence/tactical-track/contested-mobile.png` | `ED029158EFAE81F4C130E586F6F088B4CD8BE8D7B0F4D2069CD0B9D05B2CDD8C` |
+| Base | 1440×900 | `evidence/tactical-track/base-desktop.png` | `32D3F49D88453BD3D7A9BBD3DCB166E42018D8BB4D5DF8D2C2D20D3D291592DF` |
+| Base | 768×1024 | `evidence/tactical-track/base-tablet.png` | `83BBA8A4DA749C60FD7CD1FC802B7ADE5B8A79BD4FA7CB8BF68F86F323F898C5` |
+| Base | 390×844 | `evidence/tactical-track/base-mobile.png` | `22B0CB3218EC758E850AD9787077DDDE35CDEA389B72182BB07BC28D7430145A` |
+| Contested lead | 1440×900 | `evidence/tactical-track/contested-desktop.png` | `E381FC409B62BD24A2CA08D09E2F8323B3017B4BF8EA827CD1A6B5DD818D461B` |
+| Contested lead | 768×1024 | `evidence/tactical-track/contested-tablet.png` | `ED705580B27AD834B1D484B02D2196EE8DBDD14DBFEF13E1FE06B72F00195CFC` |
+| Contested lead | 390×844 | `evidence/tactical-track/contested-mobile.png` | `302F2103CBEC1A18F96369BD60F4D5289989BE54586519907874FC6D2343EA50` |
 
 ## Validation
 
 - `pnpm --filter @racing-intelligence/web build` — PASS.
 - Playwright interaction check — PASS: 11 runners present; Base → Contested lead changes runner position styles.
-- Playwright load measurement — PASS: 1,057 ms in the measured local run.
+- Playwright load measurement — PASS: 1,577 ms in the measured local run.
 - `@axe-core/playwright` — PASS: 0 violations after landmark correction.
 - V7 handoff pack validator — PASS before lab work.
 
@@ -42,8 +44,8 @@ All screenshots are real Chromium captures at DPR 1. Mobile captures scroll the 
 
 What is retained: cinematic turf depth, strong horizon/rail perspective, navy/gold HUD language, early-settling axis, grouped bands, selected-runner detail, analytical map, and prominent information caveats.
 
-What is below V7: the SVG runner sprites are simplified geometric feasibility shapes rather than realistic independently placeable horse/jockey assets; labels become dense at mobile width; no GPU/3D challenger was produced; and the backdrop is generated feasibility art with rights pending. The current lab therefore does not meet the V7 “match or exceed” quality bar for production.
+What remains gated: the backdrop and runner layers are generated feasibility assets with rights pending, and no human reviewer or owner has approved their use. The current candidate is materially above the superseded geometric treatment, but it is still a synthetic Phase 0 proof rather than licensed production artwork. GPU/3D work is not required for this layered feasibility test and remains out of scope until asset rights and reviewer direction are resolved.
 
 ## Decision
 
-**HOLD for Tactical Track implementation.** The layer and responsive mechanics are feasible, but this candidate must not advance to production or sign-off. Next work requires owner-approved/licensed cinematic assets, substantially more realistic code-specific runner assets, a practical 3D/GPU comparison where useful, and genuine independent reviewer plus owner decisions. No deployment, provider activation, Auth0 change, wagering capability, or The Long Straight edit was performed.
+**Production HOLD remains.** The current visual candidate is suitable for continued Phase 0 review and no longer uses the rejected geometric runner treatment. It must not advance to production or sign-off until the synthetic assets are replaced or cleared, and genuine independent reviewer plus owner decisions are recorded. No deployment, provider activation, Auth0 change, wagering capability, or The Long Straight edit was performed.
