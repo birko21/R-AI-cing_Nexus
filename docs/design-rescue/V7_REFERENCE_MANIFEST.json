@@ -1,0 +1,458 @@
+[
+  {
+    "path": "references/V7_GOLDEN/00_v7_full_original_board.png",
+    "source": "00_v7_full_original_board.png",
+    "tier": "GOLDEN_STYLE",
+    "role": "V7 origin",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "sha256": "136a38b64fca58a988f82f8b3de1de944b69b7a431d468d4fb0f2edbeaf74257",
+    "status": "V7 immutable mood benchmark; domain content not factual"
+  },
+  {
+    "path": "references/V7_GOLDEN/01_tactical_track_desktop.png",
+    "source": "01_tactical_track_desktop.png",
+    "tier": "GOLDEN_STYLE",
+    "role": "V7 origin",
+    "dimensions": [
+      1068,
+      746
+    ],
+    "sha256": "17247ab35531a2b672c265abbeb54e23673cd9e2b7b2e694187b002ec125434b",
+    "status": "V7 immutable mood benchmark; domain content not factual"
+  },
+  {
+    "path": "references/V7_GOLDEN/02_mobile_tactical_view.png",
+    "source": "02_mobile_tactical_view.png",
+    "tier": "GOLDEN_STYLE",
+    "role": "V7 origin",
+    "dimensions": [
+      237,
+      746
+    ],
+    "sha256": "4da709c3e4798efecee31effbe1b789257f816f3d603bef451291303a517950d",
+    "status": "V7 immutable mood benchmark; domain content not factual"
+  },
+  {
+    "path": "references/V7_GOLDEN/03_mobile_runner_detail.png",
+    "source": "03_mobile_runner_detail.png",
+    "tier": "GOLDEN_STYLE",
+    "role": "V7 origin",
+    "dimensions": [
+      231,
+      746
+    ],
+    "sha256": "ff7ce21b547ac89a8dc73f71038198da3d913926fce5ef2528032e4d68017b88",
+    "status": "V7 immutable mood benchmark; domain content not factual"
+  },
+  {
+    "path": "references/V7_GOLDEN/04_scenario_analysis.png",
+    "source": "04_scenario_analysis.png",
+    "tier": "GOLDEN_STYLE",
+    "role": "V7 origin",
+    "dimensions": [
+      736,
+      283
+    ],
+    "sha256": "cb8aba342eaf2566d7437dbc763106dcba93775b47b9ce8b8e5036bb4451dbbf",
+    "status": "V7 immutable mood benchmark; domain content not factual"
+  },
+  {
+    "path": "references/V7_GOLDEN/05_analytical_speed_map.png",
+    "source": "05_analytical_speed_map.png",
+    "tier": "GOLDEN_STYLE",
+    "role": "V7 origin",
+    "dimensions": [
+      332,
+      283
+    ],
+    "sha256": "068d5f67baaf058bf8ba01381d3ba86f44247862624070026842cca7b0d2df15",
+    "status": "V7 immutable mood benchmark; domain content not factual"
+  },
+  {
+    "path": "references/V7_GOLDEN/06_track_context.png",
+    "source": "06_track_context.png",
+    "tier": "GOLDEN_STYLE",
+    "role": "V7 origin",
+    "dimensions": [
+      240,
+      283
+    ],
+    "sha256": "1aa3910362e17d0f53fd73899a1c64b077eed4bf4f1d8d061474219c17572dd2",
+    "status": "V7 immutable mood benchmark; domain content not factual"
+  },
+  {
+    "path": "references/V7_GOLDEN/07_ai_race_summary.png",
+    "source": "07_ai_race_summary.png",
+    "tier": "GOLDEN_STYLE",
+    "role": "V7 origin",
+    "dimensions": [
+      232,
+      283
+    ],
+    "sha256": "50cb490bc5a2ef44deb03bb320f830d3ac5d5227d509ba15b54039e0a5e236f4",
+    "status": "V7 immutable mood benchmark; domain content not factual"
+  },
+  {
+    "path": "references/V7_GOLDEN/08_desktop_runner_insights.png",
+    "source": "08_desktop_runner_insights.png",
+    "tier": "GOLDEN_STYLE",
+    "role": "V7 origin",
+    "dimensions": [
+      242,
+      586
+    ],
+    "sha256": "938af6af031d80bb8875dd73046bc9c6f8a587bbed74aefe86101e64beeef3f9",
+    "status": "V7 immutable mood benchmark; domain content not factual"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v10_command_desktop.png",
+    "source": "nexus_v10_command_desktop.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Command Centre",
+    "dimensions": [
+      1440,
+      1060
+    ],
+    "sha256": "617b239269fd05d5165118bb68c0bbda4a01dd36a3405ac3791ad4457ee7db1a",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v10_command_mobile.png",
+    "source": "nexus_v10_command_mobile.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Command Centre",
+    "dimensions": [
+      390,
+      844
+    ],
+    "sha256": "9b14239453b84f1ecee8d92a915e5a5428f0a256b13adf62b9792bad7e356689",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v10_discovery_desktop.png",
+    "source": "nexus_v10_discovery_desktop.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Meetings & Race Discovery",
+    "dimensions": [
+      1440,
+      1087
+    ],
+    "sha256": "c47ddfb99ca64b3c3a11ba2352d83438802f00541e44d2a530913f2b60608eeb",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v10_discovery_mobile.png",
+    "source": "nexus_v10_discovery_mobile.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Meetings & Race Discovery",
+    "dimensions": [
+      390,
+      844
+    ],
+    "sha256": "6e98628f38d5ac7556fa360473f99598e705247ea72be4273b7980d78d9c8ed6",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v11_compare_desktop.png",
+    "source": "nexus_v11_compare_desktop.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Runner Comparison",
+    "dimensions": [
+      1440,
+      1059
+    ],
+    "sha256": "5a567538788003d2979a3ed8769132ad330a8919df5fbf81f46671d74dfe2429",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v11_compare_mobile.png",
+    "source": "nexus_v11_compare_mobile.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Runner Comparison",
+    "dimensions": [
+      390,
+      1386
+    ],
+    "sha256": "3345a6fb9e32688b2912ed5023f991661dabd66ea8ce9396fba8cb20b84d286d",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v12_runner_desktop.png",
+    "source": "nexus_v12_runner_desktop.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Runner Intelligence",
+    "dimensions": [
+      1440,
+      1529
+    ],
+    "sha256": "49049303a9bdc82cb15e9a6f08214a5891c20695fa16d924a47d3ac030a6682d",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v12_runner_mobile.png",
+    "source": "nexus_v12_runner_mobile.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Runner Intelligence",
+    "dimensions": [
+      390,
+      2637
+    ],
+    "sha256": "11286019cc6fb83df72cdf32350cbd2755712a97b19a02782bf196efd0f13831",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v12_model_desktop.png",
+    "source": "nexus_v12_model_desktop.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Model Laboratory",
+    "dimensions": [
+      1440,
+      1541
+    ],
+    "sha256": "041b8c95ff171921161c504e28ff52b75609aea9ada1b3a1fec4ddad9f445960",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v12_model_mobile.png",
+    "source": "nexus_v12_model_mobile.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Model Laboratory",
+    "dimensions": [
+      390,
+      2458
+    ],
+    "sha256": "470832a9f1868a5052bca08ac33b6148a8604e101084da42609b1972f1b49bb6",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v13_markets_desktop.png",
+    "source": "nexus_v13_markets_desktop.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Markets & Value",
+    "dimensions": [
+      1440,
+      1361
+    ],
+    "sha256": "1ffa1fbe5b8cfdb8cd96d06b909bf1065be59e52e35de8e6728a7fd5dd7a17ea",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v13_markets_mobile.png",
+    "source": "nexus_v13_markets_mobile.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Markets & Value",
+    "dimensions": [
+      390,
+      2413
+    ],
+    "sha256": "5b36adf824c2f8ad31c2560f438542f8e02584515edf718dca4eeb45d6bb0208",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v13_evidence_desktop.png",
+    "source": "nexus_v13_evidence_desktop.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Evidence & Provenance",
+    "dimensions": [
+      1440,
+      1263
+    ],
+    "sha256": "5dffd25f98d0777e55d6d4b683675b52f843944a8b200bf3fa5c80200bc56684",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v13_evidence_mobile.png",
+    "source": "nexus_v13_evidence_mobile.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Evidence & Provenance",
+    "dimensions": [
+      390,
+      2121
+    ],
+    "sha256": "b5a5b1f1667906073884f21425b806e2a38872b33d62e76216e597a4f0b4c09c",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v13_assistant_desktop.png",
+    "source": "nexus_v13_assistant_desktop.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Research Assistant",
+    "dimensions": [
+      1440,
+      1050
+    ],
+    "sha256": "21fd41a32b01f70ab5968b3cfd544b79ac1dbeb663cc4ce97fb51a9cf9e952e6",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v13_assistant_mobile.png",
+    "source": "nexus_v13_assistant_mobile.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Research Assistant",
+    "dimensions": [
+      390,
+      1664
+    ],
+    "sha256": "f27e4d01b0a2de83e88f50ce54da766545244dfdf367bc8df19f8f56ae79c9ba",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v13_notebook_desktop.png",
+    "source": "nexus_v13_notebook_desktop.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Notebook",
+    "dimensions": [
+      1440,
+      1050
+    ],
+    "sha256": "2b190ea59b86a5a264d8c7e06c0c378bb7b4435bf6be12bfe29fd63e4e9d7e6f",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v13_notebook_mobile.png",
+    "source": "nexus_v13_notebook_mobile.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Notebook",
+    "dimensions": [
+      390,
+      1326
+    ],
+    "sha256": "012db183d82203f8c437ffea1cc17fa2101cce390b0a0679b0a8a07cf7bb5682",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v13_watchlist_desktop.png",
+    "source": "nexus_v13_watchlist_desktop.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Watchlists",
+    "dimensions": [
+      1440,
+      1190
+    ],
+    "sha256": "8cf6d525800daf1eecda1b21985fc274f86df603bdfd7a3c6f055ea2c8a6329e",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v13_watchlist_mobile.png",
+    "source": "nexus_v13_watchlist_mobile.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Watchlists",
+    "dimensions": [
+      390,
+      2077
+    ],
+    "sha256": "7c16e482b8627fc4b58549bb7a0d0618370753b2378751b90df1a7d1171a0823",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v13_alerts_desktop.png",
+    "source": "nexus_v13_alerts_desktop.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Alerts",
+    "dimensions": [
+      1440,
+      1050
+    ],
+    "sha256": "eb2f11d5e7e4efc5cae6c297934f2ad4b69ed2b2d03d6ac48e193a0be2d6beb1",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v13_alerts_mobile.png",
+    "source": "nexus_v13_alerts_mobile.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Alerts",
+    "dimensions": [
+      390,
+      1586
+    ],
+    "sha256": "2243e6b7faadbdff5953bc2ad6221aeb661fb13b67183e9d43f62b0440f617f8",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v13_reports_desktop.png",
+    "source": "nexus_v13_reports_desktop.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Reports",
+    "dimensions": [
+      1440,
+      1050
+    ],
+    "sha256": "3e900b9a20a3b980a8e57818ad5b42a471f7b6f1649af750b9b95d355931611d",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v13_reports_mobile.png",
+    "source": "nexus_v13_reports_mobile.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Reports",
+    "dimensions": [
+      390,
+      1964
+    ],
+    "sha256": "c7161d83538e20467d3aadc0c7cbb236eebeccf964678c2e837a8244cdd36576",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v13_settings_desktop.png",
+    "source": "nexus_v13_settings_desktop.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Settings",
+    "dimensions": [
+      1440,
+      1182
+    ],
+    "sha256": "ad42e783026d4cf1f3ccf23a5e32163674b3335f1986e674323990880ac92834",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/SUPPORTING/nexus_v13_settings_mobile.png",
+    "source": "nexus_v13_settings_mobile.png",
+    "tier": "SUPPORTING_REFERENCE",
+    "role": "Settings",
+    "dimensions": [
+      390,
+      1956
+    ],
+    "sha256": "5d51cbd41163aa2a2d95175e83e261fe5b5bb729aa737755f0e12968a939e621",
+    "status": "Supporting prior study; not final approved implementation"
+  },
+  {
+    "path": "references/HIGH_FIDELITY_CONCEPTS/a_detailed_multi_panel_ui_showcase_collage_high_e.png",
+    "source": "a_detailed_multi_panel_ui_showcase_collage_high_e.png",
+    "tier": "HIGH_FIDELITY_CONCEPT_ART",
+    "role": "Protect original visual ambition across workspaces",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "sha256": "ef3635f7f4e173537faf9e6c4028fddeb322cb87be99c4a9b97113f9e21a7a66",
+    "status": "Aspirational generative art; not a production-ready interactive UI or verified race data"
+  },
+  {
+    "path": "references/HIGH_FIDELITY_CONCEPTS/a_high_fidelity_cinematic_ui_ux_concept_dashboard.png",
+    "source": "a_high_fidelity_cinematic_ui_ux_concept_dashboard.png",
+    "tier": "HIGH_FIDELITY_CONCEPT_ART",
+    "role": "Protect original visual ambition across workspaces",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "sha256": "e4396145082ce031f3942b609707a3f502337690222215f2baaaba434af911ad",
+    "status": "Aspirational generative art; not a production-ready interactive UI or verified race data"
+  },
+  {
+    "path": "references/HIGH_FIDELITY_CONCEPTS/a_wide_high_resolution_multi_panel_ui_concept_art.png",
+    "source": "a_wide_high_resolution_multi_panel_ui_concept_art.png",
+    "tier": "HIGH_FIDELITY_CONCEPT_ART",
+    "role": "Protect original visual ambition across workspaces",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "sha256": "1e043de6478a40ab7df18f2fc4c32d27c3d71598957a50522fe8906a93b2f0b9",
+    "status": "Aspirational generative art; not a production-ready interactive UI or verified race data"
+  }
+]
