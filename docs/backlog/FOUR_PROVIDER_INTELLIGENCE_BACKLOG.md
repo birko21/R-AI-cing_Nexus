@@ -13,6 +13,7 @@
 | RIL-067 | Add Betfair synthetic fixture generation, replay manifest and drift reconciliation. | DONE | `scripts/generate_betfair_replay_manifest.py`, `fixtures/synthetic/betfair_market_replay_manifest_v1.json`, `services/api/tests/test_betfair_mock.py` |
 | RIL-068 | Extend as-of feature materialization to provider observations. | SAFE_FOUNDATION | `services/api/app/provider_feature_bridge.py`, `services/api/tests/test_provider_feature_bridge.py`; provider rows with unknown timestamps, missing retention, unapproved rights or post-cutoff timing are quarantined before materialization. |
 | RIL-069 | Build independent code-specialist model scaffolds and nine-lane manifest. | SAFE_FOUNDATION | `services/api/app/specialist_models.py`, `fixtures/synthetic/specialist_models_v1.json`, `services/api/tests/test_specialist_models.py` |
+| RIL-070 | Add deterministic feature/provider ablation report. | SAFE_FOUNDATION | `services/api/app/ablation.py`, `fixtures/synthetic/ablation_v1.json`, `services/api/tests/test_ablation.py`; same-holdout metrics, coverage, uncertainty, hash and HOLD promotion status are verified offline. |
 
 ## RIL-061 implementation evidence
 
@@ -28,7 +29,6 @@ The common `historical-features-v1` contract, B0–B4 offline benchmark interfac
 
 | ID | Item | Acceptance |
 |---|---|---|
-| RIL-066 | Add provider-evidence records to the capability registry. | Matrix values are typed, versioned, source-linked and cannot enable a provider by themselves. |
 | RIL-070 | Add feature/provider ablation reports. | Walk-forward evaluation compares baseline and one incremental family/provider with log loss, Brier, calibration, coverage and uncertainty. |
 | RIL-071 | Add independent model assurance workflow. | Leakage audit, split-manifest review, calibration review and manual registry decision are required before any promotion. |
 

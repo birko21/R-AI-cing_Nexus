@@ -131,6 +131,8 @@ remain synthetic-only until T-D approvals exist.
    calculations, and experimental three-code modules. The current branch now
    includes a hashed nine-lane specialist manifest covering each code's form,
    market, and combined input contracts.
+   The deterministic T-B ablation report now compares a baseline with one
+   incremental synthetic feature/provider lane and remains explicitly HOLD.
 3. **T-C:** add secret/dependency scans, operational budgets and kill switches,
    backup/restore transcripts, retention deletion tests, and release checklists.
 4. **T-D:** do not implement or activate real provider transports until every

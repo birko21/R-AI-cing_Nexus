@@ -1,0 +1,145 @@
+{
+  "baseline": {
+    "brier": 0.5,
+    "calibration": [
+      {
+        "bin": 2,
+        "count": 8,
+        "empirical_rate": 0.5,
+        "mean_predicted": 0.5
+      }
+    ],
+    "codes": [
+      "THOROUGHBRED"
+    ],
+    "confidence_intervals": {
+      "brier_95": [
+        0.5,
+        0.5
+      ],
+      "log_loss_95": [
+        0.6931471805599453,
+        0.6931471805599453
+      ]
+    },
+    "conventions": {
+      "brier": "mean(sum((p_i-y_i)^2))",
+      "confidence_interval": "deterministic percentile bootstrap 2.5%-97.5%",
+      "log_loss": "mean(-ln(p_winner))"
+    },
+    "data_mode": "SYNTHETIC_ONLY",
+    "horizon": "T+0",
+    "log_loss": 0.6931471805599453,
+    "metric_status": "IMPLEMENTATION_METRICS_SYNTHETIC_ONLY",
+    "missingness": {},
+    "model_version": "B0_UNIFORM",
+    "n": 4,
+    "segments": {
+      "THOROUGHBRED": {
+        "brier": 0.5,
+        "log_loss": 0.6931471805599453,
+        "missingness": {},
+        "n": 4,
+        "time_range": {
+          "end": "2026-01-04T00:00:00Z",
+          "start": "2026-01-01T00:00:00Z"
+        }
+      }
+    },
+    "time_range": {
+      "end": "2026-01-04T00:00:00Z",
+      "start": "2026-01-01T00:00:00Z"
+    },
+    "validated_claim": false
+  },
+  "coverage": {
+    "baseline_fraction": 1.0,
+    "baseline_scored": 4,
+    "expected_races": 4,
+    "incremental_fraction": 1.0,
+    "incremental_scored": 4
+  },
+  "data_mode": "SYNTHETIC_ONLY",
+  "delta": {
+    "brier": -0.13749999999999996,
+    "log_loss": -0.13881586829913972
+  },
+  "feature_family": "FORM_ONLY",
+  "holdout": {
+    "end": "2026-01-05T00:00:00Z",
+    "expected_races": [
+      "race-1",
+      "race-2",
+      "race-3",
+      "race-4"
+    ],
+    "start": "2026-01-01T00:00:00Z"
+  },
+  "incremental": {
+    "brier": 0.36250000000000004,
+    "calibration": [
+      {
+        "bin": 2,
+        "count": 6,
+        "empirical_rate": 0.3333333333333333,
+        "mean_predicted": 0.46666666666666673
+      },
+      {
+        "bin": 3,
+        "count": 2,
+        "empirical_rate": 1.0,
+        "mean_predicted": 0.6
+      }
+    ],
+    "codes": [
+      "THOROUGHBRED"
+    ],
+    "confidence_intervals": {
+      "brier_95": [
+        0.32000000000000006,
+        0.40499999999999997
+      ],
+      "log_loss_95": [
+        0.5108256237659907,
+        0.5978370007556204
+      ]
+    },
+    "conventions": {
+      "brier": "mean(sum((p_i-y_i)^2))",
+      "confidence_interval": "deterministic percentile bootstrap 2.5%-97.5%",
+      "log_loss": "mean(-ln(p_winner))"
+    },
+    "data_mode": "SYNTHETIC_ONLY",
+    "horizon": "T+0",
+    "log_loss": 0.5543313122608056,
+    "metric_status": "IMPLEMENTATION_METRICS_SYNTHETIC_ONLY",
+    "missingness": {},
+    "model_version": "TB_FORM_INCREMENTAL",
+    "n": 4,
+    "segments": {
+      "THOROUGHBRED": {
+        "brier": 0.36250000000000004,
+        "log_loss": 0.5543313122608056,
+        "missingness": {},
+        "n": 4,
+        "time_range": {
+          "end": "2026-01-04T00:00:00Z",
+          "start": "2026-01-01T00:00:00Z"
+        }
+      }
+    },
+    "time_range": {
+      "end": "2026-01-04T00:00:00Z",
+      "start": "2026-01-01T00:00:00Z"
+    },
+    "validated_claim": false
+  },
+  "promotion": "HOLD",
+  "promotion_reason": "ablation evidence cannot promote a model without calibration, independent assurance and owner approval",
+  "provider_id": "synthetic-fixture",
+  "report_hash": "5a411300dfa15d86ca71afd05986d4ca0ad9a03c4acef06b47357f80432c4b62",
+  "schema_version": "ablation-report-v1",
+  "status": "IMPLEMENTATION_METRICS_SYNTHETIC_ONLY",
+  "study_id": "synthetic-tb-form-ablation-v1",
+  "validated_claim": false
+}
