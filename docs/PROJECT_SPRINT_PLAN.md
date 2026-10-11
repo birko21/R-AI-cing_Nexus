@@ -185,6 +185,7 @@ neutral data plane**. The current branch contains:
 - the current API regression suite passing.
 
 The next T-A increment is to execute the now-guarded local PostgreSQL
-migration/ingestion smoke when a disposable `DATABASE_URL` is provided,
-followed by broader as-of reconciliation coverage. The visual sprint remains
-READY for human review, not silently advanced.
+migration/ingestion smoke when a disposable `DATABASE_URL` is provided. The
+durable producer/consumer handoff and broader provider as-of quarantine suite
+are now present. The visual sprint remains READY for human review, not
+silently advanced.
