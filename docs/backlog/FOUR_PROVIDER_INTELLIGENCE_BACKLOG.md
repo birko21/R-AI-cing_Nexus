@@ -30,8 +30,14 @@ The common `historical-features-v1` contract, B0–B4 offline benchmark interfac
 
 | ID | Item | Acceptance |
 |---|---|---|
-| RIL-070 | Add feature/provider ablation reports. | Walk-forward evaluation compares baseline and one incremental family/provider with log loss, Brier, calibration, coverage and uncertainty. |
-| RIL-071 | Add independent model assurance workflow. | Leakage audit, split-manifest review, calibration review and manual registry decision are required before any promotion. |
+| T-C / RIL-060 | Aggregate release evidence into a fail-closed gate. | Synthetic local evidence, automated checks, owner review, external dependencies and prohibited capabilities are represented in one hashed report with no activation or promotion authority. |
+| T-A / G1 | Run disposable PostgreSQL apply/rollback/verify smoke. | A user-supplied disposable `DATABASE_URL` is used; no shared or production database is touched; migration checksums and ingestion leases are verified. |
+| T-A / RIL-068 | Broaden provider as-of reconciliation coverage. | Timestamp, retention, rights and cutoff edge cases remain quarantined before historical materialization; no real provider rows are required. |
+
+RIL-069–071 now have safe synthetic foundations in this branch. Their remaining
+acceptance is independent review and owner/model decision evidence; they cannot
+be promoted by CI. No additional provider-specific adapter work is safe until
+the RIL-072–077 rights and dataset gates below are satisfied.
 
 ## Blocked external work
 

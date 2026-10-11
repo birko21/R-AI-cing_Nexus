@@ -26,6 +26,7 @@ This matrix maps the supplied v1.1 source requirements to the implementation bac
 | Four-provider capability and licensing evidence | User roadmap / provider audit | Four-provider matrix, architecture and licensing gap report | RIL-061–064 |
 | Synthetic Betfair market intelligence | User roadmap / Betfair read-only requirement | Contract adapter, catalogue/book fixture, exact runner mapping, historical prices, liquidity and SP leakage tests | RIL-065, RIL-067–068 |
 | Independent three-code specialist models | User roadmap / modelling requirements | Separate code manifests, form/market/combined inputs, walk-forward ablations, calibration and assurance | RIL-069–071 |
+| Fail-closed release evidence aggregation | E11 / G11 release controls | Hashed local-synthetic gate report, explicit owner/external dependencies and no activation/promotion authority | RIL-060 |
 | Historical feature and evaluation foundation | RIL-061 development gate | Versioned rights-aware features, B0–B4 contracts, synthetic walk-forward evidence, explainability and readiness verdicts | RIL-061, RIL-077 |
 
 ## Traceability status
@@ -43,6 +44,13 @@ This matrix maps the supplied v1.1 source requirements to the implementation bac
   feature cutoffs, walk-forward evidence, diagnostics and registry controls are
   present for synthetic data. They are not validated live performance and still
   require the specified independent assurance/owner gates.
+- RIL-069–071: specialist manifests, synthetic ablation metrics and the
+  independent-assurance packet are present. They remain synthetic-only and
+  explicitly HOLD until independent review and owner decision references exist.
+- RIL-060/T-C: the release gate now aggregates local evidence, automated
+  validation, visual/accessibility/model review, owner approval, external gates
+  and prohibited-capability checks into a hashed report. It cannot authorize
+  activation, promotion, wagering or external connectivity.
 - G4–G11 requirements: retained as gated future work; external providers,
   production OIDC, production deployment and final pilot approval are not
   claimed.

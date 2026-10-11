@@ -41,6 +41,15 @@ staking, weaken authentication, deploy the product, or alter The Long Straight.
 | T-C | Operations and release controls | RIL-056–060 | Authentication, supply-chain, observability, backup/restore, retention, performance, and pilot evidence pass their gates. |
 | T-D | Approved external sources | RIL-072–076 | **Blocked until written provider rights, credentials, retention, display, model-use, cost, and security approvals exist.** |
 
+### Remaining execution sprints
+
+| Sprint | Tickets | Execution now | Exit gate |
+|---|---|---|---|
+| T-C.1 | RIL-060 | **COMPLETE: safe foundation** — hashed release-gate aggregation is checked in and remains activation/promotion neutral. | Owner review plus the visual, accessibility, model, OIDC and provider gates are still required for any broader scope. |
+| T-A.2 | G1 / RIL-011–016, 068 | **READY** — run the disposable PostgreSQL migration/lease smoke when a user-supplied `DATABASE_URL` is available; extend synthetic as-of edge coverage. | Upgrade, checksum verify, downgrade and re-upgrade pass against an explicitly disposable database. |
+| T-B.2 | RIL-069–071 | **SAFE FOUNDATION COMPLETE** — specialist lanes, ablation report and assurance packet are replayable synthetic artifacts. | Independent reviewer references, owner decision, approved historical rights and no automatic promotion. |
+| T-D.1 | RIL-072–077 | **BLOCKED_EXTERNAL_DEPENDENCY** — prepare decision packs only. | Written provider rights, credentials, retention/model-use/display terms, cost/security approval and an approved historical dataset. |
+
 ## Legacy technical epic alignment
 
 The original RIL-001–060 backlog is executed through the following dependency
@@ -137,6 +146,9 @@ remain synthetic-only until T-D approvals exist.
    and remains HOLD without real independent-review and owner references.
 3. **T-C:** add secret/dependency scans, operational budgets and kill switches,
    backup/restore transcripts, retention deletion tests, and release checklists.
+   The current increment also adds a hashed, fail-closed release-gate report
+   that keeps owner, accessibility, model, OIDC, provider-rights and safety
+   decisions separate from automated evidence.
 4. **T-D:** do not implement or activate real provider transports until every
    provider-specific rights and security gate is recorded.
 
@@ -166,6 +178,8 @@ neutral data plane**. The current branch contains:
 - typed provider-evidence records with no activation authority;
 - strict provider-feature bridge quarantine for timestamp, retention, rights,
   and cutoff failures;
+- a hashed fail-closed release-gate report with no activation or promotion
+  authority; and
 - provider-neutral capability and raw-envelope boundaries; and
 - the current API regression suite passing.
 

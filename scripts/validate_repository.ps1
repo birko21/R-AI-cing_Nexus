@@ -66,6 +66,7 @@ $required = @(
     'fixtures/synthetic/provider_evidence_v1.json',
     'fixtures/synthetic/ablation_v1.json',
     'fixtures/synthetic/assurance_packet_v1.json',
+    'fixtures/synthetic/release_gate_v1.json',
     'docs/evidence/ril-059/backup-restore-transcript.json',
     'playwright.config.ts',
     '.github/workflows/ci.yml',
@@ -120,6 +121,7 @@ $required = @(
     'services/api/app/provider_feature_bridge.py',
     'services/api/app/ablation.py',
     'services/api/app/assurance.py',
+    'services/api/app/release_gate.py',
     'services/api/app/specialist_models.py',
     'services/api/app/historical_features.py',
     'services/api/app/model_benchmarks.py',
@@ -177,6 +179,7 @@ $required = @(
     'services/api/tests/test_provider_feature_bridge.py',
     'services/api/tests/test_ablation.py',
     'services/api/tests/test_assurance.py',
+    'services/api/tests/test_release_gate.py',
     'services/api/tests/test_specialist_models.py',
     'services/api/tests/test_historical_features.py',
     'services/api/tests/test_model_benchmarks.py',
@@ -188,6 +191,7 @@ $required = @(
     'services/api/tests/test_forecast_invalidation.py',
     'docs/domain/ENTITY_DICTIONARY.md',
     'docs/domain/RACE_LIFECYCLE.md',
+    'docs/models/RELEASE_GATE_EVIDENCE.md',
     'docs/domain/BITEMPORAL_QUERIES.md',
     'docs/domain/RAW_ENVELOPES.md',
     'docs/domain/RIGHTS_MATRIX.md',
@@ -333,6 +337,7 @@ $required = @(
     'scripts/generate_provider_evidence_fixture.py',
     'scripts/generate_ablation_fixture.py',
     'scripts/generate_assurance_fixture.py',
+    'scripts/generate_release_gate_fixture.py',
     'scripts/run_synthetic_ingestion.py'
 )
 
