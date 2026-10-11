@@ -15,6 +15,10 @@ if ($LASTEXITCODE -ne 0) { throw "Migration checksum recording failed with exit 
 if ($LASTEXITCODE -ne 0) { throw "Migration checksum verification failed with exit code $LASTEXITCODE" }
 & '.venv\Scripts\python.exe' scripts/verify_ingestion_schema.py
 if ($LASTEXITCODE -ne 0) { throw "Ingestion schema verification failed with exit code $LASTEXITCODE" }
+& '.venv\Scripts\python.exe' scripts/run_postgres_synthetic_ingestion.py --replay-id db-smoke-primary
+if ($LASTEXITCODE -ne 0) { throw "Primary PostgreSQL synthetic ingestion failed with exit code $LASTEXITCODE" }
+& '.venv\Scripts\python.exe' scripts/run_postgres_synthetic_ingestion.py --replay-id db-smoke-replay
+if ($LASTEXITCODE -ne 0) { throw "Replay PostgreSQL synthetic ingestion failed with exit code $LASTEXITCODE" }
 
 & '.venv\Scripts\python.exe' -m alembic -c alembic.ini downgrade base
 if ($LASTEXITCODE -ne 0) { throw "Alembic downgrade failed with exit code $LASTEXITCODE" }

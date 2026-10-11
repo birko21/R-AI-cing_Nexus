@@ -46,7 +46,7 @@ staking, weaken authentication, deploy the product, or alter The Long Straight.
 | Sprint | Tickets | Execution now | Exit gate |
 |---|---|---|---|
 | T-C.1 | RIL-060 | **COMPLETE: safe foundation** — hashed release-gate aggregation is checked in and remains activation/promotion neutral. | Owner review plus the visual, accessibility, model, OIDC and provider gates are still required for any broader scope. |
-| T-A.2 | G1 / RIL-011–016, 068 | **SAFE FOUNDATION COMPLETE** — disposable-target preflight, full migration/lease smoke harness, ingestion-schema verification, and cutoff-boundary coverage are checked in. | Run `pnpm db:smoke` with a user-supplied explicitly disposable loopback `DATABASE_URL`; then extend broader as-of reconciliation coverage. |
+| T-A.2 | G1 / RIL-011–016, 068 | **SAFE FOUNDATION COMPLETE** — disposable-target preflight, durable PostgreSQL synthetic-ingestion runner, full migration/lease smoke harness, ingestion-schema verification, and cutoff-boundary coverage are checked in. | Run `pnpm db:smoke` with a user-supplied explicitly disposable loopback `DATABASE_URL`; then extend broader as-of reconciliation coverage. |
 | T-B.2 | RIL-069–071 | **SAFE FOUNDATION COMPLETE** — specialist lanes, ablation report and assurance packet are replayable synthetic artifacts. | Independent reviewer references, owner decision, approved historical rights and no automatic promotion. |
 | T-D.1 | RIL-072–077 | **BLOCKED_EXTERNAL_DEPENDENCY** — prepare decision packs only. | Written provider rights, credentials, retention/model-use/display terms, cost/security approval and an approved historical dataset. |
 

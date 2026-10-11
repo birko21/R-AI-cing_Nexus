@@ -18,6 +18,20 @@ The command processes all three synthetic racing codes and prints a JSON run
 summary. Use `--code THOROUGHBRED --page-size 1` to exercise a bounded single
 code run, or repeat `--code` for a selected set.
 
+After migrations have been applied to an explicitly disposable loopback
+database, the same worker can run through the durable PostgreSQL repository:
+
+```powershell
+$env:DATABASE_URL = 'postgresql+psycopg://user:password@127.0.0.1:5432/racing_intelligence_dev'
+$env:RACING_INTELLIGENCE_DB_DISPOSABLE = '1'
+.\.venv\Scripts\python.exe scripts/run_postgres_synthetic_ingestion.py --replay-id local-run
+```
+
+The command validates the target before opening a connection and uses no real
+provider, credentials or external network. `pnpm db:smoke` runs this durable
+worker path as part of the disposable upgrade/checksum/schema/
+downgrade/re-upgrade sequence.
+
 The worker consumes a `ContractedProviderAdapter`, one bounded page at a time,
 and performs the following sequence:
 

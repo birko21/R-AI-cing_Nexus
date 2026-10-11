@@ -16,6 +16,7 @@
     "db:downgrade": "powershell -ExecutionPolicy Bypass -File scripts/db_migrate.ps1 -Direction downgrade",
     "db:verify": "powershell -ExecutionPolicy Bypass -Command \".\\.venv\\Scripts\\python.exe scripts/verify_migration_checksums.py\"",
     "db:smoke": "powershell -ExecutionPolicy Bypass -File scripts/db_smoke.ps1",
+    "db:ingest:synthetic": "powershell -ExecutionPolicy Bypass -Command \".\\.venv\\Scripts\\python.exe scripts/run_postgres_synthetic_ingestion.py\"",
     "web:e2e": "playwright test"
     ,"contract:validate": "python scripts/validate_contracts.py"
   },
