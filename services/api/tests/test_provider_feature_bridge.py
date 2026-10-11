@@ -63,3 +63,11 @@ def test_bridge_quarantines_unknown_timestamps_rights_and_post_cutoff_rows() -> 
     )
     assert future.observations == ()
     assert future.quarantines[0].reason == "POST_CUTOFF"
+
+    impossible = bridge_provider_feature_observations(
+        envelope([row(feature_name="impossible", observed_at="2026-01-15T00:45:00Z")]),
+        provider_id="synthetic", dataset_reference="provider-features-v1", code="THOROUGHBRED",
+        race_id="race-1", cutoff=CUTOFF,
+    )
+    assert impossible.observations == ()
+    assert impossible.quarantines[0].reason == "INVALID_PROVIDER_FEATURE"
