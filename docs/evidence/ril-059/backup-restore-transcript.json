@@ -13,8 +13,8 @@
     {
       "data_mode": "SYNTHETIC_ONLY",
       "relative_path": "fixtures/synthetic/research_tools_v1.json",
-      "sha256": "d7a830cfcd4ce503cdc3ee264dc8aa5ad0c9c7fa7efe31837cc6b7a029200b0b",
-      "size_bytes": 1922
+      "sha256": "0847a0223236de67847dc866e13cdeea86917e48114aebcfd76533ed187ff0b4",
+      "size_bytes": 1842
     }
   ],
   "migration_rollback_steps": [
