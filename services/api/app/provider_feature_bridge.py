@@ -95,7 +95,7 @@ def bridge_provider_feature_observations(
         if not isinstance(retention_class, str) or not retention_class.strip():
             quarantines.append(ProviderFeatureQuarantine(envelope.envelope_id, "RETENTION_UNSPECIFIED", "retention_class is required", feature_label))
             continue
-        if envelope.retrieved_at > cutoff_utc or observed_at >= cutoff_utc or eligible_at >= cutoff_utc or (published_at is not None and published_at > cutoff_utc):
+        if envelope.retrieved_at > cutoff_utc or observed_at > cutoff_utc or eligible_at > cutoff_utc or (published_at is not None and published_at > cutoff_utc):
             quarantines.append(ProviderFeatureQuarantine(envelope.envelope_id, "POST_CUTOFF", "source or retrieval timestamp is not eligible by cutoff", feature_label))
             continue
         try:

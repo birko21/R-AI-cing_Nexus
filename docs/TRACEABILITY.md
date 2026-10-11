@@ -35,8 +35,10 @@ This matrix maps the supplied v1.1 source requirements to the implementation bac
   validation passing; owner/source decisions remain explicit where required.
 - G1 requirements: API, contracts, authentication boundary, migrations through
   the durable ingestion lease migration, and synthetic worker tests are present.
-  A disposable PostgreSQL apply/rollback smoke remains outstanding because no
-  `DATABASE_URL` or local PostgreSQL service is configured in this environment.
+  The disposable PostgreSQL smoke harness now validates loopback/disposable
+  targeting before connecting, verifies the ingestion schema and checksums,
+  and performs upgrade/downgrade/re-upgrade. Its actual execution remains
+  outstanding because no approved `DATABASE_URL` has been supplied.
 - G2 requirements: the synthetic three-code UI and Tactical Track proof have
   browser evidence, but the complete 14-workspace responsive atlas and
   independent accessibility review remain open.

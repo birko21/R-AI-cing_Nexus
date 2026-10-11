@@ -46,7 +46,7 @@ staking, weaken authentication, deploy the product, or alter The Long Straight.
 | Sprint | Tickets | Execution now | Exit gate |
 |---|---|---|---|
 | T-C.1 | RIL-060 | **COMPLETE: safe foundation** — hashed release-gate aggregation is checked in and remains activation/promotion neutral. | Owner review plus the visual, accessibility, model, OIDC and provider gates are still required for any broader scope. |
-| T-A.2 | G1 / RIL-011–016, 068 | **READY** — run the disposable PostgreSQL migration/lease smoke when a user-supplied `DATABASE_URL` is available; extend synthetic as-of edge coverage. | Upgrade, checksum verify, downgrade and re-upgrade pass against an explicitly disposable database. |
+| T-A.2 | G1 / RIL-011–016, 068 | **SAFE FOUNDATION COMPLETE** — disposable-target preflight, full migration/lease smoke harness, ingestion-schema verification, and cutoff-boundary coverage are checked in. | Run `pnpm db:smoke` with a user-supplied explicitly disposable loopback `DATABASE_URL`; then extend broader as-of reconciliation coverage. |
 | T-B.2 | RIL-069–071 | **SAFE FOUNDATION COMPLETE** — specialist lanes, ablation report and assurance packet are replayable synthetic artifacts. | Independent reviewer references, owner decision, approved historical rights and no automatic promotion. |
 | T-D.1 | RIL-072–077 | **BLOCKED_EXTERNAL_DEPENDENCY** — prepare decision packs only. | Written provider rights, credentials, retention/model-use/display terms, cost/security approval and an approved historical dataset. |
 
@@ -183,7 +183,7 @@ neutral data plane**. The current branch contains:
 - provider-neutral capability and raw-envelope boundaries; and
 - the current API regression suite passing.
 
-The next T-A increment is a local PostgreSQL migration/ingestion smoke test
-when a disposable `DATABASE_URL` is provided, followed by broader as-of
-reconciliation coverage. The visual sprint remains READY for human review,
-not silently advanced.
+The next T-A increment is to execute the now-guarded local PostgreSQL
+migration/ingestion smoke when a disposable `DATABASE_URL` is provided,
+followed by broader as-of reconciliation coverage. The visual sprint remains
+READY for human review, not silently advanced.

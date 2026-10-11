@@ -54,4 +54,9 @@ The API contract is in `contracts/openapi_mvp.yaml`; its hand-checked TypeScript
 
 ## Database migration foundation
 
-Set `DATABASE_URL` to a disposable local PostgreSQL database using the `postgresql+psycopg://` scheme, then run `pnpm db:upgrade`. The migration runner records and verifies SHA-256 checksums. Use `pnpm db:downgrade` followed by `pnpm db:upgrade` for the forward/rollback smoke; never point this smoke at a shared or production database.
+Set `DATABASE_URL` to an explicitly disposable loopback PostgreSQL database
+whose name ends in `dev`, `test`, `smoke`, `local` or `disposable`, then set
+`RACING_INTELLIGENCE_DB_DISPOSABLE=1`. The migration runner validates that
+target before connecting, records and verifies SHA-256 checksums, and refuses
+remote/shared databases. Run the complete forward/rollback/re-upgrade smoke
+with `pnpm db:smoke`; never point it at a shared or production database.
