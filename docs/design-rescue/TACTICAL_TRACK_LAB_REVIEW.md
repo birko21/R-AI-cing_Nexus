@@ -44,6 +44,7 @@ All screenshots are real Chromium captures at DPR 1. Mobile captures scroll the 
 - Playwright interaction check — PASS: 11 runners present; Base → Contested lead changes runner position styles and linked pace-map positions; selecting runner 5 selects pace-map runner 5.
 - Playwright load measurement — PASS: 1,577 ms in the measured local run.
 - `@axe-core/playwright` — PASS: 0 violations after landmark correction.
+- Direct-file smoke test — PASS: `file://` opening loads the backdrop and all 11 runner images; axe reports 0 violations.
 - V7 handoff pack validator — PASS before lab work.
 
 ## Comparative visual review against V7
