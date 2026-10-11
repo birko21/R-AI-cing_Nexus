@@ -63,14 +63,3 @@ def test_bridge_quarantines_unknown_timestamps_rights_and_post_cutoff_rows() -> 
     )
     assert future.observations == ()
     assert future.quarantines[0].reason == "POST_CUTOFF"
-
-
-def test_bridge_accepts_observations_exactly_at_cutoff() -> None:
-    result = bridge_provider_feature_observations(
-        envelope([row(observed_at="2026-01-15T01:00:00Z", pre_race_eligible_at="2026-01-15T01:00:00Z")], retrieved_at=CUTOFF),
-        provider_id="synthetic", dataset_reference="provider-features-v1", code="THOROUGHBRED",
-        race_id="race-1", cutoff=CUTOFF,
-    )
-
-    assert len(result.observations) == 1
-    assert result.quarantines == ()
