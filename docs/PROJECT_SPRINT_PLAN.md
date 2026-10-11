@@ -46,7 +46,7 @@ staking, weaken authentication, deploy the product, or alter The Long Straight.
 | Sprint | Tickets | Execution now | Exit gate |
 |---|---|---|---|
 | T-C.1 | RIL-060 | **COMPLETE: safe foundation** — hashed release-gate aggregation is checked in and remains activation/promotion neutral. | Owner review plus the visual, accessibility, model, OIDC and provider gates are still required for any broader scope. |
-| T-A.2 | G1 / RIL-011–016, 068 | **SAFE FOUNDATION COMPLETE** — disposable-target preflight, durable PostgreSQL synthetic-ingestion runner, full migration/lease smoke harness, ingestion-schema verification, and cutoff-boundary coverage are checked in. | Run `pnpm db:smoke` with a user-supplied explicitly disposable loopback `DATABASE_URL`; then extend broader as-of reconciliation coverage. |
+| T-A.2 | G1 / RIL-011–016, 068 | **SAFE FOUNDATION COMPLETE** — disposable-target preflight, CI-backed PostgreSQL 16 migration/lease/replay smoke, durable synthetic-ingestion runner, ingestion-schema verification, and cutoff-boundary coverage are checked in. | Hosted worker/database/monitoring deployment and broader owner-approved as-of reconciliation remain gated. |
 | T-A.3 | G1 / RIL-011–016, 068 | **SAFE FOUNDATION COMPLETE** — separate durable producer (`--enqueue-only`) and signal-aware PostgreSQL synthetic consumer with one transaction per bounded job, cooperative `SIGTERM`/`SIGINT` drain, and finite `--once`/`--max-jobs` verification modes are checked in. | Hosted worker/database/monitoring deployment remains an owner-approved Render topology gate. |
 | S2.1 | NXD-012–019 | **SAFE ENGINEERING FOUNDATION COMPLETE** — responsive 14-entry workspace atlas, shared code/race/field/model context, synthetic-only degraded-state copy, linked research navigation, and desktop/tablet/mobile browser evidence are checked in. | Named visual-owner, accessibility, racing-domain/model-trust, rights and end-to-end narrative reviews remain HOLD gates. |
 | T-B.2 | RIL-069–071 | **SAFE FOUNDATION COMPLETE** — specialist lanes, ablation report and assurance packet are replayable synthetic artifacts. | Independent reviewer references, owner decision, approved historical rights and no automatic promotion. |
@@ -185,8 +185,11 @@ neutral data plane**. The current branch contains:
 - provider-neutral capability and raw-envelope boundaries; and
 - the current API regression suite passing.
 
-The next T-A increment is to execute the now-guarded local PostgreSQL
-migration/ingestion smoke when a disposable `DATABASE_URL` is provided. The
-durable producer/consumer handoff and broader provider as-of quarantine suite
-are now present. The visual sprint remains READY for human review, not
-silently advanced.
+The T-A PostgreSQL migration/ingestion smoke is now executed in CI against an
+isolated disposable PostgreSQL 16 service. It validates the explicit target
+guard, migration checksums, ingestion schema, producer/consumer replay path,
+and downgrade/re-upgrade cycle without requiring a developer or hosted
+database credential. The local PowerShell smoke remains available for a
+user-supplied disposable loopback target. The durable producer/consumer
+handoff and broader provider as-of quarantine suite are present. The visual
+sprint remains READY for human review, not silently advanced.

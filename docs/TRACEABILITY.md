@@ -39,8 +39,10 @@ This matrix maps the supplied v1.1 source requirements to the implementation bac
   targeting before connecting, verifies the ingestion schema and checksums,
   runs the durable synthetic worker, and performs upgrade/downgrade/re-upgrade.
   The queue also has a separate producer-only path and signal-aware consumer
-  runtime for local background processing. Its actual database execution
-  remains outstanding because no approved `DATABASE_URL` has been supplied.
+  runtime for local background processing. CI now executes the migration,
+  checksum, schema, replay, downgrade, and re-upgrade path against an
+  isolated disposable PostgreSQL 16 service; hosted production execution
+  remains gated on owner-approved topology and credentials.
 - G2 requirements: the synthetic three-code UI, Tactical Track proof and the
   14-entry responsive workspace atlas have browser evidence, but real-device,
   independent accessibility, visual-owner and racing-domain review remain
