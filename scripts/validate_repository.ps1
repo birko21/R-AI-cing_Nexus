@@ -328,6 +328,7 @@ $required = @(
     'scripts/validate_safe_completion_gate.py',
     'scripts/pressure_test_data_science.py',
     'scripts/run_live_provider_capture.py',
+    'scripts/run_betfair_projection_acceptance.py',
     'docs/provider/LIVE_PROVIDER_ACTIVATION.md',
     'scripts/prove_synthetic_vertical.py',
     'scripts/run_postgres_backend_acceptance.py',
