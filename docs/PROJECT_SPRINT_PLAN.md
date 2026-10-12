@@ -4,7 +4,8 @@
 **Repository:** `birko21/R-AI-cing_Nexus`  
 **Active branch:** `codex/phase0-design-rescue`  
 **Current PR:** [#177](https://github.com/birko21/R-AI-cing_Nexus/pull/177)  
-**Operating mode:** synthetic-only, local-first, read-only, non-wagering
+**Operating mode:** synthetic by default; owner-triggered live read-only
+capture is prepared locally, with no wagering, trading or automatic actions
 
 ## How to read this plan
 
@@ -39,7 +40,7 @@ staking, weaken authentication, deploy the product, or alter The Long Straight.
 | T-A | Synthetic ingestion and provider-neutral data plane | RIL-011–016, RIL-032, RIL-061–068 | Canonical identity, receipts, replay, quarantine, as-of materialization, synthetic Betfair market lane, and durable job leases are reproducible offline. |
 | T-B | Forecasts, model assurance and paper analysis | RIL-021–040, RIL-051–055 | Deterministic baselines, chronological evaluation, diagnostics, paper-only market math, and experimental code-specific modules have replayable evidence. |
 | T-C | Operations and release controls | RIL-056–060 | Authentication, supply-chain, observability, backup/restore, retention, performance, and pilot evidence pass their gates. |
-| T-D | Approved external sources | RIL-072–076 | **Blocked until written provider rights, credentials, retention, display, model-use, cost, and security approvals exist.** |
+| T-D | Approved external sources | RIL-072–076 | **Live capture seam is implemented; provider-backed canonical data remains blocked until credentials, rights, retention, display, model-use, cost and security approvals are configured.** |
 
 ### Remaining execution sprints
 
@@ -55,7 +56,8 @@ staking, weaken authentication, deploy the product, or alter The Long Straight.
 | S4.2 | NXD-021–023 | **NON-VISUAL ENGINEERING PROOF COMPLETE** — the synthetic vertical path, automated browser/axe checks, three-code contracts, model/archive replay, security scan, contract validation, and Render isolation checks pass. | Independent accessibility, racing-domain/model, and security-owner decisions remain required. |
 | S4.3 | NXD-020 | **DELIBERATELY LAST** — visual-owner comparison is held until the executable data and safety path is accepted. | Named creative owner must compare the approved reference set and record the verdict. |
 | T-B.2 | RIL-021–030, 069–071 | **SAFE FOUNDATION COMPLETE** — deterministic B0/B1 forecast manifests, specialist lanes, ablation report and assurance packet are replayable synthetic artifacts and B0/B1 generation is now CI-checked. | Independent reviewer references, owner decision, approved historical rights and no automatic promotion. |
-| T-D.1 | RIL-072–077 | **BLOCKED_EXTERNAL_DEPENDENCY** — prepare decision packs only. | Written provider rights, credentials, retention/model-use/display terms, cost/security approval and an approved historical dataset. |
+| T-D.1 | RIL-072–077 | **LOCAL ACTIVATION SEAM COMPLETE** — secure environment-driven provider runtime, Betfair catalogue/book request separation, non-secret status, bounded diagnostic and one-capture commands are implemented and tested offline. | Owner-configured key, named approval record and a real response sample. |
+| T-D.2 | RIL-072–077 | **BLOCKED_EXTERNAL_DEPENDENCY** — first live diagnostic/capture is ready to run. | Provider-specific parser, identity reconciliation, retention/model-use approval and chronological real-data evaluation. |
 
 The remaining epic register is maintained in
 `docs/backlog/REMAINING_EPICS.md`. R1–R3 local engineering closure and the

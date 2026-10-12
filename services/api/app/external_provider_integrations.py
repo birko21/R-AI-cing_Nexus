@@ -78,6 +78,9 @@ class HttpxReadOnlyTransport:
     def __init__(self, client: httpx.Client | None = None) -> None:
         self._client = client or httpx.Client(follow_redirects=False)
 
+    def close(self) -> None:
+        self._client.close()
+
     def request(
         self,
         *,
@@ -296,10 +299,10 @@ class GatedReadOnlyProviderAdapter:
             normalized: Mapping[str, str] = {"token": credentials, "api_key": credentials}
         else:
             normalized = credentials
-        if self.asset.provider_id == "punters-edge":
+        if self.asset.provider_id in {"punters-edge", "formfav", "krok-odds"}:
             api_key = normalized.get("api_key") or normalized.get("token")
             if not api_key:
-                raise ProviderActivationError("PuntersEdge requires a server-side API key")
+                raise ProviderActivationError(f"{self.asset.display_name} requires a server-side API key")
             return normalized, {"X-API-Key": api_key}
         return normalized, {"Authorization": f"Bearer {normalized.get('token', '')}"}
 
@@ -313,6 +316,7 @@ class GatedReadOnlyProviderAdapter:
         race: int | None,
         cursor: str | None = None,
         page_size: int | None = None,
+        market_ids: tuple[str, ...] | None = None,
     ) -> dict[str, object]:
         if operation == "ACCOUNT_METADATA_READ":
             if any(value is not None for value in (date, venue, race, cursor, page_size)):
@@ -324,7 +328,39 @@ class GatedReadOnlyProviderAdapter:
                 params[key] = value
         return params
 
-    def fetch(self, operation: ProviderOperation, *, code: str, approval: SourceApprovalRecord | None = None, date: str | None = None, venue: str | None = None, race: int | None = None, view: MarketView = "catalogue", cursor: str | None = None, page_size: int | None = None) -> AdapterPage:
+    @staticmethod
+    def _betfair_params(
+        *,
+        view: MarketView,
+        date: str | None,
+        venue: str | None,
+        market_ids: tuple[str, ...] | None,
+        page_size: int | None,
+    ) -> dict[str, object]:
+        """Build bounded API-NG request parameters, never order operations."""
+
+        if view == "book":
+            if not market_ids:
+                raise ProviderActivationError("Betfair listMarketBook requires explicit market IDs from a catalogue response")
+            return {
+                "marketIds": list(market_ids[:20]),
+                "priceProjection": {"priceData": ["EX_BEST_OFFERS", "EX_TRADED", "SP_AVAILABLE", "SP_TRADED"]},
+            }
+        market_filter: dict[str, object] = {"eventTypeIds": ["7"], "marketTypeCodes": ["WIN"]}
+        if date:
+            market_filter["marketStartTime"] = {
+                "from": f"{date}T00:00:00Z",
+                "to": f"{date}T23:59:59Z",
+            }
+        if venue:
+            market_filter["venues"] = [venue]
+        return {
+            "filter": market_filter,
+            "marketProjection": ["EVENT", "COMPETITION", "MARKET_START_TIME", "RUNNER_DESCRIPTION", "RUNNER_METADATA"],
+            "maxResults": min(page_size or 100, 100),
+        }
+
+    def fetch(self, operation: ProviderOperation, *, code: str, approval: SourceApprovalRecord | None = None, date: str | None = None, venue: str | None = None, race: int | None = None, view: MarketView = "catalogue", cursor: str | None = None, page_size: int | None = None, market_ids: tuple[str, ...] | None = None) -> AdapterPage:
         if operation == "ACCOUNT_METADATA_READ":
             raise ProviderActivationError("account metadata must use the aggregate-only diagnostic path")
         approved = self._check_gate(operation, code, approval)
@@ -343,6 +379,7 @@ class GatedReadOnlyProviderAdapter:
                 raise ProviderActivationError("Betfair requires server-side app key and session token")
             headers = {"X-Application": app_key, "X-Authentication": session_token, "Content-Type": "application/json"}
             method_name = endpoint.description.split(" ", 1)[0]
+            params = self._betfair_params(view=view, date=date, venue=venue, market_ids=market_ids, page_size=page_size)
             body = {"jsonrpc": "2.0", "method": f"SportsAPING/v1.0/{method_name}", "params": params, "id": 1}
             params = {}
         response = self._transport.request(method=endpoint.method, url=f"{self.asset.base_url}{endpoint.path}", headers=headers, params=params, json_body=body, timeout_seconds=4.0)
@@ -373,6 +410,7 @@ class GatedReadOnlyProviderAdapter:
         venue: str | None = None,
         race: int | None = None,
         view: MarketView = "catalogue",
+        market_ids: tuple[str, ...] | None = None,
         request_ordinal: int = 1,
         request_ceiling: int = 6,
     ) -> "SanitizedDiagnostic":
@@ -392,6 +430,7 @@ class GatedReadOnlyProviderAdapter:
                 raise ProviderActivationError("Betfair requires server-side app key and session token")
             headers = {"X-Application": app_key, "X-Authentication": session_token, "Content-Type": "application/json"}
             method_name = endpoint.description.split(" ", 1)[0]
+            params = self._betfair_params(view=view, date=date, venue=venue, market_ids=market_ids, page_size=None)
             body = {"jsonrpc": "2.0", "method": f"SportsAPING/v1.0/{method_name}", "params": params, "id": 1}
             params = {}
         assert self._transport is not None

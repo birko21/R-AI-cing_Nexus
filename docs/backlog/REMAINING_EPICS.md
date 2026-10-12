@@ -1,7 +1,9 @@
 # Remaining epics and execution register
 
 **Plan date:** 2026-10-12  
-**Operating boundary:** synthetic-only, read-only, non-wagering, fail-closed
+**Operating boundary:** synthetic by default; owner-triggered live read-only
+capture is prepared but remains disabled until local credentials and named
+approval records are configured. No wagering, trading or automatic actions.
 
 This register is the executable remainder after the completed foundation work.
 Tickets marked `COMPLETE` have local implementation and automated evidence.
@@ -42,8 +44,10 @@ repository.
 |---|---|---|---|
 | R4.1 | Maintain provider-neutral adapter, capability and entitlement contracts. | COMPLETE | `services/api/app/providers.py`, provider evidence fixtures |
 | R4.2 | Prepare source-specific decision packs and reconciliation acceptance criteria. | COMPLETE | `docs/provider/` |
-| R4.3 | Activate FormFav, PuntersEdge, Krok or Betfair transports. | BLOCKED_EXTERNAL | Written rights, credentials, retention and model-use approvals absent |
-| R4.4 | Validate licensed historical data for walk-forward research. | BLOCKED_EXTERNAL | RIL-077 approval pack |
+| R4.3 | Add secure owner-configured runtime wiring, non-secret status and bounded live capture command. | COMPLETE | `services/api/app/live_provider_runtime.py`, `scripts/run_live_provider_capture.py`, `docs/provider/LIVE_PROVIDER_ACTIVATION.md` |
+| R4.4 | Run first owner-controlled connectivity diagnostic without raw retention. | BLOCKED_EXTERNAL | Requires local provider key and two PuntersEdge diagnostic approval records; no key is configured in this workspace |
+| R4.5 | Activate retained provider envelopes and provider-specific canonical parsers. | BLOCKED_EXTERNAL | Requires named retention/model-use approval and a real response sample for schema reconciliation |
+| R4.6 | Validate licensed historical data for walk-forward research. | BLOCKED_EXTERNAL | RIL-077 approval pack and provider export/coverage evidence |
 
 ## Epic R5 — Independent assurance and visual review
 
@@ -63,8 +67,10 @@ repository.
 
 ## Completion rule
 
-R1–R3 local tickets and R4.1–R4.2/R5.1 are complete in this branch. The
-remaining tickets are not safe to simulate: they require provider contracts,
-credentials, hosted resources, independent reviewers or owner approval. No
-ticket in this register grants activation, wagering, promotion or deployment
+R1–R3 local tickets, R4.1–R4.3 and R5.1 are complete in this branch. The
+first real request is now an operator action requiring the owner’s local key
+and approval record; this workspace currently has neither configured. The
+remaining tickets are not safe to simulate: they require provider responses,
+retention/model-use evidence, hosted resources, independent reviewers or
+owner approval. No ticket grants activation, wagering, promotion or deployment
 authority.
