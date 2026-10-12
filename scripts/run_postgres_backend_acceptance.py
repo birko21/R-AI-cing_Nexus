@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 import json
 import os
 from pathlib import Path
@@ -28,7 +28,7 @@ def main() -> None:
     validate_disposable_database_url()
     engine = create_engine(os.environ["DATABASE_URL"])
     adapter = SyntheticBetfairExchangeAdapter()
-    now = adapter.markets[0].market_start_time + timedelta(hours=1)
+    now = datetime.now(timezone.utc)
     with engine.begin() as connection:
         for market in adapter.markets:
             envelope = adapter.fetch("GET_MARKETS", code=market.code).records[0]
