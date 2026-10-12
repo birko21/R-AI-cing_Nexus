@@ -71,6 +71,7 @@ jobs:
           python scripts/run_postgres_synthetic_ingestion.py --replay-id db-smoke-primary
           python scripts/run_postgres_synthetic_ingestion.py --replay-id db-smoke-primary
           python scripts/run_postgres_synthetic_ingestion.py --replay-id db-smoke-replay
+          python scripts/run_postgres_backend_acceptance.py
       - name: Exercise downgrade and clean re-upgrade
         run: |
           python -m alembic -c alembic.ini downgrade base
@@ -112,6 +113,7 @@ jobs:
           python scripts/generate_b1_forecast_manifest.py
           python scripts/run_synthetic_ingestion.py
           python scripts/prove_synthetic_vertical.py
+          python scripts/pressure_test_synthetic_pipeline.py
           python scripts/generate_ablation_fixture.py
           python scripts/generate_assurance_fixture.py
           python scripts/generate_release_gate_fixture.py

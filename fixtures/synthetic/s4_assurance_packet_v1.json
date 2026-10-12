@@ -28,6 +28,11 @@
       "present": true
     },
     {
+      "key": "backend_acceptance",
+      "path": "docs/evidence/ril-020/backend-acceptance.md",
+      "present": true
+    },
+    {
       "key": "release_gate",
       "path": "docs/models/RELEASE_GATE_EVIDENCE.md",
       "present": true
@@ -45,7 +50,7 @@
   ],
   "missing_machine_evidence": [],
   "note": "Preparation packet only; no human approval, rights grant, provider activation, production deployment or model promotion is inferred.",
-  "packet_hash": "a8136e6c4ade80264b499f9c38ceef0d6239ec54bfa2df94ecd69b2809b1d23b",
+  "packet_hash": "b814ebe3d56cc7eb4cc47e76d34e85b2d39e0676c32c6e982434a4d0a5deca53",
   "promotion_authority": "NONE",
   "release_gate": {
     "activation_authority": "NONE",

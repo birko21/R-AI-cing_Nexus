@@ -9,6 +9,7 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.auth import forecasts_read, races_read, selections_read, selections_write, validate_bind_configuration
+from app.catalog_repository import PostgresCatalogRepository, SyntheticCatalogRepository, offset_from_cursor
 from app.contracts import (
     CodeSummary,
     CodeListResponse,
@@ -27,7 +28,7 @@ from app.contracts import (
     SystemStatusResponse,
 )
 from app.pagination import paging_parameters
-from app.selection_journal import SelectionJournal, SelectionJournalError
+from app.selection_journal import PostgresSelectionJournal, SelectionJournal, SelectionJournalError
 
 
 @asynccontextmanager
@@ -42,7 +43,19 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-journal = SelectionJournal()
+def _runtime_repositories():
+    if os.environ.get("NEXUS_API_PERSISTENCE", "synthetic").strip().lower() == "postgres":
+        database_url = os.environ.get("DATABASE_URL")
+        if not database_url:
+            raise RuntimeError("DATABASE_URL is required when NEXUS_API_PERSISTENCE=postgres")
+        from sqlalchemy import create_engine
+
+        engine = create_engine(database_url, pool_pre_ping=True)
+        return PostgresSelectionJournal(engine), PostgresCatalogRepository(engine)
+    return SelectionJournal(), SyntheticCatalogRepository()
+
+
+journal, catalog = _runtime_repositories()
 
 
 def _cors_origins() -> list[str]:
@@ -115,8 +128,11 @@ def system_status() -> SystemStatusResponse:
     )
 
 
-def _page_meta(limit: int, as_of: datetime) -> PageMeta:
-    return PageMeta(limit=limit, next_cursor=None, as_of=as_of)
+def _page_meta(limit: int, as_of: datetime, *, offset: int = 0, has_more: bool = False) -> PageMeta:
+    from app.pagination import encode_cursor
+
+    next_cursor = encode_cursor(as_of, offset + limit, {}) if has_more else None
+    return PageMeta(limit=limit, next_cursor=next_cursor, as_of=as_of)
 
 
 @app.get("/v1/codes", response_model=CodeListResponse, tags=["races"], dependencies=[Depends(races_read)])
@@ -132,25 +148,38 @@ def list_codes(paging: tuple[int, str | None, datetime] = Depends(paging_paramet
 
 @app.get("/v1/meetings", response_model=MeetingListResponse, tags=["races"], dependencies=[Depends(races_read)])
 def list_meetings(paging: tuple[int, str | None, datetime] = Depends(paging_parameters)) -> MeetingListResponse:
-    limit, _, as_of = paging
-    return MeetingListResponse(items=[], meta=_page_meta(limit, as_of))
+    limit, cursor, as_of = paging
+    offset = offset_from_cursor(cursor, as_of=as_of)
+    items, has_more = catalog.list_meetings(limit=limit, offset=offset, as_of=as_of)
+    return MeetingListResponse(items=items, meta=_page_meta(limit, as_of, offset=offset, has_more=has_more))
 
 
 @app.get("/v1/races/{race_id}", response_model=Race, tags=["races"], dependencies=[Depends(races_read)])
-def get_race(race_id: str, _: tuple[int, str | None, datetime] = Depends(paging_parameters)) -> Race:
-    raise HTTPException(status_code=404, detail=f"race {race_id} was not found")
+def get_race(race_id: str, paging: tuple[int, str | None, datetime] = Depends(paging_parameters)) -> Race:
+    race = catalog.get_race(race_id, as_of=paging[2])
+    if race is None:
+        raise HTTPException(status_code=404, detail=f"race {race_id} was not found")
+    return race
 
 
 @app.get("/v1/races/{race_id}/entries", response_model=EntryListResponse, tags=["races"], dependencies=[Depends(races_read)])
 def list_entries(race_id: str, paging: tuple[int, str | None, datetime] = Depends(paging_parameters)) -> EntryListResponse:
-    limit, _, as_of = paging
-    return EntryListResponse(items=[], meta=_page_meta(limit, as_of))
+    limit, cursor, as_of = paging
+    if catalog.get_race(race_id, as_of=as_of) is None:
+        raise HTTPException(status_code=404, detail=f"race {race_id} was not found")
+    offset = offset_from_cursor(cursor, as_of=as_of)
+    items, has_more = catalog.list_entries(race_id, limit=limit, offset=offset, as_of=as_of)
+    return EntryListResponse(items=items, meta=_page_meta(limit, as_of, offset=offset, has_more=has_more))
 
 
 @app.get("/v1/races/{race_id}/forecasts", response_model=ForecastListResponse, tags=["forecasts"], dependencies=[Depends(forecasts_read)])
 def list_forecasts(race_id: str, paging: tuple[int, str | None, datetime] = Depends(paging_parameters)) -> ForecastListResponse:
-    limit, _, as_of = paging
-    return ForecastListResponse(items=[], meta=_page_meta(limit, as_of))
+    limit, cursor, as_of = paging
+    if catalog.get_race(race_id, as_of=as_of) is None:
+        raise HTTPException(status_code=404, detail=f"race {race_id} was not found")
+    offset = offset_from_cursor(cursor, as_of=as_of)
+    items, has_more = catalog.list_forecasts(race_id, limit=limit, offset=offset, as_of=as_of)
+    return ForecastListResponse(items=items, meta=_page_meta(limit, as_of, offset=offset, has_more=has_more))
 
 
 @app.get("/v1/selections", response_model=SelectionListResponse, tags=["selections"])

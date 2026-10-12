@@ -30,3 +30,7 @@ The associated verification run also passed 307 API tests, frontend typecheck,
 frontend unit tests with `VITE_AUTH_REQUIRED=true`, the production frontend
 build, all seven Playwright/axe browser tests, the security audit, contract
 validation, and Render Blueprint validation.
+
+The pressure harness repeats the ingestion/replay path across 25 cycles, checks
+25 deterministic replay-manifest regenerations, and executes 25 tamper cases.
+It is included in CI alongside the single-run proof.

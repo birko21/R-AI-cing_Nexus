@@ -18,6 +18,7 @@ REQUIRED_EVIDENCE: tuple[tuple[str, str], ...] = (
     ("postgres_smoke", "docs/evidence/ril-011/postgres-smoke.md"),
     ("operational_controls", "docs/evidence/ril-057/operational-controls-ci.md"),
     ("synthetic_vertical_proof", "docs/evidence/ril-020/synthetic-vertical-proof.md"),
+    ("backend_acceptance", "docs/evidence/ril-020/backend-acceptance.md"),
     ("release_gate", "docs/models/RELEASE_GATE_EVIDENCE.md"),
     ("provider_rights_gap", "docs/provider/SOURCE_LICENSING_GAP_REPORT.md"),
     ("model_assurance", "docs/models/MODEL_ASSURANCE_WORKFLOW.md"),
