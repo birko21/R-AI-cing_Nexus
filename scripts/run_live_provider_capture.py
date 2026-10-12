@@ -12,6 +12,7 @@ import argparse
 from collections.abc import Mapping
 from datetime import date
 import json
+import os
 from pathlib import Path
 import sys
 
@@ -24,6 +25,8 @@ from app.live_provider_runtime import (  # noqa: E402
     configured_provider_status,
 )
 from app.provider_diagnostics import BoundedDiagnosticSession, DiagnosticPolicy  # noqa: E402
+from app.live_ingestion import persist_approved_live_envelope  # noqa: E402
+from app.betfair_live_projection import project_betfair_catalogue  # noqa: E402
 
 
 DEFAULT_OPERATION = {
@@ -102,6 +105,8 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--market-id", action="append", dest="market_ids", help="Betfair market ID; repeat for listMarketBook")
     parser.add_argument("--page-size", type=int, default=100)
     parser.add_argument("--persist", action="store_true", help="retain the approved raw envelope under data/live/raw")
+    parser.add_argument("--persist-postgres", action="store_true", help="persist the approved raw envelope and source receipt to DATABASE_URL")
+    parser.add_argument("--project-betfair", action="store_true", help="project an approved Betfair catalogue into canonical PostgreSQL race/entry tables")
     parser.add_argument("--diagnostic", action="store_true", help="run aggregate-only diagnostics; no raw payload is retained")
     parser.add_argument("--output-dir", type=Path, default=ROOT / "data" / "live" / "raw")
     parser.add_argument("--status", action="store_true", help="show non-secret provider configuration status and exit")
@@ -125,6 +130,10 @@ def main() -> int:
         raise SystemExit("--view book is only valid for betfair-exchange")
     if args.view == "book" and not args.market_ids:
         raise SystemExit("Betfair listMarketBook requires at least one --market-id from a prior catalogue capture")
+    if args.persist and args.persist_postgres:
+        raise SystemExit("choose either --persist or --persist-postgres")
+    if args.project_betfair and (args.provider != "betfair-exchange" or args.view != "catalogue" or not args.persist_postgres):
+        raise SystemExit("--project-betfair requires betfair-exchange catalogue mode with --persist-postgres")
     if args.page_size < 1 or args.page_size > 100:
         raise SystemExit("--page-size must be between 1 and 100")
 
@@ -132,7 +141,7 @@ def main() -> int:
     try:
         handle = build_live_provider_handle(args.provider)
         if args.diagnostic:
-            if args.persist:
+            if args.persist or args.persist_postgres:
                 raise ProviderActivationError("diagnostic mode cannot persist raw provider data")
             if not handle.config.diagnostics_enabled:
                 raise ProviderActivationError("diagnostics are disabled; set NEXUS_DIAGNOSTICS_ENABLED=true explicitly")
@@ -184,6 +193,22 @@ def main() -> int:
             "persisted": False,
             "summary": _summary(envelope),
         }
+        if args.persist_postgres:
+            database_url = os.environ.get("DATABASE_URL", "").strip()
+            if not database_url:
+                raise ProviderActivationError("DATABASE_URL is required for --persist-postgres")
+            if _contains_sensitive_key(envelope.payload):
+                raise ProviderActivationError("provider payload contains a sensitive field name; PostgreSQL persistence stopped")
+            from sqlalchemy import create_engine
+
+            engine = create_engine(database_url, pool_pre_ping=True)
+            try:
+                with engine.begin() as connection:
+                    result["postgres"] = persist_approved_live_envelope(connection, envelope)
+                    result["projected"] = project_betfair_catalogue(connection, envelope) if args.project_betfair else None
+            finally:
+                engine.dispose()
+            result["persisted"] = True
         if args.persist:
             if _contains_sensitive_key(envelope.payload):
                 raise ProviderActivationError("provider payload contains a sensitive field name; raw persistence stopped")

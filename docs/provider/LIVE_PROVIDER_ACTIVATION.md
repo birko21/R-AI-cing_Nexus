@@ -91,6 +91,18 @@ JSON-RPC calls. `listMarketBook` is deliberately a second step because it
 requires market IDs returned by the catalogue. Neither path can place an
 order.
 
+Once PostgreSQL is migrated and the catalogue rights record explicitly allows
+retention, the catalogue can also be projected into the canonical read model:
+
+```powershell
+$env:NEXUS_PROVIDER_BETFAIR_ENABLED = 'true'
+.\.venv\Scripts\python.exe scripts\run_live_provider_capture.py --provider betfair-exchange --operation GET_MARKETS --view catalogue --date 2026-10-12 --persist-postgres --project-betfair
+```
+
+The projection is intentionally limited to meeting/race/runner identity and
+field status. It creates no forecast. Invalid race numbers, missing market
+identity, duplicate selections or missing timestamps abort the transaction.
+
 ## Current boundary
 
 This first activation milestone proves real connectivity and preserves raw
