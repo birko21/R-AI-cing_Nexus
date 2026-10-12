@@ -28,7 +28,6 @@ def main() -> None:
     validate_disposable_database_url()
     engine = create_engine(os.environ["DATABASE_URL"])
     adapter = SyntheticBetfairExchangeAdapter()
-    now = datetime.now(timezone.utc)
     with engine.begin() as connection:
         for market in adapter.markets:
             envelope = adapter.fetch("GET_MARKETS", code=market.code).records[0]
@@ -62,6 +61,7 @@ def main() -> None:
             )
             append_forecast_manifest(connection, manifest)
 
+    now = datetime.now(timezone.utc) + timedelta(seconds=1)
     catalog = PostgresCatalogRepository(engine)
     meetings, meetings_more = catalog.list_meetings(limit=10, offset=0, as_of=now)
     race = catalog.get_race("race:1", as_of=now)
