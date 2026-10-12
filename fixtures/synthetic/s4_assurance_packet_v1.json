@@ -23,6 +23,11 @@
       "present": true
     },
     {
+      "key": "synthetic_vertical_proof",
+      "path": "docs/evidence/ril-020/synthetic-vertical-proof.md",
+      "present": true
+    },
+    {
       "key": "release_gate",
       "path": "docs/models/RELEASE_GATE_EVIDENCE.md",
       "present": true
@@ -40,7 +45,7 @@
   ],
   "missing_machine_evidence": [],
   "note": "Preparation packet only; no human approval, rights grant, provider activation, production deployment or model promotion is inferred.",
-  "packet_hash": "1d708cc5537bad0b28b2df5237b01dde5085da0956febb04e083f388a5c08ac0",
+  "packet_hash": "a8136e6c4ade80264b499f9c38ceef0d6239ec54bfa2df94ecd69b2809b1d23b",
   "promotion_authority": "NONE",
   "release_gate": {
     "activation_authority": "NONE",
@@ -82,22 +87,22 @@
     },
     {
       "key": "accessibility_review",
-      "reason": "independent WCAG and real-device review required",
+      "reason": "automated browser and axe checks pass; independent WCAG and real-device review required",
       "status": "PENDING"
     },
     {
       "key": "racing_domain_review",
-      "reason": "named specialists must review all three codes",
+      "reason": "synthetic three-code contracts and vertical processing pass; named specialists must review all three codes",
       "status": "PENDING"
     },
     {
       "key": "model_assurance_review",
-      "reason": "independent assurance and owner decision required",
+      "reason": "forecast/archive replay and synthetic assurance pass; independent assurance and owner decision required",
       "status": "PENDING"
     },
     {
       "key": "security_owner_review",
-      "reason": "security owner must accept isolation and operational controls",
+      "reason": "security audit, contract, blueprint and fail-closed controls pass; security owner must accept isolation and operational controls",
       "status": "PENDING"
     },
     {

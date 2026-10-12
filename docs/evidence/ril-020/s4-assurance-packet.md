@@ -11,12 +11,15 @@ Machine evidence currently mapped:
 - disposable PostgreSQL smoke;
 - operational, backup, retention, budget, and egress controls;
 - the hashed release gate;
+- the synthetic ingestion-to-forecast vertical proof;
 - provider rights gap analysis; and
 - model-assurance workflow.
 
-The packet deliberately leaves visual-owner, accessibility, racing-domain,
-model-assurance, security-owner, OIDC, and provider-rights gates pending or
-blocked external dependencies. It has no activation or promotion authority,
+The packet deliberately leaves the visual-owner gate until last. Automated
+browser/axe, three-code contract, synthetic forecast/archive, security, and
+Render-isolation checks may pass, but accessibility, racing-domain,
+model-assurance, security-owner, OIDC, and provider-rights gates remain pending
+or blocked external dependencies. It has no activation or promotion authority,
 and it records external connectivity and wagering as disabled.
 
 Generate and verify it with:

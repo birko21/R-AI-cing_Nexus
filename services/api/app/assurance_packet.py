@@ -17,6 +17,7 @@ REQUIRED_EVIDENCE: tuple[tuple[str, str], ...] = (
     ("workspace_atlas", "docs/evidence/ril-018/workspace-atlas.md"),
     ("postgres_smoke", "docs/evidence/ril-011/postgres-smoke.md"),
     ("operational_controls", "docs/evidence/ril-057/operational-controls-ci.md"),
+    ("synthetic_vertical_proof", "docs/evidence/ril-020/synthetic-vertical-proof.md"),
     ("release_gate", "docs/models/RELEASE_GATE_EVIDENCE.md"),
     ("provider_rights_gap", "docs/provider/SOURCE_LICENSING_GAP_REPORT.md"),
     ("model_assurance", "docs/models/MODEL_ASSURANCE_WORKFLOW.md"),
@@ -24,10 +25,10 @@ REQUIRED_EVIDENCE: tuple[tuple[str, str], ...] = (
 
 REVIEW_GATES: tuple[tuple[str, PacketStatus, str], ...] = (
     ("visual_owner_review", "PENDING", "creative owner must compare approved references"),
-    ("accessibility_review", "PENDING", "independent WCAG and real-device review required"),
-    ("racing_domain_review", "PENDING", "named specialists must review all three codes"),
-    ("model_assurance_review", "PENDING", "independent assurance and owner decision required"),
-    ("security_owner_review", "PENDING", "security owner must accept isolation and operational controls"),
+    ("accessibility_review", "PENDING", "automated browser and axe checks pass; independent WCAG and real-device review required"),
+    ("racing_domain_review", "PENDING", "synthetic three-code contracts and vertical processing pass; named specialists must review all three codes"),
+    ("model_assurance_review", "PENDING", "forecast/archive replay and synthetic assurance pass; independent assurance and owner decision required"),
+    ("security_owner_review", "PENDING", "security audit, contract, blueprint and fail-closed controls pass; security owner must accept isolation and operational controls"),
     ("oidc_production_configuration", "BLOCKED_EXTERNAL_DEPENDENCY", "approved issuer, audience and deployment configuration required"),
     ("provider_rights_and_credentials", "BLOCKED_EXTERNAL_DEPENDENCY", "written rights, credentials and retention terms required"),
 )
