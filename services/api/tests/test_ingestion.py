@@ -98,6 +98,43 @@ def test_store_quarantines_same_id_with_changed_payload() -> None:
     assert next(iter(store.quarantine_records.values())).reason_code == "UNRESOLVED_IDENTITY"
 
 
+def test_worker_projects_persisted_and_replayed_envelopes() -> None:
+    projected: list[str] = []
+    ingestion = SyntheticIngestionWorker(
+        ContractedProviderAdapter(SyntheticBetfairExchangeAdapter()),
+        projector=lambda envelope: projected.append(envelope.envelope_id),
+    )
+
+    ingestion.enqueue(code="THOROUGHBRED", replay_id="projection-first")
+    first = ingestion.run_until_idle()
+    ingestion.enqueue(code="THOROUGHBRED", replay_id="projection-replay")
+    second = ingestion.run_until_idle()
+
+    assert first.envelopes_persisted == 1
+    assert second.envelopes_skipped == 1
+    assert projected == ["synthetic-betfair:bf.au.tb.1001", "synthetic-betfair:bf.au.tb.1001"]
+
+
+def test_worker_retries_projection_failures_and_does_not_claim_success() -> None:
+    def failing_projector(_envelope) -> None:
+        raise RuntimeError("canonical projection unavailable")
+
+    ingestion = SyntheticIngestionWorker(
+        ContractedProviderAdapter(SyntheticBetfairExchangeAdapter()),
+        projector=failing_projector,
+    )
+    ingestion.enqueue(code="THOROUGHBRED", max_attempts=2)
+
+    summary = ingestion.run_until_idle()
+
+    assert summary.jobs_failed == 1
+    assert summary.envelopes_persisted == 0
+    job = next(iter(ingestion.store.jobs.values()))
+    assert job.status == "FAILED"
+    assert job.attempt == 2
+    assert "canonical projection unavailable" in (job.error or "")
+
+
 def test_postgres_store_job_mapping_is_round_trip_safe() -> None:
     now = datetime(2026, 1, 15, 2, 0, tzinfo=timezone.utc)
     job = IngestionJob(

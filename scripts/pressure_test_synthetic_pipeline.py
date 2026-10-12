@@ -12,7 +12,11 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "services" / "api"))
 
-from app.betfair_mock import SyntheticBetfairExchangeAdapter, build_synthetic_betfair_replay_manifest  # noqa: E402
+from app.betfair_mock import (  # noqa: E402
+    SyntheticBetfairExchangeAdapter,
+    build_synthetic_betfair_replay_manifest,
+    reconcile_synthetic_betfair_replay_manifest,
+)
 from app.ingestion import InMemoryIngestionStore, SyntheticIngestionWorker  # noqa: E402
 from app.providers import ContractedProviderAdapter  # noqa: E402
 from app.synthetic_acceptance import run_synthetic_vertical_proof  # noqa: E402
@@ -54,7 +58,9 @@ def main() -> None:
     for _ in range(25):
         mutated = deepcopy(manifest)
         mutated["record_count"] = 999
-        assert mutated != manifest
+        report = reconcile_synthetic_betfair_replay_manifest(mutated)
+        assert report.status == "MISMATCH"
+        assert "record_count differs from deterministic source" in report.mismatches
         tamper_checks += 1
 
     print(json.dumps({

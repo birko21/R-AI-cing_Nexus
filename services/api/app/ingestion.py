@@ -530,7 +530,13 @@ class PostgresIngestionStore:
 
 
 class SyntheticIngestionWorker:
-    """Run bounded, replayable work against a synthetic adapter only."""
+    """Run bounded, replayable work against a synthetic adapter only.
+
+    ``projector`` is an optional idempotent callback invoked after a raw
+    envelope is persisted or recognized as a checksum-identical replay. A
+    projection failure is treated as a retryable job failure so raw receipt
+    persistence cannot silently masquerade as a completed canonical update.
+    """
 
     def __init__(
         self,
@@ -541,6 +547,7 @@ class SyntheticIngestionWorker:
         default_max_attempts: int = 3,
         worker_id: str = "synthetic-local-worker",
         lease_seconds: int = 60,
+        projector: Callable[[RawEnvelope], None] | None = None,
     ) -> None:
         if adapter.capabilities.data_mode != "SYNTHETIC_ONLY" or adapter.capabilities.rights_state != "SYNTHETIC":
             raise ValueError("the local worker accepts synthetic-only adapters")
@@ -556,6 +563,7 @@ class SyntheticIngestionWorker:
         self.default_max_attempts = default_max_attempts
         self.worker_id = worker_id
         self.lease_seconds = lease_seconds
+        self.projector = projector
 
     def enqueue(
         self,
@@ -598,33 +606,38 @@ class SyntheticIngestionWorker:
         except Exception as exc:  # provider transport and contract failures are job outcomes
             return self._handle_failure(job, exc)
 
-        persisted = skipped = quarantined = 0
-        for record in page.records:
-            result = ingest_raw_envelope(record.model_dump(mode="json"))
-            if result.quarantine is not None:
-                self.store.append_quarantine(result.quarantine)
-                quarantined += 1
-                continue
-            assert result.envelope is not None
-            disposition = self.store.append_envelope(result.envelope)
-            if disposition == "PERSISTED":
-                persisted += 1
-            elif disposition == "DUPLICATE":
-                skipped += 1
-            else:
-                quarantined += 1
+        try:
+            persisted = skipped = quarantined = 0
+            for record in page.records:
+                result = ingest_raw_envelope(record.model_dump(mode="json"))
+                if result.quarantine is not None:
+                    self.store.append_quarantine(result.quarantine)
+                    quarantined += 1
+                    continue
+                assert result.envelope is not None
+                disposition = self.store.append_envelope(result.envelope)
+                if disposition == "PERSISTED":
+                    persisted += 1
+                elif disposition == "DUPLICATE":
+                    skipped += 1
+                else:
+                    quarantined += 1
+                if self.projector is not None and disposition in {"PERSISTED", "DUPLICATE"}:
+                    self.projector(result.envelope)
 
-        continuation_job_id = None
-        if page.next_cursor is not None:
-            continuation = self.enqueue(
-                code=job.code,
-                operation=job.operation,
-                cursor=page.next_cursor,
-                page_size=job.page_size,
-                replay_id=job.replay_id,
-                max_attempts=job.max_attempts,
-            )
-            continuation_job_id = continuation.job_id
+            continuation_job_id = None
+            if page.next_cursor is not None:
+                continuation = self.enqueue(
+                    code=job.code,
+                    operation=job.operation,
+                    cursor=page.next_cursor,
+                    page_size=job.page_size,
+                    replay_id=job.replay_id,
+                    max_attempts=job.max_attempts,
+                )
+                continuation_job_id = continuation.job_id
+        except Exception as exc:
+            return self._handle_failure(job, exc)
 
         finished_at = self.clock()
         return self.store.mark_succeeded(

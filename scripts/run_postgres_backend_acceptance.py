@@ -20,6 +20,8 @@ from app.catalog_repository import PostgresCatalogRepository  # noqa: E402
 from app.contracts import SelectionAddendumCreate, SelectionCreate  # noqa: E402
 from app.database_safety import validate_disposable_database_url  # noqa: E402
 from app.forecast_archive import create_forecast_manifest  # noqa: E402
+from app.ingestion import PostgresIngestionStore, SyntheticIngestionWorker  # noqa: E402
+from app.providers import ContractedProviderAdapter  # noqa: E402
 from app.selection_journal import PostgresSelectionJournal  # noqa: E402
 from app.synthetic_projection import append_forecast_manifest, project_synthetic_market  # noqa: E402
 
@@ -29,9 +31,25 @@ def main() -> None:
     engine = create_engine(os.environ["DATABASE_URL"])
     adapter = SyntheticBetfairExchangeAdapter()
     with engine.begin() as connection:
+        markets_by_source = {f"betfair:market:{market.market_id}": market for market in adapter.markets}
+
+        def project(envelope):
+            project_synthetic_market(connection, markets_by_source[envelope.source_identifier], envelope)
+
+        worker = SyntheticIngestionWorker(
+            ContractedProviderAdapter(adapter),
+            store=PostgresIngestionStore(connection),
+            worker_id="backend-acceptance-worker",
+            projector=project,
+        )
+        for code in ("THOROUGHBRED", "HARNESS", "GREYHOUND"):
+            worker.enqueue(code=code, page_size=1, replay_id="backend-acceptance")
+        summary = worker.run_until_idle()
+        assert summary.jobs_failed == 0
+        assert summary.envelopes_persisted == 3
+
         for market in adapter.markets:
             envelope = adapter.fetch("GET_MARKETS", code=market.code).records[0]
-            project_synthetic_market(connection, market, envelope)
             cutoff = market.market_start_time - timedelta(minutes=5)
             forecast = build_b0_forecast(
                 BaselineRace(

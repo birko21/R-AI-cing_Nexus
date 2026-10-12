@@ -7,9 +7,12 @@ synthetic mode and adds an explicit PostgreSQL composition:
   point-in-time filtering and signed cursor pagination;
 - `app.synthetic_projection` projects validated synthetic envelopes into the
   canonical PostgreSQL identity tables and forecast archive;
+- `SyntheticIngestionWorker` can invoke an idempotent canonical projection hook
+  after raw-envelope persistence, including on checksum-identical replays;
 - `PostgresSelectionJournal` persists append-only selections and addenda;
-- `scripts/run_postgres_backend_acceptance.py` verifies three-code PostgreSQL
-  projections, forecast reads and durable selection persistence; and
+- `scripts/run_postgres_backend_acceptance.py` verifies the real PostgreSQL
+  worker-to-projection path, three-code reads, forecast archives and durable
+  selection persistence; and
 - `scripts/pressure_test_synthetic_pipeline.py` repeats replay processing for
   25 cycles, regenerates the replay manifest 25 times and exercises 25 tamper
   cases.
@@ -20,6 +23,6 @@ the full migration set. No provider credential or external transport is
 enabled by this work.
 
 The acceptance boundary is intentionally narrow: it proves persistence,
-identity, temporal filtering, replay and fail-closed behaviour. It does not
-claim licensed provider access, real-world model accuracy or production
-approval.
+identity, temporal filtering, replay, projection idempotency and fail-closed
+behaviour. It does not claim licensed provider access, real-world model
+accuracy or production approval.

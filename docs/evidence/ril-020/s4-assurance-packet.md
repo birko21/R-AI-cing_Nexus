@@ -12,6 +12,7 @@ Machine evidence currently mapped:
 - operational, backup, retention, budget, and egress controls;
 - the hashed release gate;
 - the synthetic ingestion-to-forecast vertical proof;
+- the PostgreSQL worker-to-canonical backend acceptance;
 - provider rights gap analysis; and
 - model-assurance workflow.
 
