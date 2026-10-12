@@ -46,7 +46,7 @@ repository.
 | R4.2 | Prepare source-specific decision packs and reconciliation acceptance criteria. | COMPLETE | `docs/provider/` |
 | R4.3 | Add secure owner-configured runtime wiring, non-secret status and bounded live capture command. | COMPLETE | `services/api/app/live_provider_runtime.py`, `scripts/run_live_provider_capture.py`, `docs/provider/LIVE_PROVIDER_ACTIVATION.md` |
 | R4.4 | Run first owner-controlled connectivity diagnostic without raw retention. | BLOCKED_EXTERNAL | Requires local provider key and two PuntersEdge diagnostic approval records; no key is configured in this workspace |
-| R4.5 | Activate retained provider envelopes and provider-specific canonical parsers. | BLOCKED_EXTERNAL | Requires named retention/model-use approval and a real response sample for schema reconciliation |
+| R4.5 | Activate retained provider envelopes and provider-specific canonical parsers. | PARTIAL_LOCAL | Generic approved-envelope persistence plus Betfair catalogue parsing/projection are implemented; real response validation, provider form/results parsers and PostgreSQL credentials remain outstanding |
 | R4.6 | Validate licensed historical data for walk-forward research. | BLOCKED_EXTERNAL | RIL-077 approval pack and provider export/coverage evidence |
 
 ## Epic R5 — Independent assurance and visual review

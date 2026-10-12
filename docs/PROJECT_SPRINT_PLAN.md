@@ -57,7 +57,8 @@ staking, weaken authentication, deploy the product, or alter The Long Straight.
 | S4.3 | NXD-020 | **DELIBERATELY LAST** — visual-owner comparison is held until the executable data and safety path is accepted. | Named creative owner must compare the approved reference set and record the verdict. |
 | T-B.2 | RIL-021–030, 069–071 | **SAFE FOUNDATION COMPLETE** — deterministic B0/B1 forecast manifests, specialist lanes, ablation report and assurance packet are replayable synthetic artifacts and B0/B1 generation is now CI-checked. | Independent reviewer references, owner decision, approved historical rights and no automatic promotion. |
 | T-D.1 | RIL-072–077 | **LOCAL ACTIVATION SEAM COMPLETE** — secure environment-driven provider runtime, Betfair catalogue/book request separation, non-secret status, bounded diagnostic and one-capture commands are implemented and tested offline. | Owner-configured key, named approval record and a real response sample. |
-| T-D.2 | RIL-072–077 | **BLOCKED_EXTERNAL_DEPENDENCY** — first live diagnostic/capture is ready to run. | Provider-specific parser, identity reconciliation, retention/model-use approval and chronological real-data evaluation. |
+| T-D.2 | RIL-072–077 | **BETFAIR CATALOGUE PROJECTION COMPLETE LOCALLY** — approved raw envelopes, source receipts, fail-closed catalogue parsing and canonical meeting/race/entry projection are implemented. | Live Betfair response, PostgreSQL credentials, identity reconciliation and retention/model-use approval. |
+| T-D.3 | RIL-072–077 | **BLOCKED_EXTERNAL_DEPENDENCY** — first live diagnostic/capture is ready to run. | Provider-specific form/results parsers, chronological real-data evaluation and owner-configured provider access. |
 
 The remaining epic register is maintained in
 `docs/backlog/REMAINING_EPICS.md`. R1–R3 local engineering closure and the
