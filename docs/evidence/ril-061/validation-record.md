@@ -17,6 +17,16 @@
 | `pnpm run web:e2e` | 0 | Six browser/accessibility smoke tests passed; workbench screenshot generated |
 | `pnpm run validate` | 0 | Repository baseline validation passed after final staging |
 
+## Current reproducibility pressure
+
+The follow-up gate `scripts/pressure_test_data_science.py` runs the RIL-061
+and B3 generators twice, compares all four evidence artifact hashes, and
+requires six records covering LightGBM and CatBoost across thoroughbred,
+harness and greyhound. CatBoost model metadata is canonicalized so its UUID
+and wall-clock training timestamp cannot create false artifact drift. The
+latest run passed with `status=PASS`, `repetitions=2`,
+`validated_claim=false`, and `promotion_authority=NONE`.
+
 ## Safety boundary
 
 The branch contains no provider credentials, no live network adapter activation, no production deployment, no wagering/staking/trading execution and no automatic model promotion. Synthetic B3 results remain `ILLUSTRATIVE_SYNTHETIC_ONLY`.

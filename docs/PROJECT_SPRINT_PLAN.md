@@ -57,6 +57,12 @@ staking, weaken authentication, deploy the product, or alter The Long Straight.
 | T-B.2 | RIL-021–030, 069–071 | **SAFE FOUNDATION COMPLETE** — deterministic B0/B1 forecast manifests, specialist lanes, ablation report and assurance packet are replayable synthetic artifacts and B0/B1 generation is now CI-checked. | Independent reviewer references, owner decision, approved historical rights and no automatic promotion. |
 | T-D.1 | RIL-072–077 | **BLOCKED_EXTERNAL_DEPENDENCY** — prepare decision packs only. | Written provider rights, credentials, retention/model-use/display terms, cost/security approval and an approved historical dataset. |
 
+The remaining epic register is maintained in
+`docs/backlog/REMAINING_EPICS.md`. R1–R3 local engineering closure and the
+safe portions of R4–R5 are now executable and CI-backed; only provider,
+hosting, independent-review, owner-approval and final visual-gate tickets
+remain blocked or ready for external action.
+
 ## Legacy technical epic alignment
 
 The original RIL-001–060 backlog is executed through the following dependency

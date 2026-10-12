@@ -33,6 +33,16 @@
       "present": true
     },
     {
+      "key": "safe_completion_gate",
+      "path": "docs/evidence/ril-060/safe-completion-gate.json",
+      "present": true
+    },
+    {
+      "key": "data_science_pressure",
+      "path": "docs/evidence/ril-061/data-science-pressure.json",
+      "present": true
+    },
+    {
       "key": "release_gate",
       "path": "docs/models/RELEASE_GATE_EVIDENCE.md",
       "present": true
@@ -50,7 +60,7 @@
   ],
   "missing_machine_evidence": [],
   "note": "Preparation packet only; no human approval, rights grant, provider activation, production deployment or model promotion is inferred.",
-  "packet_hash": "b814ebe3d56cc7eb4cc47e76d34e85b2d39e0676c32c6e982434a4d0a5deca53",
+  "packet_hash": "28a0899ac4cc20b4eabda3885efa25a8a3c091b93cb7db580249729259574f32",
   "promotion_authority": "NONE",
   "release_gate": {
     "activation_authority": "NONE",

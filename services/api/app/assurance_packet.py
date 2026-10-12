@@ -19,6 +19,8 @@ REQUIRED_EVIDENCE: tuple[tuple[str, str], ...] = (
     ("operational_controls", "docs/evidence/ril-057/operational-controls-ci.md"),
     ("synthetic_vertical_proof", "docs/evidence/ril-020/synthetic-vertical-proof.md"),
     ("backend_acceptance", "docs/evidence/ril-020/backend-acceptance.md"),
+    ("safe_completion_gate", "docs/evidence/ril-060/safe-completion-gate.json"),
+    ("data_science_pressure", "docs/evidence/ril-061/data-science-pressure.json"),
     ("release_gate", "docs/models/RELEASE_GATE_EVIDENCE.md"),
     ("provider_rights_gap", "docs/provider/SOURCE_LICENSING_GAP_REPORT.md"),
     ("model_assurance", "docs/models/MODEL_ASSURANCE_WORKFLOW.md"),

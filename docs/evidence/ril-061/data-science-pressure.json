@@ -1,0 +1,27 @@
+{
+  "artifacts": {
+    "docs\\evidence\\ril-061\\b3-synthetic-evaluation.json": "cbb04c1609cf492ec169c277f54c102a2ced9a2a1247bdc1434bd2ed43967be2",
+    "docs\\evidence\\ril-061\\model-evaluation.json": "9d2d8aff97cad78f9363542d22dc29022d335d1b09ed0c00e95866348765ad62",
+    "docs\\evidence\\ril-061\\provider-readiness.json": "da11c8481af88c0429654b7174917898e9295328aacba13b952407ae053db4a7",
+    "docs\\evidence\\ril-061\\research-output.json": "df5fc5717d7f3684a9f21276ac5c6bb0b09c2ed41f5b9e15a59a375e8939e2da"
+  },
+  "coverage": {
+    "backends": [
+      "catboost",
+      "lightgbm"
+    ],
+    "codes": [
+      "GREYHOUND",
+      "HARNESS",
+      "THOROUGHBRED"
+    ],
+    "models": 6
+  },
+  "data_mode": "SYNTHETIC_ONLY",
+  "note": "Repeated deterministic benchmark and B3 generation produced identical artifact hashes; no real-world performance claim is made.",
+  "promotion_authority": "NONE",
+  "repetitions": 2,
+  "schema_version": "data-science-pressure-v1",
+  "status": "PASS",
+  "validated_claim": false
+}
