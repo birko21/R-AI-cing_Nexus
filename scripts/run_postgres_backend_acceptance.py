@@ -46,7 +46,10 @@ def main() -> None:
             worker.enqueue(code=code, page_size=1, replay_id="backend-acceptance")
         summary = worker.run_until_idle()
         assert summary.jobs_failed == 0
-        assert summary.envelopes_persisted == 3
+        # The preceding PostgreSQL smoke may already have persisted the raw
+        # receipts. Both fresh persistence and checksum-identical replay must
+        # drive the canonical projection hook.
+        assert summary.envelopes_persisted + summary.envelopes_skipped == 3
 
         for market in adapter.markets:
             envelope = adapter.fetch("GET_MARKETS", code=market.code).records[0]
