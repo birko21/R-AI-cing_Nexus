@@ -13,6 +13,11 @@ The current fixture is deliberately `LOCAL_SYNTHETIC_ONLY_HOLD`:
 - `activation_authority` and `promotion_authority` are permanently `NONE`;
 - wagering and external connectivity must remain disabled.
 
+The S4 packet at `fixtures/synthetic/s4_assurance_packet_v1.json` maps the
+machine evidence to the named visual, accessibility, racing-domain, model,
+security, OIDC, and provider-rights gates. It is a preparation artifact, not
+an approval record.
+
 The report is hashed so stale or edited gate states fail verification. A
 passing local pilot state would still be a scoped, owner-approved synthetic
 pilot; it would not authorize live providers, production deployment, model

@@ -49,6 +49,7 @@ staking, weaken authentication, deploy the product, or alter The Long Straight.
 | T-A.2 | G1 / RIL-011–016, 068 | **SAFE FOUNDATION COMPLETE** — disposable-target preflight, CI-backed PostgreSQL 16 migration/lease/replay smoke, durable synthetic-ingestion runner, ingestion-schema verification, and cutoff-boundary coverage are checked in. | Hosted worker/database/monitoring deployment and broader owner-approved as-of reconciliation remain gated. |
 | T-A.3 | G1 / RIL-011–016, 068 | **SAFE FOUNDATION COMPLETE** — separate durable producer (`--enqueue-only`) and signal-aware PostgreSQL synthetic consumer with one transaction per bounded job, cooperative `SIGTERM`/`SIGINT` drain, and finite `--once`/`--max-jobs` verification modes are checked in. | Hosted worker/database/monitoring deployment remains an owner-approved Render topology gate. |
 | S2.1 | NXD-012–019 | **SAFE ENGINEERING FOUNDATION COMPLETE** — responsive 14-entry workspace atlas, shared code/race/field/model context, synthetic-only degraded-state copy, linked research navigation, and desktop/tablet/mobile browser evidence are checked in. | Named visual-owner, accessibility, racing-domain/model-trust, rights and end-to-end narrative reviews remain HOLD gates. |
+| S4.1 | NXD-020–023 | **ASSURANCE PACKET COMPLETE** — machine evidence is mapped into a hashed S4 review packet with explicit pending and external-dependency statuses; no approval or activation authority is inferred. | Creative owner, independent accessibility/domain/model reviewers, security owner, OIDC owner, and rights owner must provide the actual decisions. |
 | T-B.2 | RIL-021–030, 069–071 | **SAFE FOUNDATION COMPLETE** — deterministic B0/B1 forecast manifests, specialist lanes, ablation report and assurance packet are replayable synthetic artifacts and B0/B1 generation is now CI-checked. | Independent reviewer references, owner decision, approved historical rights and no automatic promotion. |
 | T-D.1 | RIL-072–077 | **BLOCKED_EXTERNAL_DEPENDENCY** — prepare decision packs only. | Written provider rights, credentials, retention/model-use/display terms, cost/security approval and an approved historical dataset. |
 
@@ -115,10 +116,10 @@ provider, or production gate.
 
 | Ticket | Planned outcome | Current handling |
 |---|---|---|
-| NXD-020 | Reference-by-reference visual gate | Human creative-owner verdict required. |
-| NXD-021 | WCAG 2.2 AA and real-device usability review | Independent accessibility reviewer and device evidence required. |
-| NXD-022 | Three-code domain/model-trust review | Independent specialists and model-assurance reviewer required. |
-| NXD-023 | Security, rights, no-wagering, and deployed-isolation evidence | Engineering checks can be automated; legal/security acceptance remains human-owned. |
+| NXD-020 | Reference-by-reference visual gate | S4 packet prepared; human creative-owner verdict required. |
+| NXD-021 | WCAG 2.2 AA and real-device usability review | S4 packet prepared; independent accessibility reviewer and device evidence required. |
+| NXD-022 | Three-code domain/model-trust review | S4 packet prepared; independent specialists and model-assurance reviewer required. |
+| NXD-023 | Security, rights, no-wagering, and deployed-isolation evidence | S4 packet maps the automated evidence; legal/security acceptance remains human-owned. |
 
 ### S5 — Controlled handover
 

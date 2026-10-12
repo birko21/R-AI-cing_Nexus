@@ -1,0 +1,118 @@
+{
+  "activation_authority": "NONE",
+  "external_connectivity_enabled": false,
+  "machine_evidence": [
+    {
+      "key": "repository_contract",
+      "path": "docs/TRACEABILITY.md",
+      "present": true
+    },
+    {
+      "key": "workspace_atlas",
+      "path": "docs/evidence/ril-018/workspace-atlas.md",
+      "present": true
+    },
+    {
+      "key": "postgres_smoke",
+      "path": "docs/evidence/ril-011/postgres-smoke.md",
+      "present": true
+    },
+    {
+      "key": "operational_controls",
+      "path": "docs/evidence/ril-057/operational-controls-ci.md",
+      "present": true
+    },
+    {
+      "key": "release_gate",
+      "path": "docs/models/RELEASE_GATE_EVIDENCE.md",
+      "present": true
+    },
+    {
+      "key": "provider_rights_gap",
+      "path": "docs/provider/SOURCE_LICENSING_GAP_REPORT.md",
+      "present": true
+    },
+    {
+      "key": "model_assurance",
+      "path": "docs/models/MODEL_ASSURANCE_WORKFLOW.md",
+      "present": true
+    }
+  ],
+  "missing_machine_evidence": [],
+  "note": "Preparation packet only; no human approval, rights grant, provider activation, production deployment or model promotion is inferred.",
+  "packet_hash": "1d708cc5537bad0b28b2df5237b01dde5085da0956febb04e083f388a5c08ac0",
+  "promotion_authority": "NONE",
+  "release_gate": {
+    "activation_authority": "NONE",
+    "blocking_requirements": [
+      "accessibility_review",
+      "model_assurance",
+      "owner_approval",
+      "visual_review"
+    ],
+    "checks": {
+      "accessibility_review": "PENDING",
+      "approved_oidc": "BLOCKED_EXTERNAL_DEPENDENCY",
+      "automated_validation": "PASS",
+      "local_evidence": "PASS",
+      "model_assurance": "PENDING",
+      "owner_approval": "PENDING",
+      "real_source_rights": "BLOCKED_EXTERNAL_DEPENDENCY",
+      "visual_review": "PENDING"
+    },
+    "external_connectivity_enabled": false,
+    "external_gates_pending": [
+      "approved_oidc",
+      "real_source_rights"
+    ],
+    "note": "Evidence aggregation only; human, rights, security and owner decisions remain required.",
+    "promotion_authority": "NONE",
+    "report_hash": "19223c7acf4746d54431a4aaf059d6eaead8720dae1397101d4a88a140808649",
+    "safety_violations": [],
+    "schema_version": "release-gate-v1",
+    "scope": "LOCAL_SYNTHETIC_ONLY",
+    "status": "LOCAL_SYNTHETIC_ONLY_HOLD",
+    "wagering_enabled": false
+  },
+  "review_gates": [
+    {
+      "key": "visual_owner_review",
+      "reason": "creative owner must compare approved references",
+      "status": "PENDING"
+    },
+    {
+      "key": "accessibility_review",
+      "reason": "independent WCAG and real-device review required",
+      "status": "PENDING"
+    },
+    {
+      "key": "racing_domain_review",
+      "reason": "named specialists must review all three codes",
+      "status": "PENDING"
+    },
+    {
+      "key": "model_assurance_review",
+      "reason": "independent assurance and owner decision required",
+      "status": "PENDING"
+    },
+    {
+      "key": "security_owner_review",
+      "reason": "security owner must accept isolation and operational controls",
+      "status": "PENDING"
+    },
+    {
+      "key": "oidc_production_configuration",
+      "reason": "approved issuer, audience and deployment configuration required",
+      "status": "BLOCKED_EXTERNAL_DEPENDENCY"
+    },
+    {
+      "key": "provider_rights_and_credentials",
+      "reason": "written rights, credentials and retention terms required",
+      "status": "BLOCKED_EXTERNAL_DEPENDENCY"
+    }
+  ],
+  "schema_version": "s4-assurance-packet-v1",
+  "scope": "LOCAL_SYNTHETIC_ONLY",
+  "status": "LOCAL_SYNTHETIC_ONLY_HOLD",
+  "wagering_enabled": false
+}
