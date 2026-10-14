@@ -74,8 +74,8 @@ repository.
 | BE-013 | Add bounded PuntersEdge aggregate-only probe path. | COMPLETE | `/v1/provider-probes/punters-edge`, commit `f20f877` |
 | BE-014 | Prevent raw payload retention/return from diagnostics. | COMPLETE | Diagnostic response contract and negative tests |
 | BE-015 | Normalize upstream HTTP/transport/JSON failures. | COMPLETE | Provider transport tests |
-| BE-016 | Deploy backend-only staging branch and verify health/logs. | COMPLETE | Render deployment `dep-db7lung473hc73ds1q50` |
-| BE-017 | Re-run full backend, contract, lint and repository validation. | COMPLETE | 322 tests, Ruff, repository baseline |
+| BE-016 | Deploy backend-only staging branch and verify health/logs. | COMPLETE | Render deployment `dep-db7n2qm7bikc73bfbk4g`; health `ok`; no error logs |
+| BE-017 | Re-run full backend, contract, lint and repository validation. | COMPLETE | 325 tests, Ruff, repository baseline |
 | BE-018 | Configure named provider diagnostic approvals and owner permission. | BLOCKED_EXTERNAL | Render/provider owner action required |
 | BE-019 | Execute first approved aggregate-only live diagnostic. | BLOCKED_EXTERNAL | Depends on BE-018 and owner token |
 | BE-020 | Capture, validate and persist an approved live response. | BLOCKED_EXTERNAL | Depends on real response, rights and database |

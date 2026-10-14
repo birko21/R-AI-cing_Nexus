@@ -25,7 +25,7 @@ exist.
 | BE-013 | Add a PuntersEdge aggregate-only probe endpoint with a two-request ceiling: account metadata first, then one bounded read. | `/v1/provider-probes/punters-edge`; commit `f20f877` |
 | BE-014 | Guarantee probe responses never retain or return raw provider payloads. | `ProviderDiagnosticCheck`; negative tests |
 | BE-015 | Normalize provider HTTP failures, transport failures and malformed JSON into safe activation errors. | `test_external_provider_integrations.py` |
-| BE-016 | Deploy the backend-only staging branch without active visual source changes. | Render deployment `dep-db7lung473hc73ds1q50` |
+| BE-016 | Deploy the backend-only staging branch without active visual source changes. | Render deployment `dep-db7n2qm7bikc73bfbk4g`; health `ok`; no error logs |
 | BE-017 | Re-run full backend, contract, repository and lint validation after the changes. | 325 API tests passed; Ruff, contract, security, repository and synthetic pressure checks passed. |
 
 ## Remaining execution tickets
@@ -84,6 +84,8 @@ described as passing.
 - `python scripts/pressure_test_synthetic_pipeline.py` — `PASS`, 25 cycles, deterministic replay, 25 tamper cases
 - `python scripts/pressure_test_data_science.py` — synthetic evidence valid for six model/code combinations; no real-data validation claim
 - `python scripts/prove_synthetic_vertical.py` — `PASS`; ingestion replay idempotent, forecast archive replay matched, release gate `LOCAL_SYNTHETIC_ONLY_HOLD`
+- Staging black-box check against `https://nexus-staging-api-feap.onrender.com` — health `ok`; `data_mode=SYNTHETIC_ONLY`; `external_connectivity=false`; all four provider flags/diagnostics disabled; `providers:read` probe without a token returned `401`; OpenAPI exposed the probe route.
+- Render error-log query for `nexus-staging-api` — zero error logs returned.
 
 The local PostgreSQL acceptance script remains environment-blocked because this
 machine has no disposable database credentials available to the repository
