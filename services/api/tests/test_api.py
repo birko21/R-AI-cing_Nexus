@@ -11,7 +11,7 @@ def authenticated_client(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setenv("ALLOW_LOCAL_AUTH", "true")
     monkeypatch.setenv("API_HOST", "127.0.0.1")
     monkeypatch.setenv("LOCAL_AUTH_TOKEN", "test-local-token")
-    monkeypatch.setenv("LOCAL_AUTH_SCOPES", "races:read,forecasts:read,selections:read,selections:write")
+    monkeypatch.setenv("LOCAL_AUTH_SCOPES", "races:read,forecasts:read,selections:read,selections:write,providers:read")
     with TestClient(app) as client:
         yield client
 
@@ -136,6 +136,17 @@ def test_invalid_token_and_missing_scope_fail_closed(authenticated_client: TestC
     )
     assert forbidden.status_code == 403
     assert forbidden.json()["error"]["code"] == "FORBIDDEN"
+
+
+def test_provider_probe_fails_closed_without_runtime_credentials(authenticated_client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("LOCAL_AUTH_SCOPES", "providers:read")
+    blocked = authenticated_client.post(
+        "/v1/provider-probes/punters-edge",
+        json={"date": "2026-10-12"},
+        headers={"Authorization": "Bearer test-local-token"},
+    )
+    assert blocked.status_code == 503
+    assert "provider probe blocked" in blocked.json()["error"]["message"]
 
 
 def test_external_and_production_bind_modes_are_rejected(monkeypatch: pytest.MonkeyPatch) -> None:

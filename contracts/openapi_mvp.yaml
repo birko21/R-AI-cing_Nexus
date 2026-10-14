@@ -44,6 +44,25 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/CodeListResponse' }
         '401': { $ref: '#/components/responses/Unauthorized' }
+  /v1/provider-probes/punters-edge:
+    post:
+      operationId: probePuntersEdge
+      security: [{ bearerAuth: [providers:read] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProviderProbeRequest' }
+      responses:
+        '200':
+          description: Aggregate-only live connectivity result; raw payload is discarded.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProviderProbeResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '503': { $ref: '#/components/responses/ExternalDependency' }
   /v1/meetings:
     get:
       operationId: listMeetings
@@ -175,6 +194,7 @@ components:
             forecasts:read: Read immutable forecast archives.
             selections:read: Read the private selection journal.
             selections:write: Create selections and deliberate PASS records.
+            providers:read: Run explicitly bounded, aggregate-only provider diagnostics.
   parameters:
     AsOf:
       name: as_of
@@ -210,6 +230,16 @@ components:
           schema: { $ref: '#/components/schemas/ErrorResponse' }
     Unauthorized:
       description: Missing or invalid bearer credentials.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+    Forbidden:
+      description: Valid bearer credentials without the required scope.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+    ExternalDependency:
+      description: Provider access is blocked by configuration, approval or upstream availability.
       content:
         application/json:
           schema: { $ref: '#/components/schemas/ErrorResponse' }
@@ -260,6 +290,44 @@ components:
         diagnostic_approval_tiers:
           type: array
           items: { type: string }
+    ProviderProbeRequest:
+      type: object
+      additionalProperties: false
+      required: [operation, code, date]
+      properties:
+        operation: { type: string, enum: [GET_RESULTS, GET_ENTRIES], default: GET_RESULTS }
+        code: { type: string, const: THOROUGHBRED }
+        date: { type: string, pattern: '^\\d{4}-\\d{2}-\\d{2}$' }
+        venue: { type: string, maxLength: 120 }
+        race: { type: integer, minimum: 1, maximum: 99 }
+    ProviderDiagnosticCheck:
+      type: object
+      additionalProperties: false
+      required: [provider_id, operation, code, request_ordinal, request_ceiling, status_class, row_count, field_presence, quota_checked, raw_payload_retained, approval_reference]
+      properties:
+        provider_id: { type: string, const: punters-edge }
+        operation: { type: string }
+        code: { type: string, const: THOROUGHBRED }
+        request_ordinal: { type: integer }
+        request_ceiling: { type: integer }
+        status_class: { type: string }
+        row_count: { type: integer }
+        field_presence: { type: array, items: { type: string } }
+        quota_checked: { type: boolean }
+        raw_payload_retained: { type: boolean, const: false }
+        approval_reference: { type: string }
+    ProviderProbeResponse:
+      type: object
+      additionalProperties: false
+      required: [status, provider, operation, code, checks, requests_used, raw_payload_retained]
+      properties:
+        status: { type: string, const: LIVE_DIAGNOSTIC_SUCCESS }
+        provider: { type: string, const: punters-edge }
+        operation: { type: string, enum: [GET_RESULTS, GET_ENTRIES] }
+        code: { type: string, const: THOROUGHBRED }
+        checks: { type: array, items: { $ref: '#/components/schemas/ProviderDiagnosticCheck' } }
+        requests_used: { type: integer }
+        raw_payload_retained: { type: boolean, const: false }
     ErrorResponse:
       type: object
       additionalProperties: false

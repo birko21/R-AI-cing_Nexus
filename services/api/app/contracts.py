@@ -22,6 +22,44 @@ class ProviderRuntimeStatus(BaseModel):
     diagnostic_approval_tiers: list[str]
 
 
+class ProviderProbeRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    operation: Literal["GET_RESULTS", "GET_ENTRIES"] = "GET_RESULTS"
+    code: Literal["THOROUGHBRED"] = "THOROUGHBRED"
+    date: str = Field(pattern=r"^\d{4}-\d{2}-\d{2}$")
+    venue: str | None = Field(default=None, max_length=120)
+    race: int | None = Field(default=None, ge=1, le=99)
+
+
+class ProviderDiagnosticCheck(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    provider_id: Literal["punters-edge"]
+    operation: str
+    code: Literal["THOROUGHBRED"]
+    request_ordinal: int
+    request_ceiling: int
+    status_class: str
+    row_count: int
+    field_presence: list[str]
+    quota_checked: bool
+    raw_payload_retained: Literal[False]
+    approval_reference: str
+
+
+class ProviderProbeResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    status: Literal["LIVE_DIAGNOSTIC_SUCCESS"]
+    provider: Literal["punters-edge"]
+    operation: Literal["GET_RESULTS", "GET_ENTRIES"]
+    code: Literal["THOROUGHBRED"]
+    checks: list[ProviderDiagnosticCheck]
+    requests_used: int
+    raw_payload_retained: Literal[False]
+
+
 class SystemStatusResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
 

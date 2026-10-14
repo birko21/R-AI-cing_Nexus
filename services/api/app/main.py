@@ -8,7 +8,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.auth import forecasts_read, races_read, selections_read, selections_write, validate_bind_configuration
+from app.auth import forecasts_read, providers_read, races_read, selections_read, selections_write, validate_bind_configuration
 from app.catalog_repository import PostgresCatalogRepository, SyntheticCatalogRepository, offset_from_cursor
 from app.contracts import (
     CodeSummary,
@@ -26,10 +26,15 @@ from app.contracts import (
     SelectionListResponse,
     SelectionCreate,
     SystemStatusResponse,
+    ProviderDiagnosticCheck,
+    ProviderProbeRequest,
+    ProviderProbeResponse,
 )
+from app.external_provider_integrations import ProviderActivationError
+from app.live_provider_runtime import build_live_provider_handle, configured_provider_status
 from app.pagination import paging_parameters
+from app.provider_diagnostics import BoundedDiagnosticSession, DiagnosticPolicy
 from app.selection_journal import PostgresSelectionJournal, SelectionJournal, SelectionJournalError
-from app.live_provider_runtime import configured_provider_status
 
 
 @asynccontextmanager
@@ -128,6 +133,39 @@ def system_status() -> SystemStatusResponse:
         wagering_enabled=False,
         providers=configured_provider_status(),
     )
+
+
+@app.post("/v1/provider-probes/punters-edge", response_model=ProviderProbeResponse, tags=["providers"], dependencies=[Depends(providers_read)])
+def probe_punters_edge(payload: ProviderProbeRequest) -> ProviderProbeResponse:
+    """Run one bounded, aggregate-only PuntersEdge connectivity check."""
+
+    handle = None
+    try:
+        handle = build_live_provider_handle("punters-edge")
+        if not handle.config.diagnostics_enabled:
+            raise ProviderActivationError("provider diagnostics are disabled by the kill switch")
+        session = BoundedDiagnosticSession(
+            handle.adapter,
+            approval=handle.config.diagnostic_approvals,
+            code=payload.code,
+            policy=DiagnosticPolicy(enabled=True),
+        )
+        checks = [session.run("ACCOUNT_METADATA_READ")]
+        checks.append(session.run(payload.operation, date=payload.date, venue=payload.venue, race=payload.race))
+        return ProviderProbeResponse(
+            status="LIVE_DIAGNOSTIC_SUCCESS",
+            provider="punters-edge",
+            operation=payload.operation,
+            code=payload.code,
+            checks=[ProviderDiagnosticCheck(**check.__dict__) for check in checks],
+            requests_used=session.requests_used,
+            raw_payload_retained=False,
+        )
+    except (ProviderActivationError, RuntimeError, ValueError) as exc:
+        raise HTTPException(status_code=503, detail=f"provider probe blocked: {exc}") from exc
+    finally:
+        if handle is not None:
+            handle.close()
 
 
 def _page_meta(limit: int, as_of: datetime, *, offset: int = 0, has_more: bool = False) -> PageMeta:

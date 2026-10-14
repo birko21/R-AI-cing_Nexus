@@ -229,6 +229,7 @@ races_read = require_scopes("races:read")
 forecasts_read = require_scopes("forecasts:read")
 selections_read = require_scopes("selections:read")
 selections_write = require_scopes("selections:write")
+providers_read = require_scopes("providers:read")
 
 
 def require_bearer(authorization: str | None = Header(default=None)) -> None:
