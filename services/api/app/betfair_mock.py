@@ -32,6 +32,30 @@ BETFAIR_SYNTHETIC_RETRIEVED_AT = datetime(2026, 1, 15, 1, 0, tzinfo=timezone.utc
 
 
 @dataclass(frozen=True)
+class ReplayReconciliationReport:
+    """Deterministic comparison between a stored replay manifest and its source."""
+
+    fixture_id: str
+    status: Literal["MATCH", "MISMATCH"]
+    expected_pages: int
+    observed_pages: int
+    expected_records: int
+    observed_records: int
+    mismatches: tuple[str, ...]
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "fixture_id": self.fixture_id,
+            "status": self.status,
+            "expected_pages": self.expected_pages,
+            "observed_pages": self.observed_pages,
+            "expected_records": self.expected_records,
+            "observed_records": self.observed_records,
+            "mismatches": list(self.mismatches),
+        }
+
+
+@dataclass(frozen=True)
 class SyntheticBetfairPricePoint:
     source_timestamp: datetime
     back_price: float
@@ -283,3 +307,87 @@ class SyntheticBetfairExchangeAdapter:
                 data_mode="SYNTHETIC_ONLY", rights_state="SYNTHETIC",
             ))
         return tuple(quotes)
+
+
+def build_synthetic_betfair_replay_manifest(
+    adapter: SyntheticBetfairExchangeAdapter | None = None,
+    *,
+    page_size: int = 100,
+) -> dict[str, object]:
+    """Build deterministic page/checksum evidence for offline replay."""
+
+    if page_size < 1 or page_size > 100:
+        raise ValueError("synthetic Betfair replay page_size must be between 1 and 100")
+    source = adapter or SyntheticBetfairExchangeAdapter()
+    pages: list[dict[str, object]] = []
+    for code in sorted(VALID_CODES):
+        cursor: str | None = None
+        page_number = 0
+        while True:
+            page = source.fetch("GET_MARKETS", code=code, cursor=cursor, page_size=page_size)
+            pages.append(
+                {
+                    "code": code,
+                    "page_number": page_number,
+                    "cursor": cursor,
+                    "next_cursor": page.next_cursor,
+                    "as_of": page.as_of.isoformat().replace("+00:00", "Z") if page.as_of else None,
+                    "envelopes": [
+                        {
+                            "envelope_id": record.envelope_id,
+                            "source_identifier": record.source_identifier,
+                            "payload_sha256": record.payload_sha256,
+                            "schema_version": record.schema_version,
+                        }
+                        for record in page.records
+                    ],
+                }
+            )
+            page_number += 1
+            cursor = page.next_cursor
+            if cursor is None:
+                break
+    return {
+        "schema_version": "betfair-market-replay-manifest-v1",
+        "fixture_id": "ril-067-betfair-replay-v1",
+        "provider_id": BETFAIR_SYNTHETIC_PROVIDER_ID,
+        "page_size": page_size,
+        "pages": pages,
+        "record_count": sum(len(page["envelopes"]) for page in pages),
+        "fictional": True,
+        "data_mode": "SYNTHETIC_ONLY",
+        "rights_state": "SYNTHETIC",
+        "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE",
+        "note": "Deterministic offline replay manifest; no external provider was contacted.",
+    }
+
+
+def reconcile_synthetic_betfair_replay_manifest(
+    manifest: dict[str, object],
+    adapter: SyntheticBetfairExchangeAdapter | None = None,
+) -> ReplayReconciliationReport:
+    """Compare a stored synthetic manifest with a fresh offline replay."""
+
+    expected = build_synthetic_betfair_replay_manifest(adapter)
+    expected_pages = expected["pages"]
+    observed_pages = manifest.get("pages", [])
+    expected_records = int(expected["record_count"])
+    observed_records = manifest.get("record_count", 0)
+    observed_page_count = len(observed_pages) if isinstance(observed_pages, list) else 0
+    mismatches: list[str] = []
+    for key in ("schema_version", "fixture_id", "provider_id", "page_size", "data_mode", "rights_state", "watermark"):
+        if manifest.get(key) != expected[key]:
+            mismatches.append(f"{key} differs from deterministic source")
+    if observed_pages != expected_pages:
+        mismatches.append("pages differ from deterministic source")
+    if observed_records != expected_records:
+        mismatches.append("record_count differs from deterministic source")
+    return ReplayReconciliationReport(
+        fixture_id=str(manifest.get("fixture_id", expected["fixture_id"])),
+        status="MISMATCH" if mismatches else "MATCH",
+        expected_pages=len(expected_pages),
+        observed_pages=observed_page_count,
+        expected_records=expected_records,
+        observed_records=int(observed_records) if isinstance(observed_records, int) else 0,
+        mismatches=tuple(mismatches),
+    )

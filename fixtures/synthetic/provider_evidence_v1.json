@@ -1,0 +1,21 @@
+{
+  "activation_authority": "NONE",
+  "fictional": true,
+  "note": "Evidence records describe observed capability only; they cannot enable a provider or grant rights.",
+  "records": [
+    {
+      "capability": "races, entries, results and bounded pagination",
+      "data_mode": "SYNTHETIC_ONLY",
+      "evidence_id": "synthetic-fixture-contract-v1",
+      "evidence_status": "OBSERVED",
+      "notes": "Offline contract evidence only; no external provider is enabled.",
+      "observed_at": "2026-01-15T00:00:00Z",
+      "provider_id": "synthetic-fixture",
+      "rights_state": "SYNTHETIC",
+      "schema_version": "provider-evidence-v1",
+      "source_reference": "docs/models/PROVIDER_ADAPTER_CONTRACT.md"
+    }
+  ],
+  "schema_version": "provider-evidence-registry-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}

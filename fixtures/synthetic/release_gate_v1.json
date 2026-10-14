@@ -1,0 +1,32 @@
+{
+  "activation_authority": "NONE",
+  "blocking_requirements": [
+    "accessibility_review",
+    "model_assurance",
+    "owner_approval",
+    "visual_review"
+  ],
+  "checks": {
+    "accessibility_review": "PENDING",
+    "approved_oidc": "BLOCKED_EXTERNAL_DEPENDENCY",
+    "automated_validation": "PASS",
+    "local_evidence": "PASS",
+    "model_assurance": "PENDING",
+    "owner_approval": "PENDING",
+    "real_source_rights": "BLOCKED_EXTERNAL_DEPENDENCY",
+    "visual_review": "PENDING"
+  },
+  "external_connectivity_enabled": false,
+  "external_gates_pending": [
+    "approved_oidc",
+    "real_source_rights"
+  ],
+  "note": "Evidence aggregation only; human, rights, security and owner decisions remain required.",
+  "promotion_authority": "NONE",
+  "report_hash": "19223c7acf4746d54431a4aaf059d6eaead8720dae1397101d4a88a140808649",
+  "safety_violations": [],
+  "schema_version": "release-gate-v1",
+  "scope": "LOCAL_SYNTHETIC_ONLY",
+  "status": "LOCAL_SYNTHETIC_ONLY_HOLD",
+  "wagering_enabled": false
+}

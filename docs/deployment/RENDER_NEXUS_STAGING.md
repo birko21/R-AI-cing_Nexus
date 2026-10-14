@@ -23,6 +23,13 @@ historical result, model-training artifact or multi-instance workload is
 introduced. Free Render filesystems are ephemeral and are not a persistence
 mechanism.
 
+The repository now includes a local signal-aware PostgreSQL consumer runtime
+for the synthetic queue (`scripts/run_postgres_synthetic_worker.py`). It is
+not a hosted deployment declaration: `render.yaml` intentionally still has no
+database, worker, Key Value, cron, or persistent disk. Before adding a Render
+worker, the owner must approve the database/queue topology, retention policy,
+shutdown window, secret handling, health/metrics plan, and cost envelope.
+
 ## Authentication and authorization
 
 Local bearer authentication remains available only for loopback development.

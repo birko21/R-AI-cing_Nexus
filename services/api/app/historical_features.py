@@ -66,6 +66,10 @@ class FeatureObservation:
             raise ValueError("published_at must be timezone-aware")
         if self.published_at is not None and self.published_at > self.retrieved_at:
             raise ValueError("published_at cannot be later than retrieved_at")
+        if self.observed_at > self.retrieved_at:
+            raise ValueError("observed_at cannot be later than retrieved_at")
+        if self.pre_race_eligible_at > self.retrieved_at:
+            raise ValueError("pre_race_eligible_at cannot be later than retrieved_at")
         if self.value is not None and not math.isfinite(self.value):
             raise ValueError("feature value must be finite or null")
         if self.identity_link_id is not None and self.identity_evidence == "NAME_ONLY":

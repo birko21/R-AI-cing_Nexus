@@ -10,7 +10,7 @@
   "files": {
     "fixture.json": {
       "path": "fixtures/synthetic/fixture.json",
-      "sha256": "799fc4b9bb8d0c6a1c17ebd1c942ea56d78d73e9bdffd8b6a4fb5817d1073404"
+      "sha256": "ac421a59f536e729abd71ce38794adce16e46e785df557bf2256c6ba6a78d0ab"
     }
   },
   "fixture_id": "ril-016-three-code-v1",

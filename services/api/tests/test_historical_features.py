@@ -84,3 +84,12 @@ def test_leakage_canary_post_race_value_cannot_change_snapshot() -> None:
     assert first.snapshot_hash == second.snapshot_hash
     assert first.critical_missing == ("p1:historical_performance",)
     assert "historical_performance" not in first.records["p1"]
+
+
+def test_feature_observation_rejects_impossible_retrieval_order() -> None:
+    with pytest.raises(ValueError, match="observed_at cannot be later than retrieved_at"):
+        FeatureObservation(
+            "synthetic", "runs-v1", "THOROUGHBRED", "race-1", "p1", "synthetic:p1", "raw_speed", 1.0, "m/s",
+            CUTOFF, CUTOFF - timedelta(minutes=2), CUTOFF - timedelta(minutes=1), CUTOFF - timedelta(minutes=1),
+            "observed-after-retrieval", "SYNTHETIC", "SYNTHETIC_LOCAL",
+        )

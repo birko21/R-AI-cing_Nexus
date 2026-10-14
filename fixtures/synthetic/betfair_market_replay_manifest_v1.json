@@ -1,0 +1,59 @@
+{
+  "data_mode": "SYNTHETIC_ONLY",
+  "fictional": true,
+  "fixture_id": "ril-067-betfair-replay-v1",
+  "note": "Deterministic offline replay manifest; no external provider was contacted.",
+  "page_size": 100,
+  "pages": [
+    {
+      "as_of": "2026-01-15T01:00:00Z",
+      "code": "GREYHOUND",
+      "cursor": null,
+      "envelopes": [
+        {
+          "envelope_id": "synthetic-betfair:bf.au.g.1003",
+          "payload_sha256": "23eaeaa66d5ab3bc7ab83f7f508454016fdcfd02313c1ef8df7d00a1b04352d7",
+          "schema_version": "betfair-market-fixture-v1",
+          "source_identifier": "betfair:market:bf.au.g.1003"
+        }
+      ],
+      "next_cursor": null,
+      "page_number": 0
+    },
+    {
+      "as_of": "2026-01-15T01:00:00Z",
+      "code": "HARNESS",
+      "cursor": null,
+      "envelopes": [
+        {
+          "envelope_id": "synthetic-betfair:bf.au.h.1002",
+          "payload_sha256": "7179aae6ce76b60e66db22bdfbd894ed0df24415e37f621e35359f2f29e53048",
+          "schema_version": "betfair-market-fixture-v1",
+          "source_identifier": "betfair:market:bf.au.h.1002"
+        }
+      ],
+      "next_cursor": null,
+      "page_number": 0
+    },
+    {
+      "as_of": "2026-01-15T01:00:00Z",
+      "code": "THOROUGHBRED",
+      "cursor": null,
+      "envelopes": [
+        {
+          "envelope_id": "synthetic-betfair:bf.au.tb.1001",
+          "payload_sha256": "dc696f19e27b2b9b2b7440760221a8347803efdd0eb54f27f85327422288979d",
+          "schema_version": "betfair-market-fixture-v1",
+          "source_identifier": "betfair:market:bf.au.tb.1001"
+        }
+      ],
+      "next_cursor": null,
+      "page_number": 0
+    }
+  ],
+  "provider_id": "betfair-exchange-synthetic",
+  "record_count": 3,
+  "rights_state": "SYNTHETIC",
+  "schema_version": "betfair-market-replay-manifest-v1",
+  "watermark": "FICTIONAL_SYNTHETIC_DO_NOT_TREAT_AS_LIVE"
+}

@@ -1,0 +1,49 @@
+{
+  "activation_authority": "NONE",
+  "assurance_packet_hash": "28a0899ac4cc20b4eabda3885efa25a8a3c091b93cb7db580249729259574f32",
+  "external_connectivity_enabled": false,
+  "external_gates_pending": [
+    "approved_oidc",
+    "real_source_rights"
+  ],
+  "gate_hash": "0777263a498b11330d8f1695ddc4fbdbbdd1f10de56685a6c6784f1a20446982",
+  "human_gates_pending": [
+    "accessibility_review",
+    "model_assurance",
+    "owner_approval",
+    "visual_review"
+  ],
+  "machine_checks": [
+    {
+      "command": [
+        "scripts/validate_render_blueprint.py"
+      ],
+      "exit_code": 0,
+      "name": "render_blueprint",
+      "output_tail": "RENDER BLUEPRINT PASS: Nexus-only, free-plan, OIDC-gated, provider-disabled staging configuration\n"
+    },
+    {
+      "command": [
+        "scripts/security_audit.py"
+      ],
+      "exit_code": 0,
+      "name": "security_audit",
+      "output_tail": "SECURITY AUDIT PASS: files=391 secret_findings=0 frontend_secret_refs=0\n"
+    },
+    {
+      "command": [
+        "scripts/generate_s4_assurance_packet.py"
+      ],
+      "exit_code": 0,
+      "name": "s4_packet",
+      "output_tail": "S4 ASSURANCE PACKET VALID: status=LOCAL_SYNTHETIC_ONLY_HOLD hash=28a0899ac4cc20b4eabda3885efa25a8a3c091b93cb7db580249729259574f32\n"
+    }
+  ],
+  "note": "Local completion evidence is valid; external and human gates remain explicit and unapproved.",
+  "promotion_authority": "NONE",
+  "release_gate_hash": "19223c7acf4746d54431a4aaf059d6eaead8720dae1397101d4a88a140808649",
+  "schema_version": "safe-completion-gate-v1",
+  "scope": "LOCAL_SYNTHETIC_ONLY",
+  "status": "LOCAL_SYNTHETIC_ONLY_HOLD",
+  "wagering_enabled": false
+}
