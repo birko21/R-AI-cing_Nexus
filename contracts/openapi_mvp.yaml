@@ -233,7 +233,7 @@ components:
     SystemStatusResponse:
       type: object
       additionalProperties: false
-      required: [app, environment, data_mode, external_connectivity, model_status, wagering_enabled]
+      required: [app, environment, data_mode, external_connectivity, model_status, wagering_enabled, providers]
       properties:
         app: { type: string, const: racing-intelligence-lab }
         environment: { type: string }
@@ -241,6 +241,25 @@ components:
         external_connectivity: { type: boolean, const: false }
         model_status: { type: string, enum: [NOT_TRAINED, ILLUSTRATIVE_ONLY, MODEL_VALIDATED] }
         wagering_enabled: { type: boolean, const: false }
+        providers:
+          type: array
+          items: { $ref: '#/components/schemas/ProviderRuntimeStatus' }
+    ProviderRuntimeStatus:
+      type: object
+      additionalProperties: false
+      required: [provider, enabled, credentials_configured, diagnostics_enabled, approval_status, approval_missing_requirements, diagnostic_approval_tiers]
+      properties:
+        provider: { type: string }
+        enabled: { type: boolean }
+        credentials_configured: { type: boolean }
+        diagnostics_enabled: { type: boolean }
+        approval_status: { type: string }
+        approval_missing_requirements:
+          type: array
+          items: { type: string }
+        diagnostic_approval_tiers:
+          type: array
+          items: { type: string }
     ErrorResponse:
       type: object
       additionalProperties: false

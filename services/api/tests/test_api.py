@@ -26,6 +26,12 @@ def test_health_and_status_are_anonymous_and_correlated() -> None:
         status = client.get("/v1/system/status")
         assert status.status_code == 200
         assert status.json()["data_mode"] == "SYNTHETIC_ONLY"
+        assert {item["provider"] for item in status.json()["providers"]} == {
+            "formfav",
+            "punters-edge",
+            "krok-odds",
+            "betfair-exchange",
+        }
         assert status.headers["X-Correlation-ID"]
 
 

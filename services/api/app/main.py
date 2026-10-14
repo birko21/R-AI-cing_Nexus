@@ -29,6 +29,7 @@ from app.contracts import (
 )
 from app.pagination import paging_parameters
 from app.selection_journal import PostgresSelectionJournal, SelectionJournal, SelectionJournalError
+from app.live_provider_runtime import configured_provider_status
 
 
 @asynccontextmanager
@@ -125,6 +126,7 @@ def system_status() -> SystemStatusResponse:
         external_connectivity=False,
         model_status="NOT_TRAINED",
         wagering_enabled=False,
+        providers=configured_provider_status(),
     )
 
 

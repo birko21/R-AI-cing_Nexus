@@ -71,4 +71,5 @@ def test_foundation_runtime_matches_shared_response_models() -> None:
         "external_connectivity",
         "model_status",
         "wagering_enabled",
+        "providers",
     }

@@ -10,6 +10,18 @@ class HealthResponse(BaseModel):
     status: Literal["ok"]
 
 
+class ProviderRuntimeStatus(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    provider: str
+    enabled: bool
+    credentials_configured: bool
+    diagnostics_enabled: bool
+    approval_status: str
+    approval_missing_requirements: list[str]
+    diagnostic_approval_tiers: list[str]
+
+
 class SystemStatusResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -19,6 +31,7 @@ class SystemStatusResponse(BaseModel):
     external_connectivity: Literal[False]
     model_status: Literal["NOT_TRAINED", "ILLUSTRATIVE_ONLY", "MODEL_VALIDATED"]
     wagering_enabled: Literal[False]
+    providers: list[ProviderRuntimeStatus]
 
 
 class ErrorDetail(BaseModel):
