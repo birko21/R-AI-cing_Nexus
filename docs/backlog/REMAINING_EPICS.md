@@ -87,6 +87,9 @@ repository.
 The detailed eight-hour execution register is in
 `docs/backlog/BACKEND_COMPLETION_8H.md`.
 
+The controlled provider activation sequence is in
+`docs/deployment/LIVE_PROVIDER_GO_LIVE_PLAN.md`.
+
 ## Completion rule
 
 R1–R3 local tickets, R4.1–R4.3 and R5.1 are complete in this branch. The

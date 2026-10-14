@@ -92,3 +92,6 @@ machine has no disposable database credentials available to the repository
 test harness. The existing database acceptance evidence is retained, and the
 hosted database/backup/restore ticket remains external rather than being
 marked complete without a real target.
+
+The approved activation sequence is documented in
+`docs/deployment/LIVE_PROVIDER_GO_LIVE_PLAN.md`.
