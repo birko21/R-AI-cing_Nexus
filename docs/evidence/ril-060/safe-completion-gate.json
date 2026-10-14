@@ -6,7 +6,7 @@
     "approved_oidc",
     "real_source_rights"
   ],
-  "gate_hash": "0777263a498b11330d8f1695ddc4fbdbbdd1f10de56685a6c6784f1a20446982",
+  "gate_hash": "adfccd73fe936ba7d9038b344fd02150d0ef68db6e0a48474e7780d2cf5f16c7",
   "human_gates_pending": [
     "accessibility_review",
     "model_assurance",
@@ -28,7 +28,7 @@
       ],
       "exit_code": 0,
       "name": "security_audit",
-      "output_tail": "SECURITY AUDIT PASS: files=391 secret_findings=0 frontend_secret_refs=0\n"
+      "output_tail": "SECURITY AUDIT PASS: files=398 secret_findings=0 frontend_secret_refs=0\n"
     },
     {
       "command": [
