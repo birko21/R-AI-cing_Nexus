@@ -1,6 +1,6 @@
 # Live provider activation go-live plan
 
-**Status:** prepared; no provider flags or secrets changed by this plan
+**Status:** PuntersEdge bounded diagnostic configuration is live in staging; the first owner-authenticated request is still pending
 
 **Scope:** first controlled live-data activation for Nexus backend. Visual
 owner review remains last. No wagering, trading, staking, order placement or
@@ -13,11 +13,13 @@ in My Workspace. The service is healthy, runs on the Free plan in Singapore,
 has automatic deploys disabled, and currently reports:
 
 - provider credentials configured in Render;
-- all provider enable flags disabled;
-- diagnostics kill switch disabled;
-- no diagnostic approval records configured;
+- PuntersEdge enable and diagnostics flags enabled only for the bounded
+  diagnostic path;
+- the two non-secret PuntersEdge diagnostic approval records configured;
+- FormFav, Krok Odds and Betfair Exchange remain disabled;
 - `data_mode=SYNTHETIC_ONLY`;
-- `external_connectivity=false`;
+- `external_connectivity=false` until the owner-authenticated diagnostic
+  succeeds;
 - no hosted PostgreSQL or queue/worker service.
 
 The first activation target is PuntersEdge because Nexus already has a bounded

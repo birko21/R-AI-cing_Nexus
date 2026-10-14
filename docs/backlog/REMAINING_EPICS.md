@@ -1,9 +1,10 @@
 # Remaining epics and execution register
 
 **Plan date:** 2026-10-12  
-**Operating boundary:** synthetic by default; owner-triggered live read-only
-capture is prepared but remains disabled until local credentials and named
-approval records are configured. No wagering, trading or automatic actions.
+**Operating boundary:** synthetic by default; PuntersEdge has a configured
+owner-triggered, aggregate-only diagnostic path, but no authenticated live
+capture or persistence has occurred. No wagering, trading or automatic
+actions.
 
 This register is the executable remainder after the completed foundation work.
 Tickets marked `COMPLETE` have local implementation and automated evidence.
@@ -45,7 +46,7 @@ repository.
 | R4.1 | Maintain provider-neutral adapter, capability and entitlement contracts. | COMPLETE | `services/api/app/providers.py`, provider evidence fixtures |
 | R4.2 | Prepare source-specific decision packs and reconciliation acceptance criteria. | COMPLETE | `docs/provider/` |
 | R4.3 | Add secure owner-configured runtime wiring, non-secret status and bounded live capture command. | COMPLETE | `services/api/app/live_provider_runtime.py`, `scripts/run_live_provider_capture.py`, `docs/provider/LIVE_PROVIDER_ACTIVATION.md` |
-| R4.4 | Run first owner-controlled connectivity diagnostic without raw retention. | BLOCKED_EXTERNAL | Requires local provider key and two PuntersEdge diagnostic approval records; no key is configured in this workspace |
+| R4.4 | Run first owner-controlled connectivity diagnostic without raw retention. | BLOCKED_HUMAN | Render configuration is complete; requires the owner-authenticated Nexus session |
 | R4.5 | Activate retained provider envelopes and provider-specific canonical parsers. | PARTIAL_LOCAL | Generic approved-envelope persistence plus Betfair catalogue parsing/projection are implemented; real response validation, provider form/results parsers and PostgreSQL credentials remain outstanding |
 | R4.6 | Validate licensed historical data for walk-forward research. | BLOCKED_EXTERNAL | RIL-077 approval pack and provider export/coverage evidence |
 
@@ -76,8 +77,8 @@ repository.
 | BE-015 | Normalize upstream HTTP/transport/JSON failures. | COMPLETE | Provider transport tests |
 | BE-016 | Deploy backend-only staging branch and verify health/logs. | COMPLETE | Render deployment `dep-db7n2qm7bikc73bfbk4g`; health `ok`; no error logs |
 | BE-017 | Re-run full backend, contract, lint and repository validation. | COMPLETE | 325 tests, Ruff, repository baseline |
-| BE-018 | Configure named provider diagnostic approvals and owner permission. | BLOCKED_EXTERNAL | Render/provider owner action required |
-| BE-019 | Execute first approved aggregate-only live diagnostic. | BLOCKED_EXTERNAL | Depends on BE-018 and owner token |
+| BE-018 | Configure named provider diagnostic approvals and bounded provider permission. | COMPLETE_FOR_BOUNDED_DIAGNOSTIC | PuntersEdge flags and both diagnostic tiers are live in Render; no secrets copied |
+| BE-019 | Execute first approved aggregate-only live diagnostic. | BLOCKED_HUMAN | Requires owner-authenticated Nexus `providers:read` session |
 | BE-020 | Capture, validate and persist an approved live response. | BLOCKED_EXTERNAL | Depends on real response, rights and database |
 | BE-021 | Reconcile live rows into canonical data with quarantine. | BLOCKED_EXTERNAL | Depends on provider sample and parser evidence |
 | BE-022 | Run real-data chronological model evaluation. | BLOCKED_EXTERNAL | Depends on historical/model-use approval and labelled data |
@@ -93,9 +94,9 @@ The controlled provider activation sequence is in
 ## Completion rule
 
 R1–R3 local tickets, R4.1–R4.3 and R5.1 are complete in this branch. The
-first real request is now an operator action requiring the owner’s local key
-and approval record; this workspace currently has neither configured. The
-remaining tickets are not safe to simulate: they require provider responses,
+first real request is now an operator action requiring the owner’s
+authenticated Nexus session; the Render-held key and bounded approval records
+are configured. The remaining tickets are not safe to simulate: they require provider responses,
 retention/model-use evidence, hosted resources, independent reviewers or
 owner approval. No ticket grants activation, wagering, promotion or deployment
 authority.

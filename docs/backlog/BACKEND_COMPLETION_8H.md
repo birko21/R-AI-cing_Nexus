@@ -32,8 +32,8 @@ exist.
 
 | Ticket | Acceptance | Status |
 |---|---|---|
-| BE-018 | Configure one provider's explicit enable flag, diagnostics flag, two non-secret diagnostic approval records and `providers:read` owner permission. | Owner/Render configuration required; no secret values in source or chat. | BLOCKED_EXTERNAL |
-| BE-019 | Execute the first bounded PuntersEdge diagnostic and retain only aggregate evidence. | Requires BE-018 and an owner-authorized token. | BLOCKED_EXTERNAL |
+| BE-018 | Configure one provider's explicit enable flag, diagnostics flag and two non-secret diagnostic approval records. | PuntersEdge is configured in Render; no secret values were read or copied. A `providers:read` owner session remains required for the request. | COMPLETE_FOR_BOUNDED_DIAGNOSTIC |
+| BE-019 | Execute the first bounded PuntersEdge diagnostic and retain only aggregate evidence. | Requires the owner to complete the Nexus/Auth0 session; no provider request has been made yet. | BLOCKED_HUMAN |
 | BE-020 | Execute one approved live capture, validate schema/identity/timestamps and persist only where retention rights and PostgreSQL are approved. | Requires real provider response, rights record and database target. | BLOCKED_EXTERNAL |
 | BE-021 | Reconcile live provider rows into canonical meetings, races and entries with quarantine for identity/timestamp/rights failures. | Requires BE-020 sample and provider-specific parser acceptance. | BLOCKED_EXTERNAL |
 | BE-022 | Run chronological walk-forward evaluation on approved historical data and compare B0–B4 baselines. | Requires approved retention/model-use rights and sufficient labelled history. | BLOCKED_EXTERNAL |
@@ -65,10 +65,12 @@ decisions. This is deliberately last for visual work.
 
 ## Current measured state
 
-The staging service reports all four credential sets configured, all provider
-enable flags false, diagnostics false and approval records absent. This is the
-correct safe state. The live probe route therefore rejects activation until the
-external gate is satisfied; no live recommendation claim is made.
+The staging service reports all four credential sets configured. PuntersEdge
+and the diagnostics kill switch are enabled only for the two-request,
+aggregate-only diagnostic path; the other three providers remain disabled.
+The authenticated probe has not yet been run, so `data_mode` remains
+`SYNTHETIC_ONLY`, `external_connectivity` remains false and no live
+recommendation claim is made.
 
 ## Final verification record
 
@@ -84,7 +86,7 @@ described as passing.
 - `python scripts/pressure_test_synthetic_pipeline.py` — `PASS`, 25 cycles, deterministic replay, 25 tamper cases
 - `python scripts/pressure_test_data_science.py` — synthetic evidence valid for six model/code combinations; no real-data validation claim
 - `python scripts/prove_synthetic_vertical.py` — `PASS`; ingestion replay idempotent, forecast archive replay matched, release gate `LOCAL_SYNTHETIC_ONLY_HOLD`
-- Staging black-box check against `https://nexus-staging-api-feap.onrender.com` — health `ok`; `data_mode=SYNTHETIC_ONLY`; `external_connectivity=false`; all four provider flags/diagnostics disabled; `providers:read` probe without a token returned `401`; OpenAPI exposed the probe route.
+- Staging black-box check against `https://nexus-staging-api-feap.onrender.com` — health `ok`; deployment `dep-db7tog6k1f9s73d1fht0` live; `data_mode=SYNTHETIC_ONLY`; `external_connectivity=false`; PuntersEdge and diagnostics enabled with both diagnostic tiers present; other providers disabled; `providers:read` probe without a token returned `401`; OpenAPI exposed the probe route.
 - Render error-log query for `nexus-staging-api` — zero error logs returned.
 
 The local PostgreSQL acceptance script remains environment-blocked because this
