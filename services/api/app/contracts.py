@@ -1,7 +1,8 @@
 from datetime import datetime
+from datetime import date as calendar_date
 from typing import Generic, Literal, TypeVar
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class HealthResponse(BaseModel):
@@ -30,6 +31,12 @@ class ProviderProbeRequest(BaseModel):
     date: str = Field(pattern=r"^\d{4}-\d{2}-\d{2}$")
     venue: str | None = Field(default=None, max_length=120)
     race: int | None = Field(default=None, ge=1, le=99)
+
+    @field_validator("date")
+    @classmethod
+    def validate_calendar_date(cls, value: str) -> str:
+        calendar_date.fromisoformat(value)
+        return value
 
 
 class ProviderDiagnosticCheck(BaseModel):

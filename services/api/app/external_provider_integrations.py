@@ -91,16 +91,23 @@ class HttpxReadOnlyTransport:
         json_body: Mapping[str, object] | None,
         timeout_seconds: float,
     ) -> TransportResponse:
-        response = self._client.request(
-            method,
-            url,
-            headers=dict(headers),
-            params=dict(params),
-            json=json_body,
-            timeout=timeout_seconds,
-        )
-        response.raise_for_status()
-        body = response.json()
+        try:
+            response = self._client.request(
+                method,
+                url,
+                headers=dict(headers),
+                params=dict(params),
+                json=json_body,
+                timeout=timeout_seconds,
+            )
+        except httpx.HTTPError as exc:
+            raise ProviderActivationError("provider request failed") from exc
+        if response.status_code < 200 or response.status_code >= 300:
+            raise ProviderActivationError(f"provider returned HTTP {response.status_code}")
+        try:
+            body = response.json()
+        except ValueError as exc:
+            raise ProviderActivationError("provider response was not valid JSON") from exc
         if not isinstance(body, dict):
             raise ProviderActivationError("provider response must be a JSON object")
         retrieved_at = datetime.now(timezone.utc)

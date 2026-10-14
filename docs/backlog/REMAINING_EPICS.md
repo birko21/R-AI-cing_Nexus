@@ -65,6 +65,28 @@ repository.
 | R6.2 | Record owner-approved restricted pilot scope and go/no-go decision. | BLOCKED_HUMAN | `docs/evidence/ril-060/release-gate-checklist.md` |
 | R6.3 | Deploy a public or live-provider pilot. | BLOCKED_EXTERNAL | Explicitly out of scope until R3/R4/R5 gates pass |
 
+## Epic R7 — Backend completion and live-data activation
+
+| Ticket | Outcome | Status | Evidence |
+|---|---|---|---|
+| BE-011 | Expose non-secret provider runtime readiness. | COMPLETE | `/v1/system/status`, commit `09c8e33` |
+| BE-012 | Add dedicated provider-read authorization scope. | COMPLETE | `providers:read`, contract/auth tests |
+| BE-013 | Add bounded PuntersEdge aggregate-only probe path. | COMPLETE | `/v1/provider-probes/punters-edge`, commit `f20f877` |
+| BE-014 | Prevent raw payload retention/return from diagnostics. | COMPLETE | Diagnostic response contract and negative tests |
+| BE-015 | Normalize upstream HTTP/transport/JSON failures. | COMPLETE | Provider transport tests |
+| BE-016 | Deploy backend-only staging branch and verify health/logs. | COMPLETE | Render deployment `dep-db7lung473hc73ds1q50` |
+| BE-017 | Re-run full backend, contract, lint and repository validation. | COMPLETE | 322 tests, Ruff, repository baseline |
+| BE-018 | Configure named provider diagnostic approvals and owner permission. | BLOCKED_EXTERNAL | Render/provider owner action required |
+| BE-019 | Execute first approved aggregate-only live diagnostic. | BLOCKED_EXTERNAL | Depends on BE-018 and owner token |
+| BE-020 | Capture, validate and persist an approved live response. | BLOCKED_EXTERNAL | Depends on real response, rights and database |
+| BE-021 | Reconcile live rows into canonical data with quarantine. | BLOCKED_EXTERNAL | Depends on provider sample and parser evidence |
+| BE-022 | Run real-data chronological model evaluation. | BLOCKED_EXTERNAL | Depends on historical/model-use approval and labelled data |
+| BE-023 | Provision hosted database/worker/queue and prove recovery. | BLOCKED_EXTERNAL | Render plan/resources not provisioned |
+| BE-024 | Issue final non-visual backend release gate. | READY_AFTER_EXTERNAL_GATES | Depends on BE-019–023 and independent reviews |
+
+The detailed eight-hour execution register is in
+`docs/backlog/BACKEND_COMPLETION_8H.md`.
+
 ## Completion rule
 
 R1–R3 local tickets, R4.1–R4.3 and R5.1 are complete in this branch. The

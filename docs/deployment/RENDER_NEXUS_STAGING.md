@@ -70,7 +70,7 @@ memory-only token caching, sign-in/sign-out, callback handling at `/callback`,
 silent access-token acquisition for the Nexus API, owner-subject allowlisting,
 and fail-closed invalid/expired-session states. The API accepts Auth0
 `permissions` as the existing route scopes (`races:read`, `forecasts:read`,
-`selections:read`, `selections:write`) and independently validates the signed
+`selections:read`, `selections:write`, `providers:read`) and independently validates the signed
 access token, issuer, audience, expiry, subject and scope. The frontend's
 allowlist is only a user-experience gate; the API allowlist is authoritative.
 
@@ -125,6 +125,8 @@ automatic spend is requested by this change.
    service. Do not enter provider keys yet.
 6. Complete the OIDC integration test with a real signed token:
    - valid token with races:read reaches a protected route;
+   - valid token with providers:read reaches the provider diagnostic route only
+     after the provider and approval gates are configured;
    - wrong issuer, audience, signature, expiry or scope is rejected;
    - local bearer auth is rejected in staging;
    - /health/live remains an unauthenticated liveness check only.
@@ -146,8 +148,8 @@ automatic spend is requested by this change.
   no Auth0 account or credentials were created by this change.
 - In Auth0, create the API with identifier
   `https://r-ai-cing-nexus-staging-api`, enable RBAC/permissions, and create
-  the exact permissions `races:read`, `forecasts:read`, `selections:read`, and
-  `selections:write`. Create one SPA client and disable public sign-up or use
+  the exact permissions `races:read`, `forecasts:read`, `selections:read`,
+  `selections:write`, and `providers:read`. Create one SPA client and disable public sign-up or use
   an invitation-only connection. Assign only the owner account these
   permissions.
 - Enter the exact Auth0 values in Nexus Render only: domain

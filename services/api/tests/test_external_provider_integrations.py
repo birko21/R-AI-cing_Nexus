@@ -1,9 +1,11 @@
 from datetime import datetime, timezone
 
+import httpx
 import pytest
 
 from app.external_provider_integrations import (
     ProviderActivationError,
+    HttpxReadOnlyTransport,
     TransportResponse,
     build_bounded_probe_plan,
     build_disabled_provider_adapters,
@@ -220,3 +222,23 @@ def test_diagnostic_session_has_no_pagination_or_retry_path() -> None:
             code="THOROUGHBRED",
             policy=DiagnosticPolicy(enabled=True),
         ).run("GET_RESULTS")
+
+
+def test_http_transport_converts_upstream_http_failure_to_safe_activation_error() -> None:
+    client = httpx.Client(transport=httpx.MockTransport(lambda request: httpx.Response(429, json={"error": "quota"})))
+    transport = HttpxReadOnlyTransport(client=client)
+    try:
+        with pytest.raises(ProviderActivationError, match="HTTP 429"):
+            transport.request(method="GET", url="https://provider.invalid", headers={}, params={}, json_body=None, timeout_seconds=1)
+    finally:
+        transport.close()
+
+
+def test_http_transport_rejects_non_json_provider_payload() -> None:
+    client = httpx.Client(transport=httpx.MockTransport(lambda request: httpx.Response(200, content=b"not-json")))
+    transport = HttpxReadOnlyTransport(client=client)
+    try:
+        with pytest.raises(ProviderActivationError, match="valid JSON"):
+            transport.request(method="GET", url="https://provider.invalid", headers={}, params={}, json_body=None, timeout_seconds=1)
+    finally:
+        transport.close()

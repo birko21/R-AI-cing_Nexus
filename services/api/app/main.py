@@ -104,6 +104,19 @@ def _error_response(request: Request, code: str, message: str, status_code: int,
     return JSONResponse(status_code=status_code, content=body.model_dump(mode="json"), headers={"X-Correlation-ID": _correlation_id(request)})
 
 
+def _json_safe_validation_errors(errors: list[dict[str, object]]) -> list[dict[str, object]]:
+    def sanitize(value: object) -> object:
+        if isinstance(value, BaseException):
+            return str(value)
+        if isinstance(value, dict):
+            return {str(key): sanitize(item) for key, item in value.items()}
+        if isinstance(value, (list, tuple)):
+            return [sanitize(item) for item in value]
+        return value
+
+    return sanitize(errors)  # type: ignore[return-value]
+
+
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
     code = {400: "BAD_REQUEST", 401: "UNAUTHORIZED", 403: "FORBIDDEN", 404: "NOT_FOUND", 501: "NOT_IMPLEMENTED"}.get(
@@ -114,7 +127,7 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
-    return _error_response(request, "BAD_REQUEST", "request validation failed", 400, {"errors": exc.errors()})
+    return _error_response(request, "BAD_REQUEST", "request validation failed", 400, {"errors": _json_safe_validation_errors(exc.errors())})
 
 
 @app.get("/health/live", response_model=HealthResponse, tags=["health"])

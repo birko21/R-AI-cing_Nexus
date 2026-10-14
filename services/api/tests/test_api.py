@@ -149,6 +149,18 @@ def test_provider_probe_fails_closed_without_runtime_credentials(authenticated_c
     assert "provider probe blocked" in blocked.json()["error"]["message"]
 
 
+def test_provider_probe_rejects_impossible_calendar_date(authenticated_client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("LOCAL_AUTH_SCOPES", "providers:read")
+    invalid = authenticated_client.post(
+        "/v1/provider-probes/punters-edge",
+        json={"date": "2026-99-99"},
+        headers={"Authorization": "Bearer test-local-token"},
+    )
+    assert invalid.status_code == 400
+    assert invalid.json()["error"]["code"] == "BAD_REQUEST"
+    assert "month must be in 1..12" in str(invalid.json()["error"]["details"])
+
+
 def test_external_and_production_bind_modes_are_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("APP_ENV", "development")
     monkeypatch.setenv("ALLOW_LOCAL_AUTH", "true")
