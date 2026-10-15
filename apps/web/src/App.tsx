@@ -6,6 +6,7 @@ type Code = 'ALL' | 'THOROUGHBRED' | 'HARNESS' | 'GREYHOUND';
 type Status = 'LIVE' | 'DEMO' | 'NO_RACING' | 'NO_DATA' | 'UNAVAILABLE' | 'LOADING' | 'STALE' | 'QUARANTINED' | 'UNSUPPORTED' | 'AUTH_DENIED';
 type WorkspaceId = 'COMMAND' | 'MEETINGS' | 'TACTICAL' | 'RUNNER' | 'COMPARE' | 'MODEL' | 'MARKETS' | 'EVIDENCE' | 'ASSISTANT' | 'NOTEBOOK' | 'WATCHLISTS' | 'ALERTS' | 'REPORTS' | 'SETTINGS';
 type DataMode = 'LOADING' | 'SYNTHETIC_ONLY' | 'LICENSED';
+type ProductMode = 'LIVE_EVIDENCE' | 'ANALYSIS_LAB';
 
 type CommandItem = {
   id: string;
@@ -606,6 +607,7 @@ function answerAssistantQuestion(question: string): AssistantAnswer {
 
 export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {}) {
   const [activeWorkspace, setActiveWorkspace] = useState<WorkspaceId>('COMMAND');
+  const [productMode, setProductMode] = useState<ProductMode>(apiRequest ? 'LIVE_EVIDENCE' : 'ANALYSIS_LAB');
   const [selectedCode, setSelectedCode] = useState<Code>('ALL');
   const [selectedStatus, setSelectedStatus] = useState<Status | 'ALL'>('ALL');
   const [showStateExamples, setShowStateExamples] = useState(true);
@@ -616,6 +618,7 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
   const [liveMeetings, setLiveMeetings] = useState<LiveMeeting[]>([]);
   const [liveIngestion, setLiveIngestion] = useState<LiveIngestionHealth | null>(null);
   const [selectedLiveMeeting, setSelectedLiveMeeting] = useState<LiveMeeting | null>(null);
+  const isAnalysisLab = productMode === 'ANALYSIS_LAB';
   const visibleItems = useMemo(
     () => (dataMode === 'LICENSED' ? liveCommandItems(liveMeetings) : dataMode === 'LOADING' ? [] : commandItems).filter((item) =>
       (selectedCode === 'ALL' || item.code === selectedCode) &&
@@ -625,7 +628,14 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
   );
 
   useEffect(() => {
-    if (!apiRequest) return;
+    if (!apiRequest || isAnalysisLab) {
+      setDataMode('SYNTHETIC_ONLY');
+      setApiStatus('idle');
+      setLiveMeetings([]);
+      setLiveIngestion(null);
+      setSelectedLiveMeeting(null);
+      return;
+    }
     let active = true;
     setDataMode('LOADING');
     setApiStatus('checking');
@@ -661,7 +671,7 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
         }
       });
     return () => { active = false; };
-  }, [apiRequest]);
+  }, [apiRequest, isAnalysisLab]);
 
   useEffect(() => {
     if (dataMode === 'LICENSED') {
@@ -672,6 +682,18 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
 
   const activeWorkspaceLabel = workspaces.find((workspace) => workspace.value === activeWorkspace)?.label ?? 'Command Centre';
   const isCommandWorkspace = activeWorkspace === 'COMMAND' || (dataMode === 'LICENSED' && activeWorkspace === 'MEETINGS');
+  const selectProductMode = (nextMode: ProductMode) => {
+    setProductMode(nextMode);
+    setActiveWorkspace('COMMAND');
+    setSelectedLiveMeeting(null);
+    if (nextMode === 'ANALYSIS_LAB') {
+      setDataMode('SYNTHETIC_ONLY');
+      setApiStatus('idle');
+    } else {
+      setDataMode('LOADING');
+      setApiStatus('checking');
+    }
+  };
 
   return (
     <main className="shell nexus-shell">
@@ -679,11 +701,20 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
         <div className="brand-lockup"><NexusMark /><div><p className="eyebrow">RACING INTELLIGENCE LAB</p><div className="brand-wordmark">NEXUS <span>/ RESEARCH OS</span></div><h1>{activeWorkspace === 'COMMAND' ? 'Today / Command Centre' : activeWorkspaceLabel}</h1></div></div>
         <nav className="product-nav" aria-label="Primary product navigation"><span className="product-nav-active">Races</span><span>Analytics</span><span>Watchlist</span><span>Markets</span><span>Reports</span></nav>
         <div className="search-display" aria-label="Search scope"><span>⌕</span> Search races, horses, trainers…</div>
-        <div className="topbar-meta"><div className="session-chip"><span className="session-pulse" aria-hidden="true" /> PRIVATE OWNER WORKSPACE</div><div className="header-badges">{dataMode === 'LICENSED' ? <><span className="mode-badge">LIVE READ-ONLY</span><span className="mode-badge subdued">LICENSED</span></> : dataMode === 'LOADING' ? <><span className="mode-badge subdued">LIVE CHECK</span><span className="mode-badge subdued">API CHECKING</span></> : <><span className="mode-badge">DEMO ONLY</span><span className="mode-badge subdued">SYNTHETIC_ONLY</span></>}{apiStatus !== 'idle' && dataMode !== 'LOADING' && <span className="mode-badge subdued">API {apiStatus.toUpperCase()}</span>}</div></div>
+        <div className="topbar-meta">
+          <div className="session-chip"><span className="session-pulse" aria-hidden="true" /> PRIVATE OWNER WORKSPACE</div>
+          {apiRequest && <div className="product-mode-switch" aria-label="Product mode" role="group">
+            <span className="mode-switch-label">VIEW</span>
+            <button aria-pressed={productMode === 'LIVE_EVIDENCE'} className={productMode === 'LIVE_EVIDENCE' ? 'mode-switch-button selected' : 'mode-switch-button'} onClick={() => selectProductMode('LIVE_EVIDENCE')} type="button">Live evidence</button>
+            <button aria-pressed={productMode === 'ANALYSIS_LAB'} className={productMode === 'ANALYSIS_LAB' ? 'mode-switch-button selected lab' : 'mode-switch-button lab'} onClick={() => selectProductMode('ANALYSIS_LAB')} type="button">Analysis lab</button>
+          </div>}
+          <div className="header-badges">{productMode === 'ANALYSIS_LAB' ? <><span className="mode-badge">ANALYSIS LAB</span><span className="mode-badge subdued">SYNTHETIC_ONLY</span></> : dataMode === 'LICENSED' ? <><span className="mode-badge">LIVE READ-ONLY</span><span className="mode-badge subdued">LICENSED</span></> : dataMode === 'LOADING' ? <><span className="mode-badge subdued">LIVE CHECK</span><span className="mode-badge subdued">API CHECKING</span></> : <><span className="mode-badge">DEMO ONLY</span><span className="mode-badge subdued">SYNTHETIC_ONLY</span></>}{apiStatus !== 'idle' && dataMode !== 'LOADING' && <span className="mode-badge subdued">API {apiStatus.toUpperCase()}</span>}</div>
+        </div>
       </header>
       <nav className="workspace-nav" aria-label="Research workspaces">
         {workspaces.map((workspace) => <button aria-current={activeWorkspace === workspace.value ? 'page' : undefined} className={activeWorkspace === workspace.value ? 'workspace-link active' : 'workspace-link'} key={workspace.value} onClick={() => setActiveWorkspace(workspace.value)} type="button"><span>{workspace.short}</span><small>{workspace.label}</small></button>)}
       </nav>
+      {isAnalysisLab && <section className="analysis-lab-banner" aria-label="Analysis Lab notice"><div><span className="analysis-lab-kicker">OWNER ANALYSIS LAB</span><strong>Full V7 visual test environment</strong></div><p>All graphs, tables and analytical surfaces are deterministic synthetic fixtures. No provider values, forecasts or market prices are presented as live evidence in this mode.</p></section>}
       {dataMode === 'LOADING' && <LoadingWorkspace apiStatus={apiStatus} />}
       {dataMode !== 'LOADING' && !isCommandWorkspace && <WorkspaceBoundary workspace={activeWorkspace} dataMode={dataMode} onReturn={() => setActiveWorkspace('COMMAND')} />}
       {dataMode !== 'LOADING' && isCommandWorkspace && <>

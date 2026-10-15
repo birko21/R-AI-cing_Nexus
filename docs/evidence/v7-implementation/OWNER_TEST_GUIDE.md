@@ -4,11 +4,28 @@ Local preview: http://127.0.0.1:5201/
 
 Hosted UAT preview: https://nexus-staging-frontend.onrender.com/
 
-This is a synthetic-only, read-only visual candidate. It does not activate Render, Auth0, racing-provider credentials, wagering, or The Long Straight.
+The hosted build has two explicit owner modes. `LIVE EVIDENCE` opens the licensed,
+provider-backed read-only journey. `ANALYSIS LAB` opens the complete V7 visual
+product using deterministic synthetic fixtures so every graph, table and
+analytical surface can be exercised without implying that fixture values are
+live racing evidence.
 
-For the authenticated live-data UAT journey, use the hosted preview and follow
+For the authenticated live-data UAT journey, use `LIVE EVIDENCE` in the hosted
+preview and follow
 `docs/deployment/LIVE_AUTHENTICATED_E2E_CHECKLIST.md`. The hosted lane is
 private, owner-scoped, licensed, read-only, and wagering-disabled.
+
+For the full visual/product journey:
+
+1. Sign in to the hosted preview with the allowlisted owner account.
+2. Choose `Analysis lab` in the `VIEW` control in the top-right of the shell.
+3. Confirm the `OWNER ANALYSIS LAB` banner and `ANALYSIS LAB · SYNTHETIC_ONLY` badges.
+4. Exercise the atlas in the order below. Every analytical surface should be
+   available in this mode, including tactical track, speed map, runner
+   comparison, model evaluation, markets, evidence, assistant, notebook,
+   alerts, reports and settings.
+5. Switch back to `Live evidence` and confirm the licensed live meeting flow
+   returns with no synthetic replacement values.
 
 ## Approved atlas order
 
@@ -34,7 +51,8 @@ private, owner-scoped, licensed, read-only, and wagering-disabled.
 - On Evidence, open the receipt ledger action and switch Receipts/Rights/Timeline.
 - On Alerts, switch Active/Recent/Rules and toggle an alert. No automatic action should appear.
 - On Settings, open the assurance action and toggle Compact data tables or Reduce animated motion.
-- On every screen, confirm the synthetic-only / rights boundary remains visible and no unsupported racing value is presented as live.
+- In Analysis Lab, confirm the synthetic-only boundary remains visible on every screen and no fixture value is presented as live.
+- In Live Evidence, confirm the licensed boundary remains visible and no unsupported analytical value is presented.
 - Review at 1440×900, 768×1024 and 390×844 before approving the candidate.
 
 ## Current gate

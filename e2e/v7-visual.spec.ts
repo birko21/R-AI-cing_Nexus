@@ -22,6 +22,8 @@ test('V7 visual surfaces are individually authored and responsive', async ({ pag
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Today / Command Centre' })).toBeVisible();
+  await expect(page.getByText('OWNER ANALYSIS LAB')).toBeVisible();
+  await expect(page.getByText('Full V7 visual test environment')).toBeVisible();
   await expect(page.getByRole('region', { name: 'Synthetic command centre visual summary' })).toBeVisible();
   await page.screenshot({ path: 'docs/evidence/v7-implementation/command-centre-1440.png', fullPage: true });
 
@@ -107,6 +109,7 @@ test('V7 visual surfaces are individually authored and responsive', async ({ pag
   for (const viewport of [{ width: 768, height: 1024, name: '768' }, { width: 390, height: 844, name: '390' }]) {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
     await page.goto('/');
+    await expect(page.getByText('OWNER ANALYSIS LAB')).toBeVisible();
     await expect(page.getByRole('region', { name: 'Synthetic command centre visual summary' })).toBeVisible();
     await page.screenshot({ path: `docs/evidence/v7-implementation/command-centre-${viewport.name}.png`, fullPage: true });
     for (const workspace of workspaces) {

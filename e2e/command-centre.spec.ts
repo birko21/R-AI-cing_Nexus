@@ -4,7 +4,8 @@ import { expect, test } from '@playwright/test';
 test('command centre filters codes and distinguishes data states', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Today / Command Centre' })).toBeVisible();
-  await expect(page.getByText('DEMO ONLY')).toBeVisible();
+  await expect(page.getByText('ANALYSIS LAB', { exact: true })).toBeVisible();
+  await expect(page.getByText('OWNER ANALYSIS LAB')).toBeVisible();
   await expect(page.locator('header').getByText('SYNTHETIC_ONLY')).toBeVisible();
   await expect(page.getByText('Fictional Thoroughbred Park')).toBeVisible();
   await expect(page.getByText('Fictional Harness Circuit')).toBeVisible();

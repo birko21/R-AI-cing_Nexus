@@ -14,7 +14,7 @@ expansion, or a production customer release.
 | Render frontend source | Tracked `codex/live-provider-staging`; the hosted service was behind the validated V7 candidate |
 | Hosted API | Healthy licensed lane; PuntersEdge `GET_RESULTS`; Neon/Postgres persistence; wagering disabled |
 | Auth boundary | Auth0 owner session active in the hosted browser; anonymous `GET /v1/meetings` returns `401` |
-| Hosted UI taxonomy | Previous deployment exposed the older 13-workspace atlas; V7 candidate contains the 14-screen atlas |
+| Hosted UI taxonomy | V7 candidate contains the 14-screen atlas plus an explicit owner-only Analysis Lab mode |
 | Provider journey | Live dashboard and canonical meeting/race/entry flow are available without synthetic fallback |
 
 ## Executed tickets
@@ -29,6 +29,7 @@ expansion, or a production customer release.
 | UAT-006 | Verified public denial | `GET /v1/meetings` without a bearer token returned `401 Unauthorized` |
 | UAT-007 | Re-ran repository checks | 338 API tests passed; contract validation passed; Render blueprint validation passed; web checks/build/E2E already passed on the deployed commit |
 | UAT-008 | Created this handoff record | No tokens, credentials, raw provider payloads, or browser storage captured |
+| UAT-009 | Added owner-only Analysis Lab switch | Full V7 visual journey is available as deterministic synthetic fixtures; Live Evidence remains provider-backed and bounded |
 
 ## Owner UAT sequence
 
@@ -37,8 +38,9 @@ expansion, or a production customer release.
 3. Confirm `LICENSED INGESTION MONITOR` and a bounded `HEALTHY`, `STALE`, `FAILED`, or `NO DATA` state.
 4. Open a live meeting and confirm the `LIVE RESEARCH VIEW · READ-ONLY`, a licensed race panel, canonical entries, field states, and receipt.
 5. Confirm no forecasts, market odds, wagering actions, raw provider payloads, or synthetic replacement values appear in the licensed journey.
-6. Exercise the V7 workspace atlas at desktop, tablet, and mobile sizes; compare against the canonical pack and record visual approval or defects.
-7. Sign out and reload; confirm the owner gate returns.
+6. Choose `Analysis lab`, confirm the `OWNER ANALYSIS LAB` banner, and exercise the complete atlas at desktop, tablet, and mobile sizes; compare against the canonical pack and record visual approval or defects.
+7. Switch back to `Live evidence` and confirm the licensed dashboard and canonical meeting flow return.
+8. Sign out and reload; confirm the owner gate returns.
 
 ## Remaining gates
 

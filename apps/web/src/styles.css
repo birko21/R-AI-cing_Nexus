@@ -254,6 +254,18 @@ body {
 .session-chip { display: flex; align-items: center; gap: 7px; color: var(--nexus-muted); font-size: 0.62rem; font-weight: 800; letter-spacing: 0.12em; }
 .session-pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--nexus-lime); box-shadow: 0 0 0 4px rgba(159, 240, 198, 0.12), 0 0 12px rgba(159, 240, 198, 0.7); }
 .header-badges { gap: 7px; }
+.product-mode-switch { display: inline-flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid rgba(120, 182, 255, 0.26); border-radius: 999px; background: rgba(7, 17, 31, 0.62); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 24px rgba(0, 0, 0, 0.16); }
+.mode-switch-label { padding: 0 6px 0 8px; color: rgba(169, 189, 212, 0.7); font-size: 0.56rem; font-weight: 850; letter-spacing: 0.14em; }
+.mode-switch-button { min-height: 30px; padding: 6px 11px; border: 1px solid transparent; border-radius: 999px; color: #9fb4cc; background: transparent; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.02em; transition: color 160ms ease, background 160ms ease, border-color 160ms ease, transform 160ms ease; }
+.mode-switch-button:hover { color: #eef6ff; background: rgba(48, 101, 156, 0.28); }
+.mode-switch-button:active { transform: scale(0.97); }
+.mode-switch-button.selected { color: #f4fbff; background: linear-gradient(135deg, rgba(48, 126, 181, 0.95), rgba(34, 78, 125, 0.95)); border-color: rgba(143, 210, 255, 0.7); box-shadow: 0 4px 14px rgba(25, 75, 127, 0.26); }
+.mode-switch-button.selected.lab { color: #fff2c5; background: linear-gradient(135deg, rgba(126, 95, 42, 0.95), rgba(84, 65, 31, 0.95)); border-color: rgba(255, 220, 138, 0.72); }
+.analysis-lab-banner { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: 16px; padding: 14px 17px; border: 1px solid rgba(255, 220, 138, 0.34); border-left: 3px solid var(--nexus-amber); border-radius: var(--nexus-radius-md); background: linear-gradient(105deg, rgba(86, 67, 28, 0.42), rgba(26, 42, 65, 0.74)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 14px 34px rgba(0, 0, 0, 0.14); }
+.analysis-lab-banner > div { display: grid; gap: 4px; min-width: max-content; }
+.analysis-lab-kicker { color: var(--nexus-amber); font-size: 0.62rem; font-weight: 850; letter-spacing: 0.14em; }
+.analysis-lab-banner strong { color: #fff2c5; font-size: 0.96rem; letter-spacing: -0.01em; }
+.analysis-lab-banner p { max-width: 720px; margin: 0; color: #d4c9aa; font-size: 0.82rem; line-height: 1.45; }
 .mode-badge { background: rgba(255, 220, 138, 0.05); border-color: rgba(255, 220, 138, 0.65); box-shadow: inset 0 0 0 1px rgba(255, 220, 138, 0.04); }
 .mode-badge.subdued { background: rgba(159, 240, 198, 0.045); border-color: rgba(159, 240, 198, 0.58); }
 .warning-badge { color: var(--nexus-amber); border-color: rgba(255, 220, 138, 0.58); background: rgba(255, 220, 138, 0.04); }
@@ -415,6 +427,10 @@ body {
   .tactical-atlas-preview { grid-template-columns: 1fr; }
   .tactical-visual { min-height: 280px; padding: 16px; }
   .tactical-lane small { font-size: 0.6rem; }
+  .product-mode-switch { align-self: stretch; justify-content: space-between; }
+  .mode-switch-button { flex: 1; }
+  .analysis-lab-banner { align-items: flex-start; flex-direction: column; gap: 9px; }
+  .analysis-lab-banner > div { min-width: 0; }
 }
 
 /* V7 visual implementation layer: synthetic-only cinematic surfaces. */

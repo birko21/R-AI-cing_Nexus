@@ -15,6 +15,14 @@ describe('authenticated dashboard hand-off', () => {
     expect(markup).not.toContain('Protected staging configuration required');
   });
 
+  it('labels the local fixture pack as the Analysis Lab', () => {
+    const markup = renderToStaticMarkup(<App />);
+
+    expect(markup).toContain('ANALYSIS LAB');
+    expect(markup).toContain('OWNER ANALYSIS LAB');
+    expect(markup).toContain('Full V7 visual test environment');
+  });
+
   it('maps licensed canonical meetings to live provider cards', () => {
     const cards = liveCommandItems([{
       meeting_id: 'punters-edge:meeting:randwick',
