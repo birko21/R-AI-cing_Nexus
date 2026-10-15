@@ -5,6 +5,7 @@
   "packageManager": "pnpm@11.19.0",
   "scripts": {
     "bootstrap": "powershell -ExecutionPolicy Bypass -File scripts/bootstrap.ps1",
+    "build": "pnpm web:build",
     "dev": "powershell -ExecutionPolicy Bypass -File scripts/start-dev.ps1",
     "seed:fixture": "powershell -ExecutionPolicy Bypass -File scripts/seed_fixture.ps1",
     "validate": "powershell -ExecutionPolicy Bypass -File scripts/validate_repository.ps1",
@@ -19,11 +20,15 @@
     "db:ingest:synthetic": "powershell -ExecutionPolicy Bypass -Command \".\\.venv\\Scripts\\python.exe scripts/run_postgres_synthetic_ingestion.py\"",
     "db:enqueue:synthetic": "powershell -ExecutionPolicy Bypass -Command \".\\.venv\\Scripts\\python.exe scripts/run_postgres_synthetic_ingestion.py --enqueue-only\"",
     "db:worker:synthetic": "powershell -ExecutionPolicy Bypass -Command \".\\.venv\\Scripts\\python.exe scripts/run_postgres_synthetic_worker.py\"",
-    "web:e2e": "playwright test"
-    ,"contract:validate": "python scripts/validate_contracts.py"
+    "web:e2e": "playwright test",
+    "contract:validate": "python scripts/validate_contracts.py"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.2",
     "@playwright/test": "1.64.0"
+  },
+  "dependencies": {
+    "@neon/config": "^1.9.1",
+    "@neon/env": "^1.6.2"
   }
 }

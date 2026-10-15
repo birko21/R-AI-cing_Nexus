@@ -12,6 +12,7 @@ import os
 
 from sqlalchemy import create_engine
 
+from app.database_config import sqlalchemy_database_url
 from app.live_ingestion import persist_approved_live_envelope
 from app.live_projection import project_live_envelope
 from app.live_provider_runtime import build_live_provider_handle
@@ -67,7 +68,7 @@ def run_live_ingestion(
         if len(page.records) != 1:
             raise RuntimeError("provider returned an unexpected envelope count")
         envelope = page.records[0]
-        engine = create_engine(database_url, pool_pre_ping=True, pool_size=1, max_overflow=0)
+        engine = create_engine(sqlalchemy_database_url(database_url), pool_pre_ping=True, pool_size=1, max_overflow=0)
         try:
             with engine.begin() as connection:
                 persistence = persist_approved_live_envelope(connection, envelope)

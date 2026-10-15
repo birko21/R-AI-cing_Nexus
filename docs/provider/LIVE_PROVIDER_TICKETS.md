@@ -28,13 +28,22 @@ Approved provider envelopes pass through strict identity and timestamp
 validation before canonical meetings, races, entries, and official results
 are written. Ambiguous records are rejected rather than guessed.
 
-## LIVE-005 — Wire PostgreSQL and migrations — CODE COMPLETE / NEON URL PENDING
+## LIVE-005 — Wire PostgreSQL and migrations — COMPLETE LOCALLY / RENDER PENDING
 
 The Alembic chain and transactional live-ingestion runner are ready. The
-free Blueprint now expects pooled and direct Neon URLs as Render secrets;
+`nexus-staging` Neon project and `production` branch are now linked. The
+pooled and direct URLs are available through the ignored local `.env.local`,
+all 19 migrations have been applied, and the API uses the installed psycopg 3
+driver. The free Blueprint still expects the same URLs as Render secrets;
 Render does not create a paid database resource.
 
-## LIVE-006 — Add scheduled ingestion — CODE COMPLETE / GITHUB SECRETS PENDING
+## LIVE-006 — Wire Render runtime secrets — READY / RENDER ACTION PENDING
+
+Enter the pooled and direct Neon URLs, the existing PuntersEdge API key, a
+new ingestion trigger token, and the non-secret licensed read-only scope into
+`nexus-staging-api`. Keep provider credentials and database URLs in Render.
+
+## LIVE-007 — Add scheduled ingestion — CODE COMPLETE / GITHUB SECRETS PENDING
 
 The protected `/internal/live-ingestion/run` endpoint performs one bounded
 read using provider credentials held in Render. A GitHub Actions schedule
@@ -42,18 +51,31 @@ triggers it hourly, avoiding Render's paid Cron service. Each run persists the
 approved receipt/envelope, projects canonical data, and exits without placing
 orders or wagers.
 
-## LIVE-007 — Remove synthetic runtime fallback — CODE COMPLETE / ACTIVATION PENDING
+## LIVE-008 — Remove synthetic runtime fallback — CODE COMPLETE / ACTIVATION PENDING
 
 Synthetic repositories remain available only for local/test mode. A licensed
 deployment fails closed unless PostgreSQL and the explicit live scope are
-configured. The current Render service remains synthetic until LIVE-005 and
-LIVE-006 are applied.
+configured. The current Render service remains synthetic until the Neon,
+Render, GitHub, and deployment tickets are applied.
 
-## LIVE-008 — Deploy and validate on Render — IN PROGRESS
+## LIVE-009 — Deploy and validate on Render — READY / CONFIGURATION PENDING
 
-Commit `4209bf1` is live and health-checked. Final validation requires the
-managed database, cron service, non-secret live scope configuration, one
-bounded provider sample, and verification of persisted canonical rows.
+The existing free API service is live and health-checked. Final validation
+requires the Neon secrets, GitHub workflow, non-secret live scope
+configuration, one bounded provider sample, and verification of persisted
+canonical rows.
+
+## LIVE-010 — Verify canonical persistence and idempotency — READY / FIRST RUN PENDING
+
+Confirm that one successful provider run creates the expected receipt,
+envelope, and canonical rows in Neon, then repeat the same run to prove that
+the idempotency boundary does not duplicate data.
+
+## LIVE-011 — Operational closeout — READY / VALIDATION PENDING
+
+Record the safe response shape, failure behavior, kill-switch procedure, and
+rollback steps. Confirm that provider failures fail closed and that the API
+never exposes raw payloads, credentials, or wagering operations.
 
 ## Current external gate
 
@@ -61,3 +83,6 @@ The free path requires a Neon pooled URL, Neon direct URL, and one matching
 ingestion trigger token entered as secrets in Render/GitHub. No billable
 Render resource is required. Scheduled workflows run from the repository's
 default branch, so the workflow must be merged there before hourly execution.
+
+The full dependency-ordered Ralph sequence and completed evidence are recorded
+in `docs/deployment/RALPH_LIVE_PROVIDER_EXECUTION.md`.

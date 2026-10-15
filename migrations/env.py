@@ -12,9 +12,13 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 
-database_url = os.environ.get("DATABASE_URL")
+database_url = os.environ.get("DATABASE_URL_UNPOOLED") or os.environ.get("DATABASE_URL")
 if not database_url:
-    raise RuntimeError("DATABASE_URL must be set before running migrations")
+    raise RuntimeError("DATABASE_URL_UNPOOLED or DATABASE_URL must be set before running migrations")
+if database_url.startswith("postgresql://"):
+    database_url = "postgresql+psycopg://" + database_url.removeprefix("postgresql://")
+elif database_url.startswith("postgres://"):
+    database_url = "postgresql+psycopg://" + database_url.removeprefix("postgres://")
 
 config.set_main_option("sqlalchemy.url", database_url.replace("%", "%%"))
 target_metadata = None

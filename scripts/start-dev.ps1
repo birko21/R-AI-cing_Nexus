@@ -1,5 +1,19 @@
 $ErrorActionPreference = 'Stop'
 
+if (Test-Path -LiteralPath '.env.local') {
+    foreach ($line in Get-Content -LiteralPath '.env.local') {
+        if ([string]::IsNullOrWhiteSpace($line) -or $line.TrimStart().StartsWith('#')) { continue }
+        $separator = $line.IndexOf('=')
+        if ($separator -le 0) { continue }
+        $key = $line.Substring(0, $separator).Trim()
+        $value = $line.Substring($separator + 1)
+        if ($value.Length -ge 2 -and (($value.StartsWith('"') -and $value.EndsWith('"')) -or ($value.StartsWith("'") -and $value.EndsWith("'")))) {
+            $value = $value.Substring(1, $value.Length - 2)
+        }
+        Set-Item -Path ("Env:" + $key) -Value $value
+    }
+}
+
 if (-not (Test-Path -LiteralPath '.venv\Scripts\python.exe')) {
     powershell -ExecutionPolicy Bypass -File 'scripts/bootstrap.ps1'
 }

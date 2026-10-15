@@ -11,6 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.auth import forecasts_read, providers_read, races_read, selections_read, selections_write, validate_bind_configuration
 from app.catalog_repository import PostgresCatalogRepository, SyntheticCatalogRepository, offset_from_cursor
+from app.database_config import sqlalchemy_database_url
 from app.contracts import (
     CodeSummary,
     CodeListResponse,
@@ -62,7 +63,7 @@ def _runtime_repositories():
             raise RuntimeError("DATABASE_URL is required when NEXUS_API_PERSISTENCE=postgres")
         from sqlalchemy import create_engine
 
-        engine = create_engine(database_url, pool_pre_ping=True)
+        engine = create_engine(sqlalchemy_database_url(database_url), pool_pre_ping=True)
         return PostgresSelectionJournal(engine), PostgresCatalogRepository(engine)
     if runtime.data_mode != "SYNTHETIC_ONLY":
         raise RuntimeError("non-synthetic data modes require PostgreSQL persistence")
