@@ -108,12 +108,21 @@ API service, and GitHub Actions supplies the hourly schedule. No billable
 Render database or cron resource is required. The current scope remains one
 bounded, read-only PuntersEdge thoroughbred-results operation per run.
 
+## LIVE-015 — Add freshness and coverage monitoring — COMPLETE
+
+The hourly lane records fixed-detail success/failure events in the existing
+append-only `source_health_events` table. Anonymous system status now exposes
+only safe operational metadata: latest success and attempt timestamps,
+provider response age, configurable freshness threshold, aggregate canonical
+coverage, and a bounded failure code. The status view never returns provider
+payloads, provider error text, credentials, or wagering fields. The Render
+deployment and a fresh scheduled ingestion were verified against Neon.
+
 ## Next ticket boundary
 
-LIVE-015 should add freshness and coverage monitoring for the scheduled lane:
-record the latest successful ingestion, provider response age, canonical row
-coverage, and failure state in a safe operational view. It must not widen the
-provider operation or retain additional fields.
+LIVE-016 should add an explicit operator-facing alert or dashboard treatment
+for `STALE` and `FAILED` ingestion status, without adding provider scope or
+turning the status endpoint into a payload browser.
 
 The full dependency-ordered Ralph sequence and completed evidence are recorded
 in `docs/deployment/RALPH_LIVE_PROVIDER_EXECUTION.md`.

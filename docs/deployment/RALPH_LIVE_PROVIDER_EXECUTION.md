@@ -34,6 +34,7 @@ wagering-disabled throughout.
 | LIVE-012 | Replace synthetic command cards with licensed canonical meetings | COMPLETE | LIVE-011 | Frontend reads `/v1/system/status` and `/v1/meetings`; licensed mode shows provider-backed cards and suppresses synthetic assistant claims |
 | LIVE-013 | Expose canonical races by meeting | COMPLETE | LIVE-012 | Authenticated `/v1/meetings/{meeting_id}/races` returns bounded, as-of filtered licensed races; contract and Neon verification pass |
 | LIVE-014 | Show licensed race and entry detail | COMPLETE | LIVE-013 | Frontend loads canonical races and entries, displays provenance/read-only state, and fails closed without synthetic replacement |
+| LIVE-015 | Add freshness and coverage monitoring for the hourly lane | COMPLETE | LIVE-014 | Safe status reports latest success/attempt, provider response age, freshness threshold, aggregate canonical coverage, and bounded failure state; Render and Neon verification pass |
 
 ## Ralph loop protocol
 
@@ -86,10 +87,18 @@ LIVE-005 completed locally and LIVE-006 through LIVE-011 completed in the stagin
 - LIVE-014 was merged as PR #180 and deployed as frontend commit `db7ab11`;
   the asset contains the live race view, race-list and entry-list calls, and
   the explicit no-synthetic-replacement state.
+- LIVE-015 was deployed as API commit `824dd6c`; Render deployment
+  `dep-db8ark2vcj2c738rck2g` completed successfully and `/v1/system/status`
+  returned a healthy licensed ingestion view after a fresh scheduled run.
+- The new telemetry path recorded one `HEALTHY` event in Neon. The verified
+  aggregate coverage is two licensed meetings, two races, 21 entries, and
+  three official results; provider response age was 35 seconds at verification
+  and the configured freshness threshold was 10,800 seconds.
 
 ## Post-closeout follow-up
 
 The staging lane is operational and the first live data is visible through the
-frontend. The next technical ticket is freshness/coverage monitoring for the
-hourly lane. Provider expansion or historical/model use remains a separate
-decision requiring account entitlement and retention evidence.
+frontend. LIVE-015 is complete. The next technical ticket is a bounded
+operator-facing treatment for stale or failed ingestion status. Provider
+expansion or historical/model use remains a separate decision requiring
+account entitlement and retention evidence.
