@@ -108,8 +108,13 @@ class HttpxReadOnlyTransport:
             body = response.json()
         except ValueError as exc:
             raise ProviderActivationError("provider response was not valid JSON") from exc
+        if isinstance(body, list):
+            # PuntersEdge returns the results collection as a top-level JSON
+            # array. Normalize that transport shape before it crosses the
+            # common envelope boundary; projection still validates every row.
+            body = {"results": body}
         if not isinstance(body, dict):
-            raise ProviderActivationError("provider response must be a JSON object")
+            raise ProviderActivationError("provider response must be a JSON object or array")
         retrieved_at = datetime.now(timezone.utc)
         return TransportResponse(
             status_code=response.status_code,

@@ -127,6 +127,29 @@ def test_full_named_approval_and_injected_transport_are_required() -> None:
     assert transport.calls[0]["params"] == {"category": "horse", "date": "2026-09-19", "venue": "Randwick"}
 
 
+def test_http_transport_normalizes_top_level_results_array() -> None:
+    class Response:
+        status_code = 200
+        headers = {"x-request-id": "request-1"}
+
+        @staticmethod
+        def json() -> list[dict[str, object]]:
+            return [{"race_id": "race-1"}]
+
+    class Client:
+        @staticmethod
+        def request(*args: object, **kwargs: object) -> Response:
+            return Response()
+
+    transport = HttpxReadOnlyTransport(client=Client())  # type: ignore[arg-type]
+    response = transport.request(
+        method="GET", url="https://provider.test/results", headers={}, params={},
+        json_body=None, timeout_seconds=1.0,
+    )
+
+    assert response.payload == {"results": [{"race_id": "race-1"}]}
+
+
 def test_betfair_adapter_uses_read_only_json_rpc_and_never_post_settlement_sp_as_pre_race_input() -> None:
     transport = FakeTransport()
     asset = build_existing_provider_assets()["betfair-exchange"]
