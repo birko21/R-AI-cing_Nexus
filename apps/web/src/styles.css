@@ -481,3 +481,35 @@ body {
   .tactical-field-size { justify-content:space-between; }
   .tactical-field-size select { min-width:0; flex:1; }
 }
+
+/* Analytical speed map refinement: give each runner a legible lane position instead of stacking markers on one centre line. */
+.v7-speed-map { min-height:290px; padding:16px; }
+.speed-map-head { padding-bottom:11px; border-bottom:1px solid rgba(143,230,255,.16); }
+.speed-map-head .eyebrow { margin-bottom:4px; color:#6fc7ff; }
+.speed-map-head strong { font-size:.9rem; letter-spacing:.01em; }
+.speed-map-head>span { padding:4px 6px; border:1px solid rgba(53,226,160,.35); border-radius:999px; color:#8ce8c4; font-size:.52rem; text-transform:uppercase; letter-spacing:.08em; }
+.speed-map-grid { position:relative; margin-top:14px; overflow:visible; border:1px solid rgba(111,199,255,.38); border-radius:7px; padding:6px 7px 4px; background:linear-gradient(180deg,rgba(7,25,42,.98),rgba(4,16,28,.98)),repeating-linear-gradient(90deg,transparent 0,transparent calc(20% - 1px),rgba(111,199,255,.16) calc(20% - 1px),rgba(111,199,255,.16) 20%); }
+.speed-map-row { min-height:48px; margin:0; border-bottom:1px solid rgba(143,230,255,.16); }
+.speed-map-row:last-child { border-bottom:0; }
+.speed-map-row>b { position:relative; z-index:2; width:82px; padding-left:5px; color:#dcecf7; font-size:.56rem; letter-spacing:.05em; }
+.speed-map-row button { z-index:3; top:50%; left:calc(82px + (var(--runner-left) * .68)); width:24px; height:24px; border:2px solid #061523; box-shadow:0 2px 8px rgba(0,0,0,.45); font-size:.58rem; transition:transform .16s ease, box-shadow .16s ease; }
+.speed-map-row button:nth-of-type(1) { top:26%; }
+.speed-map-row button:nth-of-type(2) { top:74%; }
+.speed-map-row button:nth-of-type(3) { top:38%; }
+.speed-map-row button:nth-of-type(4) { top:62%; }
+.speed-map-row button:nth-of-type(5) { top:50%; }
+.speed-map-row button:hover { transform:translateX(-50%) scale(1.12); box-shadow:0 0 0 3px rgba(255,255,255,.18),0 3px 11px rgba(0,0,0,.55); }
+.speed-map-row button.selected { outline:2px solid #f6fbff; box-shadow:0 0 0 4px rgba(95,196,255,.34),0 3px 12px rgba(0,0,0,.55); }
+.speed-map-axis { position:relative; margin:8px 0 0 82px; color:#a8c4d7; font-size:.53rem; }
+.speed-map-axis::before { content:'EARLY SETTLING'; position:absolute; left:0; top:-14px; color:#5f89a5; font-size:.45rem; letter-spacing:.1em; }
+.speed-map-axis::after { content:'FINISH →'; position:absolute; right:0; top:-14px; color:#e3b647; font-size:.45rem; letter-spacing:.1em; }
+.v7-speed-map>p { max-width:90%; margin-top:16px; color:#a9c2d2; }
+@media (max-width:580px) {
+  .v7-speed-map { min-height:278px; padding:12px; }
+  .speed-map-head>span { font-size:.45rem; }
+  .speed-map-row { min-height:43px; }
+  .speed-map-row>b { width:60px; font-size:.48rem; }
+  .speed-map-row button { left:calc(60px + (var(--runner-left) * .76)); width:18px; height:18px; font-size:.48rem; }
+  .speed-map-axis { margin-left:60px; font-size:.45rem; }
+  .speed-map-axis::before,.speed-map-axis::after { font-size:.4rem; }
+}
