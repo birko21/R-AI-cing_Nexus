@@ -326,6 +326,14 @@ class GatedReadOnlyProviderAdapter:
             if any(value is not None for value in (date, venue, race, cursor, page_size)):
                 raise ProviderActivationError("PuntersEdge account metadata accepts no query parameters")
             return {}
+        if operation == "GET_RESULTS" and code == "THOROUGHBRED":
+            # PuntersEdge names the thoroughbred category "horse" and does
+            # not accept the application's generic `code` query parameter.
+            params = {"category": "horse"}
+            for key, value in (("date", date), ("venue", venue), ("limit", page_size)):
+                if value is not None:
+                    params[key] = value
+            return params
         params: dict[str, object] = {"code": code}
         for key, value in (("date", date), ("venue", venue), ("race", race), ("cursor", cursor), ("limit", page_size)):
             if value is not None:

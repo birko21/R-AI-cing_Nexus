@@ -124,6 +124,7 @@ def test_full_named_approval_and_injected_transport_are_required() -> None:
     assert transport.calls[0]["method"] == "GET"
     assert transport.calls[0]["url"].endswith("/v1/racing/results")
     assert transport.calls[0]["headers"]["X-API-Key"] == "test-only-secret"
+    assert transport.calls[0]["params"] == {"category": "horse", "date": "2026-09-19", "venue": "Randwick"}
 
 
 def test_betfair_adapter_uses_read_only_json_rpc_and_never_post_settlement_sp_as_pre_race_input() -> None:
