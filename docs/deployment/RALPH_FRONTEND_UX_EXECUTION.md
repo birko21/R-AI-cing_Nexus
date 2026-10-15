@@ -41,6 +41,29 @@ The hosted browser audit found:
 | UX-002 | Improve live meeting/race detail hierarchy, state chips, provenance, and degraded states | UX-001 | COMPLETE |
 | UX-003 | Validate responsive/accessibility behavior and deploy the reviewed UI | UX-001, UX-002 | IN PROGRESS |
 
+## UX-003 validation notes
+
+The default Playwright run initially reused a Vite server from a different
+workspace. The test harness now accepts `WEB_PORT` and
+`PLAYWRIGHT_REUSE_SERVER=false` so a fresh branch-local server can be forced.
+The isolated rerun passed all six existing browser journeys, including axe,
+desktop/mobile screenshots, and the workspace navigation regression.
+
+Observed commands:
+
+```text
+npm run typecheck                         PASS
+npm run test -- --run                     5 passed
+npm run build                             PASS
+$env:WEB_PORT='5174'; $env:PLAYWRIGHT_REUSE_SERVER='false'; pnpm web:e2e
+                                            6 passed (31.5s)
+```
+
+Evidence captures were refreshed at `docs/evidence/ril-017` through
+`docs/evidence/ril-061`. The browser suite includes the 390px mobile viewport
+and an axe scan; the hosted licensed browser pass remains the final live-data
+acceptance check after deployment.
+
 ## Safety boundary
 
 This pass changes presentation and navigation only. It does not add market

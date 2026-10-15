@@ -10,6 +10,14 @@ test('command centre filters codes and distinguishes data states', async ({ page
   await expect(page.getByText('Fictional Harness Circuit')).toBeVisible();
   await expect(page.getByText('Fictional Greyhound Track')).toBeVisible();
 
+  const workspaceNav = page.getByRole('navigation', { name: 'Research workspaces' });
+  await expect(workspaceNav).toBeVisible();
+  await expect(workspaceNav.getByRole('button', { name: /Evidence/ })).toBeVisible();
+  await workspaceNav.getByRole('button', { name: /Evidence/ }).click();
+  await expect(page.getByRole('region', { name: 'Evidence workspace' })).toBeVisible();
+  await page.getByRole('button', { name: 'Return to Command Centre' }).click();
+  await expect(page.getByRole('heading', { name: 'Today / Command Centre' })).toBeVisible();
+
   await page.getByRole('button', { name: 'Open research view' }).first().click();
   await expect(page.getByRole('region', { name: 'Race research view' })).toBeVisible();
   await expect(page.getByText('field-r2', { exact: true })).toBeVisible();
