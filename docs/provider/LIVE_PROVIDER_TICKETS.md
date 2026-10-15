@@ -118,17 +118,17 @@ coverage, and a bounded failure code. The status view never returns provider
 payloads, provider error text, credentials, or wagering fields. The Render
 deployment and a fresh scheduled ingestion were verified against Neon.
 
-## LIVE-016 — Add operator-facing live health status — IN PROGRESS
+## LIVE-016 — Add operator-facing live health status — COMPLETE
 
 The licensed dashboard now consumes the safe `live_ingestion` status object and
 renders explicit HEALTHY, STALE, FAILED, and NO DATA states with provider,
 operation, last-success, freshness, and aggregate coverage metadata. It does
 not render provider payloads, provider error text, credentials, forecasts,
 markets, or a synthetic replacement. Local web typecheck, five web tests, and
-the production build pass; hosted deployment verification is the remaining
-acceptance step.
+the production build pass. Render deploy `dep-db8b1erncjis73f9676g` from
+commit `cefeebf` also succeeded, and the public asset includes the monitor.
 
-## LIVE-019 — Verify the hourly failure path — IN PROGRESS
+## LIVE-019 — Verify the hourly failure path — COMPLETE
 
 The scheduler already uses `set -euo pipefail` and curl's
 `--fail-with-body --silent --show-error`, so an ingestion `503` produces a
@@ -136,8 +136,9 @@ failed GitHub Actions run rather than a false success. The API contract test
 also proves missing trigger configuration returns `503`, invalid trigger
 credentials return `401`, and the health projection emits only the bounded
 `INGESTION_FAILED` or `DATABASE_UNAVAILABLE` code. A workflow contract test
-now guards these fail-closed properties; the ticket closes after the hosted
-workflow and deployment evidence are recorded.
+now guards these fail-closed properties. The complete API suite passes 338
+tests, and hosted workflow run `38723784884` completed its bounded read-only
+ingestion successfully.
 
 ## Next ticket boundary
 

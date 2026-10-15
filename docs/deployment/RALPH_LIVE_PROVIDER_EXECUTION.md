@@ -35,10 +35,10 @@ wagering-disabled throughout.
 | LIVE-013 | Expose canonical races by meeting | COMPLETE | LIVE-012 | Authenticated `/v1/meetings/{meeting_id}/races` returns bounded, as-of filtered licensed races; contract and Neon verification pass |
 | LIVE-014 | Show licensed race and entry detail | COMPLETE | LIVE-013 | Frontend loads canonical races and entries, displays provenance/read-only state, and fails closed without synthetic replacement |
 | LIVE-015 | Add freshness and coverage monitoring for the hourly lane | COMPLETE | LIVE-014 | Safe status reports latest success/attempt, provider response age, freshness threshold, aggregate canonical coverage, and bounded failure state; Render and Neon verification pass |
-| LIVE-016 | Add operator-facing live health status | IN PROGRESS | LIVE-015 | Licensed dashboard shows bounded HEALTHY/STALE/FAILED/NO DATA state without payload leakage or synthetic replacement |
+| LIVE-016 | Add operator-facing live health status | COMPLETE | LIVE-015 | Licensed dashboard shows bounded HEALTHY/STALE/FAILED/NO DATA state without payload leakage or synthetic replacement |
 | LIVE-017 | Prove the authenticated hosted live journey | PLANNED | LIVE-016 | Auth0 owner session reaches live meeting, race, and entry views through protected API calls; wagering remains disabled |
 | LIVE-018 | Capture repeatable live acceptance evidence | PLANNED | LIVE-017, LIVE-019 | Render, GitHub Actions, Neon, and authenticated UI evidence are recorded without secrets or raw provider payloads |
-| LIVE-019 | Verify the hourly failure/alert path | IN PROGRESS | LIVE-015, LIVE-016 | Scheduled ingestion failure is non-zero/visible and status remains bounded |
+| LIVE-019 | Verify the hourly failure/alert path | COMPLETE | LIVE-015, LIVE-016 | Scheduled ingestion failure is non-zero/visible and status remains bounded |
 | LIVE-020 | Run release go/no-go closeout | PLANNED | LIVE-018, LIVE-019 | Kill switch, rollback, no-synthetic, no-wagering, and scope boundaries are confirmed |
 
 ## Ralph loop protocol
@@ -99,12 +99,22 @@ LIVE-005 completed locally and LIVE-006 through LIVE-011 completed in the stagin
   aggregate coverage is two licensed meetings, two races, 21 entries, and
   three official results; provider response age was 35 seconds at verification
   and the configured freshness threshold was 10,800 seconds.
+- LIVE-016 was deployed from commit `cefeebf`; Render deploy
+  `dep-db8b1erncjis73f9676g` succeeded. The public frontend asset returned
+  HTTP 200 and contains the licensed ingestion monitor, Auth0 boundary, and
+  live-data path.
+- LIVE-019 was verified by workflow run `38723784884` on `main`; the bounded
+  read-only ingestion job completed successfully in 12 seconds. The local API
+  suite now passes 338 tests, including the scheduler fail-closed contract.
+- After that hosted run, `/v1/system/status` reported `LICENSED`, `postgres`,
+  `punters-edge`, `GET_RESULTS`, `HEALTHY`, and coverage of two meetings, two
+  races, 21 entries, and three results. `wagering_enabled` remained false.
 
 ## Post-closeout follow-up
 
 The staging lane is operational and the first live data is visible through the
-frontend. LIVE-015 is complete and LIVE-016 is the current Ralph ticket. The
-full dependency-ordered release epics are in
+frontend. LIVE-016 and LIVE-019 are complete. LIVE-017 is the current Ralph
+ticket; the full dependency-ordered release epics are in
 `docs/deployment/RALPH_LIVE_E2E_EPICS.md`. Provider expansion or
 historical/model use remains a separate decision requiring account entitlement
 and retention evidence.
