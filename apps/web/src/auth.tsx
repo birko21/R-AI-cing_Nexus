@@ -97,7 +97,7 @@ function AuthenticatedApp({ config, user }: { config: AuthConfig; user: User }) 
   return (
     <>
       <nav className="auth-toolbar" aria-label="Owner session">
-        <span>Signed in as {user.email ?? user.sub}</span>
+        <span>Owner session active</span>
         <button type="button" onClick={() => void logout({ logoutParams: { returnTo: window.location.origin } })}>Sign out</button>
       </nav>
       <App apiRequest={request} />

@@ -4,6 +4,7 @@ export type NexusApiRequest = (path: string, init?: RequestInit, requiredScope?:
 
 type Code = 'ALL' | 'THOROUGHBRED' | 'HARNESS' | 'GREYHOUND';
 type Status = 'LIVE' | 'DEMO' | 'NO_RACING' | 'NO_DATA' | 'UNAVAILABLE' | 'LOADING' | 'STALE' | 'QUARANTINED' | 'UNSUPPORTED' | 'AUTH_DENIED';
+type WorkspaceId = 'COMMAND' | 'MEETINGS' | 'RACE' | 'TACTICAL' | 'RUNNER' | 'COMPARE' | 'MODEL' | 'SCENARIO' | 'MARKETS' | 'EVIDENCE' | 'ASSISTANT' | 'NOTEBOOK' | 'WATCHLISTS' | 'REPORTS_SETTINGS';
 
 type CommandItem = {
   id: string;
@@ -84,6 +85,23 @@ const codes: Array<{ value: Code; label: string }> = [
   { value: 'THOROUGHBRED', label: 'Thoroughbred' },
   { value: 'HARNESS', label: 'Harness' },
   { value: 'GREYHOUND', label: 'Greyhound' },
+];
+
+const workspaces: Array<{ value: WorkspaceId; label: string; short: string }> = [
+  { value: 'COMMAND', label: 'Command Centre', short: 'Today' },
+  { value: 'MEETINGS', label: 'Meeting discovery', short: 'Meetings' },
+  { value: 'RACE', label: 'Race intelligence', short: 'Race' },
+  { value: 'TACTICAL', label: 'Tactical track', short: 'Tactical' },
+  { value: 'RUNNER', label: 'Runner intelligence', short: 'Runner' },
+  { value: 'COMPARE', label: 'Runner comparison', short: 'Compare' },
+  { value: 'MODEL', label: 'Model laboratory', short: 'Models' },
+  { value: 'SCENARIO', label: 'Scenario studio', short: 'Scenarios' },
+  { value: 'MARKETS', label: 'Markets', short: 'Markets' },
+  { value: 'EVIDENCE', label: 'Evidence', short: 'Evidence' },
+  { value: 'ASSISTANT', label: 'Research assistant', short: 'Assistant' },
+  { value: 'NOTEBOOK', label: 'Notebook', short: 'Notebook' },
+  { value: 'WATCHLISTS', label: 'Watchlists and alerts', short: 'Watchlists' },
+  { value: 'REPORTS_SETTINGS', label: 'Reports and settings', short: 'Reports' },
 ];
 
 const statuses: Array<{ value: Status | 'ALL'; label: string }> = [
@@ -323,7 +341,7 @@ export function liveCommandItems(meetings: LiveMeeting[]): CommandItem[] {
       dateStyle: 'medium', timeStyle: 'short', timeZone: 'Australia/Sydney',
     }).format(new Date(meeting.scheduled_date)),
     sourceAge: 'Canonical licensed receipt',
-    note: `${meeting.country} meeting from the read-only provider lane. Race detail is loaded by the next live-data ticket.`,
+    note: `${meeting.country} meeting from the live read-only provider lane. Open the canonical race and entry view.`,
   }));
 }
 
@@ -357,6 +375,7 @@ function answerAssistantQuestion(question: string): AssistantAnswer {
 }
 
 export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {}) {
+  const [activeWorkspace, setActiveWorkspace] = useState<WorkspaceId>('COMMAND');
   const [selectedCode, setSelectedCode] = useState<Code>('ALL');
   const [selectedStatus, setSelectedStatus] = useState<Status | 'ALL'>('ALL');
   const [showStateExamples, setShowStateExamples] = useState(true);
@@ -371,7 +390,7 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
     () => (dataMode === 'LICENSED' ? liveCommandItems(liveMeetings) : commandItems).filter((item) =>
       (selectedCode === 'ALL' || item.code === selectedCode) &&
       (selectedStatus === 'ALL' || item.status === selectedStatus) &&
-      (showStateExamples || item.status === 'DEMO' || item.status === 'LIVE')),
+      (dataMode === 'LICENSED' || showStateExamples || item.status === 'DEMO')),
     [dataMode, liveMeetings, selectedCode, selectedStatus, showStateExamples],
   );
 
@@ -409,12 +428,27 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
     return () => { active = false; };
   }, [apiRequest]);
 
+  useEffect(() => {
+    if (dataMode === 'LICENSED') {
+      setSelectedStatus('ALL');
+      setShowStateExamples(false);
+    }
+  }, [dataMode]);
+
+  const activeWorkspaceLabel = workspaces.find((workspace) => workspace.value === activeWorkspace)?.label ?? 'Command Centre';
+  const isCommandWorkspace = activeWorkspace === 'COMMAND' || (dataMode === 'LICENSED' && activeWorkspace === 'MEETINGS');
+
   return (
     <main className="shell">
       <header className="topbar">
-        <div><p className="eyebrow">RACING INTELLIGENCE LAB</p><h1>Today / Command Centre</h1></div>
+        <div><p className="eyebrow">RACING INTELLIGENCE LAB</p><h1>{activeWorkspace === 'COMMAND' ? 'Today / Command Centre' : activeWorkspaceLabel}</h1></div>
         <div className="header-badges">{dataMode === 'LICENSED' ? <><span className="mode-badge">LIVE READ-ONLY</span><span className="mode-badge subdued">LICENSED</span></> : <><span className="mode-badge">DEMO ONLY</span><span className="mode-badge subdued">SYNTHETIC_ONLY</span></>}{apiStatus !== 'idle' && <span className="mode-badge subdued">API {apiStatus.toUpperCase()}</span>}</div>
       </header>
+      <nav className="workspace-nav" aria-label="Research workspaces">
+        {workspaces.map((workspace) => <button aria-current={activeWorkspace === workspace.value ? 'page' : undefined} className={activeWorkspace === workspace.value ? 'workspace-link active' : 'workspace-link'} key={workspace.value} onClick={() => setActiveWorkspace(workspace.value)} type="button"><span>{workspace.short}</span><small>{workspace.label}</small></button>)}
+      </nav>
+      {!isCommandWorkspace && <WorkspaceBoundary workspace={activeWorkspace} dataMode={dataMode} onReturn={() => setActiveWorkspace('COMMAND')} />}
+      {isCommandWorkspace && <>
       <section className="intro" aria-labelledby="intro-title">
         <p className="eyebrow">{dataMode === 'LICENSED' ? 'PRIVATE PROVIDER WORKSPACE' : 'LOCAL RESEARCH WORKSPACE'}</p>
         <h2 id="intro-title">{dataMode === 'LICENSED' ? 'Provider-backed meetings, one honest evidence view.' : 'Three racing codes, one honest evidence view.'}</h2>
@@ -424,10 +458,10 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
         <div className="filter-group"><span className="filter-label">Code</span><div className="filter-row" role="group" aria-label="Filter by racing code">
           {codes.map((code) => <button aria-pressed={selectedCode === code.value} className={`filter-button ${selectedCode === code.value ? 'selected' : ''}`} key={code.value} onClick={() => setSelectedCode(code.value)} type="button">{code.label}</button>)}
         </div></div>
-        <div className="filter-group"><label className="filter-label" htmlFor="state-filter">Data state</label><select id="state-filter" value={selectedStatus} onChange={(event) => setSelectedStatus(event.target.value as Status | 'ALL')}>
-          {statuses.map((status) => <option key={status.value} value={status.value}>{status.label}</option>)}
+        {dataMode === 'LICENSED' ? <div className="live-filter-note"><span className="filter-label">Data state</span><strong>Live provider · current receipt</strong><small>Availability examples are hidden in licensed mode.</small></div> : <><div className="filter-group"><label className="filter-label" htmlFor="state-filter">Data state</label><select id="state-filter" value={selectedStatus} onChange={(event) => setSelectedStatus(event.target.value as Status | 'ALL')}>
+          {statuses.filter((status) => status.value !== 'LIVE').map((status) => <option key={status.value} value={status.value}>{status.label}</option>)}
         </select></div>
-        <label className="state-toggle"><input checked={showStateExamples} onChange={(event) => setShowStateExamples(event.target.checked)} type="checkbox" />Show availability examples</label>
+        <label className="state-toggle"><input checked={showStateExamples} onChange={(event) => setShowStateExamples(event.target.checked)} type="checkbox" />Show availability examples</label></>}
       </section>
       <section className="summary-strip" aria-label="Workspace status">
         <div><span className="summary-value">{visibleItems.length}</span><span className="summary-label">visible cards</span></div>
@@ -435,12 +469,12 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
         <div><span className="summary-value">{localNow()}</span><span className="summary-label">local browser time · Australia/Sydney</span></div>
       </section>
       {dataMode === 'LICENSED' && liveIngestion && <LiveIngestionStatusCard status={liveIngestion} />}
-      {dataMode === 'LICENSED' ? <section className="assistant-workbench" aria-label="Licensed research assistant unavailable"><div className="assistant-heading"><div><p className="eyebrow">BOUNDED RESEARCH ASSISTANT</p><h2>Assistant evidence is not enabled for live data.</h2></div><span className="mode-badge subdued">NOT_AVAILABLE</span></div><p className="assistant-disclaimer">The current licensed lane exposes canonical meeting data only. No live forecast, market, or unsupported evidence claim is generated.</p></section> : <AssistantWorkbench />}
+      {dataMode === 'SYNTHETIC_ONLY' && <AssistantWorkbench />}
       <section className="code-grid" aria-label="Today command cards">
         {visibleItems.map((item) => <article aria-label={`${item.label} · ${statusText[item.status]}`} className={`code-card status-${item.status.toLowerCase()}`} key={item.id}>
           <div className="card-topline"><span className="status-dot" aria-hidden="true" /><span className="status-pill">{statusText[item.status]}</span></div>
           <h3>{item.label}</h3>{item.meeting && <p className="meeting-name">{item.meeting}</p>}
-          <dl className="card-facts">{item.races !== undefined && <><dt>Races</dt><dd>{item.races} fictional races</dd></>}{item.localTime && <><dt>Fixture time</dt><dd>{item.localTime}</dd></>}<dt>Source age</dt><dd>{item.sourceAge}</dd></dl>
+          <dl className="card-facts">{item.races !== undefined && <><dt>Races</dt><dd>{item.races} fictional races</dd></>}{item.localTime && <><dt>{item.status === 'LIVE' ? 'Scheduled' : 'Fixture time'}</dt><dd>{item.localTime}</dd></>}<dt>{item.status === 'LIVE' ? 'Receipt' : 'Source age'}</dt><dd>{item.sourceAge}</dd></dl>
           <p className="card-note">{item.note}</p>
           {item.status === 'DEMO' && <button aria-label={`Open research view for ${item.label}`} className="research-button" onClick={() => { setSelectedRace(item.code); setEvidenceTab('FIELD'); }} type="button">Open research view</button>}
           {item.status === 'LIVE' && <button aria-label={`Open live meeting for ${item.meeting}`} className="research-button" onClick={() => setSelectedLiveMeeting(liveMeetings.find((meeting) => meeting.meeting_id === item.id) ?? null)} type="button">Open live meeting</button>}
@@ -450,9 +484,24 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
       {visibleItems.length === 0 && <section className="empty-state" aria-live="polite"><p className="eyebrow">NO MATCHING STATES</p><h3>No cards match these filters.</h3><p>Change the code or data-state filter. No racing data is invented to fill an empty view.</p></section>}
       {selectedRace && <ResearchView key={selectedRace} race={researchRaces[selectedRace]} evidenceTab={evidenceTab} onClose={() => setSelectedRace(null)} onTabChange={setEvidenceTab} />}
       {selectedLiveMeeting && apiRequest && <LiveMeetingView meeting={selectedLiveMeeting} apiRequest={apiRequest} onClose={() => setSelectedLiveMeeting(null)} />}
+      {dataMode === 'LICENSED' && <section className="licensed-boundary" aria-label="Licensed capability boundary"><div><p className="eyebrow">LICENSED READ-ONLY SCOPE</p><h2>Canonical racing evidence only</h2><p>Forecasts, markets, exports and wagering actions are not enabled for this provider lane.</p></div><div className="capability-list"><span>Races and entries · available</span><span>Forecasts · not available</span><span>Wagering · disabled</span></div></section>}
+      </>}
       <footer className="footer"><span>{dataMode === 'LICENSED' ? 'Provider API: licensed staging lane' : 'Local API: 127.0.0.1:8000'}</span><span>Data rights: {dataMode === 'LICENSED' ? 'owner-approved private read' : 'synthetic fixture only'}</span><span>Model: not trained</span></footer>
     </main>
   );
+}
+
+function WorkspaceBoundary({ workspace, dataMode, onReturn }: { workspace: WorkspaceId; dataMode: 'SYNTHETIC_ONLY' | 'LICENSED'; onReturn: () => void }) {
+  const metadata = workspaces.find((item) => item.value === workspace) ?? workspaces[0];
+  const liveMessage = dataMode === 'LICENSED'
+    ? 'This licensed staging lane currently exposes canonical meetings, races and entries only. No unsupported values are invented to fill the workspace.'
+    : 'This workspace is part of the research atlas. Use the Command Centre to open a clearly labelled synthetic race view.';
+  return <section className="workspace-panel" aria-label={`${metadata.label} workspace`}>
+    <div className="workspace-heading"><div><p className="eyebrow">WORKSPACE ATLAS · {dataMode === 'LICENSED' ? 'LICENSED READ-ONLY' : 'SYNTHETIC DEMO'}</p><h2>{metadata.label}</h2><p className="workspace-subtitle">Shared context remains explicit across every research workspace.</p></div><span className="mode-badge subdued">{dataMode === 'LICENSED' ? 'NOT_AVAILABLE' : 'SYNTHETIC_ONLY'}</span></div>
+    <div className="workspace-context" aria-label="Shared research context"><div><span>Mode</span><strong>{dataMode}</strong></div><div><span>Scope</span><strong>{dataMode === 'LICENSED' ? 'READ-ONLY' : 'RESEARCH DEMO'}</strong></div><div><span>Evidence</span><strong>{dataMode === 'LICENSED' ? 'CANONICAL ONLY' : 'FIXTURE LABELLED'}</strong></div><div><span>Wagering</span><strong>DISABLED</strong></div></div>
+    <div className="state-callout"><strong>{metadata.label} is bounded in this release.</strong> {liveMessage}</div>
+    <button className="secondary-action" onClick={onReturn} type="button">Return to Command Centre</button>
+  </section>;
 }
 
 function LiveIngestionStatusCard({ status }: { status: LiveIngestionHealth }) {
