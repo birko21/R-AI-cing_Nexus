@@ -241,13 +241,15 @@ def project_live_envelope(connection: Connection, envelope: RawEnvelope) -> dict
             if runner.status == "SCRATCHED":
                 scratched.append(runner.entry_id)
         if race.official and placings:
-            result_id = f"{race.race_id}:result:{envelope.envelope_id}"
-            connection.execute(text("""
+            # The same provider observation may be retrieved more than once
+            # with a new envelope ID. Canonical result identity follows the
+            # race field revision, not the immutable transport receipt.
+            result_id = f"{race.race_id}:result:{race.field_revision}"
+            inserted = connection.execute(text("""
                 INSERT INTO official_result_revisions (result_id, race_id, field_revision, source_receipt_id, status, observed_at, official_at, placings, dead_heat_groups, scratched_entries, data_mode)
                 VALUES (:result_id, :race_id, :field_revision, :source_receipt_id, 'OFFICIAL', :observed_at, :official_at, CAST(:placings AS jsonb), '[]'::jsonb, :scratched_entries, :data_mode)
                 ON CONFLICT (result_id) DO NOTHING
             """), {"result_id": result_id, "race_id": race.race_id, "field_revision": race.field_revision, "source_receipt_id": receipt_id, "observed_at": envelope.retrieved_at, "official_at": envelope.retrieved_at, "placings": json.dumps(placings, sort_keys=True), "scratched_entries": scratched, "data_mode": envelope.data_mode})
-            counts["results"] += 1
+            counts["results"] += 1 if inserted.rowcount == 1 else 0
     return counts
-
 
