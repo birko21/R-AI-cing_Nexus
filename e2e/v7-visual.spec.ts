@@ -29,7 +29,7 @@ test('V7 visual surfaces are individually authored and responsive', async ({ pag
     await page.getByRole('navigation', { name: 'Research workspaces' }).getByRole('button', { name: new RegExp(`^${workspace.label}`) }).click();
     await expect(page.getByRole('region', { name: /workspace$/ })).toBeVisible();
     await expect(page.getByText('Research preview · synthetic only.')).toBeVisible();
-    if (workspace.label === 'Tactical') {
+      if (workspace.label === 'Tactical') {
       await expect(page.getByRole('region', { name: 'Tactical Track V7 visual surface' })).toBeVisible();
       await expect(page.locator('.tactical-runner')).toHaveCount(11);
       await page.getByLabel('Synthetic field size').selectOption('6');
@@ -45,9 +45,25 @@ test('V7 visual surfaces are individually authored and responsive', async ({ pag
       await expect(page.getByText('Position is contextual, not predictive.')).toBeVisible();
       await page.getByRole('button', { name: 'Select runner 5 Desert King' }).click();
       await expect(page.getByRole('button', { name: 'Select runner 5 Desert King' }).first()).toHaveClass(/selected/);
-      await expect(page.getByText('Desert King', { exact: true }).first()).toBeVisible();
-    }
-    await page.screenshot({ path: `docs/evidence/v7-implementation/${workspace.file}-1440.png`, fullPage: true });
+        await expect(page.getByText('Desert King', { exact: true }).first()).toBeVisible();
+      }
+      if (workspace.label === 'Evidence') {
+        const evidence = page.locator('.evidence-atlas-preview');
+        await evidence.locator('.surface-primary-action').click();
+        await expect(evidence.locator('.surface-action-feedback')).toContainText('Receipt ledger opened · synthetic preview only');
+        await evidence.getByLabel('Dismiss evidence action feedback').click();
+        await evidence.locator('.surface-tabs button').nth(1).click();
+        await expect(evidence.locator('.surface-tabs button').nth(1)).toHaveAttribute('aria-selected', 'true');
+      }
+      if (workspace.label !== 'Tactical' && workspace.label !== 'Evidence') {
+        const surface = page.locator('.cinematic-surface');
+        await surface.locator('.surface-primary-action').click();
+        await expect(surface.locator('.surface-action-feedback')).toContainText('opened · synthetic preview only');
+        await surface.getByLabel('Dismiss action feedback').click();
+        await surface.locator('.surface-tabs button').nth(1).click();
+        await expect(surface.locator('.surface-tabs button').nth(1)).toHaveAttribute('aria-selected', 'true');
+      }
+      await page.screenshot({ path: `docs/evidence/v7-implementation/${workspace.file}-1440.png`, fullPage: true });
   }
 
   for (const viewport of [{ width: 768, height: 1024, name: '768' }, { width: 390, height: 844, name: '390' }]) {

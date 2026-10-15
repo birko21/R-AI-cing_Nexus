@@ -247,6 +247,21 @@ const cinematicSurfaces: Partial<Record<WorkspaceId, SurfaceDefinition>> = {
   },
 };
 
+type SurfaceIntent = { focus: string; action: string; detail: string; tabs: string[] };
+const surfaceIntents: Partial<Record<WorkspaceId, SurfaceIntent>> = {
+  MEETINGS: { focus: 'Next canonical meeting', action: 'Open meeting radar', detail: 'Start with the freshest source-labelled fixture.', tabs: ['Today', 'By code', 'Revisions'] },
+  RACE: { focus: 'Field intelligence', action: 'Open race context', detail: 'Keep conditions, revision and evidence in one view.', tabs: ['Overview', 'Field', 'Evidence'] },
+  RUNNER: { focus: 'Selected participant', action: 'Inspect runner record', detail: 'Review code-specific inputs before comparing form.', tabs: ['Profile', 'Form', 'Provenance'] },
+  COMPARE: { focus: 'Decision frame', action: 'Compare runner pair', detail: 'Align like-for-like signals and expose missing inputs.', tabs: ['Pair view', 'Inputs', 'Differences'] },
+  MODEL: { focus: 'Model assurance', action: 'Open model lab', detail: 'Inspect version, drift and calibration boundaries.', tabs: ['Models', 'Evaluation', 'Drift'] },
+  SCENARIO: { focus: 'Scenario branch', action: 'Run scenario branch', detail: 'Change one assumption while preserving the field revision.', tabs: ['Base case', 'Branches', 'Impact'] },
+  MARKETS: { focus: 'Paper value lane', action: 'Review market context', detail: 'Keep quote provenance and rights attached to the readout.', tabs: ['Board', 'Freshness', 'Rights'] },
+  ASSISTANT: { focus: 'Evidence answer', action: 'Ask bounded question', detail: 'Every answer must resolve to a receipt or NOT_AVAILABLE.', tabs: ['Ask', 'Citations', 'Notes'] },
+  NOTEBOOK: { focus: 'Approved local note', action: 'Open local journal', detail: 'Write only against evidence already in the record.', tabs: ['Journal', 'Sources', 'Approval'] },
+  WATCHLISTS: { focus: 'Change queue', action: 'Review alert queue', detail: 'Monitor canonical changes without auto-action.', tabs: ['Alerts', 'Lists', 'History'] },
+  REPORTS_SETTINGS: { focus: 'Owner release gate', action: 'Review assurance', detail: 'Check access, rights and export boundaries before release.', tabs: ['Assurance', 'Access', 'Exports'] },
+};
+
 type TacticalRunner = { number: number; name: string; group: 'LEAD' | 'ON PACE' | 'MIDFIELD' | 'BACKMARKERS'; color: string; asset: string; factor: string; detail: string; base: [number, number]; contested: [number, number] };
 
 const tacticalRunners: TacticalRunner[] = [
@@ -755,11 +770,17 @@ function CommandCinematicHero() {
 }
 
 function CinematicWorkspaceSurface({ workspace }: { workspace: WorkspaceId }) {
+  const definition = cinematicSurfaces[workspace] ?? cinematicSurfaces.RACE!;
+  const intent = surfaceIntents[workspace] ?? surfaceIntents.RACE!;
+  const [activeTab, setActiveTab] = useState(intent.tabs[0]);
+  const [feedback, setFeedback] = useState<string | null>(null);
   if (workspace === 'TACTICAL') return <TacticalTrackSurface />;
   if (workspace === 'EVIDENCE') return <EvidenceWorkspacePreview />;
-  const definition = cinematicSurfaces[workspace] ?? cinematicSurfaces.RACE!;
   return <section className={`cinematic-surface surface-${workspace.toLowerCase()}`} aria-label={`${definition.title} visual surface`}>
     <div className="cinematic-surface-header"><div><p className="eyebrow">{definition.kicker}</p><h3>{definition.title}</h3><p>{definition.subtitle}</p></div><span className="surface-stamp">SYNTHETIC / ILLUSTRATIVE</span></div>
+    <div className="surface-command-bar"><div><span className="surface-command-label">NEXT MOVE</span><strong>{intent.focus}</strong><small>{intent.detail}</small></div><button className="surface-primary-action" onClick={() => setFeedback(`${intent.action} opened · synthetic preview only`)} type="button">{intent.action}<span aria-hidden="true">↗</span></button></div>
+    <div className="surface-tabs" role="tablist" aria-label={`${definition.title} views`}>{intent.tabs.map((tab) => <button aria-selected={activeTab === tab} className={activeTab === tab ? 'active' : ''} key={tab} onClick={() => setActiveTab(tab)} role="tab" type="button">{tab}</button>)}</div>
+    {feedback && <div className="surface-action-feedback" role="status"><span aria-hidden="true">●</span>{feedback}<button aria-label="Dismiss action feedback" onClick={() => setFeedback(null)} type="button">×</button></div>}
     <div className="cinematic-surface-grid">
       <div className="surface-hero"><div className="surface-hero-backdrop" /><div className="surface-hero-grid" /><div className="surface-hero-copy"><span>{definition.heroLabel}</span><strong>{definition.heroValue}</strong><small>{definition.heroDetail}</small></div><div className="surface-axis"><span>START</span><span>FIELD-R2</span><span>FINISH →</span></div></div>
       <div className="surface-readout"><p className="eyebrow">FIELD SIGNALS</p>{definition.rows.map((row) => <div className="surface-readout-row" key={row.label}><i className={`readout-dot readout-${row.tone ?? 'cyan'}`} /><span><strong>{row.label}</strong><b>{row.value}</b><small>{row.detail}</small></span></div>)}</div>
@@ -770,8 +791,14 @@ function CinematicWorkspaceSurface({ workspace }: { workspace: WorkspaceId }) {
 }
 
 function EvidenceWorkspacePreview() {
+  const [activeTab, setActiveTab] = useState('Receipts');
+  const [feedback, setFeedback] = useState<string | null>(null);
   return <div className="evidence-atlas-preview">
     <p className="evidence-atlas-context">Shared context · Thoroughbred · Fictional Thoroughbred Park · Race 1 · field-r2</p>
+    <div className="surface-command-bar evidence-special-surface"><div><span className="surface-command-label">NEXT MOVE</span><strong>Verify receipt chain</strong><small>Start with the source, rights and observation timestamps.</small></div><button className="surface-primary-action" onClick={() => setFeedback('Receipt ledger opened · synthetic preview only')} type="button">Open receipt ledger<span aria-hidden="true">↗</span></button></div>
+    <div className="surface-tabs evidence-special-surface" role="tablist" aria-label="Evidence views">{['Receipts', 'Rights', 'Timeline'].map((tab) => <button aria-selected={activeTab === tab} className={activeTab === tab ? 'active' : ''} key={tab} onClick={() => setActiveTab(tab)} role="tab" type="button">{tab}</button>)}</div>
+    <p className="evidence-view-state" role="status">Viewing {activeTab.toLowerCase()} · append-only provenance</p>
+    {feedback && <div className="surface-action-feedback evidence-special-surface" role="status"><span aria-hidden="true">●</span>{feedback}<button aria-label="Dismiss evidence action feedback" onClick={() => setFeedback(null)} type="button">×</button></div>}
     <div className="workspace-context evidence-atlas-context-grid" aria-label="Evidence research context"><div><span>Code</span><strong>THOROUGHBRED</strong></div><div><span>Race</span><strong>Race 1 · Fictional Maiden</strong></div><div><span>Field</span><strong>field-r2 · FINAL_FIELDS</strong></div><div><span>Model state</span><strong>ILLUSTRATIVE_ONLY</strong></div></div>
     <p className="evidence-atlas-description">Evidence is append-only and source-labelled. Provenance, rights state, timestamps and limitations stay attached to every view.</p>
     <dl className="provenance-facts evidence-atlas-facts"><dt>Source receipt</dt><dd>synthetic://thoroughbred/race-001</dd><dt>First observed</dt><dd>15 Jan 2026, 14:00 AEDT</dd><dt>Published</dt><dd>15 Jan 2026, 13:50 AEDT</dd><dt>Rights</dt><dd>SYNTHETIC · fictional fixture</dd><dt>External transport</dt><dd>Disabled</dd><dt>Model claim</dt><dd>ILLUSTRATIVE_NOT_VALIDATED</dd></dl>
