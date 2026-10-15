@@ -28,6 +28,7 @@ from app.external_provider_integrations import (
 from app.source_approval import (
     SourceApprovalRecord,
     evaluate_source_approval,
+    evaluate_tiered_source_approval,
 )
 
 
