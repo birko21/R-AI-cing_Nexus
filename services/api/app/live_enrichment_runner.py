@@ -41,6 +41,16 @@ def _result(provider: str, operation: str, status: str, *, venue: str | None = N
     return payload
 
 
+def _safe_error_detail(exc: Exception) -> str:
+    """Return bounded diagnostics without retaining provider response bodies or credentials."""
+
+    message = " ".join(str(exc).split())
+    for marker in ("X-API-Key", "Authorization", "X-Application", "X-Authentication", "api_key", "session_token"):
+        if marker.lower() in message.lower():
+            return type(exc).__name__
+    return f"{type(exc).__name__}: {message[:180]}" if message else type(exc).__name__
+
+
 def run_live_enrichment(*, date: str | None = None, venues: tuple[str, ...] = ()) -> dict[str, object]:
     runtime = load_runtime_config()
     if not runtime.live_enabled:
@@ -88,7 +98,7 @@ def run_live_enrichment(*, date: str | None = None, venues: tuple[str, ...] = ()
                     record_ingestion_health(connection, source_id=source_id, checked_at=datetime.now(timezone.utc), success=True)
                 outputs.append(_result(provider, operation, "SUCCESS", venue=venue, persistence=persistence, projection=projection))
             except Exception as exc:
-                outputs.append(_result(provider, operation, "BLOCKED", venue=venue, detail=type(exc).__name__))
+                outputs.append(_result(provider, operation, "BLOCKED", venue=venue, detail=_safe_error_detail(exc)))
                 try:
                     with engine.begin() as connection:
                         record_ingestion_health(connection, source_id=source_id, checked_at=datetime.now(timezone.utc), success=False)
@@ -117,7 +127,7 @@ def run_live_enrichment(*, date: str | None = None, venues: tuple[str, ...] = ()
                     record_ingestion_health(connection, source_id="betfair-exchange:GET_MARKETS:book", checked_at=datetime.now(timezone.utc), success=True)
                 outputs.append(_result("betfair-exchange", "GET_MARKETS_BOOK", "SUCCESS", persistence=persistence, projection=projection))
             except Exception as exc:
-                outputs.append(_result("betfair-exchange", "GET_MARKETS_BOOK", "BLOCKED", detail=type(exc).__name__))
+                outputs.append(_result("betfair-exchange", "GET_MARKETS_BOOK", "BLOCKED", detail=_safe_error_detail(exc)))
                 try:
                     with engine.begin() as connection:
                         record_ingestion_health(connection, source_id="betfair-exchange:GET_MARKETS:book", checked_at=datetime.now(timezone.utc), success=False)
