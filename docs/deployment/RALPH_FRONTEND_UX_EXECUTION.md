@@ -39,7 +39,7 @@ The hosted browser audit found:
 |---|---|---|---|
 | UX-001 | Restore the shared workspace shell and make licensed/synthetic controls and copy truthful | Discovery | COMPLETE |
 | UX-002 | Improve live meeting/race detail hierarchy, state chips, provenance, and degraded states | UX-001 | COMPLETE |
-| UX-003 | Validate responsive/accessibility behavior and deploy the reviewed UI | UX-001, UX-002 | IN PROGRESS |
+| UX-003 | Validate responsive/accessibility behavior and deploy the reviewed UI | UX-001, UX-002 | COMPLETE |
 
 ## UX-003 validation notes
 
@@ -63,6 +63,26 @@ Evidence captures were refreshed at `docs/evidence/ril-017` through
 `docs/evidence/ril-061`. The browser suite includes the 390px mobile viewport
 and an axe scan; the hosted licensed browser pass remains the final live-data
 acceptance check after deployment.
+
+## Hosted acceptance
+
+- Render service `nexus-staging-frontend` deployed commit `69e15f2` as
+  `dep-db8bi60u01pc73f7k7h0`; Render reports `status: live` and a successful
+  Vite build.
+- Auth0 owner session reached licensed mode after API hydration and showed the
+  workspace atlas, live ingestion monitor, two meeting cards, and the licensed
+  capability boundary.
+- Northam opened to Race 8 with 12 total entries, 9 active, 3 scratched,
+  styled state chips, a verified receipt, and no provider payloads or
+  forecasts displayed.
+- Sign-out returned to `Nexus owner sign-in required`.
+
+## Ralph closeout
+
+UX-001, UX-002, and UX-003 are complete for the approved private,
+owner-only, read-only licensed staging experience. Further workspaces remain
+explicitly bounded until their data and rights gates are approved; no wagering
+or synthetic fallback was added.
 
 ## Safety boundary
 
