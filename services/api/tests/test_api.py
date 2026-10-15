@@ -110,6 +110,14 @@ def test_synthetic_catalog_routes_return_data_with_cursor_and_as_of(authenticate
     assert next_page.status_code == 200
     assert len(next_page.json()["items"]) == 1
 
+    races = authenticated_client.get(
+        f"/v1/meetings/{meetings.json()['items'][0]['meeting_id']}/races?limit=1&as_of={as_of}",
+        headers=headers,
+    )
+    assert races.status_code == 200
+    assert len(races.json()["items"]) == 1
+    assert races.json()["meta"]["next_cursor"] is None
+
     race = authenticated_client.get(f"/v1/races/race:1?as_of={as_of}", headers=headers)
     assert race.status_code == 200
     entries = authenticated_client.get(f"/v1/races/race:1/entries?limit=2&as_of={as_of}", headers=headers)

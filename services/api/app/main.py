@@ -22,6 +22,7 @@ from app.contracts import (
     MeetingListResponse,
     PageMeta,
     Race,
+    RaceListResponse,
     Selection,
     SelectionAddendum,
     SelectionAddendumCreate,
@@ -251,6 +252,14 @@ def list_meetings(paging: tuple[int, str | None, datetime] = Depends(paging_para
     offset = offset_from_cursor(cursor, as_of=as_of)
     items, has_more = catalog.list_meetings(limit=limit, offset=offset, as_of=as_of)
     return MeetingListResponse(items=items, meta=_page_meta(limit, as_of, offset=offset, has_more=has_more))
+
+
+@app.get("/v1/meetings/{meeting_id}/races", response_model=RaceListResponse, tags=["races"], dependencies=[Depends(races_read)])
+def list_races_for_meeting(meeting_id: str, paging: tuple[int, str | None, datetime] = Depends(paging_parameters)) -> RaceListResponse:
+    limit, cursor, as_of = paging
+    offset = offset_from_cursor(cursor, as_of=as_of)
+    items, has_more = catalog.list_races(meeting_id, limit=limit, offset=offset, as_of=as_of)
+    return RaceListResponse(items=items, meta=_page_meta(limit, as_of, offset=offset, has_more=has_more))
 
 
 @app.get("/v1/races/{race_id}", response_model=Race, tags=["races"], dependencies=[Depends(races_read)])

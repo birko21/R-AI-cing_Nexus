@@ -80,6 +80,26 @@ paths:
               schema: { $ref: '#/components/schemas/MeetingListResponse' }
         '400': { $ref: '#/components/responses/BadRequest' }
         '401': { $ref: '#/components/responses/Unauthorized' }
+  /v1/meetings/{meeting_id}/races:
+    get:
+      operationId: listRacesForMeeting
+      security: [{ bearerAuth: [races:read] }]
+      parameters:
+        - name: meeting_id
+          in: path
+          required: true
+          schema: { type: string, minLength: 1 }
+        - { $ref: '#/components/parameters/AsOf' }
+        - { $ref: '#/components/parameters/Limit' }
+        - { $ref: '#/components/parameters/Cursor' }
+      responses:
+        '200':
+          description: Bounded race page for one meeting.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RaceListResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
   /v1/races/{race_id}:
     get:
       operationId: getRace
@@ -463,6 +483,12 @@ components:
       required: [items, meta]
       properties:
         items: { type: array, items: { $ref: '#/components/schemas/Meeting' } }
+        meta: { $ref: '#/components/schemas/PageMeta' }
+    RaceListResponse:
+      type: object
+      required: [items, meta]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/Race' } }
         meta: { $ref: '#/components/schemas/PageMeta' }
     EntryListResponse:
       type: object

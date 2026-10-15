@@ -21,6 +21,7 @@ def test_openapi_contract_has_versioned_mvp_surfaces() -> None:
         "/v1/system/status",
         "/v1/codes",
         "/v1/meetings",
+        "/v1/meetings/{meeting_id}/races",
         "/v1/races/{race_id}",
         "/v1/races/{race_id}/entries",
         "/v1/races/{race_id}/forecasts",

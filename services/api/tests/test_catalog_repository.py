@@ -14,6 +14,11 @@ def test_synthetic_catalog_repository_serves_real_race_entries_and_forecast() ->
     assert has_more is True
     assert meetings[0].data_mode == "SYNTHETIC_ONLY"
 
+    races, races_more = repository.list_races(meetings[0].meeting_id, limit=1, offset=0, as_of=AS_OF)
+    assert len(races) == 1
+    assert races_more is False
+    assert races[0].meeting_id == meetings[0].meeting_id
+
     race = repository.get_race("race:1", as_of=AS_OF)
     assert race is not None
     assert race.status == "FINAL_FIELDS"

@@ -19,6 +19,7 @@ from app.contracts import Entry, Forecast, Meeting, Race
 
 class CatalogRepository(Protocol):
     def list_meetings(self, *, limit: int, offset: int, as_of: datetime) -> tuple[list[Meeting], bool]: ...
+    def list_races(self, meeting_id: str, *, limit: int, offset: int, as_of: datetime) -> tuple[list[Race], bool]: ...
     def get_race(self, race_id: str, *, as_of: datetime) -> Race | None: ...
     def list_entries(self, race_id: str, *, limit: int, offset: int, as_of: datetime) -> tuple[list[Entry], bool]: ...
     def list_forecasts(self, race_id: str, *, limit: int, offset: int, as_of: datetime) -> tuple[list[Forecast], bool]: ...
@@ -64,6 +65,16 @@ class SyntheticCatalogRepository:
             source_receipt_id=f"synthetic://{market.market_id}",
             as_of=as_of,
         )
+
+    def list_races(self, meeting_id: str, *, limit: int, offset: int, as_of: datetime) -> tuple[list[Race], bool]:
+        races = [
+            race for market in self._markets
+            if _synthetic_meeting_id(market.code) == meeting_id
+            for race in [self.get_race(market.race_id, as_of=as_of)]
+            if race is not None
+        ]
+        page = races[offset:offset + limit]
+        return page, offset + len(page) < len(races)
 
     def list_entries(self, race_id: str, *, limit: int, offset: int, as_of: datetime) -> tuple[list[Entry], bool]:
         market = next((item for item in self._markets if item.race_id == race_id), None)
@@ -140,6 +151,35 @@ class PostgresCatalogRepository:
                 {"as_of": as_of, "fetch_limit": limit + 1, "offset": offset},
             ).mappings().all()
         return [Meeting(meeting_id=row["meeting_id"], code=row["code"], name=row["name"], country=row["country"], scheduled_date=row["scheduled_at"], data_mode=row["data_mode"]) for row in rows[:limit]], len(rows) > limit
+
+    def list_races(self, meeting_id: str, *, limit: int, offset: int, as_of: datetime) -> tuple[list[Race], bool]:
+        with self.engine.connect() as connection:
+            rows = connection.execute(
+                text(
+                    """
+                    SELECT race_id, meeting_id, race_number, status, field_revision,
+                           data_mode, source_receipt_id
+                    FROM race_revisions current_revision
+                    WHERE meeting_id = :meeting_id
+                      AND effective_from <= :as_of
+                      AND (effective_to IS NULL OR effective_to > :as_of)
+                      AND race_revision_id = (
+                          SELECT race_revision_id
+                          FROM race_revisions candidate
+                          WHERE candidate.race_id = current_revision.race_id
+                            AND candidate.effective_from <= :as_of
+                            AND (candidate.effective_to IS NULL OR candidate.effective_to > :as_of)
+                          ORDER BY candidate.effective_from DESC, candidate.race_revision_id DESC
+                          LIMIT 1
+                      )
+                    ORDER BY race_number, race_id
+                    LIMIT :fetch_limit OFFSET :offset
+                    """
+                ),
+                {"meeting_id": meeting_id, "as_of": as_of, "fetch_limit": limit + 1, "offset": offset},
+            ).mappings().all()
+        items = [Race(**dict(row), as_of=as_of) for row in rows[:limit]]
+        return items, len(rows) > limit
 
     def get_race(self, race_id: str, *, as_of: datetime) -> Race | None:
         with self.engine.connect() as connection:

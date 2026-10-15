@@ -239,6 +239,10 @@ class MeetingListResponse(Page[Meeting]):
     pass
 
 
+class RaceListResponse(Page[Race]):
+    pass
+
+
 class EntryListResponse(Page[Entry]):
     pass
 
