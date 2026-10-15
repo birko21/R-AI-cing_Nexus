@@ -14,6 +14,7 @@ from app.domain import VALID_CODES, DomainInvariantError, MarketSelectionMapping
 PriceType = Literal["DECIMAL", "FRACTIONAL", "AMERICAN", "TOTAL_RETURN"]
 MarketType = Literal["WIN", "PLACE", "TOP_N", "HEAD_TO_HEAD"]
 PricePhase = Literal["LIVE", "CLOSING"]
+QuoteSide = Literal["BACK", "LAY"]
 RunnerStatus = Literal["ACTIVE", "SCRATCHED", "RESERVE"]
 DataMode = Literal["SYNTHETIC_ONLY", "SCRAPED_PUBLIC", "LICENSED"]
 RightsState = Literal["SYNTHETIC", "UNASSESSED", "APPROVED", "RESTRICTED", "REJECTED"]
@@ -28,6 +29,7 @@ class MarketQuote(BaseModel):
     market_type: MarketType
     price_type: PriceType
     price_phase: PricePhase = "LIVE"
+    quote_side: QuoteSide = "BACK"
     runner_status: RunnerStatus = "ACTIVE"
     price: float
     source_timestamp: datetime

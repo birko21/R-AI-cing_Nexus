@@ -14,7 +14,7 @@ from sqlalchemy import Engine, text
 
 from app.baseline import BaselineRace, BaselineRunner, build_b0_forecast
 from app.betfair_mock import synthetic_betfair_markets
-from app.contracts import Entry, Forecast, Meeting, Race
+from app.contracts import Entry, Forecast, MarketQuoteView, Meeting, Race
 
 
 class CatalogRepository(Protocol):
@@ -23,6 +23,7 @@ class CatalogRepository(Protocol):
     def get_race(self, race_id: str, *, as_of: datetime) -> Race | None: ...
     def list_entries(self, race_id: str, *, limit: int, offset: int, as_of: datetime) -> tuple[list[Entry], bool]: ...
     def list_forecasts(self, race_id: str, *, limit: int, offset: int, as_of: datetime) -> tuple[list[Forecast], bool]: ...
+    def list_market_quotes(self, race_id: str, field_revision: str, *, limit: int, offset: int, as_of: datetime) -> tuple[list[MarketQuoteView], bool]: ...
 
 
 def _synthetic_meeting_id(code: str) -> str:
@@ -128,6 +129,9 @@ class SyntheticCatalogRepository:
         ] if forecast.status == "READY" and cutoff <= as_of else []
         page = records[offset:offset + limit]
         return page, offset + len(page) < len(records)
+
+    def list_market_quotes(self, race_id: str, field_revision: str, *, limit: int, offset: int, as_of: datetime) -> tuple[list[MarketQuoteView], bool]:
+        return [], False
 
 
 class PostgresCatalogRepository:
@@ -239,6 +243,42 @@ class PostgresCatalogRepository:
                 {"race_id": race_id, "as_of": as_of, "fetch_limit": limit + 1, "offset": offset},
             ).mappings().all()
         return [Forecast(forecast_id=row["forecast_id"], race_id=row["race_id"], field_revision=row["field_revision"], cutoff=row["cutoff_at"], model_version=row["model_version"], probabilities=row["probabilities"], data_mode=row["data_mode"]) for row in rows[:limit]], len(rows) > limit
+
+    def list_market_quotes(self, race_id: str, field_revision: str, *, limit: int, offset: int, as_of: datetime) -> tuple[list[MarketQuoteView], bool]:
+        with self.engine.connect() as connection:
+            rows = connection.execute(
+                text(
+                    """
+                    SELECT q.quote_id, q.race_id, q.field_revision, q.entry_id,
+                           e.number, p.name AS participant_name, q.market_source,
+                           q.market_id, q.selection_id, q.market_type, q.price_type,
+                           q.price_phase, q.quote_side, q.runner_status, q.price,
+                           q.source_timestamp, q.retrieved_at, q.in_play,
+                           q.size, q.liquidity, q.data_mode, q.rights_state,
+                           q.source_receipt_id
+                    FROM market_quotes q
+                    JOIN entry_revisions e ON e.entry_id = q.entry_id
+                    JOIN participants p ON p.participant_id = e.participant_id
+                    WHERE q.race_id = :race_id
+                      AND q.field_revision = :field_revision
+                      AND q.data_mode = 'LICENSED'
+                      AND q.rights_state = 'APPROVED'
+                      AND q.retrieved_at <= :as_of
+                      AND e.race_revision_id = (
+                          SELECT rr.race_revision_id
+                          FROM race_revisions rr
+                          WHERE rr.race_id = q.race_id
+                            AND rr.field_revision = q.field_revision
+                          ORDER BY rr.effective_from DESC, rr.race_revision_id DESC
+                          LIMIT 1
+                      )
+                    ORDER BY e.number, q.source_timestamp DESC, q.quote_id
+                    LIMIT :fetch_limit OFFSET :offset
+                    """
+                ),
+                {"race_id": race_id, "field_revision": field_revision, "as_of": as_of, "fetch_limit": limit + 1, "offset": offset},
+            ).mappings().all()
+        return [MarketQuoteView(**dict(row)) for row in rows[:limit]], len(rows) > limit
 
 
 def offset_from_cursor(cursor: str | None, *, as_of: datetime) -> int:

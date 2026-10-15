@@ -125,6 +125,9 @@ def test_synthetic_catalog_routes_return_data_with_cursor_and_as_of(authenticate
     assert len(entries.json()["items"]) == 2
     forecasts = authenticated_client.get(f"/v1/races/race:1/forecasts?as_of={as_of}", headers=headers)
     assert forecasts.status_code == 200
+    markets = authenticated_client.get(f"/v1/races/race:1/markets?as_of={as_of}", headers=headers)
+    assert markets.status_code == 200
+    assert markets.json()["items"] == []
     assert len(forecasts.json()["items"]) == 1
     assert forecasts.json()["items"][0]["data_mode"] == "SYNTHETIC_ONLY"
 

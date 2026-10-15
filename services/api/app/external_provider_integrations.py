@@ -319,6 +319,7 @@ class GatedReadOnlyProviderAdapter:
     def _request_params(
         operation: str,
         *,
+        provider_id: ProviderId | None = None,
         code: str,
         date: str | None,
         venue: str | None,
@@ -331,7 +332,7 @@ class GatedReadOnlyProviderAdapter:
             if any(value is not None for value in (date, venue, race, cursor, page_size)):
                 raise ProviderActivationError("PuntersEdge account metadata accepts no query parameters")
             return {}
-        if operation == "GET_RESULTS" and code == "THOROUGHBRED":
+        if operation == "GET_RESULTS" and code == "THOROUGHBRED" and provider_id == "punters-edge":
             # PuntersEdge names the thoroughbred category "horse" and does
             # not accept the application's generic `code` query parameter.
             params = {"category": "horse"}
@@ -339,7 +340,19 @@ class GatedReadOnlyProviderAdapter:
                 if value is not None:
                     params[key] = value
             return params
-        params: dict[str, object] = {"code": code}
+        # Krok uses its own racing-code vocabulary and silently ignores the
+        # generic `code` parameter.  Use `race_type=T` for the board, odds and
+        # dated-result endpoints so a broad all-code response cannot be
+        # mistaken for a thoroughbred-only response.
+        if provider_id == "krok-odds":
+            params = {"race_type": "T" if code == "THOROUGHBRED" else code}
+            if operation == "GET_MARKETS":
+                # The board's default is fixed/group pricing.  Request the
+                # documented tote and exchange lines as additive enrichment;
+                # unsupported lines are still rejected by the provider.
+                params["include"] = "tote,exchange"
+        else:
+            params = {"code": code}
         for key, value in (("date", date), ("venue", venue), ("race", race), ("cursor", cursor), ("limit", page_size)):
             if value is not None:
                 params[key] = value
@@ -386,7 +399,7 @@ class GatedReadOnlyProviderAdapter:
         endpoint = self.asset.endpoint(operation, view=view)
         credentials, headers = self._credentials()
         params = self._request_params(
-            operation, code=code, date=date, venue=venue, race=race, cursor=cursor, page_size=page_size,
+            operation, provider_id=self.asset.provider_id, code=code, date=date, venue=venue, race=race, cursor=cursor, page_size=page_size,
         )
         body: dict[str, object] | None = None
         if self.asset.provider_id == "betfair-exchange":
@@ -399,7 +412,8 @@ class GatedReadOnlyProviderAdapter:
             params = self._betfair_params(view=view, date=date, venue=venue, market_ids=market_ids, page_size=page_size)
             body = {"jsonrpc": "2.0", "method": f"SportsAPING/v1.0/{method_name}", "params": params, "id": 1}
             params = {}
-        response = self._transport.request(method=endpoint.method, url=f"{self.asset.base_url}{endpoint.path}", headers=headers, params=params, json_body=body, timeout_seconds=4.0)
+        path = endpoint.path.replace("{date}", date or "")
+        response = self._transport.request(method=endpoint.method, url=f"{self.asset.base_url}{path}", headers=headers, params=params, json_body=body, timeout_seconds=4.0)
         if response.status_code < 200 or response.status_code >= 300:
             raise ProviderActivationError(f"provider returned HTTP {response.status_code}")
         retrieved_at = response.retrieved_at
@@ -438,7 +452,7 @@ class GatedReadOnlyProviderAdapter:
             raise ProviderActivationError("diagnostic request ceiling must be between 1 and 6")
         endpoint = self.asset.endpoint(operation, view=view)
         credentials, headers = self._credentials()
-        params = self._request_params(operation, code=code, date=date, venue=venue, race=race)
+        params = self._request_params(operation, provider_id=self.asset.provider_id, code=code, date=date, venue=venue, race=race)
         body: dict[str, object] | None = None
         if self.asset.provider_id == "betfair-exchange":
             app_key = credentials.get("app_key", "")
@@ -451,8 +465,9 @@ class GatedReadOnlyProviderAdapter:
             body = {"jsonrpc": "2.0", "method": f"SportsAPING/v1.0/{method_name}", "params": params, "id": 1}
             params = {}
         assert self._transport is not None
+        path = endpoint.path.replace("{date}", date or "")
         response = self._transport.request(
-            method=endpoint.method, url=f"{self.asset.base_url}{endpoint.path}", headers=headers,
+            method=endpoint.method, url=f"{self.asset.base_url}{path}", headers=headers,
             params=params, json_body=body, timeout_seconds=4.0,
         )
         if response.status_code < 200 or response.status_code >= 300:

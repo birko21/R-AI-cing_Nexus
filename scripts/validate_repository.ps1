@@ -307,6 +307,7 @@ $required = @(
     'migrations/versions/017_alert_events.py',
     'migrations/versions/018_responsible_controls.py',
     'migrations/versions/019_ingestion_jobs.py',
+    'migrations/versions/020_market_quote_side.py',
     'scripts/db_migrate.ps1',
     'scripts/db_smoke.ps1',
     'scripts/validate_database_target.py',

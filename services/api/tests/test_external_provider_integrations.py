@@ -127,6 +127,30 @@ def test_full_named_approval_and_injected_transport_are_required() -> None:
     assert transport.calls[0]["params"] == {"category": "horse", "date": "2026-09-19", "venue": "Randwick"}
 
 
+def test_krok_uses_race_type_and_expands_racing_market_lines() -> None:
+    transport = FakeTransport()
+    adapter = build_disabled_provider_adapters()["krok-odds"]
+    active = adapter.__class__(adapter.asset, transport=transport, credential_resolver=lambda: "test-only-secret")
+
+    active.fetch(
+        "LIST_MEETINGS", code="THOROUGHBRED", date="2026-10-17", venue="Randwick",
+        approval=approval("krok-odds", "LIST_MEETINGS"),
+    )
+    active.fetch(
+        "GET_MARKETS", code="THOROUGHBRED", date="2026-10-17", venue="Caulfield",
+        approval=approval("krok-odds", "GET_MARKETS"),
+    )
+    active.fetch(
+        "GET_RESULTS", code="THOROUGHBRED", date="2026-10-16",
+        approval=approval("krok-odds", "GET_RESULTS"),
+    )
+
+    assert transport.calls[0]["params"]["race_type"] == "T"
+    assert "code" not in transport.calls[0]["params"]
+    assert transport.calls[1]["params"]["include"] == "tote,exchange"
+    assert transport.calls[2]["url"].endswith("/api/v1/racing/results/2026-10-16")
+
+
 def test_http_transport_normalizes_top_level_results_array() -> None:
     class Response:
         status_code = 200

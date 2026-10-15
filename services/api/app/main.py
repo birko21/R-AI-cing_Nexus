@@ -16,6 +16,7 @@ from app.contracts import (
     CodeSummary,
     CodeListResponse,
     EntryListResponse,
+    MarketQuoteListResponse,
     ErrorResponse,
     ForecastListResponse,
     HealthResponse,
@@ -34,9 +35,12 @@ from app.contracts import (
     ProviderProbeResponse,
     LiveIngestionRequest,
     LiveIngestionResponse,
+    LiveEnrichmentRequest,
+    LiveEnrichmentResponse,
 )
 from app.external_provider_integrations import ProviderActivationError
 from app.live_ingestion_runner import run_live_ingestion
+from app.live_enrichment_runner import run_live_enrichment
 from app.live_ingestion_health import read_live_ingestion_status
 from app.live_provider_runtime import build_live_provider_handle, configured_provider_status
 from app.pagination import paging_parameters
@@ -229,6 +233,24 @@ def run_live_ingestion_endpoint(payload: LiveIngestionRequest | None = None) -> 
         raise HTTPException(status_code=503, detail=f"live ingestion blocked: {exc}") from exc
 
 
+@app.post(
+    "/internal/live-enrichment/run",
+    response_model=LiveEnrichmentResponse,
+    include_in_schema=False,
+    tags=["internal"],
+    dependencies=[Depends(require_ingestion_trigger)],
+)
+def run_live_enrichment_endpoint(payload: LiveEnrichmentRequest | None = None) -> LiveEnrichmentResponse:
+    try:
+        result = run_live_enrichment(
+            date=payload.date if payload else None,
+            venues=tuple(payload.venues if payload else ()),
+        )
+        return LiveEnrichmentResponse(**result)
+    except (ProviderActivationError, RuntimeError, ValueError) as exc:
+        raise HTTPException(status_code=503, detail=f"live enrichment blocked: {exc}") from exc
+
+
 def _page_meta(limit: int, as_of: datetime, *, offset: int = 0, has_more: bool = False) -> PageMeta:
     from app.pagination import encode_cursor
 
@@ -281,6 +303,17 @@ def list_entries(race_id: str, paging: tuple[int, str | None, datetime] = Depend
     offset = offset_from_cursor(cursor, as_of=as_of)
     items, has_more = catalog.list_entries(race_id, limit=limit, offset=offset, as_of=as_of)
     return EntryListResponse(items=items, meta=_page_meta(limit, as_of, offset=offset, has_more=has_more))
+
+
+@app.get("/v1/races/{race_id}/markets", response_model=MarketQuoteListResponse, tags=["markets"], dependencies=[Depends(races_read)])
+def list_market_quotes(race_id: str, paging: tuple[int, str | None, datetime] = Depends(paging_parameters)) -> MarketQuoteListResponse:
+    limit, cursor, as_of = paging
+    race = catalog.get_race(race_id, as_of=as_of)
+    if race is None:
+        raise HTTPException(status_code=404, detail=f"race {race_id} was not found")
+    offset = offset_from_cursor(cursor, as_of=as_of)
+    items, has_more = catalog.list_market_quotes(race_id, race.field_revision, limit=limit, offset=offset, as_of=as_of)
+    return MarketQuoteListResponse(items=items, meta=_page_meta(limit, as_of, offset=offset, has_more=has_more))
 
 
 @app.get("/v1/races/{race_id}/forecasts", response_model=ForecastListResponse, tags=["forecasts"], dependencies=[Depends(forecasts_read)])

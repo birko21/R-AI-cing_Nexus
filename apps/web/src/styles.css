@@ -168,6 +168,22 @@ th { color: #8fa8c4; font-size: 0.76rem; letter-spacing: 0.06em; text-transform:
 .provenance-note strong { color: #9ff0c6; }
 .provenance-note span { color: #d5e0ee; overflow-wrap: anywhere; }
 .provenance-note small { grid-column: 1 / -1; color: #94a8c0; }
+.live-market-evidence { margin-top: 20px; padding: 16px; background: rgba(9, 21, 37, 0.74); border: 1px solid #365574; border-radius: 12px; }
+.live-market-evidence h4 { margin: 0 0 4px; color: #e7edf7; }
+.live-market-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 14px 0 16px; }
+.live-market-facts > div { padding: 10px 12px; background: #142740; border: 1px solid #2a4667; border-radius: 8px; }
+.live-market-facts span { display: block; color: #7890ab; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.live-market-facts strong { display: block; margin-top: 4px; color: #d5e0ee; font-size: 0.82rem; overflow-wrap: anywhere; }
+.quote-bars { margin: 12px 0 18px; }
+.quote-bars-axis { display: flex; justify-content: space-between; margin-left: 124px; color: #7890ab; font-size: 0.64rem; letter-spacing: 0.08em; }
+.quote-bar-row { display: grid; grid-template-columns: 116px 1fr 48px; align-items: center; gap: 8px; margin-top: 8px; }
+.quote-runner { color: #c5d4e6; font-size: 0.78rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.quote-bar-track { height: 9px; overflow: hidden; background: #1c3049; border-radius: 999px; }
+.quote-bar-fill { display: block; height: 100%; background: linear-gradient(90deg, #35e2a0, #78b9ef); border-radius: inherit; transition: width 420ms cubic-bezier(.22,1,.36,1); }
+.quote-bar-row strong { color: #9ff0c6; font-size: 0.8rem; text-align: right; }
+.empty-state.compact { margin-top: 14px; padding: 18px; }
+.empty-state.compact h5 { margin: 0 0 6px; color: #e7edf7; font-size: 0.92rem; }
+.empty-state.compact p { margin: 0; color: #94a8c0; line-height: 1.5; font-size: 0.84rem; }
 .compare-panel { margin: 20px 0 24px; padding: 18px; background: rgba(20, 39, 64, 0.72); border: 1px solid #365574; border-radius: 12px; }
 .compare-count { color: #9ff0c6; font-size: 0.78rem; font-weight: 750; white-space: nowrap; }
 .runner-picker { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 4px; }

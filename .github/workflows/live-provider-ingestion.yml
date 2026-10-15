@@ -2,6 +2,16 @@ name: Live provider ingestion
 
 on:
   workflow_dispatch:
+    inputs:
+      date:
+        description: "AU-local racing date (YYYY-MM-DD); blank means today"
+        required: false
+        type: string
+      venues:
+        description: "Comma-separated venues"
+        required: false
+        default: "Randwick,Caulfield"
+        type: string
   schedule:
     # Avoid the top of the hour, when scheduled workflows are more likely to
     # be delayed. GitHub Actions uses UTC unless a timezone is specified.
@@ -20,13 +30,16 @@ jobs:
         env:
           INGESTION_URL: ${{ secrets.NEXUS_INGESTION_URL }}
           TRIGGER_TOKEN: ${{ secrets.NEXUS_INGESTION_TRIGGER_TOKEN }}
+          TARGET_DATE: ${{ inputs.date || '' }}
+          TARGET_VENUES: ${{ inputs.venues || 'Randwick,Caulfield' }}
         shell: bash
         run: |
           set -euo pipefail
           test -n "$INGESTION_URL"
           test -n "$TRIGGER_TOKEN"
+          BODY=$(jq -n --arg date "$TARGET_DATE" --arg venues "$TARGET_VENUES" '{date: (if $date == "" then null else $date end), venues: ($venues | split(",") | map(select(length > 0)))}')
           curl --fail-with-body --silent --show-error \
-            --request POST "$INGESTION_URL/internal/live-ingestion/run" \
+            --request POST "$INGESTION_URL/internal/live-enrichment/run" \
             --header "Authorization: Bearer $TRIGGER_TOKEN" \
             --header "Content-Type: application/json" \
-            --data '{}'
+            --data "$BODY"

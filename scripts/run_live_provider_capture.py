@@ -27,6 +27,7 @@ from app.live_provider_runtime import (  # noqa: E402
 from app.provider_diagnostics import BoundedDiagnosticSession, DiagnosticPolicy  # noqa: E402
 from app.live_ingestion import persist_approved_live_envelope  # noqa: E402
 from app.betfair_live_projection import project_betfair_catalogue  # noqa: E402
+from app.betfair_market_book import project_betfair_market_book  # noqa: E402
 
 
 DEFAULT_OPERATION = {
@@ -107,6 +108,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--persist", action="store_true", help="retain the approved raw envelope under data/live/raw")
     parser.add_argument("--persist-postgres", action="store_true", help="persist the approved raw envelope and source receipt to DATABASE_URL")
     parser.add_argument("--project-betfair", action="store_true", help="project an approved Betfair catalogue into canonical PostgreSQL race/entry tables")
+    parser.add_argument("--project-betfair-book", action="store_true", help="project an approved Betfair market book into exact market quote tables")
     parser.add_argument("--diagnostic", action="store_true", help="run aggregate-only diagnostics; no raw payload is retained")
     parser.add_argument("--output-dir", type=Path, default=ROOT / "data" / "live" / "raw")
     parser.add_argument("--status", action="store_true", help="show non-secret provider configuration status and exit")
@@ -134,6 +136,8 @@ def main() -> int:
         raise SystemExit("choose either --persist or --persist-postgres")
     if args.project_betfair and (args.provider != "betfair-exchange" or args.view != "catalogue" or not args.persist_postgres):
         raise SystemExit("--project-betfair requires betfair-exchange catalogue mode with --persist-postgres")
+    if args.project_betfair_book and (args.provider != "betfair-exchange" or args.view != "book" or not args.persist_postgres):
+        raise SystemExit("--project-betfair-book requires betfair-exchange book mode with --persist-postgres")
     if args.page_size < 1 or args.page_size > 100:
         raise SystemExit("--page-size must be between 1 and 100")
 
@@ -205,7 +209,12 @@ def main() -> int:
             try:
                 with engine.begin() as connection:
                     result["postgres"] = persist_approved_live_envelope(connection, envelope)
-                    result["projected"] = project_betfair_catalogue(connection, envelope) if args.project_betfair else None
+                    if args.project_betfair:
+                        result["projected"] = project_betfair_catalogue(connection, envelope)
+                    elif args.project_betfair_book:
+                        result["projected"] = project_betfair_market_book(connection, envelope)
+                    else:
+                        result["projected"] = None
             finally:
                 engine.dispose()
             result["persisted"] = True

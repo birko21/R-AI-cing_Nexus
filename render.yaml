@@ -95,15 +95,57 @@ services:
         value: "false"
       - key: NEXUS_PROVIDER_FORMFAV_API_KEY
         sync: false
+      - key: NEXUS_PROVIDER_FORMFAV_APPROVAL_TIER
+        sync: false
+      - key: NEXUS_PROVIDER_FORMFAV_APPROVED_OPERATIONS
+        sync: false
+      - key: NEXUS_PROVIDER_FORMFAV_APPROVED_CODES
+        sync: false
+      - key: NEXUS_PROVIDER_FORMFAV_ACCOUNT_ENTITLEMENT_EVIDENCE
+        sync: false
+      - key: NEXUS_PROVIDER_FORMFAV_CREDENTIAL_CUSTODIAN
+        sync: false
+      - key: NEXUS_PROVIDER_FORMFAV_QUOTA_CEILING
+        sync: false
+      - key: NEXUS_PROVIDER_FORMFAV_KILL_SWITCH_REFERENCE
+        sync: false
       - key: NEXUS_PROVIDER_KROK_ODDS_ENABLED
         value: "false"
       - key: NEXUS_PROVIDER_KROK_ODDS_API_KEY
+        sync: false
+      - key: NEXUS_PROVIDER_KROK_ODDS_APPROVAL_TIER
+        sync: false
+      - key: NEXUS_PROVIDER_KROK_ODDS_APPROVED_OPERATIONS
+        sync: false
+      - key: NEXUS_PROVIDER_KROK_ODDS_APPROVED_CODES
+        sync: false
+      - key: NEXUS_PROVIDER_KROK_ODDS_ACCOUNT_ENTITLEMENT_EVIDENCE
+        sync: false
+      - key: NEXUS_PROVIDER_KROK_ODDS_CREDENTIAL_CUSTODIAN
+        sync: false
+      - key: NEXUS_PROVIDER_KROK_ODDS_QUOTA_CEILING
+        sync: false
+      - key: NEXUS_PROVIDER_KROK_ODDS_KILL_SWITCH_REFERENCE
         sync: false
       - key: NEXUS_PROVIDER_BETFAIR_ENABLED
         value: "false"
       - key: NEXUS_PROVIDER_BETFAIR_APP_KEY
         sync: false
       - key: NEXUS_PROVIDER_BETFAIR_SESSION_TOKEN
+        sync: false
+      - key: NEXUS_PROVIDER_BETFAIR_APPROVAL_TIER
+        sync: false
+      - key: NEXUS_PROVIDER_BETFAIR_APPROVED_OPERATIONS
+        sync: false
+      - key: NEXUS_PROVIDER_BETFAIR_APPROVED_CODES
+        sync: false
+      - key: NEXUS_PROVIDER_BETFAIR_ACCOUNT_ENTITLEMENT_EVIDENCE
+        sync: false
+      - key: NEXUS_PROVIDER_BETFAIR_CREDENTIAL_CUSTODIAN
+        sync: false
+      - key: NEXUS_PROVIDER_BETFAIR_QUOTA_CEILING
+        sync: false
+      - key: NEXUS_PROVIDER_BETFAIR_KILL_SWITCH_REFERENCE
         sync: false
 
   - type: web

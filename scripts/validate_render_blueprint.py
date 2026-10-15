@@ -88,7 +88,7 @@ def main() -> None:
     workflow = ROOT / ".github" / "workflows" / "live-provider-ingestion.yml"
     require(workflow.is_file(), "free deployment must provide a GitHub Actions ingestion schedule")
     workflow_text = workflow.read_text(encoding="utf-8")
-    require("17 * * * *" in workflow_text and "/internal/live-ingestion/run" in workflow_text, "GitHub Actions must trigger the protected hourly ingestion endpoint")
+    require("17 * * * *" in workflow_text and "/internal/live-enrichment/run" in workflow_text, "GitHub Actions must trigger the protected hourly enrichment endpoint")
     print("RENDER BLUEPRINT PASS: OIDC-gated API, Neon PostgreSQL, protected GitHub Actions ingestion, synthetic runtime removed")
 
 

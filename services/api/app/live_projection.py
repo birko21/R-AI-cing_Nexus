@@ -12,8 +12,6 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 import hashlib
 import json
-from typing import Any
-
 from sqlalchemy import Connection, text
 
 from app.betfair_live_projection import parse_betfair_catalogue
@@ -110,7 +108,7 @@ def _race_items(payload: Mapping[str, object]) -> list[Mapping[str, object]]:
             for child in nested:
                 child_mapping = dict(_mapping(child, "race item"))
                 child_mapping.setdefault("meeting", meeting_value)
-                for key in ("venue", "track", "trackName", "scheduled_at", "scheduledAt", "start_time", "startTime"):
+                for key in ("venue", "track", "trackName", "scheduled_at", "scheduledAt", "scheduled_time", "scheduledTime", "start_time", "startTime", "jump_time", "jumpTime"):
                     if key not in child_mapping and key in item:
                         child_mapping[key] = item[key]
                 items.append(child_mapping)
@@ -138,8 +136,8 @@ def _parse_generic(envelope: RawEnvelope) -> tuple[ProjectedRace, ...]:
         meeting_mapping = meeting if isinstance(meeting, Mapping) else {}
         venue = _text(_first(item, "venue", "track", "trackName") or _first(meeting_mapping, "venue", "name", "track"), "venue")
         scheduled_at = _timestamp(
-            _first(item, "scheduled_at", "scheduledAt", "start_time", "startTime", "raceStartTime", "start")
-            or _first(meeting_mapping, "scheduled_at", "scheduledAt", "date"),
+            _first(item, "scheduled_at", "scheduledAt", "scheduled_time", "scheduledTime", "jump_time", "jumpTime", "start_time", "startTime", "raceStartTime", "start")
+            or _first(meeting_mapping, "scheduled_at", "scheduledAt", "scheduled_time", "scheduledTime", "jump_time", "jumpTime", "date"),
             "scheduled_at",
         )
         race_number = _positive_int(_first(item, "race_number", "raceNumber", "raceNo", "number"), "race_number")
@@ -151,7 +149,7 @@ def _parse_generic(envelope: RawEnvelope) -> tuple[ProjectedRace, ...]:
         runners: list[ProjectedRunner] = []
         seen_ids: set[str] = set()
         for index, raw_runner in enumerate(_runners(item), start=1):
-            source_runner_id = _first(raw_runner, "runner_id", "runnerId", "horse_id", "horseId", "entry_id", "entryId", "id")
+            source_runner_id = _first(raw_runner, "runner_id", "runnerId", "horse_id", "horseId", "horse_code", "horseCode", "entry_id", "entryId", "slug", "id")
             runner_key = _text(source_runner_id, "runner_id") if source_runner_id is not None else None
             name = _text(_first(raw_runner, "name", "runner_name", "runnerName", "horse_name", "horseName"), "runner_name")
             number = _positive_int(_first(raw_runner, "number", "saddlecloth", "runnerNumber", "tabNo") or index, "runner_number")
@@ -160,7 +158,7 @@ def _parse_generic(envelope: RawEnvelope) -> tuple[ProjectedRace, ...]:
             if entry_id in seen_ids:
                 raise LiveProjectionError(f"race {race_key} repeats runner identity {source_key}")
             seen_ids.add(entry_id)
-            raw_status = _first(raw_runner, "status", "runnerStatus") or "ACTIVE"
+            raw_status = _first(raw_runner, "status", "runnerStatus") or ("SCRATCHED" if raw_runner.get("scratched") or raw_runner.get("is_scratched") else "ACTIVE")
             status = str(raw_status).strip().upper()
             status = "SCRATCHED" if status in {"SCRATCHED", "REMOVED", "WITHDRAWN"} else "ACTIVE"
             raw_position = _first(raw_runner, "position", "placing", "finishPosition", "finishingPosition", "place")

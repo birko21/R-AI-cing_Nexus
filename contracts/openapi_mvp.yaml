@@ -148,6 +148,22 @@ paths:
         '400': { $ref: '#/components/responses/BadRequest' }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '404': { $ref: '#/components/responses/NotFound' }
+  /v1/races/{race_id}/markets:
+    get:
+      operationId: listMarketQuotes
+      security: [{ bearerAuth: [races:read] }]
+      parameters:
+        - { $ref: '#/components/parameters/RaceId' }
+        - { $ref: '#/components/parameters/AsOf' }
+      responses:
+        '200':
+          description: Rights-approved, exact-mapped market observations for one race.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/MarketQuoteListResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
   /v1/selections:
     get:
       operationId: listSelections
@@ -461,6 +477,34 @@ components:
         probabilities: { type: object, additionalProperties: { type: number, minimum: 0, maximum: 1 } }
         data_mode: { $ref: '#/components/schemas/DataMode' }
         diagnostic_flags: { type: array, items: { type: string } }
+    MarketQuoteView:
+      type: object
+      additionalProperties: false
+      required: [quote_id, race_id, field_revision, entry_id, number, market_source, market_id, selection_id, market_type, price_type, price_phase, quote_side, runner_status, price, source_timestamp, retrieved_at, in_play, data_mode, rights_state, source_receipt_id]
+      properties:
+        quote_id: { type: string }
+        race_id: { type: string }
+        field_revision: { type: string }
+        entry_id: { type: string }
+        number: { type: integer, minimum: 1 }
+        participant_name: { type: string, nullable: true }
+        market_source: { type: string }
+        market_id: { type: string }
+        selection_id: { type: string }
+        market_type: { type: string, enum: [WIN, PLACE, TOP_N, HEAD_TO_HEAD] }
+        price_type: { type: string, enum: [DECIMAL, FRACTIONAL, AMERICAN, TOTAL_RETURN] }
+        price_phase: { type: string, enum: [LIVE, CLOSING] }
+        quote_side: { type: string, enum: [BACK, LAY] }
+        runner_status: { type: string, enum: [ACTIVE, SCRATCHED, RESERVE] }
+        price: { type: number }
+        source_timestamp: { type: string, format: date-time }
+        retrieved_at: { type: string, format: date-time }
+        in_play: { type: boolean }
+        size: { type: number, nullable: true }
+        liquidity: { type: number, nullable: true }
+        data_mode: { $ref: '#/components/schemas/DataMode' }
+        rights_state: { type: string, enum: [SYNTHETIC, UNASSESSED, APPROVED, RESTRICTED, REJECTED] }
+        source_receipt_id: { type: string }
     SelectionCreate:
       type: object
       additionalProperties: false
@@ -529,6 +573,12 @@ components:
       required: [items, meta]
       properties:
         items: { type: array, items: { $ref: '#/components/schemas/Forecast' } }
+        meta: { $ref: '#/components/schemas/PageMeta' }
+    MarketQuoteListResponse:
+      type: object
+      required: [items, meta]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/MarketQuoteView' } }
         meta: { $ref: '#/components/schemas/PageMeta' }
     SelectionListResponse:
       type: object

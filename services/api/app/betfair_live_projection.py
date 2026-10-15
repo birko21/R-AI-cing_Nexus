@@ -237,6 +237,28 @@ def project_betfair_catalogue(connection: Connection, envelope: RawEnvelope) -> 
             connection.execute(
                 text(
                     """
+                    INSERT INTO market_selection_mappings (
+                        mapping_id, code, race_id, field_revision, entry_id,
+                        market_source, market_id, selection_id
+                    ) VALUES (
+                        :mapping_id, 'THOROUGHBRED', :race_id, :field_revision,
+                        :entry_id, 'BETFAIR_EXCHANGE', :market_id, :selection_id
+                    ) ON CONFLICT (market_source, market_id, selection_id) DO NOTHING
+                    """
+                ),
+                {
+                    "mapping_id": f"betfair:{race.market_id}:{runner.selection_id}",
+                    "race_id": race.race_id,
+                    "field_revision": race.field_revision,
+                    "entry_id": runner.entry_id,
+                    "market_id": race.market_id,
+                    "selection_id": runner.selection_id,
+                },
+            )
+        for runner in race.runners:
+            connection.execute(
+                text(
+                    """
                     INSERT INTO participants (
                         participant_id, code, name, source_receipt_id, first_observed_at, data_mode
                     ) VALUES (

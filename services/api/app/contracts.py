@@ -94,6 +94,33 @@ class LiveIngestionResponse(BaseModel):
     projection: dict[str, int]
 
 
+class LiveEnrichmentRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    date: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
+    venues: list[str] = Field(default_factory=list, max_length=8)
+
+    @field_validator("date")
+    @classmethod
+    def validate_calendar_date(cls, value: str | None) -> str | None:
+        if value is not None:
+            calendar_date.fromisoformat(value)
+        return value
+
+    @field_validator("venues")
+    @classmethod
+    def validate_venues(cls, value: list[str]) -> list[str]:
+        return [venue.strip() for venue in value if venue.strip()]
+
+
+class LiveEnrichmentResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    status: Literal["LIVE_ENRICHMENT_COMPLETE"]
+    date: str
+    results: list[dict[str, object]]
+
+
 class LiveIngestionCoverage(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -201,6 +228,34 @@ class Entry(BaseModel):
     data_mode: Literal["SYNTHETIC_ONLY", "SCRAPED_PUBLIC", "LICENSED"]
 
 
+class MarketQuoteView(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    quote_id: str
+    race_id: str
+    field_revision: str
+    entry_id: str
+    number: int = Field(ge=1)
+    participant_name: str | None = None
+    market_source: str
+    market_id: str
+    selection_id: str
+    market_type: Literal["WIN", "PLACE", "TOP_N", "HEAD_TO_HEAD"]
+    price_type: Literal["DECIMAL", "FRACTIONAL", "AMERICAN", "TOTAL_RETURN"]
+    price_phase: Literal["LIVE", "CLOSING"]
+    quote_side: Literal["BACK", "LAY"]
+    runner_status: Literal["ACTIVE", "SCRATCHED", "RESERVE"]
+    price: float
+    source_timestamp: datetime
+    retrieved_at: datetime
+    in_play: bool
+    size: float | None = None
+    liquidity: float | None = None
+    data_mode: Literal["SYNTHETIC_ONLY", "SCRAPED_PUBLIC", "LICENSED"]
+    rights_state: Literal["SYNTHETIC", "UNASSESSED", "APPROVED", "RESTRICTED", "REJECTED"]
+    source_receipt_id: str
+
+
 class Forecast(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -270,6 +325,10 @@ class RaceListResponse(Page[Race]):
 
 
 class EntryListResponse(Page[Entry]):
+    pass
+
+
+class MarketQuoteListResponse(Page[MarketQuoteView]):
     pass
 
 

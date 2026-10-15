@@ -526,6 +526,31 @@ type LiveEntry = {
   status: string;
   data_mode: 'LICENSED';
 };
+type LiveMarketQuote = {
+  quote_id: string;
+  race_id: string;
+  field_revision: string;
+  entry_id: string;
+  number: number;
+  participant_name?: string | null;
+  market_source: string;
+  market_id: string;
+  selection_id: string;
+  market_type: string;
+  price_type: string;
+  price_phase: string;
+  quote_side: 'BACK' | 'LAY';
+  runner_status: string;
+  price: number;
+  source_timestamp: string;
+  retrieved_at: string;
+  in_play: boolean;
+  size?: number | null;
+  liquidity?: number | null;
+  data_mode: 'LICENSED';
+  rights_state: string;
+  source_receipt_id: string;
+};
 
 type LiveIngestionHealth = {
   status: 'DISABLED' | 'NO_DATA' | 'HEALTHY' | 'STALE' | 'FAILED';
@@ -945,6 +970,7 @@ function LiveIngestionStatusCard({ status }: { status: LiveIngestionHealth }) {
 function LiveMeetingView({ meeting, apiRequest, onClose }: { meeting: LiveMeeting; apiRequest: NexusApiRequest; onClose: () => void }) {
   const [races, setRaces] = useState<LiveRace[]>([]);
   const [entries, setEntries] = useState<Record<string, LiveEntry[]>>({});
+  const [marketQuotes, setMarketQuotes] = useState<Record<string, LiveMarketQuote[]>>({});
   const [state, setState] = useState<'loading' | 'ready' | 'unavailable'>('loading');
 
   useEffect(() => {
@@ -956,13 +982,15 @@ function LiveMeetingView({ meeting, apiRequest, onClose }: { meeting: LiveMeetin
         const liveRaces = Array.isArray(page.items) ? page.items : [];
         const entryPages = await Promise.all(liveRaces.map(async (race) => {
           const entryResponse = await apiRequest(`/v1/races/${encodeURIComponent(race.race_id)}/entries`, undefined, 'races:read');
-          if (!entryResponse.ok) return [race.race_id, []] as const;
-          const entryPage = await entryResponse.json() as ApiPage<LiveEntry>;
-          return [race.race_id, Array.isArray(entryPage.items) ? entryPage.items : []] as const;
+          const marketResponse = await apiRequest(`/v1/races/${encodeURIComponent(race.race_id)}/markets`, undefined, 'races:read');
+          const entryPage = entryResponse.ok ? await entryResponse.json() as ApiPage<LiveEntry> : { items: [] };
+          const marketPage = marketResponse.ok ? await marketResponse.json() as ApiPage<LiveMarketQuote> : { items: [] };
+          return { raceId: race.race_id, entries: Array.isArray(entryPage.items) ? entryPage.items : [], quotes: Array.isArray(marketPage.items) ? marketPage.items : [] };
         }));
         if (!active) return;
         setRaces(liveRaces);
-        setEntries(Object.fromEntries(entryPages));
+        setEntries(Object.fromEntries(entryPages.map((item) => [item.raceId, item.entries])));
+        setMarketQuotes(Object.fromEntries(entryPages.map((item) => [item.raceId, item.quotes])));
         setState('ready');
       })
       .catch(() => { if (active) setState('unavailable'); });
@@ -977,15 +1005,37 @@ function LiveMeetingView({ meeting, apiRequest, onClose }: { meeting: LiveMeetin
     {state === 'ready' && races.length === 0 && <div className="empty-state" aria-live="polite"><h3>No canonical races captured</h3><p>The meeting exists, but no race rows are currently available.</p></div>}
     {state === 'ready' && races.map((race) => {
       const raceEntries = entries[race.race_id] ?? [];
+      const raceQuotes = marketQuotes[race.race_id] ?? [];
       const activeEntries = raceEntries.filter((entry) => entry.status === 'ACTIVE').length;
       const scratchedEntries = raceEntries.filter((entry) => entry.status === 'SCRATCHED').length;
       return <div className="evidence-panel live-race-panel" key={race.race_id}>
         <div className="panel-heading"><div><p className="eyebrow">CANONICAL RACE</p><h3>Race {race.race_number}</h3><p className="panel-note">{race.status} · field {race.field_revision}</p></div><span className="status-pill">LICENSED</span></div>
         <div className="live-race-summary" aria-label={`Race ${race.race_number} field summary`}><div><strong>{raceEntries.length}</strong><span>total entries</span></div><div><strong>{activeEntries}</strong><span>active</span></div><div><strong>{scratchedEntries}</strong><span>scratched</span></div></div>
         <table><caption>Canonical entries · current field revision</caption><thead><tr><th scope="col">No.</th><th scope="col">Participant</th><th scope="col">State</th></tr></thead><tbody>{raceEntries.map((entry) => <tr key={entry.entry_id}><td className="entry-number">{entry.number}</td><td>{entry.name ?? entry.participant_id}</td><td><span className={`entry-state entry-${entry.status.toLowerCase()}`} aria-label={liveEntryStateLabel(entry.status)}>{liveEntryStateLabel(entry.status)}</span></td></tr>)}</tbody></table>
-        <div className="provenance-note"><strong>Receipt verified</strong><span>{race.source_receipt_id ?? 'Receipt identifier not exposed'}</span><small>Provider payloads and forecasts are not displayed.</small></div>
+        <LiveMarketEvidence quotes={raceQuotes} entries={raceEntries} />
+        <div className="provenance-note"><strong>Receipt verified</strong><span>{race.source_receipt_id ?? 'Receipt identifier not exposed'}</span><small>Field and market observations are shown read-only; forecasts remain unavailable until a trained model is approved.</small></div>
       </div>;
     })}
+  </section>;
+}
+
+function LiveMarketEvidence({ quotes, entries }: { quotes: LiveMarketQuote[]; entries: LiveEntry[] }) {
+  const activeQuotes = quotes.filter((quote) => quote.runner_status === 'ACTIVE' && quote.price_type === 'DECIMAL');
+  const bestByEntry = new Map<string, LiveMarketQuote>();
+  activeQuotes.forEach((quote) => {
+    const current = bestByEntry.get(quote.entry_id);
+    if (!current || (quote.quote_side === 'BACK' && current.quote_side === 'LAY') || (quote.quote_side === current.quote_side && quote.price < current.price) || (quote.quote_side === current.quote_side && new Date(quote.retrieved_at) > new Date(current.retrieved_at))) bestByEntry.set(quote.entry_id, quote);
+  });
+  const rows = entries.map((entry) => ({ entry, quote: bestByEntry.get(entry.entry_id) })).filter(({ quote }) => quote);
+  const strongestPrice = rows.reduce((max, row) => Math.max(max, 1 / (row.quote?.price ?? 1)), 0.01);
+  return <section className="live-market-evidence" aria-label="Live market evidence">
+    <div className="panel-heading"><div><p className="eyebrow">MARKET EVIDENCE · EXACT MAPPING</p><h4>Read-only exchange snapshot</h4></div><span className={quotes.length ? 'status-pill' : 'invalidated-pill'}>{quotes.length ? 'LIVE QUOTES' : 'NO MARKET DATA'}</span></div>
+    {quotes.length === 0 ? <div className="empty-state compact"><h5>No approved market quotes captured</h5><p>The field is real and readable, but no rights-approved quote snapshot is available for this race yet. No synthetic odds are substituted.</p></div> : <>
+      <div className="live-market-facts"><div><span>Quotes</span><strong>{quotes.length}</strong></div><div><span>Source</span><strong>{quotes[0].market_source}</strong></div><div><span>Phase</span><strong>{quotes[0].price_phase}</strong></div><div><span>Rights</span><strong>{quotes[0].rights_state}</strong></div></div>
+      <div className="quote-bars" aria-label="Market-implied price strength"><div className="quote-bars-axis"><span>SHORTER</span><span>LONGER</span></div>{rows.map(({ entry, quote }) => { const strength = (1 / (quote?.price ?? 1)) / strongestPrice * 100; return <div className="quote-bar-row" key={quote?.quote_id}><span className="quote-runner">{entry.number} · {entry.name ?? entry.participant_id}</span><span className="quote-bar-track"><span className="quote-bar-fill" style={{ width: `${Math.max(8, Math.min(100, strength))}%` }} /></span><strong>{quote?.price.toFixed(2)}</strong></div>; })}</div>
+      <table><caption>Exact mapped market observations · raw exchange values</caption><thead><tr><th scope="col">Runner</th><th scope="col">Side</th><th scope="col">Price</th><th scope="col">Liquidity</th><th scope="col">Observed</th></tr></thead><tbody>{rows.map(({ entry, quote }) => <tr key={`${quote?.quote_id}-row`}><td>{entry.number} · {entry.name ?? entry.participant_id}</td><td>{quote?.quote_side}</td><td>{quote?.price.toFixed(2)} {quote?.price_type}</td><td>{quote?.liquidity == null ? 'NOT_AVAILABLE' : quote.liquidity.toFixed(2)}</td><td>{quote ? formatSydneyDateTime(quote.source_timestamp) : 'NOT_AVAILABLE'}</td></tr>)}</tbody></table>
+      <p className="panel-note">Bars show relative market-implied strength from the observed decimal price. They are not model probabilities, recommendations or normalized forecasts.</p>
+    </>}
   </section>;
 }
 
