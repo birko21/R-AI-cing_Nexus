@@ -1,9 +1,10 @@
 from datetime import datetime
 from contextlib import asynccontextmanager
+import hmac
 import os
 from uuid import uuid4
 
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -29,8 +30,11 @@ from app.contracts import (
     ProviderDiagnosticCheck,
     ProviderProbeRequest,
     ProviderProbeResponse,
+    LiveIngestionRequest,
+    LiveIngestionResponse,
 )
 from app.external_provider_integrations import ProviderActivationError
+from app.live_ingestion_runner import run_live_ingestion
 from app.live_provider_runtime import build_live_provider_handle, configured_provider_status
 from app.pagination import paging_parameters
 from app.provider_diagnostics import BoundedDiagnosticSession, DiagnosticPolicy
@@ -190,6 +194,34 @@ def probe_punters_edge(payload: ProviderProbeRequest) -> ProviderProbeResponse:
     finally:
         if handle is not None:
             handle.close()
+
+
+def require_ingestion_trigger(authorization: str | None = Header(default=None)) -> None:
+    configured = os.environ.get("NEXUS_INGESTION_TRIGGER_TOKEN", "").strip()
+    if not configured:
+        raise HTTPException(status_code=503, detail="live ingestion trigger is not configured")
+    supplied = authorization.removeprefix("Bearer ").strip() if authorization else ""
+    if not supplied or not hmac.compare_digest(supplied, configured):
+        raise HTTPException(status_code=401, detail="live ingestion trigger authentication failed")
+
+
+@app.post(
+    "/internal/live-ingestion/run",
+    response_model=LiveIngestionResponse,
+    include_in_schema=False,
+    tags=["internal"],
+    dependencies=[Depends(require_ingestion_trigger)],
+)
+def run_live_ingestion_endpoint(payload: LiveIngestionRequest | None = None) -> LiveIngestionResponse:
+    try:
+        result = run_live_ingestion(
+            date=payload.date if payload else None,
+            venue=payload.venue if payload else None,
+            race=payload.race if payload else None,
+        )
+        return LiveIngestionResponse(**result)
+    except (ProviderActivationError, RuntimeError, ValueError) as exc:
+        raise HTTPException(status_code=503, detail=f"live ingestion blocked: {exc}") from exc
 
 
 def _page_meta(limit: int, as_of: datetime, *, offset: int = 0, has_more: bool = False) -> PageMeta:

@@ -10,7 +10,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 BLUEPRINT = ROOT / "render.yaml"
-EXPECTED_SERVICES = {"nexus-staging-api", "nexus-staging-frontend", "nexus-staging-live-ingestion"}
+EXPECTED_SERVICES = {"nexus-staging-api", "nexus-staging-frontend"}
 PROVIDER_FLAGS = (
     "NEXUS_PROVIDER_PUNTERS_EDGE_ENABLED",
     "NEXUS_PROVIDER_FORMFAV_ENABLED",
@@ -36,14 +36,10 @@ def main() -> None:
     require(BLUEPRINT.is_file(), "render.yaml is missing")
     document = yaml.safe_load(BLUEPRINT.read_text(encoding="utf-8"))
     require(isinstance(document, dict), "render.yaml must contain a mapping")
-    databases = document.get("databases")
-    require(isinstance(databases, list) and len(databases) == 1, "Blueprint must define the Nexus staging database")
-    database = databases[0]
-    require(database.get("name") == "nexus-staging-db", "database must use the Nexus staging name")
-    require(database.get("region") == "singapore", "database must be colocated with the API")
+    require("databases" not in document, "free Blueprint must not create a Render database")
 
     services = document.get("services")
-    require(isinstance(services, list) and len(services) == 3, "Blueprint must define exactly three staging services")
+    require(isinstance(services, list) and len(services) == 2, "free Blueprint must define exactly two staging services")
     by_name = {service.get("name"): service for service in services if isinstance(service, dict)}
     require(set(by_name) == EXPECTED_SERVICES, "Blueprint service names must be Nexus-specific")
 
@@ -51,7 +47,7 @@ def main() -> None:
     require(api.get("type") == "web" and api.get("runtime") == "python", "API must be a Python web service")
     require(api.get("plan") == "free", "API must remain on the free plan")
     require(api.get("healthCheckPath") == "/health/live", "API health check must use /health/live")
-    require("alembic" in str(api.get("preDeployCommand")), "API must run database migrations before deploy")
+    require("alembic" in str(api.get("preDeployCommand")) and "DATABASE_URL_UNPOOLED" in str(api.get("preDeployCommand")), "API must run migrations with the direct Neon URL")
     require(api.get("autoDeployTrigger") == "off", "API auto-deploy must remain disabled")
     require("0.0.0.0" in str(api.get("startCommand")) and "$PORT" in str(api.get("startCommand")), "API must bind Render's PORT on all interfaces")
     api_env = env_map(api)
@@ -66,7 +62,9 @@ def main() -> None:
     require(api_env.get("NEXUS_DATA_MODE", {}).get("value") == "LICENSED", "staging API must use licensed data mode")
     require(api_env.get("NEXUS_API_PERSISTENCE", {}).get("value") == "postgres", "staging API must use PostgreSQL persistence")
     require(api_env.get("NEXUS_LIVE_PROVIDER", {}).get("value") == "punters-edge", "staging must start with PuntersEdge")
-    require(api_env.get("DATABASE_URL", {}).get("fromDatabase", {}).get("name") == "nexus-staging-db", "API must use the internal staging database")
+    require(api_env.get("DATABASE_URL", {}).get("sync") is False, "API must accept the pooled Neon URL as a Render secret")
+    require(api_env.get("DATABASE_URL_UNPOOLED", {}).get("sync") is False, "API must accept the direct Neon URL as a Render secret")
+    require(api_env.get("NEXUS_INGESTION_TRIGGER_TOKEN", {}).get("sync") is False, "ingestion trigger token must remain a Render secret")
     require(api_env.get("NEXUS_PROVIDER_PUNTERS_EDGE_ENABLED", {}).get("value") in {True, "true"}, "PuntersEdge must be enabled for the first live lane")
     for key in PROVIDER_FLAGS[1:]:
         require(api_env.get(key, {}).get("value") in {False, "false"}, f"{key} must remain disabled")
@@ -87,14 +85,11 @@ def main() -> None:
     headers = frontend.get("headers", [])
     csp = " ".join(str(item.get("value", "")) for item in headers if isinstance(item, dict) and item.get("name") == "Content-Security-Policy")
     require("https://dev-raicingnexus.au.auth0.com" in csp and "https://nexus-staging-api-feap.onrender.com" in csp, "frontend CSP must allow the configured Auth0 tenant and Nexus API")
-    ingestion = by_name["nexus-staging-live-ingestion"]
-    require(ingestion.get("type") == "cron" and ingestion.get("runtime") == "python", "live ingestion must be a Python cron service")
-    require(ingestion.get("schedule") == "0 * * * *", "live ingestion must run hourly in UTC")
-    require("run_live_provider_ingestion.py" in str(ingestion.get("startCommand")), "cron must run the live ingestion runner")
-    ingestion_env = env_map(ingestion)
-    require(ingestion_env.get("DATABASE_URL", {}).get("fromDatabase", {}).get("name") == "nexus-staging-db", "cron must use the internal staging database")
-    require(ingestion_env.get("NEXUS_LIVE_PROVIDER", {}).get("value") == "punters-edge", "cron must start with PuntersEdge")
-    print("RENDER BLUEPRINT PASS: OIDC-gated API, PostgreSQL, owner-scoped PuntersEdge cron ingestion, synthetic runtime removed")
+    workflow = ROOT / ".github" / "workflows" / "live-provider-ingestion.yml"
+    require(workflow.is_file(), "free deployment must provide a GitHub Actions ingestion schedule")
+    workflow_text = workflow.read_text(encoding="utf-8")
+    require("17 * * * *" in workflow_text and "/internal/live-ingestion/run" in workflow_text, "GitHub Actions must trigger the protected hourly ingestion endpoint")
+    print("RENDER BLUEPRINT PASS: OIDC-gated API, Neon PostgreSQL, protected GitHub Actions ingestion, synthetic runtime removed")
 
 
 if __name__ == "__main__":

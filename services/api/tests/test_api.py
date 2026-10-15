@@ -161,6 +161,25 @@ def test_provider_probe_rejects_impossible_calendar_date(authenticated_client: T
     assert "month must be in 1..12" in str(invalid.json()["error"]["details"])
 
 
+def test_internal_live_ingestion_trigger_fails_closed(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("APP_ENV", "development")
+    monkeypatch.setenv("ALLOW_LOCAL_AUTH", "true")
+    monkeypatch.setenv("API_HOST", "127.0.0.1")
+    with TestClient(app) as client:
+        missing = client.post("/internal/live-ingestion/run", json={})
+        assert missing.status_code == 503
+        assert "trigger is not configured" in missing.json()["error"]["message"]
+
+        monkeypatch.setenv("NEXUS_INGESTION_TRIGGER_TOKEN", "test-ingestion-token")
+        invalid = client.post(
+            "/internal/live-ingestion/run",
+            json={},
+            headers={"Authorization": "Bearer wrong"},
+        )
+        assert invalid.status_code == 401
+        assert "authentication failed" in invalid.json()["error"]["message"]
+
+
 def test_external_and_production_bind_modes_are_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("APP_ENV", "development")
     monkeypatch.setenv("ALLOW_LOCAL_AUTH", "true")

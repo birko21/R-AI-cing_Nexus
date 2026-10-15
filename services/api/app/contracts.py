@@ -67,6 +67,33 @@ class ProviderProbeResponse(BaseModel):
     raw_payload_retained: Literal[False]
 
 
+class LiveIngestionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    date: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
+    venue: str | None = Field(default=None, max_length=120)
+    race: int | None = Field(default=None, ge=1, le=99)
+
+    @field_validator("date")
+    @classmethod
+    def validate_calendar_date(cls, value: str | None) -> str | None:
+        if value is not None:
+            calendar_date.fromisoformat(value)
+        return value
+
+
+class LiveIngestionResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    status: Literal["LIVE_INGESTION_SUCCESS"]
+    provider: str
+    operation: str
+    code: Literal["THOROUGHBRED"]
+    date: str
+    persistence: dict[str, object]
+    projection: dict[str, int]
+
+
 class SystemStatusResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
 

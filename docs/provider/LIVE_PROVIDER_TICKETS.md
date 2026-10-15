@@ -28,17 +28,19 @@ Approved provider envelopes pass through strict identity and timestamp
 validation before canonical meetings, races, entries, and official results
 are written. Ambiguous records are rejected rather than guessed.
 
-## LIVE-005 — Wire Render PostgreSQL and migrations — CODE COMPLETE / RESOURCE PENDING
+## LIVE-005 — Wire PostgreSQL and migrations — CODE COMPLETE / NEON URL PENDING
 
 The Alembic chain and transactional live-ingestion runner are ready. The
-Render Blueprint declares the managed PostgreSQL resource and migration hook,
-but the resource has not been created.
+free Blueprint now expects pooled and direct Neon URLs as Render secrets;
+Render does not create a paid database resource.
 
-## LIVE-006 — Add scheduled ingestion — CODE COMPLETE / CRON PENDING
+## LIVE-006 — Add scheduled ingestion — CODE COMPLETE / GITHUB SECRETS PENDING
 
-`scripts/run_live_provider_ingestion.py` is ready for a Render Cron service.
-Each run performs one bounded read, persists the approved receipt/envelope,
-projects canonical data, and exits without placing orders or wagers.
+The protected `/internal/live-ingestion/run` endpoint performs one bounded
+read using provider credentials held in Render. A GitHub Actions schedule
+triggers it hourly, avoiding Render's paid Cron service. Each run persists the
+approved receipt/envelope, projects canonical data, and exits without placing
+orders or wagers.
 
 ## LIVE-007 — Remove synthetic runtime fallback — CODE COMPLETE / ACTIVATION PENDING
 
@@ -55,6 +57,7 @@ bounded provider sample, and verification of persisted canonical rows.
 
 ## Current external gate
 
-Render is currently on the Hobby plan with no payment method configured.
-Creating the managed PostgreSQL and Cron resources may require a plan or
-billing change. No billable resource has been created by this migration.
+The free path requires a Neon pooled URL, Neon direct URL, and one matching
+ingestion trigger token entered as secrets in Render/GitHub. No billable
+Render resource is required. Scheduled workflows run from the repository's
+default branch, so the workflow must be merged there before hourly execution.

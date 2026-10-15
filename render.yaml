@@ -1,12 +1,6 @@
 # Nexus staging Blueprint for the owner-scoped, read-only live data lane.
-# Applying this file creates a managed PostgreSQL resource; review its Render
-# plan and billing before applying it.
-databases:
-  - name: nexus-staging-db
-    databaseName: nexus_staging
-    user: nexus_staging
-    region: singapore
-    plan: basic-256mb
+# The free path uses Neon for PostgreSQL and GitHub Actions for scheduling.
+# Enter the pooled and direct Neon URLs as Render secrets; do not commit them.
 
 services:
   - type: web
@@ -17,7 +11,7 @@ services:
     rootDir: services/api
     buildCommand: pip install --requirement requirements.lock.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
-    preDeployCommand: cd ../.. && python -m alembic -c alembic.ini upgrade head
+    preDeployCommand: cd ../.. && DATABASE_URL="$DATABASE_URL_UNPOOLED" python -m alembic -c alembic.ini upgrade head
     healthCheckPath: /health/live
     autoDeployTrigger: "off"
     envVars:
@@ -49,15 +43,35 @@ services:
         value: GET_RESULTS
       - key: NEXUS_LIVE_CODES
         value: THOROUGHBRED
+      - key: NEXUS_LIVE_OPERATION
+        value: GET_RESULTS
+      - key: NEXUS_LIVE_CODE
+        value: THOROUGHBRED
       - key: NEXUS_LIVE_READ_ONLY
         value: "true"
       - key: DATABASE_URL
-        fromDatabase:
-          name: nexus-staging-db
-          property: connectionString
+        sync: false
+      - key: DATABASE_URL_UNPOOLED
+        sync: false
+      - key: NEXUS_INGESTION_TRIGGER_TOKEN
+        sync: false
       - key: NEXUS_PROVIDER_PUNTERS_EDGE_ENABLED
         value: "true"
       - key: NEXUS_PROVIDER_PUNTERS_EDGE_API_KEY
+        sync: false
+      - key: NEXUS_PROVIDER_PUNTERS_EDGE_APPROVAL_TIER
+        sync: false
+      - key: NEXUS_PROVIDER_PUNTERS_EDGE_APPROVED_OPERATIONS
+        sync: false
+      - key: NEXUS_PROVIDER_PUNTERS_EDGE_APPROVED_CODES
+        sync: false
+      - key: NEXUS_PROVIDER_PUNTERS_EDGE_ACCOUNT_ENTITLEMENT_EVIDENCE
+        sync: false
+      - key: NEXUS_PROVIDER_PUNTERS_EDGE_CREDENTIAL_CUSTODIAN
+        sync: false
+      - key: NEXUS_PROVIDER_PUNTERS_EDGE_QUOTA_CEILING
+        sync: false
+      - key: NEXUS_PROVIDER_PUNTERS_EDGE_KILL_SWITCH_REFERENCE
         sync: false
       - key: NEXUS_PROVIDER_PUNTERS_EDGE_APPROVAL_TIER
         sync: false
@@ -126,57 +140,4 @@ services:
       - key: VITE_AUTH0_AUDIENCE
         sync: false
       - key: VITE_AUTH0_ALLOWED_SUBJECT
-        sync: false
-
-  - type: cron
-    name: nexus-staging-live-ingestion
-    runtime: python
-    region: singapore
-    plan: starter
-    schedule: "0 * * * *"
-    rootDir: services/api
-    buildCommand: pip install --requirement requirements.lock.txt
-    startCommand: python ../../scripts/run_live_provider_ingestion.py
-    envVars:
-      - key: APP_ENV
-        value: staging
-      - key: API_HOST
-        value: 127.0.0.1
-      - key: NEXUS_API_PERSISTENCE
-        value: postgres
-      - key: NEXUS_DATA_MODE
-        value: LICENSED
-      - key: NEXUS_LIVE_PROVIDER
-        value: punters-edge
-      - key: NEXUS_LIVE_OPERATION
-        value: GET_RESULTS
-      - key: NEXUS_LIVE_CODE
-        value: THOROUGHBRED
-      - key: NEXUS_LIVE_OPERATIONS
-        value: GET_RESULTS
-      - key: NEXUS_LIVE_CODES
-        value: THOROUGHBRED
-      - key: NEXUS_LIVE_READ_ONLY
-        value: "true"
-      - key: DATABASE_URL
-        fromDatabase:
-          name: nexus-staging-db
-          property: connectionString
-      - key: NEXUS_PROVIDER_PUNTERS_EDGE_ENABLED
-        value: "true"
-      - key: NEXUS_PROVIDER_PUNTERS_EDGE_API_KEY
-        sync: false
-      - key: NEXUS_PROVIDER_PUNTERS_EDGE_APPROVAL_TIER
-        sync: false
-      - key: NEXUS_PROVIDER_PUNTERS_EDGE_APPROVED_OPERATIONS
-        sync: false
-      - key: NEXUS_PROVIDER_PUNTERS_EDGE_APPROVED_CODES
-        sync: false
-      - key: NEXUS_PROVIDER_PUNTERS_EDGE_ACCOUNT_ENTITLEMENT_EVIDENCE
-        sync: false
-      - key: NEXUS_PROVIDER_PUNTERS_EDGE_CREDENTIAL_CUSTODIAN
-        sync: false
-      - key: NEXUS_PROVIDER_PUNTERS_EDGE_QUOTA_CEILING
-        sync: false
-      - key: NEXUS_PROVIDER_PUNTERS_EDGE_KILL_SWITCH_REFERENCE
         sync: false
