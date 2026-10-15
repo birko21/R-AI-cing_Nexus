@@ -335,6 +335,22 @@ body {
 .preview-metric-list small { color: var(--nexus-muted); font-size: 0.72rem; }
 .workspace-preview .state-callout { margin-top: 18px; }
 
+.auth-gate { display: grid; min-height: 100vh; align-items: center; }
+.auth-gate-grid { display: grid; grid-template-columns: minmax(260px, 0.8fr) minmax(360px, 1.2fr); gap: clamp(34px, 8vw, 120px); align-items: center; max-width: 980px; margin: 0 auto; padding: 48px 0; }
+.auth-gate-brand { display: flex; align-items: flex-start; gap: 15px; }
+.auth-gate-brand .nexus-mark { width: 54px; height: 54px; }
+.auth-gate-tagline { margin: 22px 0 0; color: #a9c0d8; font-size: clamp(1.15rem, 2.6vw, 1.65rem); letter-spacing: -0.035em; }
+.auth-gate-card { position: relative; overflow: hidden; padding: clamp(26px, 5vw, 46px); background: linear-gradient(145deg, rgba(17, 39, 65, 0.94), rgba(8, 18, 32, 0.98)); border: 1px solid rgba(143, 230, 255, 0.4); border-radius: var(--nexus-radius-lg); box-shadow: 0 30px 90px rgba(0, 0, 0, 0.34); }
+.auth-gate-card::before { content: ''; position: absolute; top: -86px; right: -38px; width: 220px; height: 220px; border: 1px solid rgba(143, 230, 255, 0.2); border-radius: 50%; box-shadow: 0 0 0 20px rgba(143, 230, 255, 0.025), 0 0 0 40px rgba(143, 230, 255, 0.025); }
+.auth-gate-card-top { position: relative; z-index: 1; display: flex; align-items: center; gap: 9px; margin-bottom: 44px; color: var(--nexus-lime); font-size: 0.62rem; font-weight: 850; letter-spacing: 0.14em; }
+.auth-gate-card h1 { position: relative; z-index: 1; max-width: 600px; margin: 0 0 14px; color: #f2f8ff; font-size: clamp(2rem, 4.5vw, 3.4rem); letter-spacing: -0.06em; line-height: 1; }
+.auth-gate-card > p:not(.eyebrow) { position: relative; z-index: 1; max-width: 560px; color: #a9c0d8; line-height: 1.7; }
+.auth-gate-card .auth-action { position: relative; z-index: 1; margin-top: 24px; }
+.auth-gate-card .auth-action button { padding: 12px 16px; background: linear-gradient(135deg, #397dbd, #245287); border-color: rgba(143, 210, 255, 0.78); border-radius: 10px; box-shadow: 0 8px 20px rgba(25, 75, 127, 0.25); }
+.auth-gate-boundary { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 36px; padding-top: 17px; border-top: 1px solid var(--nexus-line); color: #819ab6; font-size: 0.6rem; font-weight: 800; letter-spacing: 0.11em; }
+@media (max-width: 820px) { .auth-gate-grid { grid-template-columns: 1fr; max-width: 620px; gap: 34px; } .auth-gate-tagline { margin-top: 12px; } }
+@media (max-width: 580px) { .auth-gate-grid { padding: 28px 0; gap: 28px; } .auth-gate-brand .nexus-mark { width: 40px; height: 40px; } .auth-gate-card { padding: 24px; } .auth-gate-card-top { margin-bottom: 32px; } }
+
 @media (max-width: 820px) {
   .topbar { align-items: flex-start; }
   .topbar-meta { align-self: stretch; justify-items: start; }

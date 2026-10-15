@@ -525,7 +525,7 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
   );
 }
 
-function NexusMark() {
+export function NexusMark() {
   return <svg className="nexus-mark" aria-hidden="true" viewBox="0 0 48 48" role="img"><path d="M24 3 42 13v22L24 45 6 35V13L24 3Z" fill="none" stroke="currentColor" strokeWidth="1.5" /><path d="m14 31 20-14M14 17l20 14M24 9v30" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /><circle cx="24" cy="24" r="4" fill="currentColor" /></svg>;
 }
 

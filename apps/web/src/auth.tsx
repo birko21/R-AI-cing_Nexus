@@ -1,7 +1,7 @@
 import { useCallback, useState, type ReactNode } from 'react';
 import { Auth0Provider, useAuth0, type User } from '@auth0/auth0-react';
 
-import App, { type NexusApiRequest } from './App';
+import App, { NexusMark, type NexusApiRequest } from './App';
 
 export type AuthConfig = {
   domain: string;
@@ -133,13 +133,18 @@ function useNexusApiRequest(config: AuthConfig, onAuthFailure: (failure: NexusAu
 
 function AuthState({ title, message, action }: { title: string; message: string; action?: ReactNode }) {
   return (
-    <main className="shell auth-state" aria-live="polite">
-      <section className="intro" aria-labelledby="auth-state-title">
-        <p className="eyebrow">RACING INTELLIGENCE LAB · PRIVATE STAGING</p>
-        <h1 id="auth-state-title">{title}</h1>
-        <p>{message}</p>
-        {action && <div className="auth-action">{action}</div>}
-      </section>
+    <main className="shell auth-state auth-gate" aria-live="polite">
+      <div className="auth-gate-grid">
+        <div className="auth-gate-brand"><NexusMark /><div><p className="eyebrow">RACING INTELLIGENCE LAB</p><div className="brand-wordmark">NEXUS <span>/ RESEARCH OS</span></div><p className="auth-gate-tagline">Evidence before inference.</p></div></div>
+        <section className="auth-gate-card" aria-labelledby="auth-state-title">
+          <div className="auth-gate-card-top"><span className="session-pulse" aria-hidden="true" /><span>PRIVATE OWNER ACCESS</span></div>
+          <p className="eyebrow">SECURE WORKSPACE</p>
+          <h1 id="auth-state-title">{title}</h1>
+          <p>{message}</p>
+          {action && <div className="auth-action">{action}</div>}
+          <div className="auth-gate-boundary"><span>READ-ONLY RESEARCH</span><span>NO WAGERING</span><span>PROVENANCE FIRST</span></div>
+        </section>
+      </div>
     </main>
   );
 }
