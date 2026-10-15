@@ -1,0 +1,48 @@
+# LIVE-017 authenticated hosted E2E checklist
+
+This checklist is the operator-run acceptance record for the first real live
+hosted journey. It uses the deployed staging site and does not capture tokens,
+credentials, provider payloads, or screenshots containing sensitive data.
+
+## Preconditions
+
+- Render frontend is live from the staging branch and the API reports
+  `LICENSED`, `postgres`, `punters-edge`, and `wagering_enabled=false`.
+- The owner completes Auth0 sign-in in the browser. Credentials are entered by
+  the owner only.
+- The public API still returns `401` for `GET /v1/meetings` without a bearer
+  token.
+
+## Acceptance steps
+
+1. Open `https://nexus-staging-frontend.onrender.com/` and choose **Sign in
+   with Auth0**.
+2. Confirm the page shows **Signed in as** the allowlisted owner identity.
+3. Confirm the licensed dashboard shows **LICENSED INGESTION MONITOR** and a
+   bounded `HEALTHY`, `STALE`, `FAILED`, or `NO DATA` status.
+4. Confirm at least one meeting card shows **LIVE READ-ONLY** and **Open live
+   meeting**.
+5. Open the meeting and confirm **LIVE RESEARCH VIEW · READ-ONLY**, a
+   `LICENSED` race panel, and a **Canonical entries** table.
+6. Confirm the live view says provider payloads and forecasts are not
+   displayed, and does not show synthetic meeting, race, forecast, market, or
+   wagering values.
+7. Sign out, reload, and confirm the public page returns to **Nexus owner
+   sign-in required**.
+
+## Evidence to record
+
+Record only timestamps, URLs, HTTP status codes, bounded labels, aggregate
+counts, deployment IDs, workflow run IDs, and commit IDs. Never record the
+Auth0 token, password, email address, raw provider response, or full browser
+storage state.
+
+| Check | Result | Evidence |
+|---|---|---|
+| Auth0 owner session | PENDING | Owner browser handoff |
+| Licensed status monitor | PENDING | UI label and timestamp |
+| Live meeting list | PENDING | Meeting card label and aggregate count |
+| Race and entry detail | PENDING | `LICENSED` panel and entry count |
+| Synthetic fallback absent | PENDING | No synthetic/live mixing observed |
+| Wagering disabled | PENDING | `/v1/system/status` safe field |
+| Logout returns to owner gate | PENDING | Public UI label |

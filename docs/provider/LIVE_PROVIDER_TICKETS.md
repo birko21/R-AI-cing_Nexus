@@ -140,6 +140,13 @@ now guards these fail-closed properties. The complete API suite passes 338
 tests, and hosted workflow run `38723784884` completed its bounded read-only
 ingestion successfully.
 
+## LIVE-017 — Prove the authenticated hosted live journey — IN PROGRESS
+
+The deployed frontend and protected API are ready for the owner-run Auth0
+handoff. The acceptance sequence is recorded in
+`docs/deployment/LIVE_AUTHENTICATED_E2E_CHECKLIST.md`; the only remaining
+external step is completing the Auth0 credentials in the open browser tab.
+
 ## Next ticket boundary
 
 LIVE-017 is the authenticated hosted journey: complete the owner Auth0
