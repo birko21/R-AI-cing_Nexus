@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState, type FormEvent } from 'react';
 export type NexusApiRequest = (path: string, init?: RequestInit, requiredScope?: string) => Promise<Response>;
 
 type Code = 'ALL' | 'THOROUGHBRED' | 'HARNESS' | 'GREYHOUND';
-type Status = 'DEMO' | 'NO_RACING' | 'NO_DATA' | 'UNAVAILABLE' | 'LOADING' | 'STALE' | 'QUARANTINED' | 'UNSUPPORTED' | 'AUTH_DENIED';
+type Status = 'LIVE' | 'DEMO' | 'NO_RACING' | 'NO_DATA' | 'UNAVAILABLE' | 'LOADING' | 'STALE' | 'QUARANTINED' | 'UNSUPPORTED' | 'AUTH_DENIED';
 
 type CommandItem = {
   id: string;
@@ -88,6 +88,7 @@ const codes: Array<{ value: Code; label: string }> = [
 
 const statuses: Array<{ value: Status | 'ALL'; label: string }> = [
   { value: 'ALL', label: 'All states' },
+  { value: 'LIVE', label: 'Live provider' },
   { value: 'DEMO', label: 'Demo fixture' },
   { value: 'LOADING', label: 'Loading' },
   { value: 'STALE', label: 'Stale snapshot' },
@@ -247,6 +248,7 @@ const researchRaces: Record<Exclude<Code, 'ALL'>, ResearchRace> = {
 };
 
 const statusText: Record<Status, string> = {
+  LIVE: 'Live provider',
   DEMO: 'Fictional demo', NO_RACING: 'No racing', NO_DATA: 'No data', UNAVAILABLE: 'Unavailable',
   LOADING: 'Loading', STALE: 'Stale snapshot', QUARANTINED: 'Quarantined', UNSUPPORTED: 'Unsupported', AUTH_DENIED: 'Auth denied',
 };
@@ -255,6 +257,32 @@ function localNow(): string {
   return new Intl.DateTimeFormat('en-AU', {
     dateStyle: 'medium', timeStyle: 'short', timeZone: 'Australia/Sydney',
   }).format(new Date());
+}
+
+type LiveMeeting = {
+  meeting_id: string;
+  code: Exclude<Code, 'ALL'>;
+  name: string;
+  country: string;
+  scheduled_date: string;
+  data_mode: 'LICENSED';
+};
+
+type ApiPage<T> = { items: T[] };
+
+export function liveCommandItems(meetings: LiveMeeting[]): CommandItem[] {
+  return meetings.map((meeting) => ({
+    id: meeting.meeting_id,
+    code: meeting.code,
+    label: meeting.code === 'THOROUGHBRED' ? 'Thoroughbred' : meeting.code,
+    status: 'LIVE',
+    meeting: meeting.name,
+    localTime: new Intl.DateTimeFormat('en-AU', {
+      dateStyle: 'medium', timeStyle: 'short', timeZone: 'Australia/Sydney',
+    }).format(new Date(meeting.scheduled_date)),
+    sourceAge: 'Canonical licensed receipt',
+    note: `${meeting.country} meeting from the read-only provider lane. Race detail is loaded by the next live-data ticket.`,
+  }));
 }
 
 function answerAssistantQuestion(question: string): AssistantAnswer {
@@ -293,22 +321,42 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
   const [selectedRace, setSelectedRace] = useState<Exclude<Code, 'ALL'> | null>(null);
   const [evidenceTab, setEvidenceTab] = useState<EvidenceTab>('FIELD');
   const [apiStatus, setApiStatus] = useState<'idle' | 'checking' | 'ready' | 'denied' | 'unavailable'>('idle');
+  const [dataMode, setDataMode] = useState<'SYNTHETIC_ONLY' | 'LICENSED'>('SYNTHETIC_ONLY');
+  const [liveMeetings, setLiveMeetings] = useState<LiveMeeting[]>([]);
   const visibleItems = useMemo(
-    () => commandItems.filter((item) =>
+    () => (dataMode === 'LICENSED' ? liveCommandItems(liveMeetings) : commandItems).filter((item) =>
       (selectedCode === 'ALL' || item.code === selectedCode) &&
       (selectedStatus === 'ALL' || item.status === selectedStatus) &&
-      (showStateExamples || item.status === 'DEMO')),
-    [selectedCode, selectedStatus, showStateExamples],
+      (showStateExamples || item.status === 'DEMO' || item.status === 'LIVE')),
+    [dataMode, liveMeetings, selectedCode, selectedStatus, showStateExamples],
   );
 
   useEffect(() => {
     if (!apiRequest) return;
     let active = true;
     setApiStatus('checking');
-    void apiRequest('/v1/codes', undefined, 'races:read')
-      .then((response) => {
+    void Promise.all([
+      apiRequest('/v1/system/status', undefined, 'races:read'),
+      apiRequest('/v1/meetings', undefined, 'races:read'),
+    ])
+      .then(async ([statusResponse, meetingsResponse]) => {
         if (!active) return;
-        setApiStatus(response.ok ? 'ready' : response.status === 401 || response.status === 403 ? 'denied' : 'unavailable');
+        const status = statusResponse.ok ? await statusResponse.json() as { data_mode?: string } : {};
+        const licensed = status.data_mode === 'LICENSED';
+        if (licensed) setDataMode('LICENSED');
+        if (!statusResponse.ok || !meetingsResponse.ok) {
+          const response = !statusResponse.ok ? statusResponse : meetingsResponse;
+          setApiStatus(response.status === 401 || response.status === 403 ? 'denied' : 'unavailable');
+          return;
+        }
+        if (!licensed) {
+          setApiStatus('ready');
+          return;
+        }
+        const page = await meetingsResponse.json() as ApiPage<LiveMeeting>;
+        setDataMode('LICENSED');
+        setLiveMeetings(Array.isArray(page.items) ? page.items : []);
+        setApiStatus('ready');
       })
       .catch(() => {
         if (active) setApiStatus('unavailable');
@@ -320,12 +368,12 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
     <main className="shell">
       <header className="topbar">
         <div><p className="eyebrow">RACING INTELLIGENCE LAB</p><h1>Today / Command Centre</h1></div>
-        <div className="header-badges"><span className="mode-badge">DEMO ONLY</span><span className="mode-badge subdued">SYNTHETIC_ONLY</span>{apiStatus !== 'idle' && <span className="mode-badge subdued">API {apiStatus.toUpperCase()}</span>}</div>
+        <div className="header-badges">{dataMode === 'LICENSED' ? <><span className="mode-badge">LIVE READ-ONLY</span><span className="mode-badge subdued">LICENSED</span></> : <><span className="mode-badge">DEMO ONLY</span><span className="mode-badge subdued">SYNTHETIC_ONLY</span></>}{apiStatus !== 'idle' && <span className="mode-badge subdued">API {apiStatus.toUpperCase()}</span>}</div>
       </header>
       <section className="intro" aria-labelledby="intro-title">
-        <p className="eyebrow">LOCAL RESEARCH WORKSPACE</p>
-        <h2 id="intro-title">Three racing codes, one honest evidence view.</h2>
-        <p>Browse the fictional fixture pack by code and data state. Every card is explicitly labelled; this screen never presents synthetic records as live racing or validated advice.</p>
+        <p className="eyebrow">{dataMode === 'LICENSED' ? 'PRIVATE PROVIDER WORKSPACE' : 'LOCAL RESEARCH WORKSPACE'}</p>
+        <h2 id="intro-title">{dataMode === 'LICENSED' ? 'Provider-backed meetings, one honest evidence view.' : 'Three racing codes, one honest evidence view.'}</h2>
+        <p>{dataMode === 'LICENSED' ? 'Browse canonical meetings captured from the licensed read-only provider lane. Forecasts, market views and race detail remain unavailable until their own evidence tickets pass.' : 'Browse the fictional fixture pack by code and data state. Every card is explicitly labelled; this screen never presents synthetic records as live racing or validated advice.'}</p>
       </section>
       <section className="command-panel" aria-label="Command centre filters">
         <div className="filter-group"><span className="filter-label">Code</span><div className="filter-row" role="group" aria-label="Filter by racing code">
@@ -338,10 +386,10 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
       </section>
       <section className="summary-strip" aria-label="Workspace status">
         <div><span className="summary-value">{visibleItems.length}</span><span className="summary-label">visible cards</span></div>
-        <div><span className="summary-value">3</span><span className="summary-label">codes covered</span></div>
+        <div><span className="summary-value">{dataMode === 'LICENSED' ? new Set(liveMeetings.map((meeting) => meeting.code)).size : 3}</span><span className="summary-label">codes covered</span></div>
         <div><span className="summary-value">{localNow()}</span><span className="summary-label">local browser time · Australia/Sydney</span></div>
       </section>
-      <AssistantWorkbench />
+      {dataMode === 'LICENSED' ? <section className="assistant-workbench" aria-label="Licensed research assistant unavailable"><div className="assistant-heading"><div><p className="eyebrow">BOUNDED RESEARCH ASSISTANT</p><h2>Assistant evidence is not enabled for live data.</h2></div><span className="mode-badge subdued">NOT_AVAILABLE</span></div><p className="assistant-disclaimer">The current licensed lane exposes canonical meeting data only. No live forecast, market, or unsupported evidence claim is generated.</p></section> : <AssistantWorkbench />}
       <section className="code-grid" aria-label="Today command cards">
         {visibleItems.map((item) => <article aria-label={`${item.label} · ${statusText[item.status]}`} className={`code-card status-${item.status.toLowerCase()}`} key={item.id}>
           <div className="card-topline"><span className="status-dot" aria-hidden="true" /><span className="status-pill">{statusText[item.status]}</span></div>
@@ -349,12 +397,12 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
           <dl className="card-facts">{item.races !== undefined && <><dt>Races</dt><dd>{item.races} fictional races</dd></>}{item.localTime && <><dt>Fixture time</dt><dd>{item.localTime}</dd></>}<dt>Source age</dt><dd>{item.sourceAge}</dd></dl>
           <p className="card-note">{item.note}</p>
           {item.status === 'DEMO' && <button aria-label={`Open research view for ${item.label}`} className="research-button" onClick={() => { setSelectedRace(item.code); setEvidenceTab('FIELD'); }} type="button">Open research view</button>}
-          <span className="card-watermark">FICTIONAL · NOT LIVE · NO WAGERING</span>
+          <span className="card-watermark">{item.status === 'LIVE' ? 'LICENSED · READ-ONLY · NO WAGERING' : 'FICTIONAL · NOT LIVE · NO WAGERING'}</span>
         </article>)}
       </section>
       {visibleItems.length === 0 && <section className="empty-state" aria-live="polite"><p className="eyebrow">NO MATCHING STATES</p><h3>No cards match these filters.</h3><p>Change the code or data-state filter. No racing data is invented to fill an empty view.</p></section>}
       {selectedRace && <ResearchView key={selectedRace} race={researchRaces[selectedRace]} evidenceTab={evidenceTab} onClose={() => setSelectedRace(null)} onTabChange={setEvidenceTab} />}
-      <footer className="footer"><span>Local API: 127.0.0.1:8000</span><span>Data rights: synthetic fixture only</span><span>Model: not trained</span></footer>
+      <footer className="footer"><span>{dataMode === 'LICENSED' ? 'Provider API: licensed staging lane' : 'Local API: 127.0.0.1:8000'}</span><span>Data rights: {dataMode === 'LICENSED' ? 'owner-approved private read' : 'synthetic fixture only'}</span><span>Model: not trained</span></footer>
     </main>
   );
 }
