@@ -513,3 +513,30 @@ body {
   .speed-map-axis { margin-left:60px; font-size:.45rem; }
   .speed-map-axis::before,.speed-map-axis::after { font-size:.4rem; }
 }
+
+/* Ralph refinement: interpretation and interaction hierarchy for the analytical map. */
+.speed-map-insight { display:grid; gap:3px; margin-top:12px; padding:10px 11px 10px 12px; border-left:2px solid #35e2a0; border-radius:0 7px 7px 0; background:linear-gradient(90deg,rgba(53,226,160,.1),rgba(53,226,160,.02)); box-shadow:inset 0 1px rgba(255,255,255,.04); }
+.speed-map-insight-label { color:#6fd9b2; font-size:.48rem; font-weight:800; letter-spacing:.13em; }
+.speed-map-insight strong { color:#f5fbff; font-size:.72rem; line-height:1.2; }
+.speed-map-insight small { color:#94b1c5; font-size:.56rem; }
+.speed-map-legend { display:flex; flex-wrap:wrap; gap:7px 10px; margin-top:10px; color:#a9c2d2; font-size:.5rem; text-transform:uppercase; letter-spacing:.06em; }
+.speed-map-legend span { display:inline-flex; align-items:center; gap:4px; }
+.speed-map-legend span::before { content:''; width:6px; height:6px; border-radius:50%; box-shadow:0 0 0 2px rgba(255,255,255,.06); }
+.speed-map-legend .legend-lead::before { background:#35e2a0; }
+.speed-map-legend .legend-pace::before { background:#f0b638; }
+.speed-map-legend .legend-midfield::before { background:#78b9ef; }
+.speed-map-legend .legend-back::before { background:#fb4b78; }
+.speed-map-row button { width:44px; height:44px; border:0; background:transparent; color:#061523; box-shadow:none; font-size:.58rem; font-weight:900; }
+.speed-map-row button::before { content:''; position:absolute; inset:9px; z-index:-1; border:2px solid #061523; border-radius:50%; background:var(--runner-color); box-shadow:0 2px 8px rgba(0,0,0,.45); }
+.speed-map-row button:hover { transform:translateX(-50%) scale(1.08); box-shadow:none; }
+.speed-map-row button:hover::before { box-shadow:0 0 0 3px rgba(255,255,255,.14),0 3px 11px rgba(0,0,0,.55); }
+.speed-map-row button:focus-visible { outline:2px solid #f5fbff; outline-offset:2px; border-radius:50%; }
+.speed-map-row button:active { transform:translateX(-50%) scale(.96); }
+.speed-map-row button.selected { outline:2px solid #f6fbff; outline-offset:1px; box-shadow:0 0 0 4px rgba(95,196,255,.26); }
+.speed-map-row button.selected::before { box-shadow:0 0 0 3px rgba(95,196,255,.35),0 3px 12px rgba(0,0,0,.55); }
+@media (max-width:580px) {
+  .speed-map-insight { padding:9px 10px; }
+  .speed-map-insight strong { font-size:.66rem; }
+  .speed-map-legend { gap:6px 8px; font-size:.45rem; }
+  .speed-map-row button { width:44px; height:44px; font-size:.5rem; }
+}
