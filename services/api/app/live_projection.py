@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 import hashlib
 import json
+from zoneinfo import ZoneInfo
 from sqlalchemy import Connection, text
 
 from app.betfair_live_projection import parse_betfair_catalogue
@@ -64,14 +65,16 @@ def _first(mapping: Mapping[str, object], *keys: str) -> object | None:
     return None
 
 
-def _timestamp(value: object, label: str) -> datetime:
+def _timestamp(value: object, label: str, *, default_timezone: str | None = None) -> datetime:
     raw = _text(value, label).replace("Z", "+00:00")
     try:
         parsed = datetime.fromisoformat(raw)
     except ValueError as exc:
         raise LiveProjectionError(f"provider field {label} is not an ISO timestamp") from exc
     if parsed.tzinfo is None or parsed.utcoffset() is None:
-        raise LiveProjectionError(f"provider field {label} must be timezone-aware")
+        if default_timezone is None:
+            raise LiveProjectionError(f"provider field {label} must be timezone-aware")
+        parsed = parsed.replace(tzinfo=ZoneInfo(default_timezone))
     return parsed.astimezone(timezone.utc)
 
 
@@ -139,6 +142,7 @@ def _parse_generic(envelope: RawEnvelope) -> tuple[ProjectedRace, ...]:
             _first(item, "scheduled_at", "scheduledAt", "scheduled_time", "scheduledTime", "jump_time", "jumpTime", "start_time", "startTime", "raceStartTime", "start")
             or _first(meeting_mapping, "scheduled_at", "scheduledAt", "scheduled_time", "scheduledTime", "jump_time", "jumpTime", "date"),
             "scheduled_at",
+            default_timezone="Australia/Sydney" if provider == "krok-odds" else None,
         )
         race_number = _positive_int(_first(item, "race_number", "raceNumber", "raceNo", "number"), "race_number")
         source_race_id = _first(item, "race_id", "raceId", "raceID", "id")

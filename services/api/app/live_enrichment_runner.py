@@ -71,6 +71,7 @@ def run_live_enrichment(*, date: str | None = None, venues: tuple[str, ...] = ()
         ("krok-odds", "GET_MARKETS", None),
     )
     if venues:
+        plans += tuple(("formfav", "GET_RACES", venue) for venue in venues)
         plans += tuple(("betfair-exchange", "GET_MARKETS", venue) for venue in venues)
     else:
         plans += (("betfair-exchange", "GET_MARKETS", None),)
@@ -90,7 +91,11 @@ def run_live_enrichment(*, date: str | None = None, venues: tuple[str, ...] = ()
                 envelope = page.records[0]
                 with engine.begin() as connection:
                     persistence = persist_approved_live_envelope(connection, envelope)
-                    if provider == "betfair-exchange":
+                    if provider == "formfav" and operation == "LIST_MEETINGS":
+                        projection = {"races": 0, "entries": 0, "results": 0}
+                    elif provider == "krok-odds" and operation == "GET_MARKETS":
+                        projection = {"races": 0, "entries": 0, "results": 0}
+                    elif provider == "betfair-exchange":
                         projection = project_betfair_catalogue(connection, envelope)
                         betfair_market_ids.extend(race.market_id for race in parse_betfair_catalogue(envelope).races)
                     else:

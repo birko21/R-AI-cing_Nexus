@@ -147,7 +147,9 @@ def test_krok_uses_race_type_and_expands_racing_market_lines() -> None:
 
     assert transport.calls[0]["params"]["race_type"] == "T"
     assert "code" not in transport.calls[0]["params"]
-    assert transport.calls[1]["params"]["include"] == "tote,exchange"
+    assert transport.calls[0]["params"]["full"] == "1"
+    assert transport.calls[0]["params"]["country"] == "AU"
+    assert "include" not in transport.calls[1]["params"]
     assert transport.calls[2]["url"].endswith("/api/v1/racing/results/2026-10-16")
 
 

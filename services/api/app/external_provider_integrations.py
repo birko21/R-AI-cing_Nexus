@@ -346,11 +346,9 @@ class GatedReadOnlyProviderAdapter:
         # mistaken for a thoroughbred-only response.
         if provider_id == "krok-odds":
             params = {"race_type": "T" if code == "THOROUGHBRED" else code}
-            if operation == "GET_MARKETS":
-                # The board's default is fixed/group pricing.  Request the
-                # documented tote and exchange lines as additive enrichment;
-                # unsupported lines are still rejected by the provider.
-                params["include"] = "tote,exchange"
+            if operation == "LIST_MEETINGS":
+                params["full"] = "1"
+                params["country"] = "AU"
         else:
             params = {"code": code}
         for key, value in (("date", date), ("venue", venue), ("race", race), ("cursor", cursor), ("limit", page_size)):
