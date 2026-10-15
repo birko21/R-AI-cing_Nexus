@@ -50,6 +50,8 @@ def load_runtime_config(*, environ: Mapping[str, str] | None = None) -> RuntimeC
 
     mode_value = values.get("NEXUS_DATA_MODE", "").strip().upper()
     if not mode_value:
+        if values.get("APP_ENV", "development").strip().lower() not in {"development", "test", "testing"}:
+            raise RuntimeError("NEXUS_DATA_MODE must be explicit outside development and test environments")
         mode_value = "LICENSED" if persistence_value == "postgres" else "SYNTHETIC_ONLY"
     if mode_value not in {"SYNTHETIC_ONLY", "SCRAPED_PUBLIC", "LICENSED"}:
         raise RuntimeError("NEXUS_DATA_MODE must be SYNTHETIC_ONLY, SCRAPED_PUBLIC or LICENSED")

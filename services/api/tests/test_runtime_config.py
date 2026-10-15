@@ -10,6 +10,11 @@ def test_local_default_remains_explicitly_synthetic() -> None:
     assert config.live_enabled is False
 
 
+def test_non_development_environment_cannot_default_to_synthetic() -> None:
+    with pytest.raises(RuntimeError, match="must be explicit outside development"):
+        load_runtime_config(environ={"APP_ENV": "staging"})
+
+
 def test_licensed_mode_requires_postgres_and_scope() -> None:
     with pytest.raises(RuntimeError, match="requires NEXUS_API_PERSISTENCE=postgres"):
         load_runtime_config(environ={"NEXUS_DATA_MODE": "LICENSED"})
@@ -42,5 +47,4 @@ def test_licensed_mode_requires_explicit_read_only_scope() -> None:
                 "NEXUS_LIVE_READ_ONLY": "false",
             }
         )
-
 
