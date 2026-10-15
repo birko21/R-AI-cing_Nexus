@@ -149,10 +149,20 @@ provider payloads, forecasts, markets, or wagering controls. Sign-out returned
 to the owner gate and the public meetings API returned `401`. The full
 acceptance record is in `docs/deployment/LIVE_AUTHENTICATED_E2E_CHECKLIST.md`.
 
-## Next ticket boundary
+## LIVE-018 — Capture repeatable live acceptance evidence — COMPLETE
 
-LIVE-018 is the release evidence packet: consolidate the Render deploy,
-provider workflow, Neon coverage, safe status, and authenticated browser
-evidence without secrets or raw provider payloads. The complete epic/ticket
-sequence is in
-`docs/deployment/RALPH_LIVE_E2E_EPICS.md`.
+The release evidence packet records the Render deployment, hosted provider
+workflow, Neon-backed safe status, and authenticated browser journey using
+bounded counts and labels only. It contains no credentials, tokens, browser
+storage state, raw provider payloads, or provider error text. The automated
+verifier returned `RESULT: PASS`.
+
+See `docs/evidence/live-release/LIVE_RELEASE_EVIDENCE.md`.
+
+## LIVE-020 — Run release go/no-go closeout — COMPLETE
+
+The private owner-only read-only staging scope is a GO. Public access,
+forecasts, markets, wagering, payouts, provider expansion, and production
+release remain NO-GO. The kill switch, fail-closed tests, rollback target,
+no-synthetic boundary, and no-wagering boundary are recorded in
+`docs/deployment/LIVE_RELEASE_GO_NO_GO.md`.

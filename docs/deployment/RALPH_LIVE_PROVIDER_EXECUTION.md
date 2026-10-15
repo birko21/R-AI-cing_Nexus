@@ -37,9 +37,9 @@ wagering-disabled throughout.
 | LIVE-015 | Add freshness and coverage monitoring for the hourly lane | COMPLETE | LIVE-014 | Safe status reports latest success/attempt, provider response age, freshness threshold, aggregate canonical coverage, and bounded failure state; Render and Neon verification pass |
 | LIVE-016 | Add operator-facing live health status | COMPLETE | LIVE-015 | Licensed dashboard shows bounded HEALTHY/STALE/FAILED/NO DATA state without payload leakage or synthetic replacement |
 | LIVE-017 | Prove the authenticated hosted live journey | COMPLETE | LIVE-016 | Auth0 owner session reaches live meeting, race, and entry views through protected API calls; wagering remains disabled |
-| LIVE-018 | Capture repeatable live acceptance evidence | IN PROGRESS | LIVE-017, LIVE-019 | Render, GitHub Actions, Neon, and authenticated UI evidence are recorded without secrets or raw provider payloads |
+| LIVE-018 | Capture repeatable live acceptance evidence | COMPLETE | LIVE-017, LIVE-019 | Render, GitHub Actions, Neon, and authenticated UI evidence are recorded without secrets or raw provider payloads |
 | LIVE-019 | Verify the hourly failure/alert path | COMPLETE | LIVE-015, LIVE-016 | Scheduled ingestion failure is non-zero/visible and status remains bounded |
-| LIVE-020 | Run release go/no-go closeout | PLANNED | LIVE-018, LIVE-019 | Kill switch, rollback, no-synthetic, no-wagering, and scope boundaries are confirmed |
+| LIVE-020 | Run release go/no-go closeout | COMPLETE | LIVE-018, LIVE-019 | Kill switch, rollback, no-synthetic, no-wagering, and scope boundaries are confirmed in the go/no-go record |
 
 ## Ralph loop protocol
 
@@ -120,11 +120,22 @@ LIVE-005 completed locally and LIVE-006 through LIVE-011 completed in the stagin
   2 races, 21 entries, 3 results, and `wagering_enabled=false` with no payload
   field.
 
+## LIVE-018 and LIVE-020 closeout
+
+- LIVE-018's repeatable evidence packet is at
+  `docs/evidence/live-release/LIVE_RELEASE_EVIDENCE.md`. The safe verifier
+  returned `RESULT: PASS` and the packet contains no secrets or raw provider
+  payloads.
+- LIVE-020's decision is recorded at
+  `docs/deployment/LIVE_RELEASE_GO_NO_GO.md`: GO for private owner-only
+  read-only staging; NO-GO for public access, wagering, forecasts, markets,
+  payouts, provider expansion, or production release.
+
 ## Post-closeout follow-up
 
 The staging lane is operational and the first live data is visible through the
-frontend. LIVE-016, LIVE-017, and LIVE-019 are complete. LIVE-018 is the
-current Ralph ticket; the full dependency-ordered release epics are in
+frontend. LIVE-016 through LIVE-020 are complete for the approved staging
+scope. The full dependency-ordered release epics are in
 `docs/deployment/RALPH_LIVE_E2E_EPICS.md`. Provider expansion or
 historical/model use remains a separate decision requiring account entitlement
 and retention evidence.
