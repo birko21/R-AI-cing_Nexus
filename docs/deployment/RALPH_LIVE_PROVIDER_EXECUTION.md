@@ -38,7 +38,7 @@ wagering-disabled throughout.
 | LIVE-016 | Add operator-facing live health status | IN PROGRESS | LIVE-015 | Licensed dashboard shows bounded HEALTHY/STALE/FAILED/NO DATA state without payload leakage or synthetic replacement |
 | LIVE-017 | Prove the authenticated hosted live journey | PLANNED | LIVE-016 | Auth0 owner session reaches live meeting, race, and entry views through protected API calls; wagering remains disabled |
 | LIVE-018 | Capture repeatable live acceptance evidence | PLANNED | LIVE-017, LIVE-019 | Render, GitHub Actions, Neon, and authenticated UI evidence are recorded without secrets or raw provider payloads |
-| LIVE-019 | Verify the hourly failure/alert path | PLANNED | LIVE-015, LIVE-016 | Scheduled ingestion failure is non-zero/visible and status remains bounded |
+| LIVE-019 | Verify the hourly failure/alert path | IN PROGRESS | LIVE-015, LIVE-016 | Scheduled ingestion failure is non-zero/visible and status remains bounded |
 | LIVE-020 | Run release go/no-go closeout | PLANNED | LIVE-018, LIVE-019 | Kill switch, rollback, no-synthetic, no-wagering, and scope boundaries are confirmed |
 
 ## Ralph loop protocol

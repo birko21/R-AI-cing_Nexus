@@ -128,6 +128,17 @@ markets, or a synthetic replacement. Local web typecheck, five web tests, and
 the production build pass; hosted deployment verification is the remaining
 acceptance step.
 
+## LIVE-019 — Verify the hourly failure path — IN PROGRESS
+
+The scheduler already uses `set -euo pipefail` and curl's
+`--fail-with-body --silent --show-error`, so an ingestion `503` produces a
+failed GitHub Actions run rather than a false success. The API contract test
+also proves missing trigger configuration returns `503`, invalid trigger
+credentials return `401`, and the health projection emits only the bounded
+`INGESTION_FAILED` or `DATABASE_UNAVAILABLE` code. A workflow contract test
+now guards these fail-closed properties; the ticket closes after the hosted
+workflow and deployment evidence are recorded.
+
 ## Next ticket boundary
 
 LIVE-017 is the authenticated hosted journey: complete the owner Auth0
