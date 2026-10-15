@@ -22,6 +22,7 @@ The attached pack was reviewed as the visual source of truth. The implementation
 
 1. The Command Centre is a cinematic daybook with a hero race surface, metrics, insight stack, filters, evidence assistant and state-labelled research cards.
 2. Tactical Track is a side-on visual race-reading surface with an inside rail, grouped 2–3-abreast runner layers, independently placeable runners, scenario switching, selected-runner detail and a linked speed map.
+   The field layout is now data-sized: the renderer recalculates group allocation and runner coordinates for the current field rather than assuming 11 runners. The synthetic QA control exercises 6, 8, 11, 14 and 20-runner states; the provider-entry collection can replace this synthetic collection in the live wiring pass.
 3. The remaining workspaces have distinct hero/readout/analysis treatments appropriate to their purpose: meeting discovery, race context, runner intelligence, comparison, models, scenarios, markets, evidence, assistant, notebook, watchlists and reports/assurance.
 4. Settings and Assurance are designed as an owner-control surface with provenance, access, rights and export boundaries visible rather than hidden.
 5. Mobile uses the same information hierarchy and visual language without relying on tiny type or removing the evidence state.
@@ -32,6 +33,7 @@ Screenshots are stored in `docs/evidence/v7-implementation/`:
 
 - `command-centre-1440.png`, `command-centre-768.png`, `command-centre-390.png`
 - one 1440, 768 and 390 capture for each of Meetings, Race, Tactical, Runner, Compare, Models, Scenarios, Markets, Evidence, Assistant, Notebook, Watchlists and Reports.
+- `tactical-6-1440.png` and `tactical-14-1440.png` prove that the track, grouped field, detail state and speed map adapt to different runner counts.
 
 The focused Playwright coverage is `e2e/v7-visual.spec.ts`. It verifies all 14 workspace routes, synthetic-state labelling, responsive captures, the 11-runner tactical field, base/contested scenario switching and runner selection.
 
@@ -48,4 +50,3 @@ The local visual implementation exit criteria are met only when all of the follo
 - the V7 visual suite passes at all three responsive sizes;
 - no whitespace errors are reported by `git diff --check`;
 - the captures visibly retain the approved atmosphere, information density, evidence labelling and responsive hierarchy.
-

@@ -32,6 +32,15 @@ test('V7 visual surfaces are individually authored and responsive', async ({ pag
     if (workspace.label === 'Tactical') {
       await expect(page.getByRole('region', { name: 'Tactical Track V7 visual surface' })).toBeVisible();
       await expect(page.locator('.tactical-runner')).toHaveCount(11);
+      await page.getByLabel('Synthetic field size').selectOption('6');
+      await expect(page.locator('.tactical-runner')).toHaveCount(6);
+      await expect(page.getByText('6 runners · layout adapts to the race field')).toBeVisible();
+      await page.screenshot({ path: 'docs/evidence/v7-implementation/tactical-6-1440.png', fullPage: true });
+      await page.getByLabel('Synthetic field size').selectOption('14');
+      await expect(page.locator('.tactical-runner')).toHaveCount(14);
+      await page.screenshot({ path: 'docs/evidence/v7-implementation/tactical-14-1440.png', fullPage: true });
+      await page.getByLabel('Synthetic field size').selectOption('11');
+      await expect(page.locator('.tactical-runner')).toHaveCount(11);
       await page.getByRole('button', { name: 'Contested lead' }).click();
       await expect(page.getByText('Position is contextual, not predictive.')).toBeVisible();
       await page.getByRole('button', { name: 'Select runner 5 Desert King' }).click();
