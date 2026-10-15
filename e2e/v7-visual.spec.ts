@@ -71,7 +71,29 @@ test('V7 visual surfaces are individually authored and responsive', async ({ pag
         await settings.locator('.preference-row').first().click();
         await expect(settings.locator('.preference-row').first()).toHaveAttribute('aria-pressed', 'true');
       }
-      if (!['Tactical', 'Evidence', 'Alerts', 'Settings'].includes(workspace.label)) {
+      if (workspace.label === 'Markets') {
+        const markets = page.locator('.markets-room');
+        await markets.locator('.surface-primary-action').click();
+        await expect(markets.locator('.surface-action-feedback')).toContainText('Market analysis opened · paper preview only');
+        await markets.getByLabel('Dismiss market action feedback').click();
+        await markets.locator('.surface-tabs button').nth(1).click();
+        await expect(markets.locator('.surface-tabs button').nth(1)).toHaveAttribute('aria-selected', 'true');
+      }
+      if (workspace.label === 'Assistant') {
+        const assistant = page.locator('.assistant-room');
+        await assistant.locator('.surface-primary-action').click();
+        await expect(assistant.getByText('NOT_AVAILABLE', { exact: false }).first()).toBeVisible();
+        await assistant.getByLabel('Ask a bounded question').fill('What evidence supports this race?');
+        await assistant.getByLabel('Submit assistant question').click();
+        await expect(assistant.getByText('Evidence is available for the synthetic field record.', { exact: true })).toBeVisible();
+      }
+      if (workspace.label === 'Notebook') {
+        const notebook = page.locator('.notebook-room');
+        await notebook.getByRole('button', { name: 'New note' }).click();
+        await notebook.locator('.notebook-note-list button').nth(1).click();
+        await expect(notebook.locator('.notebook-note-list button').nth(1)).toHaveClass(/selected/);
+      }
+      if (!['Tactical', 'Evidence', 'Alerts', 'Settings', 'Markets', 'Assistant', 'Notebook'].includes(workspace.label)) {
         const surface = page.locator('.cinematic-surface');
         await surface.locator('.surface-primary-action').click();
         await expect(surface.locator('.surface-action-feedback')).toContainText('opened · synthetic preview only');
