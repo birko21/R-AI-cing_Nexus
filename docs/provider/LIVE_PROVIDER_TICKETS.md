@@ -81,12 +81,39 @@ never exposes raw payloads, credentials, or wagering operations. The provider
 enable flag is the kill switch; disabling it causes the runner to fail closed.
 The rollback target is the previous known-good Render deploy for staging.
 
+## LIVE-012 — Show licensed meetings in the dashboard — COMPLETE
+
+The frontend reads the runtime mode and canonical meeting page. In licensed
+mode it displays provider-backed meetings with a `LIVE READ-ONLY` state and
+does not render the synthetic assistant or synthetic research cards.
+
+## LIVE-013 — Expose canonical races by meeting — COMPLETE
+
+The API provides an authenticated, paginated
+`GET /v1/meetings/{meeting_id}/races` route backed by both synthetic local
+fixtures and the PostgreSQL canonical repository. The OpenAPI contract,
+pagination, as-of filtering, and Neon-backed licensed response are verified.
+
+## LIVE-014 — Show licensed race and entry detail — COMPLETE
+
+The frontend live meeting view loads canonical races and entries through the
+scoped API, displays field revision/status and source receipt identifiers, and
+fails closed when detail is unavailable. Forecasts, market data and synthetic
+replacement values are not shown in this licensed view.
+
 ## Current external gate
 
 The free path is active. Neon supplies the database, Render supplies the free
 API service, and GitHub Actions supplies the hourly schedule. No billable
 Render database or cron resource is required. The current scope remains one
 bounded, read-only PuntersEdge thoroughbred-results operation per run.
+
+## Next ticket boundary
+
+LIVE-015 should add freshness and coverage monitoring for the scheduled lane:
+record the latest successful ingestion, provider response age, canonical row
+coverage, and failure state in a safe operational view. It must not widen the
+provider operation or retain additional fields.
 
 The full dependency-ordered Ralph sequence and completed evidence are recorded
 in `docs/deployment/RALPH_LIVE_PROVIDER_EXECUTION.md`.

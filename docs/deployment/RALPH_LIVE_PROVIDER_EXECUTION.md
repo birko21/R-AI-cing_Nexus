@@ -31,6 +31,9 @@ wagering-disabled throughout.
 | LIVE-009 | Render deployment and post-deploy health verification | COMPLETE | LIVE-006, LIVE-007 | Latest deployment is live; migrations complete; `/health/live` is 200; system status is licensed/Postgres/read-only |
 | LIVE-010 | First bounded provider ingestion and canonical persistence | COMPLETE | LIVE-007, LIVE-009 | Authenticated runs succeed; safe counters, receipts, envelopes, canonical rows, and post-fix idempotency are verified in Neon |
 | LIVE-011 | Operational closeout | COMPLETE | LIVE-010 | Render serves licensed provider data only; failures are fail-closed; rollback/kill-switch procedure is documented and tested |
+| LIVE-012 | Replace synthetic command cards with licensed canonical meetings | COMPLETE | LIVE-011 | Frontend reads `/v1/system/status` and `/v1/meetings`; licensed mode shows provider-backed cards and suppresses synthetic assistant claims |
+| LIVE-013 | Expose canonical races by meeting | COMPLETE | LIVE-012 | Authenticated `/v1/meetings/{meeting_id}/races` returns bounded, as-of filtered licensed races; contract and Neon verification pass |
+| LIVE-014 | Show licensed race and entry detail | COMPLETE | LIVE-013 | Frontend loads canonical races and entries, displays provenance/read-only state, and fails closed without synthetic replacement |
 
 ## Ralph loop protocol
 
@@ -75,10 +78,18 @@ LIVE-005 completed locally and LIVE-006 through LIVE-011 completed in the stagin
 - The unauthenticated ingestion trigger returns `401`; the provider enable
   flag is the documented kill switch and missing enable/configuration fails
   closed in the runtime tests.
+- LIVE-012 was merged as PR #179 and deployed to the static frontend; the
+  deployed asset returns HTTP 200 and contains the licensed-mode meeting UI.
+- LIVE-013 deployed in API commit `9bd2a48`; a Neon-backed scoped-auth check
+  returned one `LICENSED` meeting and one matching `LICENSED` race, while the
+  public Render route returned `401` without authentication.
+- LIVE-014 was merged as PR #180 and deployed as frontend commit `db7ab11`;
+  the asset contains the live race view, race-list and entry-list calls, and
+  the explicit no-synthetic-replacement state.
 
 ## Post-closeout follow-up
 
-The staging lane is operational. The next product ticket should be separate
-from activation: decide whether to add more provider operations or providers,
-and record the corresponding account entitlement and retention evidence before
-expanding the current `GET_RESULTS`/`THOROUGHBRED` scope.
+The staging lane is operational and the first live data is visible through the
+frontend. The next technical ticket is freshness/coverage monitoring for the
+hourly lane. Provider expansion or historical/model use remains a separate
+decision requiring account entitlement and retention evidence.
