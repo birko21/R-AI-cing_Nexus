@@ -25,12 +25,12 @@ wagering-disabled throughout.
 | Ticket | Scope | Status | Depends on | Acceptance evidence |
 |---|---|---|---|---|
 | LIVE-005 | Neon project, env wiring, migrations, psycopg 3 compatibility | COMPLETE | — | Neon schema head `019_ingestion_jobs`; 38 public tables; API connects to Neon |
-| LIVE-006 | Render secret and non-secret runtime configuration | READY | LIVE-005 | Render contains both Neon URLs, trigger token, provider key, licensed scope, and private approval fields; no secret is committed |
-| LIVE-007 | GitHub Actions secret wiring and default-branch activation | READY | LIVE-006 | `NEXUS_INGESTION_URL` and trigger token are repository secrets; workflow exists on `main`; manual dispatch is available |
-| LIVE-008 | Synthetic-runtime fail-closed control | CODE COMPLETE / ACTIVATION PENDING | LIVE-005, LIVE-006 | Licensed mode cannot fall back to synthetic repositories; missing production configuration fails closed |
-| LIVE-009 | Render deployment and post-deploy health verification | READY | LIVE-006, LIVE-007 | Latest deployment is live; migrations complete; `/health/live` is 200; system status is licensed/Postgres/read-only |
-| LIVE-010 | First bounded provider ingestion and canonical persistence | READY | LIVE-007, LIVE-009 | One authenticated run succeeds; safe counters, receipt, envelope, canonical rows, and idempotency are verified in Neon |
-| LIVE-011 | Operational closeout | READY | LIVE-010 | Render no longer serves synthetic data; failure is fail-closed; rollback/kill-switch procedure is documented and tested |
+| LIVE-006 | Render secret and non-secret runtime configuration | COMPLETE | LIVE-005 | Render contains both Neon URLs, trigger token, provider key, licensed scope, and private approval fields; no secret is committed |
+| LIVE-007 | GitHub Actions secret wiring and default-branch activation | COMPLETE | LIVE-006 | `NEXUS_INGESTION_URL` and trigger token are repository secrets; workflow exists on `main`; manual dispatch is available |
+| LIVE-008 | Synthetic-runtime fail-closed control | COMPLETE | LIVE-005, LIVE-006 | Licensed mode cannot fall back to synthetic repositories; missing production configuration fails closed |
+| LIVE-009 | Render deployment and post-deploy health verification | COMPLETE | LIVE-006, LIVE-007 | Latest deployment is live; migrations complete; `/health/live` is 200; system status is licensed/Postgres/read-only |
+| LIVE-010 | First bounded provider ingestion and canonical persistence | COMPLETE | LIVE-007, LIVE-009 | Authenticated runs succeed; safe counters, receipts, envelopes, canonical rows, and post-fix idempotency are verified in Neon |
+| LIVE-011 | Operational closeout | COMPLETE | LIVE-010 | Render serves licensed provider data only; failures are fail-closed; rollback/kill-switch procedure is documented and tested |
 
 ## Ralph loop protocol
 
@@ -46,9 +46,9 @@ The loop stops for user action when a secret must be entered, a provider
 account entitlement is ambiguous, or an external deployment state cannot be
 changed safely. Secrets are never printed in logs or chat.
 
-## Iteration 1 result
+## Execution result
 
-LIVE-005 completed locally:
+LIVE-005 completed locally and LIVE-006 through LIVE-011 completed in the staging lane:
 
 - `neon init` linked the requested Neon project and `production` branch.
 - `neon deploy` authenticated and pulled the three branch variables into the
@@ -59,11 +59,26 @@ LIVE-005 completed locally:
 - `npm run build` passes.
 - The API started against Neon and returned `LICENSED`, `postgres`,
   `punters-edge`, and `wagering_enabled=false`.
-- The complete API suite passes: 332 tests.
+- The complete API suite passes: 334 tests.
+- Render service `nexus-staging-api` is live on commit `cf4d59a`.
+- GitHub workflow run `38717140368` succeeded with one bounded PuntersEdge
+  `GET_RESULTS` read: one race, 12 entries, and one official result.
+- A post-fix repeat run `38717707676` succeeded and returned zero new
+  canonical results; Neon counts remained one meeting, one race revision, 12
+  participants, 12 entries, and two official-result rows (one legacy row from
+  the pre-idempotency deployment and one current canonical row).
+- Neon latest rows are `punters-edge:GET_RESULTS` with `LICENSED` and
+  `APPROVED` state. No provider payload or credential was printed.
+- Render reports `HEALTH=ok`, `DATA_MODE=LICENSED`, `PERSISTENCE=postgres`,
+  `PROVIDER=punters-edge`, `PROVIDER_ENABLED=True`,
+  `PROVIDER_APPROVAL=APPROVED`, and `WAGERING_ENABLED=False`.
+- The unauthenticated ingestion trigger returns `401`; the provider enable
+  flag is the documented kill switch and missing enable/configuration fails
+  closed in the runtime tests.
 
-## Next execution boundary
+## Post-closeout follow-up
 
-LIVE-006 is the next ticket. It requires entering the existing Neon connection
-strings and a newly generated ingestion trigger token into the Render service.
-Those values must be entered through the Render Dashboard or an authenticated
-Render API session; they must not be committed or pasted into this document.
+The staging lane is operational. The next product ticket should be separate
+from activation: decide whether to add more provider operations or providers,
+and record the corresponding account entitlement and retention evidence before
+expanding the current `GET_RESULTS`/`THOROUGHBRED` scope.
