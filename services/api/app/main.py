@@ -37,6 +37,7 @@ from app.contracts import (
 )
 from app.external_provider_integrations import ProviderActivationError
 from app.live_ingestion_runner import run_live_ingestion
+from app.live_ingestion_health import read_live_ingestion_status
 from app.live_provider_runtime import build_live_provider_handle, configured_provider_status
 from app.pagination import paging_parameters
 from app.provider_diagnostics import BoundedDiagnosticSession, DiagnosticPolicy
@@ -149,6 +150,7 @@ def live() -> HealthResponse:
 def system_status() -> SystemStatusResponse:
     runtime = load_runtime_config()
     providers = list(configured_provider_status())
+    live_ingestion = read_live_ingestion_status(runtime)
     return SystemStatusResponse(
         app="racing-intelligence-lab",
         environment=os.environ.get("APP_ENV", "development"),
@@ -162,6 +164,7 @@ def system_status() -> SystemStatusResponse:
         providers=providers,
         persistence=runtime.persistence,
         live_provider=runtime.live_provider,
+        live_ingestion=live_ingestion,
     )
 
 

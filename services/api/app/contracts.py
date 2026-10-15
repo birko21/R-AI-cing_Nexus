@@ -94,6 +94,31 @@ class LiveIngestionResponse(BaseModel):
     projection: dict[str, int]
 
 
+class LiveIngestionCoverage(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    meetings: int = Field(ge=0)
+    races: int = Field(ge=0)
+    entries: int = Field(ge=0)
+    results: int = Field(ge=0)
+
+
+class LiveIngestionStatus(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    status: Literal["DISABLED", "NO_DATA", "HEALTHY", "STALE", "FAILED"]
+    provider: str | None = None
+    operation: str | None = None
+    code: str | None = None
+    last_success_at: datetime | None = None
+    last_attempt_at: datetime | None = None
+    provider_response_at: datetime | None = None
+    response_age_seconds: int | None = Field(default=None, ge=0)
+    freshness_threshold_seconds: int | None = Field(default=None, ge=1)
+    coverage: LiveIngestionCoverage = Field(default_factory=lambda: LiveIngestionCoverage(meetings=0, races=0, entries=0, results=0))
+    failure_code: Literal["INGESTION_FAILED", "DATABASE_UNAVAILABLE"] | None = None
+
+
 class SystemStatusResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -106,6 +131,7 @@ class SystemStatusResponse(BaseModel):
     providers: list[ProviderRuntimeStatus]
     persistence: Literal["synthetic", "postgres"] = "synthetic"
     live_provider: str | None = None
+    live_ingestion: LiveIngestionStatus | None = None
 
 
 class ErrorDetail(BaseModel):

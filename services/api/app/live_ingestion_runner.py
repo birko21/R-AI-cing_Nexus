@@ -14,6 +14,7 @@ from sqlalchemy import create_engine
 
 from app.database_config import sqlalchemy_database_url
 from app.live_ingestion import persist_approved_live_envelope
+from app.live_ingestion_health import record_ingestion_health
 from app.live_projection import project_live_envelope
 from app.live_provider_runtime import build_live_provider_handle
 from app.runtime_config import load_runtime_config
@@ -53,9 +54,12 @@ def run_live_ingestion(
         race_text = os.environ.get("NEXUS_LIVE_RACE", "").strip()
         selected_race = int(race_text) if race_text else None
     database_url = _required("DATABASE_URL")
+    source_id = f"{provider}:{operation}"
+    engine = create_engine(sqlalchemy_database_url(database_url), pool_pre_ping=True, pool_size=1, max_overflow=0)
 
-    handle = build_live_provider_handle(provider)
+    handle = None
     try:
+        handle = build_live_provider_handle(provider)
         page = handle.adapter.fetch(
             operation,  # type: ignore[arg-type]
             code=code,
@@ -68,13 +72,15 @@ def run_live_ingestion(
         if len(page.records) != 1:
             raise RuntimeError("provider returned an unexpected envelope count")
         envelope = page.records[0]
-        engine = create_engine(sqlalchemy_database_url(database_url), pool_pre_ping=True, pool_size=1, max_overflow=0)
-        try:
-            with engine.begin() as connection:
-                persistence = persist_approved_live_envelope(connection, envelope)
-                projection = project_live_envelope(connection, envelope)
-        finally:
-            engine.dispose()
+        with engine.begin() as connection:
+            persistence = persist_approved_live_envelope(connection, envelope)
+            projection = project_live_envelope(connection, envelope)
+            record_ingestion_health(
+                connection,
+                source_id=source_id,
+                checked_at=datetime.now(timezone.utc),
+                success=True,
+            )
         return {
             "status": "LIVE_INGESTION_SUCCESS",
             "provider": provider,
@@ -84,5 +90,21 @@ def run_live_ingestion(
             "persistence": persistence,
             "projection": projection,
         }
+    except Exception:
+        # Failure telemetry is intentionally fixed-detail and best-effort: the
+        # original bounded provider error remains the trigger's 503 response.
+        try:
+            with engine.begin() as connection:
+                record_ingestion_health(
+                    connection,
+                    source_id=source_id,
+                    checked_at=datetime.now(timezone.utc),
+                    success=False,
+                )
+        except Exception:
+            pass
+        raise
     finally:
-        handle.close()
+        if handle is not None:
+            handle.close()
+        engine.dispose()

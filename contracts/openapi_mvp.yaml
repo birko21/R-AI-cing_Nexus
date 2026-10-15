@@ -294,6 +294,34 @@ components:
         providers:
           type: array
           items: { $ref: '#/components/schemas/ProviderRuntimeStatus' }
+        persistence: { type: string, enum: [synthetic, postgres] }
+        live_provider: { type: string, nullable: true }
+        live_ingestion: { $ref: '#/components/schemas/LiveIngestionStatus' }
+    LiveIngestionStatus:
+      type: object
+      additionalProperties: false
+      required: [status, coverage]
+      properties:
+        status: { type: string, enum: [DISABLED, NO_DATA, HEALTHY, STALE, FAILED] }
+        provider: { type: string, nullable: true }
+        operation: { type: string, nullable: true }
+        code: { type: string, nullable: true }
+        last_success_at: { type: string, format: date-time, nullable: true }
+        last_attempt_at: { type: string, format: date-time, nullable: true }
+        provider_response_at: { type: string, format: date-time, nullable: true }
+        response_age_seconds: { type: integer, minimum: 0, nullable: true }
+        freshness_threshold_seconds: { type: integer, minimum: 1, nullable: true }
+        coverage: { $ref: '#/components/schemas/LiveIngestionCoverage' }
+        failure_code: { type: string, enum: [INGESTION_FAILED, DATABASE_UNAVAILABLE], nullable: true }
+    LiveIngestionCoverage:
+      type: object
+      additionalProperties: false
+      required: [meetings, races, entries, results]
+      properties:
+        meetings: { type: integer, minimum: 0 }
+        races: { type: integer, minimum: 0 }
+        entries: { type: integer, minimum: 0 }
+        results: { type: integer, minimum: 0 }
     ProviderRuntimeStatus:
       type: object
       additionalProperties: false
