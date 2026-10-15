@@ -38,8 +38,8 @@ The hosted browser audit found:
 | Ticket | Outcome | Depends on | Status |
 |---|---|---|---|
 | UX-001 | Restore the shared workspace shell and make licensed/synthetic controls and copy truthful | Discovery | COMPLETE |
-| UX-002 | Improve live meeting/race detail hierarchy, state chips, provenance, and degraded states | UX-001 | IN PROGRESS |
-| UX-003 | Validate responsive/accessibility behavior and deploy the reviewed UI | UX-001, UX-002 | PLANNED |
+| UX-002 | Improve live meeting/race detail hierarchy, state chips, provenance, and degraded states | UX-001 | COMPLETE |
+| UX-003 | Validate responsive/accessibility behavior and deploy the reviewed UI | UX-001, UX-002 | IN PROGRESS |
 
 ## Safety boundary
 

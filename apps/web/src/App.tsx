@@ -330,6 +330,16 @@ export function liveIngestionStatusCopy(status: LiveIngestionHealth): { label: s
   return { label: 'DISABLED · licensed ingestion is not active', detail: coverage };
 }
 
+function formatSydneyDateTime(value: string): string {
+  return new Intl.DateTimeFormat('en-AU', {
+    dateStyle: 'medium', timeStyle: 'short', timeZone: 'Australia/Sydney',
+  }).format(new Date(value));
+}
+
+function liveEntryStateLabel(status: string): string {
+  return status.replaceAll('_', ' ').toLowerCase().replace(/^./, (character) => character.toUpperCase());
+}
+
 export function liveCommandItems(meetings: LiveMeeting[]): CommandItem[] {
   return meetings.map((meeting) => ({
     id: meeting.meeting_id,
@@ -515,7 +525,7 @@ function LiveIngestionStatusCard({ status }: { status: LiveIngestionHealth }) {
     <dl>
       <div><dt>Provider</dt><dd>{status.provider ?? 'not configured'}</dd></div>
       <div><dt>Operation</dt><dd>{status.operation ?? 'not configured'}</dd></div>
-      <div><dt>Last successful run</dt><dd>{status.last_success_at ? new Date(status.last_success_at).toLocaleString('en-AU') : 'not available'}</dd></div>
+      <div><dt>Last successful run</dt><dd>{status.last_success_at ? formatSydneyDateTime(status.last_success_at) : 'not available'}</dd></div>
       <div><dt>Freshness window</dt><dd>{status.freshness_threshold_seconds ? `${Math.floor(status.freshness_threshold_seconds / 60)} minutes` : 'not configured'}</dd></div>
     </dl>
   </section>;
@@ -548,13 +558,23 @@ function LiveMeetingView({ meeting, apiRequest, onClose }: { meeting: LiveMeetin
     return () => { active = false; };
   }, [apiRequest, meeting.meeting_id]);
 
-  return <section className="research-view" aria-label="Live meeting view">
+  return <section className="research-view live-meeting-view" aria-label="Live meeting view">
     <div className="research-heading"><div><p className="eyebrow">LIVE RESEARCH VIEW · READ-ONLY</p><h2>{meeting.name}</h2><p className="research-subtitle">{meeting.country} · canonical licensed meeting</p></div><button className="close-button" onClick={onClose} type="button">Close view</button></div>
-    <div className="research-facts"><div><span>Scheduled</span><strong>{new Intl.DateTimeFormat('en-AU', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Australia/Sydney' }).format(new Date(meeting.scheduled_date))}</strong></div><div><span>Data mode</span><strong>LICENSED</strong></div><div><span>Wagering</span><strong>DISABLED</strong></div></div>
+    <div className="research-facts"><div><span>Scheduled</span><strong>{formatSydneyDateTime(meeting.scheduled_date)}</strong></div><div><span>Data mode</span><strong>LICENSED</strong></div><div><span>Wagering</span><strong>DISABLED</strong></div></div>
     {state === 'loading' && <div className="empty-state" aria-live="polite"><h3>Loading canonical races</h3><p>No partial provider values are displayed.</p></div>}
     {state === 'unavailable' && <div className="empty-state" aria-live="polite"><h3>Race detail unavailable</h3><p>The canonical race or entry endpoint did not return an approved response. No synthetic replacement is shown.</p></div>}
     {state === 'ready' && races.length === 0 && <div className="empty-state" aria-live="polite"><h3>No canonical races captured</h3><p>The meeting exists, but no race rows are currently available.</p></div>}
-    {state === 'ready' && races.map((race) => <div className="evidence-panel" key={race.race_id}><div className="panel-heading"><div><h3>Race {race.race_number}</h3><p className="panel-note">{race.status} · field {race.field_revision}</p></div><span className="status-pill">LICENSED</span></div><table><caption>Canonical entries</caption><thead><tr><th scope="col">No.</th><th scope="col">Participant</th><th scope="col">State</th></tr></thead><tbody>{(entries[race.race_id] ?? []).map((entry) => <tr key={entry.entry_id}><td>{entry.number}</td><td>{entry.name ?? entry.participant_id}</td><td>{entry.status}</td></tr>)}</tbody></table><p className="panel-note">Source receipt: {race.source_receipt_id ?? 'not exposed'}. Provider payloads and forecasts are not displayed.</p></div>)}
+    {state === 'ready' && races.map((race) => {
+      const raceEntries = entries[race.race_id] ?? [];
+      const activeEntries = raceEntries.filter((entry) => entry.status === 'ACTIVE').length;
+      const scratchedEntries = raceEntries.filter((entry) => entry.status === 'SCRATCHED').length;
+      return <div className="evidence-panel live-race-panel" key={race.race_id}>
+        <div className="panel-heading"><div><p className="eyebrow">CANONICAL RACE</p><h3>Race {race.race_number}</h3><p className="panel-note">{race.status} · field {race.field_revision}</p></div><span className="status-pill">LICENSED</span></div>
+        <div className="live-race-summary" aria-label={`Race ${race.race_number} field summary`}><div><strong>{raceEntries.length}</strong><span>total entries</span></div><div><strong>{activeEntries}</strong><span>active</span></div><div><strong>{scratchedEntries}</strong><span>scratched</span></div></div>
+        <table><caption>Canonical entries · current field revision</caption><thead><tr><th scope="col">No.</th><th scope="col">Participant</th><th scope="col">State</th></tr></thead><tbody>{raceEntries.map((entry) => <tr key={entry.entry_id}><td className="entry-number">{entry.number}</td><td>{entry.name ?? entry.participant_id}</td><td><span className={`entry-state entry-${entry.status.toLowerCase()}`} aria-label={liveEntryStateLabel(entry.status)}>{liveEntryStateLabel(entry.status)}</span></td></tr>)}</tbody></table>
+        <div className="provenance-note"><strong>Receipt verified</strong><span>{race.source_receipt_id ?? 'Receipt identifier not exposed'}</span><small>Provider payloads and forecasts are not displayed.</small></div>
+      </div>;
+    })}
   </section>;
 }
 

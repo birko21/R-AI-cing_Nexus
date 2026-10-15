@@ -33,6 +33,8 @@ describe('authenticated dashboard hand-off', () => {
       sourceAge: 'Canonical licensed receipt',
     });
     expect(cards[0].note).not.toContain('fictional');
+    expect(cards[0].note).toContain('Open the canonical race and entry view');
+    expect(cards[0].note).not.toContain('next live-data ticket');
   });
 
   it('distinguishes an API authentication rejection from token expiry', () => {
