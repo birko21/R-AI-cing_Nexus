@@ -42,7 +42,7 @@ def test_openapi_contract_has_versioned_mvp_surfaces() -> None:
         assert schema_name in schemas
 
     assert schemas["PageMeta"]["properties"]["limit"]["maximum"] == 100
-    assert schemas["SystemStatusResponse"]["properties"]["external_connectivity"]["const"] is False
+    assert schemas["SystemStatusResponse"]["properties"]["external_connectivity"]["type"] == "boolean"
     assert schemas["SystemStatusResponse"]["properties"]["wagering_enabled"]["const"] is False
     scopes = contract["components"]["securitySchemes"]["bearerAuth"]["flows"]["clientCredentials"]["scopes"]
     assert set(scopes) == {"races:read", "forecasts:read", "selections:read", "selections:write", "providers:read"}

@@ -73,10 +73,12 @@ class SystemStatusResponse(BaseModel):
     app: Literal["racing-intelligence-lab"]
     environment: str
     data_mode: Literal["SYNTHETIC_ONLY", "SCRAPED_PUBLIC", "LICENSED"]
-    external_connectivity: Literal[False]
+    external_connectivity: bool
     model_status: Literal["NOT_TRAINED", "ILLUSTRATIVE_ONLY", "MODEL_VALIDATED"]
     wagering_enabled: Literal[False]
     providers: list[ProviderRuntimeStatus]
+    persistence: Literal["synthetic", "postgres"] = "synthetic"
+    live_provider: str | None = None
 
 
 class ErrorDetail(BaseModel):

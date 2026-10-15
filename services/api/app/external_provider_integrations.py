@@ -270,14 +270,11 @@ class GatedReadOnlyProviderAdapter:
     def _check_gate(self, operation: ProviderOperation, code: str, approval: SourceApprovalRecord | None) -> SourceApprovalRecord:
         if approval is None:
             raise ProviderActivationError("external provider access is disabled until a named approval record is supplied")
-        checkpoint = evaluate_tiered_source_approval(
-            approval,
-            required_tier="HISTORICAL_RETENTION_AND_MODEL_TRAINING",
-            operation=operation,
-            code=code,
-        )
+        required_tier = "PRIVATE_SINGLE_OWNER_READ_ONLY" if approval.approval_tier == "PRIVATE_SINGLE_OWNER_READ_ONLY" else "HISTORICAL_RETENTION_AND_MODEL_TRAINING"
+        checkpoint = evaluate_tiered_source_approval(approval, required_tier=required_tier, operation=operation, code=code)
         if checkpoint.status != "APPROVED":
-            raise ProviderActivationError(f"historical/model approval is incomplete: {','.join(checkpoint.missing_requirements)}")
+            label = "private live-read" if required_tier == "PRIVATE_SINGLE_OWNER_READ_ONLY" else "historical/model"
+            raise ProviderActivationError(f"{label} approval is incomplete: {','.join(checkpoint.missing_requirements)}")
         if approval.source_id != self.asset.provider_id:
             raise ProviderActivationError("approval source does not match provider")
         self._check_runtime()

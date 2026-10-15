@@ -35,6 +35,7 @@ from app.live_provider_runtime import build_live_provider_handle, configured_pro
 from app.pagination import paging_parameters
 from app.provider_diagnostics import BoundedDiagnosticSession, DiagnosticPolicy
 from app.selection_journal import PostgresSelectionJournal, SelectionJournal, SelectionJournalError
+from app.runtime_config import load_runtime_config
 
 
 @asynccontextmanager
@@ -50,7 +51,8 @@ app = FastAPI(
 )
 
 def _runtime_repositories():
-    if os.environ.get("NEXUS_API_PERSISTENCE", "synthetic").strip().lower() == "postgres":
+    runtime = load_runtime_config()
+    if runtime.persistence == "postgres":
         database_url = os.environ.get("DATABASE_URL")
         if not database_url:
             raise RuntimeError("DATABASE_URL is required when NEXUS_API_PERSISTENCE=postgres")
@@ -58,6 +60,8 @@ def _runtime_repositories():
 
         engine = create_engine(database_url, pool_pre_ping=True)
         return PostgresSelectionJournal(engine), PostgresCatalogRepository(engine)
+    if runtime.data_mode != "SYNTHETIC_ONLY":
+        raise RuntimeError("non-synthetic data modes require PostgreSQL persistence")
     return SelectionJournal(), SyntheticCatalogRepository()
 
 
@@ -137,14 +141,21 @@ def live() -> HealthResponse:
 
 @app.get("/v1/system/status", response_model=SystemStatusResponse, tags=["system"])
 def system_status() -> SystemStatusResponse:
+    runtime = load_runtime_config()
+    providers = list(configured_provider_status())
     return SystemStatusResponse(
         app="racing-intelligence-lab",
         environment=os.environ.get("APP_ENV", "development"),
-        data_mode="SYNTHETIC_ONLY",
-        external_connectivity=False,
+        data_mode=runtime.data_mode,
+        external_connectivity=any(
+            bool(item.get("enabled")) and bool(item.get("credentials_configured"))
+            for item in providers
+        ),
         model_status="NOT_TRAINED",
         wagering_enabled=False,
-        providers=configured_provider_status(),
+        providers=providers,
+        persistence=runtime.persistence,
+        live_provider=runtime.live_provider,
     )
 
 
@@ -191,10 +202,12 @@ def _page_meta(limit: int, as_of: datetime, *, offset: int = 0, has_more: bool =
 @app.get("/v1/codes", response_model=CodeListResponse, tags=["races"], dependencies=[Depends(races_read)])
 def list_codes(paging: tuple[int, str | None, datetime] = Depends(paging_parameters)) -> CodeListResponse:
     limit, _, as_of = paging
+    data_mode = load_runtime_config().data_mode
+    codes = ("THOROUGHBRED",) if data_mode != "SYNTHETIC_ONLY" else ("THOROUGHBRED", "HARNESS", "GREYHOUND")
+    labels = {"THOROUGHBRED": "Thoroughbred", "HARNESS": "Harness", "GREYHOUND": "Greyhound"}
     items = [
-        CodeSummary(code="THOROUGHBRED", label="Thoroughbred", data_mode="SYNTHETIC_ONLY"),
-        CodeSummary(code="HARNESS", label="Harness", data_mode="SYNTHETIC_ONLY"),
-        CodeSummary(code="GREYHOUND", label="Greyhound", data_mode="SYNTHETIC_ONLY"),
+        CodeSummary(code=code, label=labels[code], data_mode=data_mode)
+        for code in codes
     ]
     return CodeListResponse(items=items[:limit], meta=_page_meta(limit, as_of))
 

@@ -268,7 +268,7 @@ components:
         app: { type: string, const: racing-intelligence-lab }
         environment: { type: string }
         data_mode: { $ref: '#/components/schemas/DataMode' }
-        external_connectivity: { type: boolean, const: false }
+        external_connectivity: { type: boolean }
         model_status: { type: string, enum: [NOT_TRAINED, ILLUSTRATIVE_ONLY, MODEL_VALIDATED] }
         wagering_enabled: { type: boolean, const: false }
         providers:

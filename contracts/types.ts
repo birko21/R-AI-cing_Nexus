@@ -10,7 +10,7 @@ export interface SystemStatusResponse {
   app: 'racing-intelligence-lab';
   environment: string;
   data_mode: DataMode;
-  external_connectivity: false;
+  external_connectivity: boolean;
   model_status: 'NOT_TRAINED' | 'ILLUSTRATIVE_ONLY' | 'MODEL_VALIDATED';
   wagering_enabled: false;
 }
