@@ -153,7 +153,17 @@ class LiveProviderConfig:
     diagnostic_approvals: Mapping[str, SourceApprovalRecord]
 
     def status(self) -> dict[str, object]:
-        checkpoint = evaluate_source_approval(self.approval) if self.approval else None
+        checkpoint = None
+        if self.approval:
+            if self.approval.approval_tier in {"PRIVATE_SINGLE_OWNER_READ_ONLY", "HISTORICAL_RETENTION_AND_MODEL_TRAINING"} and self.approval.approved_operations and self.approval.approved_codes:
+                checkpoint = evaluate_tiered_source_approval(
+                    self.approval,
+                    required_tier=self.approval.approval_tier,
+                    operation=self.approval.approved_operations[0],
+                    code=self.approval.approved_codes[0],
+                )
+            else:
+                checkpoint = evaluate_source_approval(self.approval)
         return {
             "provider": self.provider_id,
             "enabled": self.enabled,

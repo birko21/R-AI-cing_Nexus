@@ -49,6 +49,20 @@ def test_runtime_status_is_non_secret_and_does_not_make_network_request() -> Non
     assert "local-test-key" not in str(statuses)
 
 
+def test_private_read_approval_is_reported_as_approved_without_historical_rights() -> None:
+    statuses = configured_provider_status(environ=_env(
+        NEXUS_PROVIDER_PUNTERS_EDGE_APPROVAL_TIER="PRIVATE_SINGLE_OWNER_READ_ONLY",
+        NEXUS_PROVIDER_PUNTERS_EDGE_WRITTEN_RIGHTS="",
+        NEXUS_PROVIDER_PUNTERS_EDGE_CREDENTIAL_POLICY="",
+        NEXUS_PROVIDER_PUNTERS_EDGE_RETENTION_TERMS="",
+        NEXUS_PROVIDER_PUNTERS_EDGE_MODEL_TRAINING_PERMISSION="",
+        NEXUS_PROVIDER_PUNTERS_EDGE_DISPLAY_PERMISSION="",
+        NEXUS_PROVIDER_PUNTERS_EDGE_RECONCILIATION_REPORT="",
+    ))
+    punters = next(item for item in statuses if item["provider"] == "punters-edge")
+    assert punters["approval_status"] == "APPROVED"
+
+
 def test_runtime_requires_explicit_enable_flag() -> None:
     with pytest.raises(ProviderActivationError, match="disabled"):
         build_live_provider_handle("punters-edge", environ={"NEXUS_PROVIDER_PUNTERS_EDGE_API_KEY": "secret"}, transport=FakeTransport())
