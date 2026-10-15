@@ -1,7 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
-import App, { liveCommandItems } from './App';
+import App, { liveCommandItems, liveIngestionStatusCopy } from './App';
 import { authFailureCopy } from './auth';
 
 describe('authenticated dashboard hand-off', () => {
@@ -39,5 +39,32 @@ describe('authenticated dashboard hand-off', () => {
     expect(authFailureCopy('rejected').title).toBe('Nexus API authentication rejected');
     expect(authFailureCopy('rejected').message).not.toContain('expired');
     expect(authFailureCopy('expired').title).toBe('Nexus session expired');
+  });
+
+  it('summarises live ingestion health without exposing provider payloads', () => {
+    const copy = liveIngestionStatusCopy({
+      status: 'HEALTHY',
+      provider: 'punters-edge',
+      operation: 'GET_RESULTS',
+      response_age_seconds: 35,
+      coverage: { meetings: 2, races: 2, entries: 21, results: 3 },
+    });
+
+    expect(copy.label).toContain('HEALTHY');
+    expect(copy.detail).toContain('35s response age');
+    expect(copy.detail).toContain('21 entries');
+    expect(copy.detail).not.toContain('payload');
+  });
+
+  it('makes stale and failed states visible without replacing live data', () => {
+    expect(liveIngestionStatusCopy({
+      status: 'STALE',
+      coverage: { meetings: 0, races: 0, entries: 0, results: 0 },
+    }).label).toContain('STALE');
+    expect(liveIngestionStatusCopy({
+      status: 'FAILED',
+      failure_code: 'INGESTION_FAILED',
+      coverage: { meetings: 1, races: 1, entries: 12, results: 1 },
+    }).detail).toContain('INGESTION_FAILED');
   });
 });

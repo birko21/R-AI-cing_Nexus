@@ -118,11 +118,20 @@ coverage, and a bounded failure code. The status view never returns provider
 payloads, provider error text, credentials, or wagering fields. The Render
 deployment and a fresh scheduled ingestion were verified against Neon.
 
+## LIVE-016 — Add operator-facing live health status — IN PROGRESS
+
+The licensed dashboard now consumes the safe `live_ingestion` status object and
+renders explicit HEALTHY, STALE, FAILED, and NO DATA states with provider,
+operation, last-success, freshness, and aggregate coverage metadata. It does
+not render provider payloads, provider error text, credentials, forecasts,
+markets, or a synthetic replacement. Local web typecheck, five web tests, and
+the production build pass; hosted deployment verification is the remaining
+acceptance step.
+
 ## Next ticket boundary
 
-LIVE-016 should add an explicit operator-facing alert or dashboard treatment
-for `STALE` and `FAILED` ingestion status, without adding provider scope or
-turning the status endpoint into a payload browser.
-
-The full dependency-ordered Ralph sequence and completed evidence are recorded
-in `docs/deployment/RALPH_LIVE_PROVIDER_EXECUTION.md`.
+LIVE-017 is the authenticated hosted journey: complete the owner Auth0
+handoff, prove protected live meeting/race/entry calls in the deployed UI, and
+record that the session remains read-only with wagering disabled. The complete
+epic/ticket sequence is in
+`docs/deployment/RALPH_LIVE_E2E_EPICS.md`.

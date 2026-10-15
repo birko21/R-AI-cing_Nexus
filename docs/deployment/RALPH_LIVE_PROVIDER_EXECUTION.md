@@ -35,6 +35,11 @@ wagering-disabled throughout.
 | LIVE-013 | Expose canonical races by meeting | COMPLETE | LIVE-012 | Authenticated `/v1/meetings/{meeting_id}/races` returns bounded, as-of filtered licensed races; contract and Neon verification pass |
 | LIVE-014 | Show licensed race and entry detail | COMPLETE | LIVE-013 | Frontend loads canonical races and entries, displays provenance/read-only state, and fails closed without synthetic replacement |
 | LIVE-015 | Add freshness and coverage monitoring for the hourly lane | COMPLETE | LIVE-014 | Safe status reports latest success/attempt, provider response age, freshness threshold, aggregate canonical coverage, and bounded failure state; Render and Neon verification pass |
+| LIVE-016 | Add operator-facing live health status | IN PROGRESS | LIVE-015 | Licensed dashboard shows bounded HEALTHY/STALE/FAILED/NO DATA state without payload leakage or synthetic replacement |
+| LIVE-017 | Prove the authenticated hosted live journey | PLANNED | LIVE-016 | Auth0 owner session reaches live meeting, race, and entry views through protected API calls; wagering remains disabled |
+| LIVE-018 | Capture repeatable live acceptance evidence | PLANNED | LIVE-017, LIVE-019 | Render, GitHub Actions, Neon, and authenticated UI evidence are recorded without secrets or raw provider payloads |
+| LIVE-019 | Verify the hourly failure/alert path | PLANNED | LIVE-015, LIVE-016 | Scheduled ingestion failure is non-zero/visible and status remains bounded |
+| LIVE-020 | Run release go/no-go closeout | PLANNED | LIVE-018, LIVE-019 | Kill switch, rollback, no-synthetic, no-wagering, and scope boundaries are confirmed |
 
 ## Ralph loop protocol
 
@@ -98,7 +103,8 @@ LIVE-005 completed locally and LIVE-006 through LIVE-011 completed in the stagin
 ## Post-closeout follow-up
 
 The staging lane is operational and the first live data is visible through the
-frontend. LIVE-015 is complete. The next technical ticket is a bounded
-operator-facing treatment for stale or failed ingestion status. Provider
-expansion or historical/model use remains a separate decision requiring
-account entitlement and retention evidence.
+frontend. LIVE-015 is complete and LIVE-016 is the current Ralph ticket. The
+full dependency-ordered release epics are in
+`docs/deployment/RALPH_LIVE_E2E_EPICS.md`. Provider expansion or
+historical/model use remains a separate decision requiring account entitlement
+and retention evidence.

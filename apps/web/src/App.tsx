@@ -288,6 +288,30 @@ type LiveEntry = {
   data_mode: 'LICENSED';
 };
 
+type LiveIngestionHealth = {
+  status: 'DISABLED' | 'NO_DATA' | 'HEALTHY' | 'STALE' | 'FAILED';
+  provider?: string | null;
+  operation?: string | null;
+  last_success_at?: string | null;
+  last_attempt_at?: string | null;
+  response_age_seconds?: number | null;
+  freshness_threshold_seconds?: number | null;
+  coverage: { meetings: number; races: number; entries: number; results: number };
+  failure_code?: 'INGESTION_FAILED' | 'DATABASE_UNAVAILABLE' | null;
+};
+
+export function liveIngestionStatusCopy(status: LiveIngestionHealth): { label: string; detail: string } {
+  const coverage = `${status.coverage.meetings} meetings · ${status.coverage.races} races · ${status.coverage.entries} entries · ${status.coverage.results} results`;
+  if (status.status === 'HEALTHY') {
+    const age = status.response_age_seconds == null ? 'response age unavailable' : `${Math.floor(status.response_age_seconds / 60)}m ${status.response_age_seconds % 60}s response age`;
+    return { label: 'HEALTHY · live receipt current', detail: `${age} · ${coverage}` };
+  }
+  if (status.status === 'STALE') return { label: 'STALE · live receipt outside freshness window', detail: coverage };
+  if (status.status === 'FAILED') return { label: 'FAILED · latest ingestion did not complete', detail: `${status.failure_code ?? 'bounded failure'} · ${coverage}` };
+  if (status.status === 'NO_DATA') return { label: 'NO DATA · no approved live receipt', detail: coverage };
+  return { label: 'DISABLED · licensed ingestion is not active', detail: coverage };
+}
+
 export function liveCommandItems(meetings: LiveMeeting[]): CommandItem[] {
   return meetings.map((meeting) => ({
     id: meeting.meeting_id,
@@ -341,6 +365,7 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
   const [apiStatus, setApiStatus] = useState<'idle' | 'checking' | 'ready' | 'denied' | 'unavailable'>('idle');
   const [dataMode, setDataMode] = useState<'SYNTHETIC_ONLY' | 'LICENSED'>('SYNTHETIC_ONLY');
   const [liveMeetings, setLiveMeetings] = useState<LiveMeeting[]>([]);
+  const [liveIngestion, setLiveIngestion] = useState<LiveIngestionHealth | null>(null);
   const [selectedLiveMeeting, setSelectedLiveMeeting] = useState<LiveMeeting | null>(null);
   const visibleItems = useMemo(
     () => (dataMode === 'LICENSED' ? liveCommandItems(liveMeetings) : commandItems).filter((item) =>
@@ -360,9 +385,10 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
     ])
       .then(async ([statusResponse, meetingsResponse]) => {
         if (!active) return;
-        const status = statusResponse.ok ? await statusResponse.json() as { data_mode?: string } : {};
+        const status = statusResponse.ok ? await statusResponse.json() as { data_mode?: string; live_ingestion?: LiveIngestionHealth } : {};
         const licensed = status.data_mode === 'LICENSED';
         if (licensed) setDataMode('LICENSED');
+        if (licensed) setLiveIngestion(status.live_ingestion ?? null);
         if (!statusResponse.ok || !meetingsResponse.ok) {
           const response = !statusResponse.ok ? statusResponse : meetingsResponse;
           setApiStatus(response.status === 401 || response.status === 403 ? 'denied' : 'unavailable');
@@ -408,6 +434,7 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
         <div><span className="summary-value">{dataMode === 'LICENSED' ? new Set(liveMeetings.map((meeting) => meeting.code)).size : 3}</span><span className="summary-label">codes covered</span></div>
         <div><span className="summary-value">{localNow()}</span><span className="summary-label">local browser time · Australia/Sydney</span></div>
       </section>
+      {dataMode === 'LICENSED' && liveIngestion && <LiveIngestionStatusCard status={liveIngestion} />}
       {dataMode === 'LICENSED' ? <section className="assistant-workbench" aria-label="Licensed research assistant unavailable"><div className="assistant-heading"><div><p className="eyebrow">BOUNDED RESEARCH ASSISTANT</p><h2>Assistant evidence is not enabled for live data.</h2></div><span className="mode-badge subdued">NOT_AVAILABLE</span></div><p className="assistant-disclaimer">The current licensed lane exposes canonical meeting data only. No live forecast, market, or unsupported evidence claim is generated.</p></section> : <AssistantWorkbench />}
       <section className="code-grid" aria-label="Today command cards">
         {visibleItems.map((item) => <article aria-label={`${item.label} · ${statusText[item.status]}`} className={`code-card status-${item.status.toLowerCase()}`} key={item.id}>
@@ -426,6 +453,23 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
       <footer className="footer"><span>{dataMode === 'LICENSED' ? 'Provider API: licensed staging lane' : 'Local API: 127.0.0.1:8000'}</span><span>Data rights: {dataMode === 'LICENSED' ? 'owner-approved private read' : 'synthetic fixture only'}</span><span>Model: not trained</span></footer>
     </main>
   );
+}
+
+function LiveIngestionStatusCard({ status }: { status: LiveIngestionHealth }) {
+  const copy = liveIngestionStatusCopy(status);
+  return <section className={`live-health live-health-${status.status.toLowerCase()}`} aria-label="Live ingestion status">
+    <div>
+      <p className="eyebrow">LICENSED INGESTION MONITOR</p>
+      <h2>{copy.label}</h2>
+      <p>{copy.detail}</p>
+    </div>
+    <dl>
+      <div><dt>Provider</dt><dd>{status.provider ?? 'not configured'}</dd></div>
+      <div><dt>Operation</dt><dd>{status.operation ?? 'not configured'}</dd></div>
+      <div><dt>Last successful run</dt><dd>{status.last_success_at ? new Date(status.last_success_at).toLocaleString('en-AU') : 'not available'}</dd></div>
+      <div><dt>Freshness window</dt><dd>{status.freshness_threshold_seconds ? `${Math.floor(status.freshness_threshold_seconds / 60)} minutes` : 'not configured'}</dd></div>
+    </dl>
+  </section>;
 }
 
 function LiveMeetingView({ meeting, apiRequest, onClose }: { meeting: LiveMeeting; apiRequest: NexusApiRequest; onClose: () => void }) {
