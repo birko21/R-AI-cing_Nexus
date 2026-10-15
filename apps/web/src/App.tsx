@@ -269,6 +269,24 @@ type LiveMeeting = {
 };
 
 type ApiPage<T> = { items: T[] };
+type LiveRace = {
+  race_id: string;
+  meeting_id: string;
+  race_number: number;
+  status: string;
+  field_revision: string;
+  data_mode: 'LICENSED';
+  source_receipt_id?: string | null;
+};
+type LiveEntry = {
+  entry_id: string;
+  race_id: string;
+  participant_id: string;
+  number: number;
+  name?: string | null;
+  status: string;
+  data_mode: 'LICENSED';
+};
 
 export function liveCommandItems(meetings: LiveMeeting[]): CommandItem[] {
   return meetings.map((meeting) => ({
@@ -323,6 +341,7 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
   const [apiStatus, setApiStatus] = useState<'idle' | 'checking' | 'ready' | 'denied' | 'unavailable'>('idle');
   const [dataMode, setDataMode] = useState<'SYNTHETIC_ONLY' | 'LICENSED'>('SYNTHETIC_ONLY');
   const [liveMeetings, setLiveMeetings] = useState<LiveMeeting[]>([]);
+  const [selectedLiveMeeting, setSelectedLiveMeeting] = useState<LiveMeeting | null>(null);
   const visibleItems = useMemo(
     () => (dataMode === 'LICENSED' ? liveCommandItems(liveMeetings) : commandItems).filter((item) =>
       (selectedCode === 'ALL' || item.code === selectedCode) &&
@@ -397,14 +416,53 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
           <dl className="card-facts">{item.races !== undefined && <><dt>Races</dt><dd>{item.races} fictional races</dd></>}{item.localTime && <><dt>Fixture time</dt><dd>{item.localTime}</dd></>}<dt>Source age</dt><dd>{item.sourceAge}</dd></dl>
           <p className="card-note">{item.note}</p>
           {item.status === 'DEMO' && <button aria-label={`Open research view for ${item.label}`} className="research-button" onClick={() => { setSelectedRace(item.code); setEvidenceTab('FIELD'); }} type="button">Open research view</button>}
+          {item.status === 'LIVE' && <button aria-label={`Open live meeting for ${item.meeting}`} className="research-button" onClick={() => setSelectedLiveMeeting(liveMeetings.find((meeting) => meeting.meeting_id === item.id) ?? null)} type="button">Open live meeting</button>}
           <span className="card-watermark">{item.status === 'LIVE' ? 'LICENSED · READ-ONLY · NO WAGERING' : 'FICTIONAL · NOT LIVE · NO WAGERING'}</span>
         </article>)}
       </section>
       {visibleItems.length === 0 && <section className="empty-state" aria-live="polite"><p className="eyebrow">NO MATCHING STATES</p><h3>No cards match these filters.</h3><p>Change the code or data-state filter. No racing data is invented to fill an empty view.</p></section>}
       {selectedRace && <ResearchView key={selectedRace} race={researchRaces[selectedRace]} evidenceTab={evidenceTab} onClose={() => setSelectedRace(null)} onTabChange={setEvidenceTab} />}
+      {selectedLiveMeeting && apiRequest && <LiveMeetingView meeting={selectedLiveMeeting} apiRequest={apiRequest} onClose={() => setSelectedLiveMeeting(null)} />}
       <footer className="footer"><span>{dataMode === 'LICENSED' ? 'Provider API: licensed staging lane' : 'Local API: 127.0.0.1:8000'}</span><span>Data rights: {dataMode === 'LICENSED' ? 'owner-approved private read' : 'synthetic fixture only'}</span><span>Model: not trained</span></footer>
     </main>
   );
+}
+
+function LiveMeetingView({ meeting, apiRequest, onClose }: { meeting: LiveMeeting; apiRequest: NexusApiRequest; onClose: () => void }) {
+  const [races, setRaces] = useState<LiveRace[]>([]);
+  const [entries, setEntries] = useState<Record<string, LiveEntry[]>>({});
+  const [state, setState] = useState<'loading' | 'ready' | 'unavailable'>('loading');
+
+  useEffect(() => {
+    let active = true;
+    void apiRequest(`/v1/meetings/${encodeURIComponent(meeting.meeting_id)}/races`, undefined, 'races:read')
+      .then(async (response) => {
+        if (!response.ok) throw new Error('race list unavailable');
+        const page = await response.json() as ApiPage<LiveRace>;
+        const liveRaces = Array.isArray(page.items) ? page.items : [];
+        const entryPages = await Promise.all(liveRaces.map(async (race) => {
+          const entryResponse = await apiRequest(`/v1/races/${encodeURIComponent(race.race_id)}/entries`, undefined, 'races:read');
+          if (!entryResponse.ok) return [race.race_id, []] as const;
+          const entryPage = await entryResponse.json() as ApiPage<LiveEntry>;
+          return [race.race_id, Array.isArray(entryPage.items) ? entryPage.items : []] as const;
+        }));
+        if (!active) return;
+        setRaces(liveRaces);
+        setEntries(Object.fromEntries(entryPages));
+        setState('ready');
+      })
+      .catch(() => { if (active) setState('unavailable'); });
+    return () => { active = false; };
+  }, [apiRequest, meeting.meeting_id]);
+
+  return <section className="research-view" aria-label="Live meeting view">
+    <div className="research-heading"><div><p className="eyebrow">LIVE RESEARCH VIEW · READ-ONLY</p><h2>{meeting.name}</h2><p className="research-subtitle">{meeting.country} · canonical licensed meeting</p></div><button className="close-button" onClick={onClose} type="button">Close view</button></div>
+    <div className="research-facts"><div><span>Scheduled</span><strong>{new Intl.DateTimeFormat('en-AU', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Australia/Sydney' }).format(new Date(meeting.scheduled_date))}</strong></div><div><span>Data mode</span><strong>LICENSED</strong></div><div><span>Wagering</span><strong>DISABLED</strong></div></div>
+    {state === 'loading' && <div className="empty-state" aria-live="polite"><h3>Loading canonical races</h3><p>No partial provider values are displayed.</p></div>}
+    {state === 'unavailable' && <div className="empty-state" aria-live="polite"><h3>Race detail unavailable</h3><p>The canonical race or entry endpoint did not return an approved response. No synthetic replacement is shown.</p></div>}
+    {state === 'ready' && races.length === 0 && <div className="empty-state" aria-live="polite"><h3>No canonical races captured</h3><p>The meeting exists, but no race rows are currently available.</p></div>}
+    {state === 'ready' && races.map((race) => <div className="evidence-panel" key={race.race_id}><div className="panel-heading"><div><h3>Race {race.race_number}</h3><p className="panel-note">{race.status} · field {race.field_revision}</p></div><span className="status-pill">LICENSED</span></div><table><caption>Canonical entries</caption><thead><tr><th scope="col">No.</th><th scope="col">Participant</th><th scope="col">State</th></tr></thead><tbody>{(entries[race.race_id] ?? []).map((entry) => <tr key={entry.entry_id}><td>{entry.number}</td><td>{entry.name ?? entry.participant_id}</td><td>{entry.status}</td></tr>)}</tbody></table><p className="panel-note">Source receipt: {race.source_receipt_id ?? 'not exposed'}. Provider payloads and forecasts are not displayed.</p></div>)}
+  </section>;
 }
 
 function AssistantWorkbench() {
