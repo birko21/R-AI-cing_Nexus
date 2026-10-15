@@ -334,6 +334,41 @@ body {
 .preview-metric-list strong { color: #eaf4ff; font-size: 0.88rem; }
 .preview-metric-list small { color: var(--nexus-muted); font-size: 0.72rem; }
 .workspace-preview .state-callout { margin-top: 18px; }
+.evidence-atlas-preview { margin-top: 22px; }
+.evidence-atlas-context { color: #c8e1fa; font-size: 1rem; }
+.evidence-atlas-context-grid { margin: 22px 0 26px; }
+.evidence-atlas-description { max-width: 880px; color: #bfd2e6; line-height: 1.65; }
+.evidence-atlas-facts { margin-top: 16px; }
+.not-live-callout { margin-top: 16px; padding: 15px 17px; color: #e6f0fb; background: rgba(62, 84, 112, 0.5); border-left: 3px solid var(--nexus-amber); border-radius: 9px; line-height: 1.55; }
+.not-live-callout strong { color: var(--nexus-amber); }
+.tactical-atlas-preview { margin-top: 22px; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(250px, 0.6fr); gap: 16px; }
+.tactical-visual { position: relative; min-height: 300px; overflow: hidden; padding: 21px; background: linear-gradient(145deg, #173d61, #0c1f37); border: 1px solid rgba(143, 230, 255, 0.38); border-radius: 16px; }
+.tactical-visual-grid { position: absolute; inset: 0; opacity: 0.25; background-image: linear-gradient(rgba(143, 230, 255, 0.13) 1px, transparent 1px), linear-gradient(90deg, rgba(143, 230, 255, 0.13) 1px, transparent 1px); background-size: 28px 28px; transform: perspective(280px) rotateX(54deg) scale(1.6); transform-origin: center bottom; }
+.tactical-visual-heading, .tactical-lanes, .tactical-finish { position: relative; z-index: 1; }
+.tactical-visual-heading { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.tactical-visual-heading .eyebrow { margin-bottom: 5px; }
+.tactical-visual-heading strong { color: #eef7ff; }
+.tactical-visual-heading > span { color: var(--nexus-cyan); font-size: 0.62rem; font-weight: 850; letter-spacing: 0.12em; }
+.tactical-lanes { display: grid; gap: 15px; margin-top: 34px; }
+.tactical-lane { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+.lane-label { color: #92b3d2; font-size: 0.62rem; font-weight: 850; }
+.lane-line { grid-column: 2 / -1; grid-row: 1; height: 1px; background: linear-gradient(90deg, rgba(143, 230, 255, 0.18), rgba(143, 230, 255, 0.82), rgba(143, 230, 255, 0.18)); }
+.runner-token { z-index: 1; grid-column: 2; grid-row: 1; display: grid; place-items: center; width: 30px; height: 30px; border: 2px solid currentColor; border-radius: 50%; font-size: 0.68rem; font-weight: 900; box-shadow: 0 0 0 5px rgba(8, 18, 32, 0.46), 0 0 17px currentColor; }
+.runner-blue { margin-left: 16%; color: #9cc8ff; background: #22558a; }
+.runner-cyan { margin-left: 48%; color: #a5f1ff; background: #187184; }
+.runner-amber { margin-left: 72%; color: #ffdc8a; background: #80622d; }
+.tactical-lane small { grid-column: 3; grid-row: 1; color: #b8cde1; font-size: 0.68rem; white-space: nowrap; }
+.tactical-finish { margin: 22px 0 0 30px; color: #91b2d0; font-size: 0.59rem; font-weight: 850; letter-spacing: 0.14em; }
+.tactical-readout { display: flex; flex-direction: column; justify-content: center; padding: 20px; background: rgba(20, 41, 67, 0.75); border: 1px solid var(--nexus-line); border-radius: 16px; }
+.tactical-readout h3 { color: #f0f7ff; font-size: 1.25rem; letter-spacing: -0.03em; }
+.tactical-readout > p:not(.eyebrow) { color: #a9c0d8; line-height: 1.6; }
+.tactical-readout-list { display: grid; gap: 10px; margin-top: 12px; color: #d0deec; font-size: 0.78rem; }
+.tactical-readout-list span { display: flex; align-items: center; gap: 8px; }
+.readout-dot { width: 8px; height: 8px; border-radius: 50%; }
+.readout-blue { background: #9cc8ff; box-shadow: 0 0 10px #9cc8ff; }
+.readout-cyan { background: #a5f1ff; box-shadow: 0 0 10px #a5f1ff; }
+.readout-amber { background: #ffdc8a; box-shadow: 0 0 10px #ffdc8a; }
+.tactical-atlas-preview > .state-callout { grid-column: 1 / -1; margin: 0; }
 
 .auth-gate { display: grid; min-height: 100vh; align-items: center; }
 .auth-gate-grid { display: grid; grid-template-columns: minmax(260px, 0.8fr) minmax(360px, 1.2fr); gap: clamp(34px, 8vw, 120px); align-items: center; max-width: 980px; margin: 0 auto; padding: 48px 0; }
@@ -377,4 +412,7 @@ body {
   .loading-workspace { min-height: 470px; padding: 24px; }
   .loading-copy h2 { font-size: 2rem; }
   .preview-visual { min-height: 190px; }
+  .tactical-atlas-preview { grid-template-columns: 1fr; }
+  .tactical-visual { min-height: 280px; padding: 16px; }
+  .tactical-lane small { font-size: 0.6rem; }
 }

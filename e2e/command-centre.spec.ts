@@ -15,6 +15,16 @@ test('command centre filters codes and distinguishes data states', async ({ page
   await expect(workspaceNav.getByRole('button', { name: /Evidence/ })).toBeVisible();
   await workspaceNav.getByRole('button', { name: /Evidence/ }).click();
   await expect(page.getByRole('region', { name: 'Evidence workspace' })).toBeVisible();
+  await expect(page.getByText('Shared context · Thoroughbred · Fictional Thoroughbred Park · Race 1 · field-r2')).toBeVisible();
+  await expect(page.getByText('ILLUSTRATIVE_NOT_VALIDATED')).toBeVisible();
+  await expect(page.getByText('Not live:', { exact: false })).toBeVisible();
+  await page.getByRole('button', { name: 'Return to Command Centre' }).click();
+  await expect(page.getByRole('heading', { name: 'Today / Command Centre' })).toBeVisible();
+
+  await workspaceNav.getByRole('button', { name: /Tactical/ }).click();
+  await expect(page.getByRole('region', { name: 'Tactical track workspace' })).toBeVisible();
+  await expect(page.getByText('SIDE-ON TACTICAL TRACK')).toBeVisible();
+  await expect(page.getByText('Position is contextual, not predictive.')).toBeVisible();
   await page.getByRole('button', { name: 'Return to Command Centre' }).click();
   await expect(page.getByRole('heading', { name: 'Today / Command Centre' })).toBeVisible();
 

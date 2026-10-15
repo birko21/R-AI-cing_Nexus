@@ -546,9 +546,32 @@ function WorkspaceBoundary({ workspace, dataMode, onReturn }: { workspace: Works
   return <section className={`workspace-panel workspace-preview workspace-${workspace.toLowerCase()}`} aria-label={`${metadata.label} workspace`}>
     <div className="workspace-heading"><div><p className="eyebrow">WORKSPACE ATLAS · {dataMode === 'LICENSED' ? 'LICENSED READ-ONLY' : 'SYNTHETIC DEMO'}</p><h2>{preview.title}</h2><p className="workspace-subtitle">{preview.description}</p></div><span className={`mode-badge ${dataMode === 'LICENSED' ? 'warning-badge' : 'subdued'}`}>{dataMode === 'LICENSED' ? 'NOT_AVAILABLE' : preview.signal}</span></div>
     <div className="workspace-context" aria-label="Shared research context"><div><span>Mode</span><strong>{dataMode}</strong></div><div><span>Scope</span><strong>{dataMode === 'LICENSED' ? 'READ-ONLY' : 'RESEARCH DEMO'}</strong></div><div><span>Evidence</span><strong>{dataMode === 'LICENSED' ? 'CANONICAL ONLY' : 'FIXTURE LABELLED'}</strong></div><div><span>Wagering</span><strong>DISABLED</strong></div></div>
-    {dataMode === 'SYNTHETIC_ONLY' ? <><div className="workspace-preview-grid"><div className="preview-visual"><div className="preview-visual-grid" /><span className="preview-visual-kicker">{preview.eyebrow}</span><strong>{preview.signal}</strong><small>Shared context / field-r2 / source labelled</small></div><div className="preview-metric-list">{preview.metrics.map((metric, index) => <div key={metric}><span>0{index + 1}</span><strong>{metric}</strong><small>{index === 0 ? 'Current workspace lens' : index === 1 ? 'Evidence attached' : 'No value inferred'}</small></div>)}</div></div><div className="state-callout"><strong>Research preview · synthetic only.</strong> {liveMessage}</div></> : <div className="state-callout"><strong>{metadata.label} is bounded in this release.</strong> {liveMessage}</div>}
+    {dataMode === 'SYNTHETIC_ONLY' ? workspace === 'EVIDENCE' ? <EvidenceWorkspacePreview /> : workspace === 'TACTICAL' ? <TacticalWorkspacePreview /> : <><div className="workspace-preview-grid"><div className="preview-visual"><div className="preview-visual-grid" /><span className="preview-visual-kicker">{preview.eyebrow}</span><strong>{preview.signal}</strong><small>Shared context / field-r2 / source labelled</small></div><div className="preview-metric-list">{preview.metrics.map((metric, index) => <div key={metric}><span>0{index + 1}</span><strong>{metric}</strong><small>{index === 0 ? 'Current workspace lens' : index === 1 ? 'Evidence attached' : 'No value inferred'}</small></div>)}</div></div><div className="state-callout"><strong>Research preview · synthetic only.</strong> {liveMessage}</div></> : <div className="state-callout"><strong>{metadata.label} is bounded in this release.</strong> {liveMessage}</div>}
     <button className="secondary-action" onClick={onReturn} type="button">Return to Command Centre</button>
   </section>;
+}
+
+function EvidenceWorkspacePreview() {
+  return <div className="evidence-atlas-preview">
+    <p className="evidence-atlas-context">Shared context · Thoroughbred · Fictional Thoroughbred Park · Race 1 · field-r2</p>
+    <div className="workspace-context evidence-atlas-context-grid" aria-label="Evidence research context"><div><span>Code</span><strong>THOROUGHBRED</strong></div><div><span>Race</span><strong>Race 1 · Fictional Maiden</strong></div><div><span>Field</span><strong>field-r2 · FINAL_FIELDS</strong></div><div><span>Model state</span><strong>ILLUSTRATIVE_ONLY</strong></div></div>
+    <p className="evidence-atlas-description">Evidence is append-only and source-labelled. Provenance, rights state, timestamps and limitations stay attached to every view.</p>
+    <dl className="provenance-facts evidence-atlas-facts"><dt>Source receipt</dt><dd>synthetic://thoroughbred/race-001</dd><dt>First observed</dt><dd>15 Jan 2026, 14:00 AEDT</dd><dt>Published</dt><dd>15 Jan 2026, 13:50 AEDT</dd><dt>Rights</dt><dd>SYNTHETIC · fictional fixture</dd><dt>External transport</dt><dd>Disabled</dd><dt>Model claim</dt><dd>ILLUSTRATIVE_NOT_VALIDATED</dd></dl>
+    <div className="not-live-callout"><strong>Not live:</strong> a receipt proves fixture provenance, not official racing status or source licensing.</div>
+  </div>;
+}
+
+function TacticalWorkspacePreview() {
+  const runners = [
+    { number: 1, name: 'Runner 1-1', tone: 'blue', note: 'front line' },
+    { number: 3, name: 'Runner 1-3', tone: 'cyan', note: 'tracking' },
+    { number: 4, name: 'Runner 1-4', tone: 'amber', note: 'reserve' },
+  ];
+  return <div className="tactical-atlas-preview">
+    <div className="tactical-visual"><div className="tactical-visual-grid" /><div className="tactical-visual-heading"><div><p className="eyebrow">SIDE-ON TACTICAL TRACK</p><strong>Race 1 · Fictional Maiden</strong></div><span>FIELD-R2</span></div><div className="tactical-lanes">{runners.map((runner, index) => <div className="tactical-lane" key={runner.number}><span className="lane-label">{index + 1}</span><div className="lane-line" /><span className={`runner-token runner-${runner.tone}`}>{runner.number}</span><small>{runner.name} · {runner.note}</small></div>)}</div><div className="tactical-finish">FINISH / NO PACE CLAIM</div></div>
+    <div className="tactical-readout"><p className="eyebrow">LINKED PACE MAP</p><h3>Position is contextual, not predictive.</h3><p>Verified early-speed and sectional inputs are absent from this fixture. The visual preserves scale and field identity without inferring a ranking.</p><div className="tactical-readout-list"><span><i className="readout-dot readout-blue" />Observed field</span><span><i className="readout-dot readout-cyan" />Context link</span><span><i className="readout-dot readout-amber" />Evidence missing</span></div></div>
+    <div className="state-callout"><strong>Research preview · synthetic only.</strong> Tactical movement remains illustrative until code-specific evidence and visual-owner gates pass.</div>
+  </div>;
 }
 
 function LiveIngestionStatusCard({ status }: { status: LiveIngestionHealth }) {
