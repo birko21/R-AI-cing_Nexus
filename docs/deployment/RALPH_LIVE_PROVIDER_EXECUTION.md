@@ -36,8 +36,8 @@ wagering-disabled throughout.
 | LIVE-014 | Show licensed race and entry detail | COMPLETE | LIVE-013 | Frontend loads canonical races and entries, displays provenance/read-only state, and fails closed without synthetic replacement |
 | LIVE-015 | Add freshness and coverage monitoring for the hourly lane | COMPLETE | LIVE-014 | Safe status reports latest success/attempt, provider response age, freshness threshold, aggregate canonical coverage, and bounded failure state; Render and Neon verification pass |
 | LIVE-016 | Add operator-facing live health status | COMPLETE | LIVE-015 | Licensed dashboard shows bounded HEALTHY/STALE/FAILED/NO DATA state without payload leakage or synthetic replacement |
-| LIVE-017 | Prove the authenticated hosted live journey | IN PROGRESS | LIVE-016 | Auth0 owner session reaches live meeting, race, and entry views through protected API calls; wagering remains disabled |
-| LIVE-018 | Capture repeatable live acceptance evidence | PLANNED | LIVE-017, LIVE-019 | Render, GitHub Actions, Neon, and authenticated UI evidence are recorded without secrets or raw provider payloads |
+| LIVE-017 | Prove the authenticated hosted live journey | COMPLETE | LIVE-016 | Auth0 owner session reaches live meeting, race, and entry views through protected API calls; wagering remains disabled |
+| LIVE-018 | Capture repeatable live acceptance evidence | IN PROGRESS | LIVE-017, LIVE-019 | Render, GitHub Actions, Neon, and authenticated UI evidence are recorded without secrets or raw provider payloads |
 | LIVE-019 | Verify the hourly failure/alert path | COMPLETE | LIVE-015, LIVE-016 | Scheduled ingestion failure is non-zero/visible and status remains bounded |
 | LIVE-020 | Run release go/no-go closeout | PLANNED | LIVE-018, LIVE-019 | Kill switch, rollback, no-synthetic, no-wagering, and scope boundaries are confirmed |
 
@@ -109,12 +109,22 @@ LIVE-005 completed locally and LIVE-006 through LIVE-011 completed in the stagin
 - After that hosted run, `/v1/system/status` reported `LICENSED`, `postgres`,
   `punters-edge`, `GET_RESULTS`, `HEALTHY`, and coverage of two meetings, two
   races, 21 entries, and three results. `wagering_enabled` remained false.
+- LIVE-017 was verified in the hosted browser after the owner completed Auth0
+  sign-in. The dashboard showed the bounded live monitor and two licensed
+  meeting cards; the first meeting, Northam, opened a read-only Race 8 panel
+  with 12 canonical entries (9 active and 3 scratched), an official field
+  revision, and no payloads, forecasts, markets, or wagering controls. Sign
+  out returned the browser to the owner sign-in gate.
+- The post-logout public API check returned `401` for `/v1/meetings`; safe
+  system status still reported `LICENSED`, `postgres`, `HEALTHY`, 2 meetings,
+  2 races, 21 entries, 3 results, and `wagering_enabled=false` with no payload
+  field.
 
 ## Post-closeout follow-up
 
 The staging lane is operational and the first live data is visible through the
-frontend. LIVE-016 and LIVE-019 are complete. LIVE-017 is the current Ralph
-ticket; the full dependency-ordered release epics are in
+frontend. LIVE-016, LIVE-017, and LIVE-019 are complete. LIVE-018 is the
+current Ralph ticket; the full dependency-ordered release epics are in
 `docs/deployment/RALPH_LIVE_E2E_EPICS.md`. Provider expansion or
 historical/model use remains a separate decision requiring account entitlement
 and retention evidence.

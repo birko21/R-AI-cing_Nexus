@@ -39,10 +39,10 @@ storage state.
 
 | Check | Result | Evidence |
 |---|---|---|
-| Auth0 owner session | PENDING | Owner browser handoff |
-| Licensed status monitor | PENDING | UI label and timestamp |
-| Live meeting list | PENDING | Meeting card label and aggregate count |
-| Race and entry detail | PENDING | `LICENSED` panel and entry count |
-| Synthetic fallback absent | PENDING | No synthetic/live mixing observed |
-| Wagering disabled | PENDING | `/v1/system/status` safe field |
-| Logout returns to owner gate | PENDING | Public UI label |
+| Auth0 owner session | PASS | Hosted browser owner session authenticated |
+| Licensed status monitor | PASS | `HEALTHY`; 2 meetings, 2 races, 21 entries, 3 results |
+| Live meeting list | PASS | Two licensed meeting cards; Northam opened |
+| Race and entry detail | PASS | Race 8; 12 canonical entries; 9 active, 3 scratched |
+| Synthetic fallback absent | PASS | Licensed view showed only canonical provider data and explicit no-payload state |
+| Wagering disabled | PASS | UI showed `DISABLED`; safe API field was `false` |
+| Logout returns to owner gate | PASS | Browser returned to `Nexus owner sign-in required`; unauthenticated meetings returned `401` |

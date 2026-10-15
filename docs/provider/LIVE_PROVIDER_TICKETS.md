@@ -140,17 +140,19 @@ now guards these fail-closed properties. The complete API suite passes 338
 tests, and hosted workflow run `38723784884` completed its bounded read-only
 ingestion successfully.
 
-## LIVE-017 — Prove the authenticated hosted live journey — IN PROGRESS
+## LIVE-017 — Prove the authenticated hosted live journey — COMPLETE
 
-The deployed frontend and protected API are ready for the owner-run Auth0
-handoff. The acceptance sequence is recorded in
-`docs/deployment/LIVE_AUTHENTICATED_E2E_CHECKLIST.md`; the only remaining
-external step is completing the Auth0 credentials in the open browser tab.
+The owner completed Auth0 sign-in in the hosted browser. The licensed
+dashboard showed two live meeting cards; Northam opened to an official Race 8
+panel with 12 canonical entries, while the UI remained read-only and showed no
+provider payloads, forecasts, markets, or wagering controls. Sign-out returned
+to the owner gate and the public meetings API returned `401`. The full
+acceptance record is in `docs/deployment/LIVE_AUTHENTICATED_E2E_CHECKLIST.md`.
 
 ## Next ticket boundary
 
-LIVE-017 is the authenticated hosted journey: complete the owner Auth0
-handoff, prove protected live meeting/race/entry calls in the deployed UI, and
-record that the session remains read-only with wagering disabled. The complete
-epic/ticket sequence is in
+LIVE-018 is the release evidence packet: consolidate the Render deploy,
+provider workflow, Neon coverage, safe status, and authenticated browser
+evidence without secrets or raw provider payloads. The complete epic/ticket
+sequence is in
 `docs/deployment/RALPH_LIVE_E2E_EPICS.md`.
