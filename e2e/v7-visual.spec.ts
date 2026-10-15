@@ -2,18 +2,18 @@ import { expect, test } from '@playwright/test';
 
 const workspaces = [
   { label: 'Meetings', file: 'meetings' },
-  { label: 'Race', file: 'race' },
   { label: 'Tactical', file: 'tactical' },
   { label: 'Runner', file: 'runner' },
   { label: 'Compare', file: 'compare' },
   { label: 'Models', file: 'models' },
-  { label: 'Scenarios', file: 'scenarios' },
   { label: 'Markets', file: 'markets' },
   { label: 'Evidence', file: 'evidence' },
   { label: 'Assistant', file: 'assistant' },
   { label: 'Notebook', file: 'notebook' },
   { label: 'Watchlists', file: 'watchlists' },
+  { label: 'Alerts', file: 'alerts' },
   { label: 'Reports', file: 'reports' },
+  { label: 'Settings', file: 'settings' },
 ];
 
 test.setTimeout(300000);
@@ -28,7 +28,7 @@ test('V7 visual surfaces are individually authored and responsive', async ({ pag
   for (const workspace of workspaces) {
     await page.getByRole('navigation', { name: 'Research workspaces' }).getByRole('button', { name: new RegExp(`^${workspace.label}`) }).click();
     await expect(page.getByRole('region', { name: /workspace$/ })).toBeVisible();
-    await expect(page.getByText('Research preview · synthetic only.')).toBeVisible();
+    await expect(page.getByText('WORKSPACE ATLAS · SYNTHETIC DEMO')).toBeVisible();
       if (workspace.label === 'Tactical') {
       await expect(page.getByRole('region', { name: 'Tactical Track V7 visual surface' })).toBeVisible();
       await expect(page.locator('.tactical-runner')).toHaveCount(11);
@@ -55,7 +55,23 @@ test('V7 visual surfaces are individually authored and responsive', async ({ pag
         await evidence.locator('.surface-tabs button').nth(1).click();
         await expect(evidence.locator('.surface-tabs button').nth(1)).toHaveAttribute('aria-selected', 'true');
       }
-      if (workspace.label !== 'Tactical' && workspace.label !== 'Evidence') {
+      if (workspace.label === 'Alerts') {
+        const alerts = page.locator('.alerts-workspace');
+        await alerts.locator('.surface-primary-action').click();
+        await expect(alerts.locator('.surface-action-feedback')).toContainText('New alert flow opened · local preview only');
+        await alerts.getByLabel('Dismiss alert action feedback').click();
+        await alerts.locator('.alert-toggle').first().click();
+        await expect(alerts.locator('.alert-toggle').first()).toHaveAttribute('aria-pressed', 'false');
+      }
+      if (workspace.label === 'Settings') {
+        const settings = page.locator('.settings-workspace');
+        await settings.locator('.surface-primary-action').click();
+        await expect(settings.locator('.surface-action-feedback')).toContainText('Assurance review opened · local preview only');
+        await settings.getByLabel('Dismiss settings action feedback').click();
+        await settings.locator('.preference-row').first().click();
+        await expect(settings.locator('.preference-row').first()).toHaveAttribute('aria-pressed', 'true');
+      }
+      if (!['Tactical', 'Evidence', 'Alerts', 'Settings'].includes(workspace.label)) {
         const surface = page.locator('.cinematic-surface');
         await surface.locator('.surface-primary-action').click();
         await expect(surface.locator('.surface-action-feedback')).toContainText('opened · synthetic preview only');
@@ -74,7 +90,7 @@ test('V7 visual surfaces are individually authored and responsive', async ({ pag
     for (const workspace of workspaces) {
       await page.getByRole('navigation', { name: 'Research workspaces' }).getByRole('button', { name: new RegExp(`^${workspace.label}`) }).click();
       await expect(page.getByRole('region', { name: /workspace$/ })).toBeVisible();
-      await expect(page.getByText('Research preview · synthetic only.')).toBeVisible();
+      await expect(page.getByText('WORKSPACE ATLAS · SYNTHETIC DEMO')).toBeVisible();
       if (workspace.label === 'Tactical') await expect(page.locator('.tactical-runner')).toHaveCount(11);
       await page.screenshot({ path: `docs/evidence/v7-implementation/${workspace.file}-${viewport.name}.png`, fullPage: true });
     }

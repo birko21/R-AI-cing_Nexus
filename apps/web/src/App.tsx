@@ -4,7 +4,7 @@ export type NexusApiRequest = (path: string, init?: RequestInit, requiredScope?:
 
 type Code = 'ALL' | 'THOROUGHBRED' | 'HARNESS' | 'GREYHOUND';
 type Status = 'LIVE' | 'DEMO' | 'NO_RACING' | 'NO_DATA' | 'UNAVAILABLE' | 'LOADING' | 'STALE' | 'QUARANTINED' | 'UNSUPPORTED' | 'AUTH_DENIED';
-type WorkspaceId = 'COMMAND' | 'MEETINGS' | 'RACE' | 'TACTICAL' | 'RUNNER' | 'COMPARE' | 'MODEL' | 'SCENARIO' | 'MARKETS' | 'EVIDENCE' | 'ASSISTANT' | 'NOTEBOOK' | 'WATCHLISTS' | 'REPORTS_SETTINGS';
+type WorkspaceId = 'COMMAND' | 'MEETINGS' | 'TACTICAL' | 'RUNNER' | 'COMPARE' | 'MODEL' | 'MARKETS' | 'EVIDENCE' | 'ASSISTANT' | 'NOTEBOOK' | 'WATCHLISTS' | 'ALERTS' | 'REPORTS' | 'SETTINGS';
 type DataMode = 'LOADING' | 'SYNTHETIC_ONLY' | 'LICENSED';
 
 type CommandItem = {
@@ -91,35 +91,35 @@ const codes: Array<{ value: Code; label: string }> = [
 const workspaces: Array<{ value: WorkspaceId; label: string; short: string }> = [
   { value: 'COMMAND', label: 'Command Centre', short: 'Today' },
   { value: 'MEETINGS', label: 'Meeting discovery', short: 'Meetings' },
-  { value: 'RACE', label: 'Race intelligence', short: 'Race' },
   { value: 'TACTICAL', label: 'Tactical track', short: 'Tactical' },
   { value: 'RUNNER', label: 'Runner intelligence', short: 'Runner' },
   { value: 'COMPARE', label: 'Runner comparison', short: 'Compare' },
   { value: 'MODEL', label: 'Model laboratory', short: 'Models' },
-  { value: 'SCENARIO', label: 'Scenario studio', short: 'Scenarios' },
   { value: 'MARKETS', label: 'Markets', short: 'Markets' },
   { value: 'EVIDENCE', label: 'Evidence', short: 'Evidence' },
   { value: 'ASSISTANT', label: 'Research assistant', short: 'Assistant' },
   { value: 'NOTEBOOK', label: 'Notebook', short: 'Notebook' },
   { value: 'WATCHLISTS', label: 'Watchlists and alerts', short: 'Watchlists' },
-  { value: 'REPORTS_SETTINGS', label: 'Reports and settings', short: 'Reports' },
+  { value: 'ALERTS', label: 'Alerts', short: 'Alerts' },
+  { value: 'REPORTS', label: 'Reports', short: 'Reports' },
+  { value: 'SETTINGS', label: 'Settings and assurance', short: 'Settings' },
 ];
 
 const workspacePreviewCopy: Record<WorkspaceId, { eyebrow: string; title: string; description: string; signal: string; metrics: string[] }> = {
   COMMAND: { eyebrow: 'OPERATIONS SURFACE', title: 'Today / Command Centre', description: 'A calm starting point for the next verified racing decision: source health first, then meetings, then evidence.', signal: 'CURRENT RECEIPT', metrics: ['Meetings', 'Races', 'Receipts'] },
   MEETINGS: { eyebrow: 'DISCOVERY SURFACE', title: 'Meeting discovery', description: 'Scan the day by code, jurisdiction, schedule and evidence state before opening a canonical race.', signal: 'INDEXED', metrics: ['Codes', 'Meetings', 'Freshness'] },
-  RACE: { eyebrow: 'ANALYSIS SURFACE', title: 'Race intelligence', description: 'Move from the meeting record to a single race context with field revision, provenance and bounded evidence.', signal: 'FIELD-R2', metrics: ['Field', 'Revision', 'Evidence'] },
   TACTICAL: { eyebrow: 'VISUAL ANALYSIS', title: 'Tactical track', description: 'A side-on race reading surface for pace, position and uncertainty. No movement is inferred when the source is absent.', signal: 'ILLUSTRATIVE', metrics: ['Pace', 'Position', 'Confidence'] },
   RUNNER: { eyebrow: 'PARTICIPANT SURFACE', title: 'Runner intelligence', description: 'Keep the runner record, code-specific inputs and provenance attached to the same field revision.', signal: 'SOURCE-LINKED', metrics: ['Runners', 'Inputs', 'History'] },
   COMPARE: { eyebrow: 'COMPARISON SURFACE', title: 'Runner comparison', description: 'Compare only like-for-like runners and show where evidence is missing instead of filling gaps with estimates.', signal: 'NO INVENTION', metrics: ['Selected', 'Comparable', 'Missing'] },
   MODEL: { eyebrow: 'ASSURANCE SURFACE', title: 'Model laboratory', description: 'Inspect model family, version, uncertainty and evaluation without turning illustrative outputs into advice.', signal: 'NOT VALIDATED', metrics: ['Models', 'Folds', 'Drift'] },
-  SCENARIO: { eyebrow: 'SCENARIO SURFACE', title: 'Scenario studio', description: 'Test changes against a fixed field revision and preserve the difference between a scenario and an observed result.', signal: 'PAPER ONLY', metrics: ['Cases', 'Inputs', 'Impact'] },
   MARKETS: { eyebrow: 'PAPER ANALYSIS', title: 'Markets', description: 'Market context remains paper analysis only; rights, timestamp and comparability stay visible at every step.', signal: 'RIGHTS-BOUND', metrics: ['Quotes', 'Freshness', 'Rights'] },
   EVIDENCE: { eyebrow: 'PROVENANCE SURFACE', title: 'Evidence', description: 'Trace every assertion to a source receipt, observed time, rights state and model claim.', signal: 'APPEND-ONLY', metrics: ['Receipts', 'Revisions', 'Claims'] },
   ASSISTANT: { eyebrow: 'RESEARCH SURFACE', title: 'Research assistant', description: 'Ask bounded questions and receive citations, limitations and explicit NOT_AVAILABLE outcomes.', signal: 'CITATIONS REQUIRED', metrics: ['Sources', 'Answers', 'Limits'] },
   NOTEBOOK: { eyebrow: 'WORKING MEMORY', title: 'Notebook', description: 'Keep approved local notes attached to the evidence that supports them, with no hidden promotion path.', signal: 'LOCAL ONLY', metrics: ['Notes', 'Sources', 'Approval'] },
   WATCHLISTS: { eyebrow: 'MONITORING SURFACE', title: 'Watchlists and alerts', description: 'Follow changes to canonical records without confusing a notification with a forecast or wager signal.', signal: 'NO AUTO-ACTION', metrics: ['Lists', 'Changes', 'Alerts'] },
-  REPORTS_SETTINGS: { eyebrow: 'CONTROL SURFACE', title: 'Reports and settings', description: 'Review rights, access, export boundaries and release evidence from one explicit control surface.', signal: 'OWNER CONTROL', metrics: ['Access', 'Rights', 'Audit'] },
+  ALERTS: { eyebrow: 'OPPORTUNITY MONITOR', title: 'Alerts', description: 'Keep owner-approved change signals visible without turning notifications into forecasts, orders or auto-actions.', signal: 'OWNER REVIEW', metrics: ['Active', 'Recent', 'Rules'] },
+  REPORTS: { eyebrow: 'RESEARCH OUTPUT', title: 'Reports', description: 'Assemble professional research output from evidence-linked sections while export rights remain explicit.', signal: 'EXPORT BOUND', metrics: ['Reports', 'Sections', 'Rights'] },
+  SETTINGS: { eyebrow: 'CONTROL SURFACE', title: 'Settings and assurance', description: 'Review environment status, research rights and accessibility preferences from a calm owner control room.', signal: 'OWNER CONTROL', metrics: ['Access', 'Rights', 'Audit'] },
 };
 
 type SurfaceRow = { label: string; value: string; detail: string; tone?: 'gold' | 'cyan' | 'green' | 'pink' };
@@ -143,16 +143,6 @@ const cinematicSurfaces: Partial<Record<WorkspaceId, SurfaceDefinition>> = {
       { label: 'Flemington', value: 'R2 · 13:05', detail: 'Soft 5 · 1400 m · synthetic', tone: 'cyan' },
       { label: 'Eagle Farm', value: 'R5 · 14:20', detail: 'Good 4 · 1300 m · synthetic', tone: 'green' },
       { label: 'Source state', value: 'FIXTURE-LABELLED', detail: 'No official status claimed', tone: 'pink' },
-    ],
-  },
-  RACE: {
-    kicker: 'RACE INTELLIGENCE · FIELD-R2', title: 'Race intelligence',
-    subtitle: 'One race, one revision, one visual hierarchy for field state, conditions and evidence.', heroLabel: 'RANDWICK R3', heroValue: '1200m', heroDetail: 'early-settling view · fictional maiden', chart: 'grid',
-    rows: [
-      { label: 'Field', value: '11 runners', detail: '2 active edge cases retained', tone: 'green' },
-      { label: 'Revision', value: 'field-r2', detail: 'published after field correction', tone: 'cyan' },
-      { label: 'Track context', value: 'Good 4', detail: 'synthetic track condition', tone: 'gold' },
-      { label: 'Claims', value: 'Illustrative only', detail: 'no validated forecast', tone: 'pink' },
     ],
   },
   RUNNER: {
@@ -183,16 +173,6 @@ const cinematicSurfaces: Partial<Record<WorkspaceId, SurfaceDefinition>> = {
       { label: 'B3', value: 'LightGBM', detail: 'synthetic · not calibrated', tone: 'gold' },
       { label: 'B4', value: 'Combined', detail: 'evaluation scaffold', tone: 'green' },
       { label: 'Drift', value: 'Awaiting history', detail: 'no real training claim', tone: 'pink' },
-    ],
-  },
-  SCENARIO: {
-    kicker: 'SCENARIO STUDIO · PAPER ONLY', title: 'Scenario analysis',
-    subtitle: 'Explore how a fixed synthetic field could settle under different assumptions while keeping the scenario boundary visible.', heroLabel: 'BASE CASE', heroValue: '62%', heroDetail: 'illustrative scenario weight · not a forecast', chart: 'timeline',
-    rows: [
-      { label: 'Base case', value: 'Moderate tempo', detail: 'reference scenario', tone: 'green' },
-      { label: 'Contested lead', value: '25%', detail: 'higher tempo · illustrative', tone: 'gold' },
-      { label: 'Lone leader', value: '10%', detail: 'slower tempo · illustrative', tone: 'cyan' },
-      { label: 'Inside bias', value: '03%', detail: 'rail advantage · not validated', tone: 'pink' },
     ],
   },
   MARKETS: {
@@ -235,9 +215,29 @@ const cinematicSurfaces: Partial<Record<WorkspaceId, SurfaceDefinition>> = {
       { label: 'Auto-action', value: 'DISABLED', detail: 'no wagering or staking', tone: 'pink' },
     ],
   },
-  REPORTS_SETTINGS: {
-    kicker: 'REPORTS & ASSURANCE · OWNER CONTROL', title: 'Reports & settings',
-    subtitle: 'Release evidence, access scope and export boundaries in one calm assurance deck.', heroLabel: 'ASSURANCE', heroValue: 'PASS', heroDetail: 'synthetic-only release · owner-scoped', chart: 'table',
+  ALERTS: {
+    kicker: 'ALERTS · OWNER REVIEW', title: 'Alerts',
+    subtitle: 'A quiet opportunity monitor for changes that need your review, with auto-action and wagering permanently disabled.', heroLabel: 'ACTIVE RULES', heroValue: '05', heroDetail: 'owner-reviewed notifications · no automated action', chart: 'grid',
+    rows: [
+      { label: 'Price drop', value: 'COASTAL STRIKE', detail: 'paper change · review only', tone: 'gold' },
+      { label: 'Value lane', value: 'ENABLED', detail: 'notification only', tone: 'green' },
+      { label: 'Market move', value: 'WATCHING', detail: 'synthetic quote-shaped input', tone: 'cyan' },
+      { label: 'Auto-action', value: 'DISABLED', detail: 'no orders or staking', tone: 'pink' },
+    ],
+  },
+  REPORTS: {
+    kicker: 'REPORTS · RESEARCH OUTPUT', title: 'Reports',
+    subtitle: 'Assemble evidence-linked research output with clear export boundaries and no unsupported claims.', heroLabel: 'CURRENT REPORT', heroValue: 'R3', heroDetail: 'Randwick research report · synthetic only', chart: 'table',
+    rows: [
+      { label: 'Race overview', value: 'READY', detail: 'field, track and conditions', tone: 'green' },
+      { label: 'Runner analysis', value: 'READY', detail: 'selected records only', tone: 'cyan' },
+      { label: 'Market analysis', value: 'PAPER ONLY', detail: 'rights-labelled context', tone: 'gold' },
+      { label: 'Export', value: 'RESTRICTED', detail: 'owner review required', tone: 'pink' },
+    ],
+  },
+  SETTINGS: {
+    kicker: 'SETTINGS & ASSURANCE · OWNER CONTROL', title: 'Settings and assurance',
+    subtitle: 'A transparent control room for environment status, research rights and accessibility preferences.', heroLabel: 'RELEASE GATE', heroValue: 'HOLD', heroDetail: 'synthetic-only release · owner-scoped', chart: 'table',
     rows: [
       { label: 'Auth0', value: 'Owner allowlist', detail: 'fail-closed access', tone: 'green' },
       { label: 'Provider lane', value: 'Read-only', detail: 'no order or wager scope', tone: 'cyan' },
@@ -250,16 +250,16 @@ const cinematicSurfaces: Partial<Record<WorkspaceId, SurfaceDefinition>> = {
 type SurfaceIntent = { focus: string; action: string; detail: string; tabs: string[] };
 const surfaceIntents: Partial<Record<WorkspaceId, SurfaceIntent>> = {
   MEETINGS: { focus: 'Next canonical meeting', action: 'Open meeting radar', detail: 'Start with the freshest source-labelled fixture.', tabs: ['Today', 'By code', 'Revisions'] },
-  RACE: { focus: 'Field intelligence', action: 'Open race context', detail: 'Keep conditions, revision and evidence in one view.', tabs: ['Overview', 'Field', 'Evidence'] },
   RUNNER: { focus: 'Selected participant', action: 'Inspect runner record', detail: 'Review code-specific inputs before comparing form.', tabs: ['Profile', 'Form', 'Provenance'] },
   COMPARE: { focus: 'Decision frame', action: 'Compare runner pair', detail: 'Align like-for-like signals and expose missing inputs.', tabs: ['Pair view', 'Inputs', 'Differences'] },
   MODEL: { focus: 'Model assurance', action: 'Open model lab', detail: 'Inspect version, drift and calibration boundaries.', tabs: ['Models', 'Evaluation', 'Drift'] },
-  SCENARIO: { focus: 'Scenario branch', action: 'Run scenario branch', detail: 'Change one assumption while preserving the field revision.', tabs: ['Base case', 'Branches', 'Impact'] },
   MARKETS: { focus: 'Paper value lane', action: 'Review market context', detail: 'Keep quote provenance and rights attached to the readout.', tabs: ['Board', 'Freshness', 'Rights'] },
   ASSISTANT: { focus: 'Evidence answer', action: 'Ask bounded question', detail: 'Every answer must resolve to a receipt or NOT_AVAILABLE.', tabs: ['Ask', 'Citations', 'Notes'] },
   NOTEBOOK: { focus: 'Approved local note', action: 'Open local journal', detail: 'Write only against evidence already in the record.', tabs: ['Journal', 'Sources', 'Approval'] },
   WATCHLISTS: { focus: 'Change queue', action: 'Review alert queue', detail: 'Monitor canonical changes without auto-action.', tabs: ['Alerts', 'Lists', 'History'] },
-  REPORTS_SETTINGS: { focus: 'Owner release gate', action: 'Review assurance', detail: 'Check access, rights and export boundaries before release.', tabs: ['Assurance', 'Access', 'Exports'] },
+  ALERTS: { focus: 'Owner review queue', action: 'Review active alerts', detail: 'Inspect change signals without auto-action or wagering scope.', tabs: ['Active', 'Recent', 'Rules'] },
+  REPORTS: { focus: 'Evidence-linked output', action: 'Open report builder', detail: 'Assemble approved sections before any restricted export.', tabs: ['Race report', 'Custom', 'Saved'] },
+  SETTINGS: { focus: 'Release gate', action: 'Review assurance', detail: 'Check access, rights and export boundaries before release.', tabs: ['Assurance', 'Access', 'Preferences'] },
 };
 
 type TacticalRunner = { number: number; name: string; group: 'LEAD' | 'ON PACE' | 'MIDFIELD' | 'BACKMARKERS'; color: string; asset: string; factor: string; detail: string; base: [number, number]; contested: [number, number] };
@@ -770,12 +770,14 @@ function CommandCinematicHero() {
 }
 
 function CinematicWorkspaceSurface({ workspace }: { workspace: WorkspaceId }) {
-  const definition = cinematicSurfaces[workspace] ?? cinematicSurfaces.RACE!;
-  const intent = surfaceIntents[workspace] ?? surfaceIntents.RACE!;
+  const definition = cinematicSurfaces[workspace] ?? cinematicSurfaces.MEETINGS!;
+  const intent = surfaceIntents[workspace] ?? surfaceIntents.MEETINGS!;
   const [activeTab, setActiveTab] = useState(intent.tabs[0]);
   const [feedback, setFeedback] = useState<string | null>(null);
   if (workspace === 'TACTICAL') return <TacticalTrackSurface />;
   if (workspace === 'EVIDENCE') return <EvidenceWorkspacePreview />;
+  if (workspace === 'ALERTS') return <AlertsWorkspacePreview />;
+  if (workspace === 'SETTINGS') return <SettingsWorkspacePreview />;
   return <section className={`cinematic-surface surface-${workspace.toLowerCase()}`} aria-label={`${definition.title} visual surface`}>
     <div className="cinematic-surface-header"><div><p className="eyebrow">{definition.kicker}</p><h3>{definition.title}</h3><p>{definition.subtitle}</p></div><span className="surface-stamp">SYNTHETIC / ILLUSTRATIVE</span></div>
     <div className="surface-command-bar"><div><span className="surface-command-label">NEXT MOVE</span><strong>{intent.focus}</strong><small>{intent.detail}</small></div><button className="surface-primary-action" onClick={() => setFeedback(`${intent.action} opened · synthetic preview only`)} type="button">{intent.action}<span aria-hidden="true">↗</span></button></div>
@@ -805,6 +807,45 @@ function EvidenceWorkspacePreview() {
     <div className="not-live-callout"><strong>Not live:</strong> a receipt proves fixture provenance, not official racing status or source licensing.</div>
     <div className="state-callout"><strong>Research preview · synthetic only.</strong> Provenance is rendered at full fidelity while the fixture remains explicitly non-live.</div>
   </div>;
+}
+
+function AlertsWorkspacePreview() {
+  const [activeTab, setActiveTab] = useState('Active');
+  const [enabled, setEnabled] = useState([true, true, true, true, false]);
+  const [feedback, setFeedback] = useState<string | null>(null);
+  const alertRows = [
+    ['Price drop alert', 'Coastal Strike', 'Notify if paper price changes below 3.20', 'gold'],
+    ['Value opportunity', 'Any runner', 'Notify if illustrative value exceeds 15%', 'green'],
+    ['Market move', 'Randwick R3', 'Notify if paper quote moves more than 10%', 'cyan'],
+    ['Race conditions', 'All meetings', 'Notify on track changes or heavy rain', 'gold'],
+    ['Custom alert', 'Maple Ridge', 'Notify only significant model-support changes', 'pink'],
+  ] as const;
+  return <section className="special-workspace-surface alerts-workspace" aria-label="Alerts visual surface">
+    <div className="special-surface-header"><div><p className="eyebrow">ALERTS · OWNER REVIEW</p><h3>Alerts</h3><p>Get notified about changes that matter while every action remains manual, bounded and source-labelled.</p></div><span className="surface-stamp">SYNTHETIC / NO AUTO-ACTION</span></div>
+    <div className="surface-command-bar"><div><span className="surface-command-label">NEXT MOVE</span><strong>Review active alerts</strong><small>Inspect change signals without auto-action or wagering scope.</small></div><button className="surface-primary-action" onClick={() => setFeedback('New alert flow opened · local preview only')} type="button">New alert<span aria-hidden="true">+</span></button></div>
+    <div className="surface-tabs" role="tablist" aria-label="Alert views">{['Active', 'Recent', 'Rules'].map((tab) => <button aria-selected={activeTab === tab} className={activeTab === tab ? 'active' : ''} key={tab} onClick={() => setActiveTab(tab)} role="tab" type="button">{tab}</button>)}</div>
+    {feedback && <div className="surface-action-feedback" role="status"><span aria-hidden="true">●</span>{feedback}<button aria-label="Dismiss alert action feedback" onClick={() => setFeedback(null)} type="button">×</button></div>}
+    <div className="alerts-workspace-grid"><section className="alert-rule-list" aria-label="Alert rules"><div className="special-panel-heading"><div><p className="eyebrow">{activeTab.toUpperCase()} RULES</p><h4>Notifications with a human in the loop</h4></div><span className="status-pill">{enabled.filter(Boolean).length} enabled</span></div>{alertRows.map(([title, subject, detail, tone], index) => <article className={`alert-rule alert-rule-${tone}`} key={title}><span className="alert-rule-icon" aria-hidden="true">{tone === 'green' ? '✓' : tone === 'pink' ? '✦' : '↗'}</span><div><strong>{title}</strong><span>{subject}</span><small>{detail}</small></div><button aria-pressed={enabled[index]} className={enabled[index] ? 'alert-toggle active' : 'alert-toggle'} onClick={() => setEnabled((current) => current.map((value, itemIndex) => itemIndex === index ? !value : value))} type="button">{enabled[index] ? 'On' : 'Off'}</button></article>)}</section><aside className="alert-summary-panel"><p className="eyebrow">SAFETY BOUNDARY</p><h4>Owner review stays explicit.</h4><p>Alerts are notifications only. No provider order scope, staking action or automatic recommendation is available in this lane.</p><div className="alert-summary-stat"><strong>00</strong><span>automated actions</span></div><div className="alert-summary-stat"><strong>05</strong><span>owner rules</span></div><div className="state-callout"><strong>Synthetic preview.</strong> Alert triggers are illustrative and do not claim live market or race state.</div></aside></div>
+  </section>;
+}
+
+function SettingsWorkspacePreview() {
+  const [compact, setCompact] = useState(false);
+  const [motion, setMotion] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
+  const gates = [
+    ['Provider entitlement audit', 'PENDING', 'gold'],
+    ['History retention rights', 'UNVERIFIED', 'gold'],
+    ['Derived display rights', 'UNVERIFIED', 'gold'],
+    ['Model calibration and backtesting', 'PENDING', 'gold'],
+    ['Independent predictive assurance', 'PENDING', 'pink'],
+  ] as const;
+  return <section className="special-workspace-surface settings-workspace" aria-label="Settings and assurance visual surface">
+    <div className="special-surface-header"><div><p className="eyebrow">SETTINGS & ASSURANCE · OWNER CONTROL</p><h3>Settings and assurance</h3><p>A transparent control room for environment status, research rights and accessibility preferences—not access to live infrastructure.</p></div><span className="surface-stamp">SYNTHETIC ONLY</span></div>
+    <div className="surface-command-bar"><div><span className="surface-command-label">NEXT MOVE</span><strong>Review assurance</strong><small>Check access, rights and export boundaries before release.</small></div><button className="surface-primary-action" onClick={() => setFeedback('Assurance review opened · local preview only')} type="button">Review release gate<span aria-hidden="true">↗</span></button></div>
+    {feedback && <div className="surface-action-feedback" role="status"><span aria-hidden="true">●</span>{feedback}<button aria-label="Dismiss settings action feedback" onClick={() => setFeedback(null)} type="button">×</button></div>}
+    <div className="settings-board-grid"><section className="settings-panel"><div className="special-panel-heading"><div><h4>Workspace identity</h4><p>Representation of the approved private-staging architecture.</p></div><span className="status-pill">PRIVATE STAGING</span></div><dl className="settings-facts"><dt>Environment</dt><dd>PRIVATE STAGING</dd><dt>Authentication design</dt><dd>OIDC OWNER ONLY</dd><dt>Current prototype</dt><dd>LOCAL DESIGN FIXTURE</dd><dt>Provider enablement</dt><dd>DISABLED</dd><dt>Real wagering features</dt><dd>NOT PROVIDED</dd></dl><p className="settings-note">This preview does not inspect or modify real Auth0, GitHub, Render or racing-provider settings.</p></section><section className="settings-panel"><div className="special-panel-heading"><div><h4>Display preferences</h4><p>Workspace readability controls.</p></div></div><button className="preference-row" aria-pressed={compact} onClick={() => setCompact((value) => !value)} type="button"><span><strong>Compact data tables</strong><small>Reduce row height in analytical tables.</small></span><i className={compact ? 'preference-switch on' : 'preference-switch'} /></button><button className="preference-row" aria-pressed={motion} onClick={() => setMotion((value) => !value)} type="button"><span><strong>Reduce animated motion</strong><small>Disable optional transitions in this design study.</small></span><i className={motion ? 'preference-switch on' : 'preference-switch'} /></button><div className="preference-row static"><span><strong>Accessible colour cues</strong><small>Never rely on colour alone for data status.</small></span><span className="status-pill">ALWAYS ON</span></div><div className="settings-note info">Preferences are temporary in this local design study. System accessibility settings take precedence in production.</div></section><section className="settings-panel settings-gates"><div className="special-panel-heading"><div><h4>Data rights and release gates</h4><p>The truth must be visible as a product feature.</p></div><span className="status-pill warning">HOLD</span></div>{gates.map(([label, state, tone]) => <div className={`assurance-gate gate-${tone}`} key={label}><span aria-hidden="true">!</span><strong>{label}</strong><em>{state}</em></div>)}</section><section className="settings-panel settings-qa"><div className="special-panel-heading"><div><h4>Design QA gates</h4><p>What must pass before a Codex handover.</p></div></div>{['Visual system continuity', 'Interaction consistency', 'Racing and evidence validity', 'Accessibility and implementation'].map((label, index) => <div className="qa-step" key={label}><span>{index + 1}</span><div><strong>{label}</strong><small>{['Dark cinematic entry points; lighter analytical research; restrained gold accents.', 'Selected runner and scenario state shared across every relevant screen.', 'Domain accuracy, realistic spatial mapping, visible uncertainty and rights gating.', 'Keyboard focus, mobile navigation, responsive tables and robust unavailable states.'][index]}</small></div></div>)}</section></div>
+  </section>;
 }
 
 function TacticalTrackSurface() {
