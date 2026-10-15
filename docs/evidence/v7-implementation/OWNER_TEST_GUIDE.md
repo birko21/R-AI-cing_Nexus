@@ -2,7 +2,13 @@
 
 Local preview: http://127.0.0.1:5201/
 
+Hosted UAT preview: https://nexus-staging-frontend.onrender.com/
+
 This is a synthetic-only, read-only visual candidate. It does not activate Render, Auth0, racing-provider credentials, wagering, or The Long Straight.
+
+For the authenticated live-data UAT journey, use the hosted preview and follow
+`docs/deployment/LIVE_AUTHENTICATED_E2E_CHECKLIST.md`. The hosted lane is
+private, owner-scoped, licensed, read-only, and wagering-disabled.
 
 ## Approved atlas order
 

@@ -40,8 +40,8 @@ storage state.
 | Check | Result | Evidence |
 |---|---|---|
 | Auth0 owner session | PASS | Hosted browser owner session authenticated |
-| Licensed status monitor | PASS | `HEALTHY`; 2 meetings, 2 races, 21 entries, 3 results |
-| Live meeting list | PASS | Two licensed meeting cards; Northam opened |
+| Licensed status monitor | PASS | `HEALTHY`; 3 meetings, 3 races, 31 entries, 4 results |
+| Live meeting list | PASS | Three licensed meeting cards; Northam opened |
 | Race and entry detail | PASS | Race 8; 12 canonical entries; 9 active, 3 scratched |
 | Synthetic fallback absent | PASS | Licensed view showed only canonical provider data and explicit no-payload state |
 | Wagering disabled | PASS | UI showed `DISABLED`; safe API field was `false` |
