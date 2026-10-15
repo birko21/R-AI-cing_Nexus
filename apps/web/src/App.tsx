@@ -5,6 +5,7 @@ export type NexusApiRequest = (path: string, init?: RequestInit, requiredScope?:
 type Code = 'ALL' | 'THOROUGHBRED' | 'HARNESS' | 'GREYHOUND';
 type Status = 'LIVE' | 'DEMO' | 'NO_RACING' | 'NO_DATA' | 'UNAVAILABLE' | 'LOADING' | 'STALE' | 'QUARANTINED' | 'UNSUPPORTED' | 'AUTH_DENIED';
 type WorkspaceId = 'COMMAND' | 'MEETINGS' | 'RACE' | 'TACTICAL' | 'RUNNER' | 'COMPARE' | 'MODEL' | 'SCENARIO' | 'MARKETS' | 'EVIDENCE' | 'ASSISTANT' | 'NOTEBOOK' | 'WATCHLISTS' | 'REPORTS_SETTINGS';
+type DataMode = 'LOADING' | 'SYNTHETIC_ONLY' | 'LICENSED';
 
 type CommandItem = {
   id: string;
@@ -103,6 +104,23 @@ const workspaces: Array<{ value: WorkspaceId; label: string; short: string }> = 
   { value: 'WATCHLISTS', label: 'Watchlists and alerts', short: 'Watchlists' },
   { value: 'REPORTS_SETTINGS', label: 'Reports and settings', short: 'Reports' },
 ];
+
+const workspacePreviewCopy: Record<WorkspaceId, { eyebrow: string; title: string; description: string; signal: string; metrics: string[] }> = {
+  COMMAND: { eyebrow: 'OPERATIONS SURFACE', title: 'Today / Command Centre', description: 'A calm starting point for the next verified racing decision: source health first, then meetings, then evidence.', signal: 'CURRENT RECEIPT', metrics: ['Meetings', 'Races', 'Receipts'] },
+  MEETINGS: { eyebrow: 'DISCOVERY SURFACE', title: 'Meeting discovery', description: 'Scan the day by code, jurisdiction, schedule and evidence state before opening a canonical race.', signal: 'INDEXED', metrics: ['Codes', 'Meetings', 'Freshness'] },
+  RACE: { eyebrow: 'ANALYSIS SURFACE', title: 'Race intelligence', description: 'Move from the meeting record to a single race context with field revision, provenance and bounded evidence.', signal: 'FIELD-R2', metrics: ['Field', 'Revision', 'Evidence'] },
+  TACTICAL: { eyebrow: 'VISUAL ANALYSIS', title: 'Tactical track', description: 'A side-on race reading surface for pace, position and uncertainty. No movement is inferred when the source is absent.', signal: 'ILLUSTRATIVE', metrics: ['Pace', 'Position', 'Confidence'] },
+  RUNNER: { eyebrow: 'PARTICIPANT SURFACE', title: 'Runner intelligence', description: 'Keep the runner record, code-specific inputs and provenance attached to the same field revision.', signal: 'SOURCE-LINKED', metrics: ['Runners', 'Inputs', 'History'] },
+  COMPARE: { eyebrow: 'COMPARISON SURFACE', title: 'Runner comparison', description: 'Compare only like-for-like runners and show where evidence is missing instead of filling gaps with estimates.', signal: 'NO INVENTION', metrics: ['Selected', 'Comparable', 'Missing'] },
+  MODEL: { eyebrow: 'ASSURANCE SURFACE', title: 'Model laboratory', description: 'Inspect model family, version, uncertainty and evaluation without turning illustrative outputs into advice.', signal: 'NOT VALIDATED', metrics: ['Models', 'Folds', 'Drift'] },
+  SCENARIO: { eyebrow: 'SCENARIO SURFACE', title: 'Scenario studio', description: 'Test changes against a fixed field revision and preserve the difference between a scenario and an observed result.', signal: 'PAPER ONLY', metrics: ['Cases', 'Inputs', 'Impact'] },
+  MARKETS: { eyebrow: 'PAPER ANALYSIS', title: 'Markets', description: 'Market context remains paper analysis only; rights, timestamp and comparability stay visible at every step.', signal: 'RIGHTS-BOUND', metrics: ['Quotes', 'Freshness', 'Rights'] },
+  EVIDENCE: { eyebrow: 'PROVENANCE SURFACE', title: 'Evidence', description: 'Trace every assertion to a source receipt, observed time, rights state and model claim.', signal: 'APPEND-ONLY', metrics: ['Receipts', 'Revisions', 'Claims'] },
+  ASSISTANT: { eyebrow: 'RESEARCH SURFACE', title: 'Research assistant', description: 'Ask bounded questions and receive citations, limitations and explicit NOT_AVAILABLE outcomes.', signal: 'CITATIONS REQUIRED', metrics: ['Sources', 'Answers', 'Limits'] },
+  NOTEBOOK: { eyebrow: 'WORKING MEMORY', title: 'Notebook', description: 'Keep approved local notes attached to the evidence that supports them, with no hidden promotion path.', signal: 'LOCAL ONLY', metrics: ['Notes', 'Sources', 'Approval'] },
+  WATCHLISTS: { eyebrow: 'MONITORING SURFACE', title: 'Watchlists and alerts', description: 'Follow changes to canonical records without confusing a notification with a forecast or wager signal.', signal: 'NO AUTO-ACTION', metrics: ['Lists', 'Changes', 'Alerts'] },
+  REPORTS_SETTINGS: { eyebrow: 'CONTROL SURFACE', title: 'Reports and settings', description: 'Review rights, access, export boundaries and release evidence from one explicit control surface.', signal: 'OWNER CONTROL', metrics: ['Access', 'Rights', 'Audit'] },
+};
 
 const statuses: Array<{ value: Status | 'ALL'; label: string }> = [
   { value: 'ALL', label: 'All states' },
@@ -392,12 +410,12 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
   const [selectedRace, setSelectedRace] = useState<Exclude<Code, 'ALL'> | null>(null);
   const [evidenceTab, setEvidenceTab] = useState<EvidenceTab>('FIELD');
   const [apiStatus, setApiStatus] = useState<'idle' | 'checking' | 'ready' | 'denied' | 'unavailable'>('idle');
-  const [dataMode, setDataMode] = useState<'SYNTHETIC_ONLY' | 'LICENSED'>('SYNTHETIC_ONLY');
+  const [dataMode, setDataMode] = useState<DataMode>(apiRequest && typeof window !== 'undefined' ? 'LOADING' : 'SYNTHETIC_ONLY');
   const [liveMeetings, setLiveMeetings] = useState<LiveMeeting[]>([]);
   const [liveIngestion, setLiveIngestion] = useState<LiveIngestionHealth | null>(null);
   const [selectedLiveMeeting, setSelectedLiveMeeting] = useState<LiveMeeting | null>(null);
   const visibleItems = useMemo(
-    () => (dataMode === 'LICENSED' ? liveCommandItems(liveMeetings) : commandItems).filter((item) =>
+    () => (dataMode === 'LICENSED' ? liveCommandItems(liveMeetings) : dataMode === 'LOADING' ? [] : commandItems).filter((item) =>
       (selectedCode === 'ALL' || item.code === selectedCode) &&
       (selectedStatus === 'ALL' || item.status === selectedStatus) &&
       (dataMode === 'LICENSED' || showStateExamples || item.status === 'DEMO')),
@@ -407,6 +425,7 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
   useEffect(() => {
     if (!apiRequest) return;
     let active = true;
+    setDataMode('LOADING');
     setApiStatus('checking');
     void Promise.all([
       apiRequest('/v1/system/status', undefined, 'races:read'),
@@ -421,6 +440,7 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
         if (!statusResponse.ok || !meetingsResponse.ok) {
           const response = !statusResponse.ok ? statusResponse : meetingsResponse;
           setApiStatus(response.status === 401 || response.status === 403 ? 'denied' : 'unavailable');
+          setDataMode('LOADING');
           return;
         }
         if (!licensed) {
@@ -433,7 +453,10 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
         setApiStatus('ready');
       })
       .catch(() => {
-        if (active) setApiStatus('unavailable');
+        if (active) {
+          setApiStatus('unavailable');
+          setDataMode('LOADING');
+        }
       });
     return () => { active = false; };
   }, [apiRequest]);
@@ -449,16 +472,17 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
   const isCommandWorkspace = activeWorkspace === 'COMMAND' || (dataMode === 'LICENSED' && activeWorkspace === 'MEETINGS');
 
   return (
-    <main className="shell">
+    <main className="shell nexus-shell">
       <header className="topbar">
-        <div><p className="eyebrow">RACING INTELLIGENCE LAB</p><h1>{activeWorkspace === 'COMMAND' ? 'Today / Command Centre' : activeWorkspaceLabel}</h1></div>
-        <div className="header-badges">{dataMode === 'LICENSED' ? <><span className="mode-badge">LIVE READ-ONLY</span><span className="mode-badge subdued">LICENSED</span></> : <><span className="mode-badge">DEMO ONLY</span><span className="mode-badge subdued">SYNTHETIC_ONLY</span></>}{apiStatus !== 'idle' && <span className="mode-badge subdued">API {apiStatus.toUpperCase()}</span>}</div>
+        <div className="brand-lockup"><NexusMark /><div><p className="eyebrow">RACING INTELLIGENCE LAB</p><div className="brand-wordmark">NEXUS <span>/ RESEARCH OS</span></div><h1>{activeWorkspace === 'COMMAND' ? 'Today / Command Centre' : activeWorkspaceLabel}</h1></div></div>
+        <div className="topbar-meta"><div className="session-chip"><span className="session-pulse" aria-hidden="true" /> PRIVATE OWNER WORKSPACE</div><div className="header-badges">{dataMode === 'LICENSED' ? <><span className="mode-badge">LIVE READ-ONLY</span><span className="mode-badge subdued">LICENSED</span></> : dataMode === 'LOADING' ? <><span className="mode-badge subdued">LIVE CHECK</span><span className="mode-badge subdued">API CHECKING</span></> : <><span className="mode-badge">DEMO ONLY</span><span className="mode-badge subdued">SYNTHETIC_ONLY</span></>}{apiStatus !== 'idle' && dataMode !== 'LOADING' && <span className="mode-badge subdued">API {apiStatus.toUpperCase()}</span>}</div></div>
       </header>
       <nav className="workspace-nav" aria-label="Research workspaces">
         {workspaces.map((workspace) => <button aria-current={activeWorkspace === workspace.value ? 'page' : undefined} className={activeWorkspace === workspace.value ? 'workspace-link active' : 'workspace-link'} key={workspace.value} onClick={() => setActiveWorkspace(workspace.value)} type="button"><span>{workspace.short}</span><small>{workspace.label}</small></button>)}
       </nav>
-      {!isCommandWorkspace && <WorkspaceBoundary workspace={activeWorkspace} dataMode={dataMode} onReturn={() => setActiveWorkspace('COMMAND')} />}
-      {isCommandWorkspace && <>
+      {dataMode === 'LOADING' && <LoadingWorkspace apiStatus={apiStatus} />}
+      {dataMode !== 'LOADING' && !isCommandWorkspace && <WorkspaceBoundary workspace={activeWorkspace} dataMode={dataMode} onReturn={() => setActiveWorkspace('COMMAND')} />}
+      {dataMode !== 'LOADING' && isCommandWorkspace && <>
       <section className="intro" aria-labelledby="intro-title">
         <p className="eyebrow">{dataMode === 'LICENSED' ? 'PRIVATE PROVIDER WORKSPACE' : 'LOCAL RESEARCH WORKSPACE'}</p>
         <h2 id="intro-title">{dataMode === 'LICENSED' ? 'Provider-backed meetings, one honest evidence view.' : 'Three racing codes, one honest evidence view.'}</h2>
@@ -496,20 +520,33 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
       {selectedLiveMeeting && apiRequest && <LiveMeetingView meeting={selectedLiveMeeting} apiRequest={apiRequest} onClose={() => setSelectedLiveMeeting(null)} />}
       {dataMode === 'LICENSED' && <section className="licensed-boundary" aria-label="Licensed capability boundary"><div><p className="eyebrow">LICENSED READ-ONLY SCOPE</p><h2>Canonical racing evidence only</h2><p>Forecasts, markets, exports and wagering actions are not enabled for this provider lane.</p></div><div className="capability-list"><span>Races and entries · available</span><span>Forecasts · not available</span><span>Wagering · disabled</span></div></section>}
       </>}
-      <footer className="footer"><span>{dataMode === 'LICENSED' ? 'Provider API: licensed staging lane' : 'Local API: 127.0.0.1:8000'}</span><span>Data rights: {dataMode === 'LICENSED' ? 'owner-approved private read' : 'synthetic fixture only'}</span><span>Model: not trained</span></footer>
+      <footer className="footer"><span>{dataMode === 'LICENSED' ? 'Provider API: licensed staging lane' : dataMode === 'LOADING' ? 'Provider API: establishing secure session' : 'Local API: 127.0.0.1:8000'}</span><span>Data rights: {dataMode === 'LICENSED' ? 'owner-approved private read' : dataMode === 'LOADING' ? 'rights state pending verification' : 'synthetic fixture only'}</span><span>Model: not trained</span></footer>
     </main>
   );
 }
 
-function WorkspaceBoundary({ workspace, dataMode, onReturn }: { workspace: WorkspaceId; dataMode: 'SYNTHETIC_ONLY' | 'LICENSED'; onReturn: () => void }) {
+function NexusMark() {
+  return <svg className="nexus-mark" aria-hidden="true" viewBox="0 0 48 48" role="img"><path d="M24 3 42 13v22L24 45 6 35V13L24 3Z" fill="none" stroke="currentColor" strokeWidth="1.5" /><path d="m14 31 20-14M14 17l20 14M24 9v30" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /><circle cx="24" cy="24" r="4" fill="currentColor" /></svg>;
+}
+
+function LoadingWorkspace({ apiStatus }: { apiStatus: 'idle' | 'checking' | 'ready' | 'denied' | 'unavailable' }) {
+  const failure = apiStatus === 'denied' || apiStatus === 'unavailable';
+  return <section className="loading-workspace" aria-label="Secure provider workspace" aria-live="polite">
+    <div className="loading-copy"><p className="eyebrow">SECURE PROVIDER HANDSHAKE</p><h2>{failure ? 'Live workspace is waiting for a verified response.' : 'Establishing the live research surface.'}</h2><p>{failure ? 'No synthetic replacement is shown. Confirm the owner session and API availability before continuing.' : 'Nexus is checking the authenticated provider lane, rights state and current receipt. No racing values are rendered until that check completes.'}</p><div className="loading-status"><span className="loading-spinner" aria-hidden="true" /> {failure ? `API ${apiStatus.toUpperCase()} · no data rendered` : 'API CHECKING · no data rendered'}</div></div>
+    <div className="loading-orbit" aria-hidden="true"><span /><span /><span /><b>NEXUS</b></div>
+  </section>;
+}
+
+function WorkspaceBoundary({ workspace, dataMode, onReturn }: { workspace: WorkspaceId; dataMode: Exclude<DataMode, 'LOADING'>; onReturn: () => void }) {
   const metadata = workspaces.find((item) => item.value === workspace) ?? workspaces[0];
+  const preview = workspacePreviewCopy[workspace];
   const liveMessage = dataMode === 'LICENSED'
     ? 'This licensed staging lane currently exposes canonical meetings, races and entries only. No unsupported values are invented to fill the workspace.'
     : 'This workspace is part of the research atlas. Use the Command Centre to open a clearly labelled synthetic race view.';
-  return <section className="workspace-panel" aria-label={`${metadata.label} workspace`}>
-    <div className="workspace-heading"><div><p className="eyebrow">WORKSPACE ATLAS · {dataMode === 'LICENSED' ? 'LICENSED READ-ONLY' : 'SYNTHETIC DEMO'}</p><h2>{metadata.label}</h2><p className="workspace-subtitle">Shared context remains explicit across every research workspace.</p></div><span className="mode-badge subdued">{dataMode === 'LICENSED' ? 'NOT_AVAILABLE' : 'SYNTHETIC_ONLY'}</span></div>
+  return <section className={`workspace-panel workspace-preview workspace-${workspace.toLowerCase()}`} aria-label={`${metadata.label} workspace`}>
+    <div className="workspace-heading"><div><p className="eyebrow">WORKSPACE ATLAS · {dataMode === 'LICENSED' ? 'LICENSED READ-ONLY' : 'SYNTHETIC DEMO'}</p><h2>{preview.title}</h2><p className="workspace-subtitle">{preview.description}</p></div><span className={`mode-badge ${dataMode === 'LICENSED' ? 'warning-badge' : 'subdued'}`}>{dataMode === 'LICENSED' ? 'NOT_AVAILABLE' : preview.signal}</span></div>
     <div className="workspace-context" aria-label="Shared research context"><div><span>Mode</span><strong>{dataMode}</strong></div><div><span>Scope</span><strong>{dataMode === 'LICENSED' ? 'READ-ONLY' : 'RESEARCH DEMO'}</strong></div><div><span>Evidence</span><strong>{dataMode === 'LICENSED' ? 'CANONICAL ONLY' : 'FIXTURE LABELLED'}</strong></div><div><span>Wagering</span><strong>DISABLED</strong></div></div>
-    <div className="state-callout"><strong>{metadata.label} is bounded in this release.</strong> {liveMessage}</div>
+    {dataMode === 'SYNTHETIC_ONLY' ? <><div className="workspace-preview-grid"><div className="preview-visual"><div className="preview-visual-grid" /><span className="preview-visual-kicker">{preview.eyebrow}</span><strong>{preview.signal}</strong><small>Shared context / field-r2 / source labelled</small></div><div className="preview-metric-list">{preview.metrics.map((metric, index) => <div key={metric}><span>0{index + 1}</span><strong>{metric}</strong><small>{index === 0 ? 'Current workspace lens' : index === 1 ? 'Evidence attached' : 'No value inferred'}</small></div>)}</div></div><div className="state-callout"><strong>Research preview · synthetic only.</strong> {liveMessage}</div></> : <div className="state-callout"><strong>{metadata.label} is bounded in this release.</strong> {liveMessage}</div>}
     <button className="secondary-action" onClick={onReturn} type="button">Return to Command Centre</button>
   </section>;
 }
