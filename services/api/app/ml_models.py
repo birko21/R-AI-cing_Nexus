@@ -198,7 +198,15 @@ def _model_text(backend: Backend, model: object) -> str:
         path = Path(handle.name)
     try:
         model.save_model(str(path), format="json")
-        return path.read_text(encoding="utf-8")
+        document = json.loads(path.read_text(encoding="utf-8"))
+        # CatBoost embeds a fresh UUID and wall-clock training timestamp in
+        # model_info. They do not affect inference, but would make identical
+        # seeded synthetic training runs produce different artifact hashes.
+        model_info = document.get("model_info")
+        if isinstance(model_info, dict):
+            model_info.pop("model_guid", None)
+            model_info.pop("train_finish_time", None)
+        return json.dumps(document, sort_keys=True, separators=(",", ":"))
     finally:
         path.unlink(missing_ok=True)
 

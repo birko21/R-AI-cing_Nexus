@@ -554,11 +554,11 @@
     {
       "ablation": {
         "removed_feature_family": "DISTANCE",
-        "retrained_model_artifact_id": "b3-b525ced592027560",
+        "retrained_model_artifact_id": "b3-6764d64aa9671f13",
         "schema_hash": "b002ed70dd7ee65465966423ab1c6b97757ea644838ec9e95fca0a38ae8def8b"
       },
-      "artifact_id": "b3-47db0b4b1e22535e",
-      "artifact_sha256": "47db0b4b1e22535e889ccceca396eea90f0ead73480f4f105302788744010338",
+      "artifact_id": "b3-24d25c56cc74e713",
+      "artifact_sha256": "24d25c56cc74e71314890951c2ba3e59a9bf66e499247c692b1eb909e8db5df7",
       "backend": "catboost",
       "calibration": {
         "artifact_id": "calibration-42140c9155db4b3e",
@@ -578,9 +578,9 @@
         ],
         "dataset_hash": "99d83e90386a1d9e0cf4dab517dc05898ec4fee74ec749228fd99162be52d4ee",
         "fold_id": "fold-001",
-        "model_artifact_id": "b3-47db0b4b1e22535e",
-        "record_hash": "c9dc8be445a18dbf42d5e38c5fd0ffebdec287d13ca5c6d3f9d509955f96b10b",
-        "test_artifact_id": "b3-47db0b4b1e22535e",
+        "model_artifact_id": "b3-24d25c56cc74e713",
+        "record_hash": "cab73273f966cfe47393528df30a292dc8db639c749095e75449e63823037800",
+        "test_artifact_id": "b3-24d25c56cc74e713",
         "test_race_ids": [
           "thoroughbred-race-7",
           "thoroughbred-race-8",
@@ -626,7 +626,7 @@
         ]
       },
       "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
-      "model_version": "b3-catboost-47db0b4b1e22",
+      "model_version": "b3-catboost-24d25c56cc74",
       "probabilities": {
         "runner-0": 0.030747959332417994,
         "runner-1": 0.9273681013816473,
@@ -726,11 +726,11 @@
     {
       "ablation": {
         "removed_feature_family": "DISTANCE",
-        "retrained_model_artifact_id": "b3-34edd2d6306e7351",
+        "retrained_model_artifact_id": "b3-0489a7a9e095805a",
         "schema_hash": "45f0dd0685c76faad85a8602703b46580354bf71d5005c710ae4301628512732"
       },
-      "artifact_id": "b3-4071bdcfd1183f3e",
-      "artifact_sha256": "4071bdcfd1183f3e53aff8e24b09bb7c93b63675b8b1dbb9ff10df9666e871c2",
+      "artifact_id": "b3-1ec91f3bd6e82910",
+      "artifact_sha256": "1ec91f3bd6e82910157b4b54201591a9eb5a9cb83583317aef57006a96b093ec",
       "backend": "catboost",
       "calibration": {
         "artifact_id": "calibration-325efdc374d4e332",
@@ -750,9 +750,9 @@
         ],
         "dataset_hash": "f8176d9fc62bcfc10826090247adfb4e081f94caa32fe0df3fc5d960b91e1367",
         "fold_id": "fold-001",
-        "model_artifact_id": "b3-4071bdcfd1183f3e",
-        "record_hash": "cd150ab9e16bb7c820d05f454e413150c2deef69c386ec5e4ff8bff04fcdf3d5",
-        "test_artifact_id": "b3-4071bdcfd1183f3e",
+        "model_artifact_id": "b3-1ec91f3bd6e82910",
+        "record_hash": "ba29ea564f7873d78df10c81c894601a7bf0bb34088c8ebe9a7c484fedc0d8eb",
+        "test_artifact_id": "b3-1ec91f3bd6e82910",
         "test_race_ids": [
           "harness-race-7",
           "harness-race-8",
@@ -798,7 +798,7 @@
         ]
       },
       "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
-      "model_version": "b3-catboost-4071bdcfd118",
+      "model_version": "b3-catboost-1ec91f3bd6e8",
       "probabilities": {
         "runner-0": 0.030747959332417994,
         "runner-1": 0.9273681013816473,
@@ -898,11 +898,11 @@
     {
       "ablation": {
         "removed_feature_family": "DISTANCE",
-        "retrained_model_artifact_id": "b3-d51760dd3634936e",
+        "retrained_model_artifact_id": "b3-d841445736e90137",
         "schema_hash": "c31fb74d23240682e64e51de53011ee7ef529614e6c565bebfd4e19dae6395f7"
       },
-      "artifact_id": "b3-306f2a0c7eb94afd",
-      "artifact_sha256": "306f2a0c7eb94afd442cea0e8e2e92c585835b78a2e4d898b099d09907a2f8fd",
+      "artifact_id": "b3-a7b2fd2c395f0ffa",
+      "artifact_sha256": "a7b2fd2c395f0ffa7ef864646bed9bc63c64f9307a273bc2d1ed1c4e5b54a48b",
       "backend": "catboost",
       "calibration": {
         "artifact_id": "calibration-a2941b966c2a73e1",
@@ -922,9 +922,9 @@
         ],
         "dataset_hash": "4d133692fedf7bb3395062d94533fa5a6cb607ea62d11bb52358dc372fba7085",
         "fold_id": "fold-001",
-        "model_artifact_id": "b3-306f2a0c7eb94afd",
-        "record_hash": "e788efbeb4b87330f79551ced7d9bc7ad6946771c8c9f5cb75b5c677aaa816d4",
-        "test_artifact_id": "b3-306f2a0c7eb94afd",
+        "model_artifact_id": "b3-a7b2fd2c395f0ffa",
+        "record_hash": "c0a68a6ca704d2958618a7116aba245c539eee227b8c4b5c1d27bb805c075472",
+        "test_artifact_id": "b3-a7b2fd2c395f0ffa",
         "test_race_ids": [
           "greyhound-race-7",
           "greyhound-race-8",
@@ -970,7 +970,7 @@
         ]
       },
       "model_status": "ILLUSTRATIVE_NOT_VALIDATED",
-      "model_version": "b3-catboost-306f2a0c7eb9",
+      "model_version": "b3-catboost-a7b2fd2c395f",
       "probabilities": {
         "runner-0": 0.030747959332417994,
         "runner-1": 0.9273681013816473,

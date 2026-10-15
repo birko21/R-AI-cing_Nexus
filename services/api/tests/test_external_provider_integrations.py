@@ -133,6 +133,7 @@ def test_betfair_adapter_uses_read_only_json_rpc_and_never_post_settlement_sp_as
 
     adapter.fetch(
         "GET_MARKETS", code="THOROUGHBRED", view="book",
+        market_ids=("1.234567890",),
         approval=approval("betfair-exchange", "GET_MARKETS"),
     )
 

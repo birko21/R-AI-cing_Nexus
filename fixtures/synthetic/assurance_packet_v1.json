@@ -1,0 +1,22 @@
+{
+  "artifact_id": "B1_FORM_HEURISTIC:synthetic-v1",
+  "calibration_review": "PENDING",
+  "evaluation_id": "synthetic-evaluation-v1",
+  "leakage_audit": "PENDING",
+  "missing_requirements": [
+    "calibration_review",
+    "independent_reviewer_reference",
+    "leakage_audit",
+    "owner_approval_reference",
+    "split_review"
+  ],
+  "owner_approval": false,
+  "owner_decision_reference": null,
+  "packet_hash": "7af9eaf5aaa18d04bf573b4958f785394308546ff282c523aed1df77dd06e45e",
+  "promotion_authority": "NONE",
+  "reviewer_reference": null,
+  "schema_version": "model-assurance-packet-v1",
+  "split_manifest_hash": "synthetic-split-manifest-v1",
+  "split_review": "PENDING",
+  "status": "HOLD"
+}

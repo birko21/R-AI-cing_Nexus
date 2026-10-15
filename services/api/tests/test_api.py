@@ -88,6 +88,38 @@ def test_missing_race_and_selection_journal_are_stable(authenticated_client: Tes
     assert addendum.status_code == 201
 
 
+def test_synthetic_catalog_routes_return_data_with_cursor_and_as_of(authenticated_client: TestClient) -> None:
+    headers = {"Authorization": "Bearer test-local-token"}
+    as_of = "2026-01-15T02:00:00Z"
+
+    meetings = authenticated_client.get(f"/v1/meetings?limit=2&as_of={as_of}", headers=headers)
+    assert meetings.status_code == 200
+    assert len(meetings.json()["items"]) == 2
+    assert meetings.json()["meta"]["next_cursor"]
+
+    next_page = authenticated_client.get(
+        f"/v1/meetings?limit=2&as_of={as_of}&cursor={meetings.json()['meta']['next_cursor']}",
+        headers=headers,
+    )
+    assert next_page.status_code == 200
+    assert len(next_page.json()["items"]) == 1
+
+    race = authenticated_client.get(f"/v1/races/race:1?as_of={as_of}", headers=headers)
+    assert race.status_code == 200
+    entries = authenticated_client.get(f"/v1/races/race:1/entries?limit=2&as_of={as_of}", headers=headers)
+    assert entries.status_code == 200
+    assert len(entries.json()["items"]) == 2
+    forecasts = authenticated_client.get(f"/v1/races/race:1/forecasts?as_of={as_of}", headers=headers)
+    assert forecasts.status_code == 200
+    assert len(forecasts.json()["items"]) == 1
+    assert forecasts.json()["items"][0]["data_mode"] == "SYNTHETIC_ONLY"
+
+    before_start = authenticated_client.get(
+        "/v1/races/race:1?as_of=2026-01-15T00:59:59Z", headers=headers
+    )
+    assert before_start.status_code == 404
+
+
 def test_invalid_token_and_missing_scope_fail_closed(authenticated_client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
     invalid = authenticated_client.get("/v1/codes", headers={"Authorization": "Bearer wrong"})
     assert invalid.status_code == 401

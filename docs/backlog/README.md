@@ -2,6 +2,10 @@
 
 This backlog decomposes the V1.1 execution prompt and the long-term master specification into dependency-ordered epics and implementation tickets.
 
+The current remainder is tracked in [`REMAINING_EPICS.md`](REMAINING_EPICS.md),
+which distinguishes completed local engineering from external and human-owned
+gates that must not be simulated.
+
 ## Delivery rules
 
 - Work through G0–G3 first using synthetic data only.
@@ -16,4 +20,3 @@ The GitHub repository is reachable, but the current authenticated account has re
 
 - [Epic register](EPICS.md)
 - [Ticket register](TICKETS.md)
-
