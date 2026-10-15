@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useState, type CSSProperties, type FormEvent } from 'react';
 
 export type NexusApiRequest = (path: string, init?: RequestInit, requiredScope?: string) => Promise<Response>;
 
@@ -121,6 +121,147 @@ const workspacePreviewCopy: Record<WorkspaceId, { eyebrow: string; title: string
   WATCHLISTS: { eyebrow: 'MONITORING SURFACE', title: 'Watchlists and alerts', description: 'Follow changes to canonical records without confusing a notification with a forecast or wager signal.', signal: 'NO AUTO-ACTION', metrics: ['Lists', 'Changes', 'Alerts'] },
   REPORTS_SETTINGS: { eyebrow: 'CONTROL SURFACE', title: 'Reports and settings', description: 'Review rights, access, export boundaries and release evidence from one explicit control surface.', signal: 'OWNER CONTROL', metrics: ['Access', 'Rights', 'Audit'] },
 };
+
+type SurfaceRow = { label: string; value: string; detail: string; tone?: 'gold' | 'cyan' | 'green' | 'pink' };
+type SurfaceDefinition = {
+  kicker: string;
+  title: string;
+  subtitle: string;
+  heroLabel: string;
+  heroValue: string;
+  heroDetail: string;
+  rows: SurfaceRow[];
+  chart: 'bars' | 'grid' | 'timeline' | 'table';
+};
+
+const cinematicSurfaces: Partial<Record<WorkspaceId, SurfaceDefinition>> = {
+  MEETINGS: {
+    kicker: 'MEETING RADAR · SYNTHETIC FIXTURE', title: 'Meetings & Race Discovery',
+    subtitle: 'A visual daybook for finding the next canonical record before opening the race intelligence surface.', heroLabel: 'FIXTURE DAY', heroValue: '08', heroDetail: 'indexed meetings · 3 codes · source-labelled', chart: 'timeline',
+    rows: [
+      { label: 'Randwick', value: 'R3 · 12:25', detail: 'Good 4 · 1200 m · synthetic', tone: 'gold' },
+      { label: 'Flemington', value: 'R2 · 13:05', detail: 'Soft 5 · 1400 m · synthetic', tone: 'cyan' },
+      { label: 'Eagle Farm', value: 'R5 · 14:20', detail: 'Good 4 · 1300 m · synthetic', tone: 'green' },
+      { label: 'Source state', value: 'FIXTURE-LABELLED', detail: 'No official status claimed', tone: 'pink' },
+    ],
+  },
+  RACE: {
+    kicker: 'RACE INTELLIGENCE · FIELD-R2', title: 'Race intelligence',
+    subtitle: 'One race, one revision, one visual hierarchy for field state, conditions and evidence.', heroLabel: 'RANDWICK R3', heroValue: '1200m', heroDetail: 'early-settling view · fictional maiden', chart: 'grid',
+    rows: [
+      { label: 'Field', value: '11 runners', detail: '2 active edge cases retained', tone: 'green' },
+      { label: 'Revision', value: 'field-r2', detail: 'published after field correction', tone: 'cyan' },
+      { label: 'Track context', value: 'Good 4', detail: 'synthetic track condition', tone: 'gold' },
+      { label: 'Claims', value: 'Illustrative only', detail: 'no validated forecast', tone: 'pink' },
+    ],
+  },
+  RUNNER: {
+    kicker: 'RUNNER INTELLIGENCE · SELECTED RECORD', title: 'Runner intelligence',
+    subtitle: 'A participant record with code-specific facts, a readable form ribbon and provenance always in frame.', heroLabel: 'RUNNER 1', heroValue: 'COASTAL STRIKE', heroDetail: 'fictional runner · lead band · synthetic', chart: 'bars',
+    rows: [
+      { label: 'Early speed', value: 'Illustrative', detail: 'no verified sectionals', tone: 'gold' },
+      { label: 'Barrier', value: '3', detail: 'synthetic draw advantage', tone: 'green' },
+      { label: 'Distance', value: '1200 m', detail: 'context only', tone: 'cyan' },
+      { label: 'Model state', value: 'Not validated', detail: 'no advice generated', tone: 'pink' },
+    ],
+  },
+  COMPARE: {
+    kicker: 'RUNNER COMPARISON · LIKE-FOR-LIKE', title: 'Runner comparison',
+    subtitle: 'Compare selected records without hiding missing inputs or turning a fixture into a recommendation.', heroLabel: 'PAIR VIEW', heroValue: '02', heroDetail: 'runners aligned · same field revision', chart: 'table',
+    rows: [
+      { label: 'Coastal Strike', value: 'Lead', detail: 'barrier 3 · illustrative', tone: 'green' },
+      { label: 'Maple Ridge', value: 'On pace', detail: 'distance fit · illustrative', tone: 'gold' },
+      { label: 'Comparable', value: '6 / 8', detail: 'two inputs unavailable', tone: 'cyan' },
+      { label: 'Decision', value: 'No value inferred', detail: 'comparison remains research-only', tone: 'pink' },
+    ],
+  },
+  MODEL: {
+    kicker: 'MODEL LABORATORY · ASSURANCE', title: 'Model intelligence lab',
+    subtitle: 'A calm model room for versions, ablations and uncertainty—not a prediction theatre.', heroLabel: 'ACTIVE REFERENCE', heroValue: 'B4', heroDetail: 'combined synthetic baseline · calibration pending', chart: 'bars',
+    rows: [
+      { label: 'B0', value: 'Uniform', detail: 'reference only', tone: 'cyan' },
+      { label: 'B3', value: 'LightGBM', detail: 'synthetic · not calibrated', tone: 'gold' },
+      { label: 'B4', value: 'Combined', detail: 'evaluation scaffold', tone: 'green' },
+      { label: 'Drift', value: 'Awaiting history', detail: 'no real training claim', tone: 'pink' },
+    ],
+  },
+  SCENARIO: {
+    kicker: 'SCENARIO STUDIO · PAPER ONLY', title: 'Scenario analysis',
+    subtitle: 'Explore how a fixed synthetic field could settle under different assumptions while keeping the scenario boundary visible.', heroLabel: 'BASE CASE', heroValue: '62%', heroDetail: 'illustrative scenario weight · not a forecast', chart: 'timeline',
+    rows: [
+      { label: 'Base case', value: 'Moderate tempo', detail: 'reference scenario', tone: 'green' },
+      { label: 'Contested lead', value: '25%', detail: 'higher tempo · illustrative', tone: 'gold' },
+      { label: 'Lone leader', value: '10%', detail: 'slower tempo · illustrative', tone: 'cyan' },
+      { label: 'Inside bias', value: '03%', detail: 'rail advantage · not validated', tone: 'pink' },
+    ],
+  },
+  MARKETS: {
+    kicker: 'MARKET CONTEXT · RIGHTS-BOUND', title: 'Markets & value',
+    subtitle: 'Read-only paper context with freshness and rights attached to every quote-shaped value.', heroLabel: 'PAPER BOARD', heroValue: 'NO BET', heroDetail: 'synthetic market context · wagering disabled', chart: 'grid',
+    rows: [
+      { label: 'Reference', value: '1.1250', detail: 'synthetic quote · not official', tone: 'cyan' },
+      { label: 'Observed', value: '5 min', detail: 'fixture timestamp only', tone: 'gold' },
+      { label: 'Comparable', value: 'NO', detail: 'source semantics differ', tone: 'pink' },
+      { label: 'Export', value: 'SUPPRESSED', detail: 'restricted in this lane', tone: 'green' },
+    ],
+  },
+  ASSISTANT: {
+    kicker: 'RESEARCH ASSISTANT · CITATIONS', title: 'Research assistant',
+    subtitle: 'A bounded research surface that answers from evidence, names uncertainty and refuses to invent missing values.', heroLabel: 'ASK NEXUS', heroValue: 'CITED', heroDetail: 'source IDs · model IDs · limitations', chart: 'table',
+    rows: [
+      { label: 'Evidence', value: 'Receipt verified', detail: 'synthetic fixture record', tone: 'green' },
+      { label: 'Discrepancy', value: 'field-r1 → r2', detail: 'revision difference explained', tone: 'gold' },
+      { label: 'Missing', value: 'NOT_AVAILABLE', detail: 'no replacement probability', tone: 'pink' },
+      { label: 'Notes', value: 'Approval required', detail: 'local journal only', tone: 'cyan' },
+    ],
+  },
+  NOTEBOOK: {
+    kicker: 'NOTEBOOK · LOCAL MEMORY', title: 'Notebook',
+    subtitle: 'Keep approved research notes attached to the exact evidence that supports them.', heroLabel: 'LOCAL JOURNAL', heroValue: '04', heroDetail: 'approved notes · source-linked', chart: 'timeline',
+    rows: [
+      { label: 'Field revision', value: 'field-r2', detail: 'observed 14:00 AEDT', tone: 'cyan' },
+      { label: 'Track context', value: 'Good 4', detail: 'fixture only', tone: 'gold' },
+      { label: 'Edge case', value: '3 scratched', detail: 'retained in record', tone: 'pink' },
+      { label: 'Approval', value: 'Owner only', detail: 'no hidden promotion path', tone: 'green' },
+    ],
+  },
+  WATCHLISTS: {
+    kicker: 'WATCHLISTS · NO AUTO-ACTION', title: 'Watchlists & alerts',
+    subtitle: 'Monitor changes to canonical records without confusing a notification with a forecast or wager signal.', heroLabel: 'WATCH RADAR', heroValue: '03', heroDetail: 'local lists · read-only changes', chart: 'grid',
+    rows: [
+      { label: 'Coastal Strike', value: 'Field changed', detail: 'revision r2 detected', tone: 'green' },
+      { label: 'Randwick R3', value: 'Receipt current', detail: 'synthetic source heartbeat', tone: 'cyan' },
+      { label: 'Eagle Farm', value: 'Needs review', detail: 'missing specialty input', tone: 'gold' },
+      { label: 'Auto-action', value: 'DISABLED', detail: 'no wagering or staking', tone: 'pink' },
+    ],
+  },
+  REPORTS_SETTINGS: {
+    kicker: 'REPORTS & ASSURANCE · OWNER CONTROL', title: 'Reports & settings',
+    subtitle: 'Release evidence, access scope and export boundaries in one calm assurance deck.', heroLabel: 'ASSURANCE', heroValue: 'PASS', heroDetail: 'synthetic-only release · owner-scoped', chart: 'table',
+    rows: [
+      { label: 'Auth0', value: 'Owner allowlist', detail: 'fail-closed access', tone: 'green' },
+      { label: 'Provider lane', value: 'Read-only', detail: 'no order or wager scope', tone: 'cyan' },
+      { label: 'Data rights', value: 'Fixture only', detail: 'rights pending for assets', tone: 'gold' },
+      { label: 'Exports', value: 'Restricted', detail: 'audit boundary enforced', tone: 'pink' },
+    ],
+  },
+};
+
+type TacticalRunner = { number: number; name: string; group: 'LEAD' | 'ON PACE' | 'MIDFIELD' | 'BACKMARKERS'; color: string; asset: string; factor: string; detail: string; base: [number, number]; contested: [number, number] };
+
+const tacticalRunners: TacticalRunner[] = [
+  { number: 1, name: 'Coastal Strike', group: 'LEAD', color: '#35e2a0', asset: '/tactical-track-runners/emerald-gold.png', factor: 'Draw advantage · Barrier 3', detail: 'High early speed · likely to cross over early', base: [78, 60], contested: [82, 58] },
+  { number: 2, name: 'Northern Legend', group: 'LEAD', color: '#35e2a0', asset: '/tactical-track-runners/navy-cyan.png', factor: 'Consistent early profile', detail: 'Tracks the speed and settles just off the rail', base: [73, 69], contested: [74, 69] },
+  { number: 3, name: 'Maple Ridge', group: 'ON PACE', color: '#f0b638', asset: '/tactical-track-runners/crimson-ivory.png', factor: 'Forward intent · synthetic', detail: 'Contesting the first line in the scenario', base: [67, 58], contested: [76, 73] },
+  { number: 4, name: 'Ocean Circuit', group: 'MIDFIELD', color: '#78b9ef', asset: '/tactical-track-runners/navy-cyan.png', factor: 'Balanced fictional profile', detail: 'Settles behind the first pair', base: [55, 61], contested: [58, 64] },
+  { number: 5, name: 'Desert King', group: 'ON PACE', color: '#f0b638', asset: '/tactical-track-runners/crimson-ivory.png', factor: 'Distance fit · illustrative', detail: 'Shares the contested lead band', base: [63, 72], contested: [70, 58] },
+  { number: 6, name: 'Royal Avenue', group: 'MIDFIELD', color: '#78b9ef', asset: '/tactical-track-runners/emerald-gold.png', factor: 'Pace map only', detail: 'Midfield runner with room to improve', base: [52, 72], contested: [53, 73] },
+  { number: 7, name: 'Eagle Farm', group: 'BACKMARKERS', color: '#fb4b78', asset: '/tactical-track-runners/crimson-ivory.png', factor: 'Backmarker band', detail: 'Settles toward the rear of the field', base: [36, 59], contested: [34, 61] },
+  { number: 8, name: 'Doodmen', group: 'BACKMARKERS', color: '#fb4b78', asset: '/tactical-track-runners/navy-cyan.png', factor: 'Synthetic fixture', detail: 'Rear group · no precise trajectory claimed', base: [30, 72], contested: [28, 74] },
+  { number: 9, name: 'Rising Sun', group: 'BACKMARKERS', color: '#fb4b78', asset: '/tactical-track-runners/emerald-gold.png', factor: 'Synthetic fixture', detail: 'Rear group · no precise trajectory claimed', base: [25, 67], contested: [23, 68] },
+  { number: 10, name: 'Midnight Storm', group: 'MIDFIELD', color: '#78b9ef', asset: '/tactical-track-runners/navy-cyan.png', factor: 'Midfield settling band', detail: 'Synthetic fixture · no forecast claim', base: [47, 67], contested: [47, 70] },
+  { number: 11, name: 'Silver Vale', group: 'BACKMARKERS', color: '#fb4b78', asset: '/tactical-track-runners/crimson-ivory.png', factor: 'Synthetic fixture', detail: 'Rear group · no precise trajectory claimed', base: [20, 77], contested: [18, 77] },
+];
 
 const statuses: Array<{ value: Status | 'ALL'; label: string }> = [
   { value: 'ALL', label: 'All states' },
@@ -475,6 +616,8 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
     <main className="shell nexus-shell">
       <header className="topbar">
         <div className="brand-lockup"><NexusMark /><div><p className="eyebrow">RACING INTELLIGENCE LAB</p><div className="brand-wordmark">NEXUS <span>/ RESEARCH OS</span></div><h1>{activeWorkspace === 'COMMAND' ? 'Today / Command Centre' : activeWorkspaceLabel}</h1></div></div>
+        <nav className="product-nav" aria-label="Primary product navigation"><span className="product-nav-active">Races</span><span>Analytics</span><span>Watchlist</span><span>Markets</span><span>Reports</span></nav>
+        <div className="search-display" aria-label="Search scope"><span>⌕</span> Search races, horses, trainers…</div>
         <div className="topbar-meta"><div className="session-chip"><span className="session-pulse" aria-hidden="true" /> PRIVATE OWNER WORKSPACE</div><div className="header-badges">{dataMode === 'LICENSED' ? <><span className="mode-badge">LIVE READ-ONLY</span><span className="mode-badge subdued">LICENSED</span></> : dataMode === 'LOADING' ? <><span className="mode-badge subdued">LIVE CHECK</span><span className="mode-badge subdued">API CHECKING</span></> : <><span className="mode-badge">DEMO ONLY</span><span className="mode-badge subdued">SYNTHETIC_ONLY</span></>}{apiStatus !== 'idle' && dataMode !== 'LOADING' && <span className="mode-badge subdued">API {apiStatus.toUpperCase()}</span>}</div></div>
       </header>
       <nav className="workspace-nav" aria-label="Research workspaces">
@@ -488,6 +631,7 @@ export default function App({ apiRequest }: { apiRequest?: NexusApiRequest } = {
         <h2 id="intro-title">{dataMode === 'LICENSED' ? 'Provider-backed meetings, one honest evidence view.' : 'Three racing codes, one honest evidence view.'}</h2>
         <p>{dataMode === 'LICENSED' ? 'Browse canonical meetings captured from the licensed read-only provider lane. Forecasts, market views and race detail remain unavailable until their own evidence tickets pass.' : 'Browse the fictional fixture pack by code and data state. Every card is explicitly labelled; this screen never presents synthetic records as live racing or validated advice.'}</p>
       </section>
+      {dataMode === 'SYNTHETIC_ONLY' && <CommandCinematicHero />}
       <section className="command-panel" aria-label="Command centre filters">
         <div className="filter-group"><span className="filter-label">Code</span><div className="filter-row" role="group" aria-label="Filter by racing code">
           {codes.map((code) => <button aria-pressed={selectedCode === code.value} className={`filter-button ${selectedCode === code.value ? 'selected' : ''}`} key={code.value} onClick={() => setSelectedCode(code.value)} type="button">{code.label}</button>)}
@@ -546,8 +690,36 @@ function WorkspaceBoundary({ workspace, dataMode, onReturn }: { workspace: Works
   return <section className={`workspace-panel workspace-preview workspace-${workspace.toLowerCase()}`} aria-label={`${metadata.label} workspace`}>
     <div className="workspace-heading"><div><p className="eyebrow">WORKSPACE ATLAS · {dataMode === 'LICENSED' ? 'LICENSED READ-ONLY' : 'SYNTHETIC DEMO'}</p><h2>{preview.title}</h2><p className="workspace-subtitle">{preview.description}</p></div><span className={`mode-badge ${dataMode === 'LICENSED' ? 'warning-badge' : 'subdued'}`}>{dataMode === 'LICENSED' ? 'NOT_AVAILABLE' : preview.signal}</span></div>
     <div className="workspace-context" aria-label="Shared research context"><div><span>Mode</span><strong>{dataMode}</strong></div><div><span>Scope</span><strong>{dataMode === 'LICENSED' ? 'READ-ONLY' : 'RESEARCH DEMO'}</strong></div><div><span>Evidence</span><strong>{dataMode === 'LICENSED' ? 'CANONICAL ONLY' : 'FIXTURE LABELLED'}</strong></div><div><span>Wagering</span><strong>DISABLED</strong></div></div>
-    {dataMode === 'SYNTHETIC_ONLY' ? workspace === 'EVIDENCE' ? <EvidenceWorkspacePreview /> : workspace === 'TACTICAL' ? <TacticalWorkspacePreview /> : <><div className="workspace-preview-grid"><div className="preview-visual"><div className="preview-visual-grid" /><span className="preview-visual-kicker">{preview.eyebrow}</span><strong>{preview.signal}</strong><small>Shared context / field-r2 / source labelled</small></div><div className="preview-metric-list">{preview.metrics.map((metric, index) => <div key={metric}><span>0{index + 1}</span><strong>{metric}</strong><small>{index === 0 ? 'Current workspace lens' : index === 1 ? 'Evidence attached' : 'No value inferred'}</small></div>)}</div></div><div className="state-callout"><strong>Research preview · synthetic only.</strong> {liveMessage}</div></> : <div className="state-callout"><strong>{metadata.label} is bounded in this release.</strong> {liveMessage}</div>}
+    {dataMode === 'SYNTHETIC_ONLY' ? <CinematicWorkspaceSurface workspace={workspace} /> : <div className="state-callout"><strong>{metadata.label} is bounded in this release.</strong> {liveMessage}</div>}
     <button className="secondary-action" onClick={onReturn} type="button">Return to Command Centre</button>
+  </section>;
+}
+
+function CommandCinematicHero() {
+  return <section className="command-cinematic-hero" aria-label="Synthetic command centre visual summary">
+      <div className="command-hero-image">
+      <div className="command-hero-grid" /><div className="command-hero-horses" aria-hidden="true"><img src="/tactical-track-runners/emerald-gold.png" alt="" /><img src="/tactical-track-runners/crimson-ivory.png" alt="" /><img src="/tactical-track-runners/navy-cyan.png" alt="" /></div>
+      <div className="command-hero-copy"><p className="eyebrow">FICTIONAL DAYBOOK · SYNTHETIC ONLY</p><h3>Race intelligence, with evidence attached.</h3><p>Navigate the day through meetings, field revisions and research surfaces without confusing a visual cue for a live claim.</p><span className="hero-stamp">DUAL ATMOSPHERE / RESEARCH MODE</span></div>
+    </div>
+    <div className="command-hero-aside">
+      <div className="hero-stat-grid"><div><strong>44</strong><span>fixture races</span></div><div><strong>08</strong><span>meetings indexed</span></div><div><strong>12</strong><span>evidence links</span></div><div><strong>06</strong><span>watch alerts</span></div></div>
+      <div className="hero-insights"><p className="eyebrow">KEY INSIGHTS</p><div><i className="insight-dot insight-green" /><span><strong>Receipt current</strong>Field-r2 is attached to the synthetic race view.</span></div><div><i className="insight-dot insight-gold" /><span><strong>Track update</strong>Good 4 context remains illustrative.</span></div><div><i className="insight-dot insight-cyan" /><span><strong>Research only</strong>No wagering, export or forecast claim.</span></div></div>
+    </div>
+  </section>;
+}
+
+function CinematicWorkspaceSurface({ workspace }: { workspace: WorkspaceId }) {
+  if (workspace === 'TACTICAL') return <TacticalTrackSurface />;
+  if (workspace === 'EVIDENCE') return <EvidenceWorkspacePreview />;
+  const definition = cinematicSurfaces[workspace] ?? cinematicSurfaces.RACE!;
+  return <section className={`cinematic-surface surface-${workspace.toLowerCase()}`} aria-label={`${definition.title} visual surface`}>
+    <div className="cinematic-surface-header"><div><p className="eyebrow">{definition.kicker}</p><h3>{definition.title}</h3><p>{definition.subtitle}</p></div><span className="surface-stamp">SYNTHETIC / ILLUSTRATIVE</span></div>
+    <div className="cinematic-surface-grid">
+      <div className="surface-hero"><div className="surface-hero-backdrop" /><div className="surface-hero-grid" /><div className="surface-hero-copy"><span>{definition.heroLabel}</span><strong>{definition.heroValue}</strong><small>{definition.heroDetail}</small></div><div className="surface-axis"><span>START</span><span>FIELD-R2</span><span>FINISH →</span></div></div>
+      <div className="surface-readout"><p className="eyebrow">FIELD SIGNALS</p>{definition.rows.map((row) => <div className="surface-readout-row" key={row.label}><i className={`readout-dot readout-${row.tone ?? 'cyan'}`} /><span><strong>{row.label}</strong><b>{row.value}</b><small>{row.detail}</small></span></div>)}</div>
+    </div>
+    <div className={`surface-analysis surface-analysis-${definition.chart}`}><div className="surface-analysis-heading"><div><p className="eyebrow">ANALYTICAL VIEW</p><h4>{definition.chart === 'bars' ? 'Signal profile' : definition.chart === 'timeline' ? 'Dayline / revision flow' : definition.chart === 'table' ? 'Evidence-linked rows' : 'Context matrix'}</h4></div><span>NO VALUE INFERRED</span></div>{definition.chart === 'bars' && <div className="signal-bars">{definition.rows.map((row, index) => <div key={row.label}><span>{row.label}</span><i style={{ width: `${36 + index * 17}%` }} /><b>{row.value}</b></div>)}</div>}{definition.chart === 'timeline' && <div className="surface-timeline">{definition.rows.map((row, index) => <div key={row.label} style={{ '--timeline-x': `${16 + index * 24}%` } as CSSProperties}><i className={`readout-dot readout-${row.tone ?? 'cyan'}`} /><span>{row.label}</span><small>{row.value}</small></div>)}</div>}{definition.chart === 'table' && <div className="surface-data-table">{definition.rows.map((row) => <div key={row.label}><strong>{row.label}</strong><span>{row.value}</span><small>{row.detail}</small></div>)}</div>}{definition.chart === 'grid' && <div className="surface-matrix">{definition.rows.map((row, index) => <div key={row.label} className={`matrix-cell matrix-${row.tone ?? 'cyan'}`} style={{ '--matrix-order': index } as CSSProperties}><span>{row.label}</span><strong>{row.value}</strong><small>{row.detail}</small></div>)}</div>}</div>
+    <div className="state-callout"><strong>Research preview · synthetic only.</strong> This visual preserves the V7 information density and atmosphere while every racing value remains explicitly illustrative and source-labelled.</div>
   </section>;
 }
 
@@ -558,20 +730,29 @@ function EvidenceWorkspacePreview() {
     <p className="evidence-atlas-description">Evidence is append-only and source-labelled. Provenance, rights state, timestamps and limitations stay attached to every view.</p>
     <dl className="provenance-facts evidence-atlas-facts"><dt>Source receipt</dt><dd>synthetic://thoroughbred/race-001</dd><dt>First observed</dt><dd>15 Jan 2026, 14:00 AEDT</dd><dt>Published</dt><dd>15 Jan 2026, 13:50 AEDT</dd><dt>Rights</dt><dd>SYNTHETIC · fictional fixture</dd><dt>External transport</dt><dd>Disabled</dd><dt>Model claim</dt><dd>ILLUSTRATIVE_NOT_VALIDATED</dd></dl>
     <div className="not-live-callout"><strong>Not live:</strong> a receipt proves fixture provenance, not official racing status or source licensing.</div>
+    <div className="state-callout"><strong>Research preview · synthetic only.</strong> Provenance is rendered at full fidelity while the fixture remains explicitly non-live.</div>
   </div>;
 }
 
-function TacticalWorkspacePreview() {
-  const runners = [
-    { number: 1, name: 'Runner 1-1', tone: 'blue', note: 'front line' },
-    { number: 3, name: 'Runner 1-3', tone: 'cyan', note: 'tracking' },
-    { number: 4, name: 'Runner 1-4', tone: 'amber', note: 'reserve' },
-  ];
-  return <div className="tactical-atlas-preview">
-    <div className="tactical-visual"><div className="tactical-visual-grid" /><div className="tactical-visual-heading"><div><p className="eyebrow">SIDE-ON TACTICAL TRACK</p><strong>Race 1 · Fictional Maiden</strong></div><span>FIELD-R2</span></div><div className="tactical-lanes">{runners.map((runner, index) => <div className="tactical-lane" key={runner.number}><span className="lane-label">{index + 1}</span><div className="lane-line" /><span className={`runner-token runner-${runner.tone}`}>{runner.number}</span><small>{runner.name} · {runner.note}</small></div>)}</div><div className="tactical-finish">FINISH / NO PACE CLAIM</div></div>
-    <div className="tactical-readout"><p className="eyebrow">LINKED PACE MAP</p><h3>Position is contextual, not predictive.</h3><p>Verified early-speed and sectional inputs are absent from this fixture. The visual preserves scale and field identity without inferring a ranking.</p><div className="tactical-readout-list"><span><i className="readout-dot readout-blue" />Observed field</span><span><i className="readout-dot readout-cyan" />Context link</span><span><i className="readout-dot readout-amber" />Evidence missing</span></div></div>
-    <div className="state-callout"><strong>Research preview · synthetic only.</strong> Tactical movement remains illustrative until code-specific evidence and visual-owner gates pass.</div>
-  </div>;
+function TacticalTrackSurface() {
+  const [scenario, setScenario] = useState<'base' | 'contested'>('base');
+  const [selectedRunner, setSelectedRunner] = useState(1);
+  const selected = tacticalRunners.find((runner) => runner.number === selectedRunner) ?? tacticalRunners[0];
+  const groupOrder: TacticalRunner['group'][] = ['LEAD', 'ON PACE', 'MIDFIELD', 'BACKMARKERS'];
+  const groupLabels: Record<TacticalRunner['group'], string> = { LEAD: 'LEADERS', 'ON PACE': 'ON PACE', MIDFIELD: 'MIDFIELD', BACKMARKERS: 'BACKMARKERS' };
+  return <section className="v7-tactical-surface" aria-label="Tactical Track V7 visual surface">
+    <div className="v7-tactical-header"><div><p className="eyebrow">SIDE-ON TACTICAL TRACK · EARLY SETTLING 0–400M</p><h3>Randwick R3 <span>· fictional thoroughbred fixture · 1200 m</span></h3><p>Independent synthetic runner layers over a side-on feasibility backdrop. Position is contextual, not predictive.</p></div><div className="tactical-badges"><span className="surface-stamp">SYNTHETIC / ILLUSTRATIVE</span><span className="surface-stamp subdued-stamp">RIGHTS: FEASIBILITY ONLY</span></div></div>
+    <div className="v7-tactical-tabs" role="tablist" aria-label="Tactical track views"><button className="active" type="button">Race intelligence</button><button type="button">Runners</button><button type="button">Pace map</button><button type="button">Scenario analysis</button><button type="button">Evidence</button></div>
+    <div className="v7-tactical-layout">
+      <div className="v7-track-card">
+        <div className="v7-track-card-head"><div><strong>Tactical Track View</strong><span> · settling bands</span><small>Independent runner layers · synthetic, runner-free backdrop</small></div><div className="tactical-scenarios" role="group" aria-label="Tactical scenario"><button className={scenario === 'base' ? 'selected' : ''} onClick={() => setScenario('base')} type="button">Base case</button><button className={scenario === 'contested' ? 'selected' : ''} onClick={() => setScenario('contested')} type="button">Contested lead</button></div></div>
+        <div className="v7-track-stage"><div className="track-atmosphere" /><div className="track-vignette" /><div className="track-synthetic-stamp">SYNTHETIC BACKDROP · GENERATED FEASIBILITY ASSET · RIGHTS PENDING</div><div className="track-lane-tags"><span className="track-band back">BACKMARKERS<small>4+ lengths</small></span><span className="track-band mid">MIDFIELD<small>2–4 lengths</small></span><span className="track-band pace">ON PACE<small>0.5–2 lengths</small></span><span className="track-band lead">LEAD<small>contesting / leading</small></span></div>{tacticalRunners.map((runner) => { const [left, top] = runner[scenario]; return <button aria-label={`Select runner ${runner.number} ${runner.name}`} className={`tactical-runner ${selectedRunner === runner.number ? 'selected' : ''}`} key={runner.number} onClick={() => setSelectedRunner(runner.number)} style={{ left: `${left}%`, top: `${top}%`, '--runner-color': runner.color } as CSSProperties} type="button"><span>{runner.number}</span><b className="tactical-runner-label">{selectedRunner === runner.number ? `${runner.number} · ${runner.name}` : ''}</b><img alt={`${runner.name} synthetic silks`} src={runner.asset} /></button>; })}<div className="track-axis"><span>START · 0m</span><span>200m</span><span>400m</span><span>FINISH →</span></div></div>
+        <div className="v7-runner-groups">{groupOrder.map((group) => <section key={group}><h4>{groupLabels[group]} ({tacticalRunners.filter((runner) => runner.group === group).length})</h4><ul>{tacticalRunners.filter((runner) => runner.group === group).map((runner) => <li key={runner.number}><button aria-label={`Select group runner ${runner.number}`} onClick={() => setSelectedRunner(runner.number)} type="button"><span style={{ '--runner-color': runner.color } as CSSProperties}>{runner.number}</span>{runner.name}</button></li>)}</ul></section>)}</div>
+      </div>
+      <aside className="v7-tactical-side"><section className="runner-detail-card"><div className="runner-detail-head"><div><span className="runner-number" style={{ '--runner-color': selected.color } as CSSProperties}>{selected.number}</span><div><strong>{selected.name}</strong><small>Fictional runner · {selected.group.toLowerCase()}</small></div></div><span className="runner-band" style={{ color: selected.color }}>{selected.group}</span></div><div className="runner-tabs"><button className="active" type="button">Overview</button><button type="button">Pace</button><button type="button">Form</button><button type="button">Evidence</button></div><div className="runner-metric"><label><span>Expected settling position</span><b>{selected.group}</b></label><div><i style={{ width: `${selected.group === 'LEAD' ? 88 : selected.group === 'ON PACE' ? 69 : selected.group === 'MIDFIELD' ? 46 : 22}%`, background: selected.color }} /></div></div><p className="runner-factor"><b>✦</b>{selected.factor}</p><p className="runner-factor"><b>◈</b>{selected.detail}</p><div className="runner-metric"><label><span>Model confidence</span><b>Illustrative only</b></label><div><i className="confidence" style={{ width: '52%' }} /></div></div></section><section className="v7-speed-map"><div className="speed-map-head"><div><p className="eyebrow">SPEED MAP · ANALYTICAL VIEW</p><strong>Linked field / {scenario === 'base' ? 'base case' : 'contested lead'}</strong></div><span>same synthetic data</span></div><div className="speed-map-grid">{groupOrder.map((group) => <div className={`speed-map-row speed-${group.toLowerCase().replace(' ', '-')}`} key={group}><b>{groupLabels[group]}</b>{tacticalRunners.filter((runner) => runner.group === group).map((runner) => <button aria-label={`Speed map runner ${runner.number}`} key={runner.number} onClick={() => setSelectedRunner(runner.number)} style={{ '--runner-color': runner.color, '--runner-left': `${runner[scenario][0]}%` } as CSSProperties} type="button" className={selectedRunner === runner.number ? 'selected' : ''}>{runner.number}</button>)}</div>)}</div><div className="speed-map-axis"><span>800m</span><span>600m</span><span>400m</span><span>200m</span><span>FINISH</span></div><p>Same synthetic field data as the track view; settling bands are illustrative.</p></section><div className="v7-quality-note"><strong>Quality gate · synthetic feasibility proof.</strong><br />Real artwork, live data, forecast claims and wagering remain outside this surface.</div></aside>
+    </div>
+    <div className="state-callout"><strong>Research preview · synthetic only.</strong> Tactical movement remains illustrative until code-specific evidence, asset rights and visual-owner gates pass.</div>
+  </section>;
 }
 
 function LiveIngestionStatusCard({ status }: { status: LiveIngestionHealth }) {
