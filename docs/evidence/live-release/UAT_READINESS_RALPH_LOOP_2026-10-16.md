@@ -29,7 +29,7 @@ expansion, or a production customer release.
 | UAT-006 | Verified public denial | `GET /v1/meetings` without a bearer token returned `401 Unauthorized` |
 | UAT-007 | Re-ran repository checks | 338 API tests passed; contract validation passed; Render blueprint validation passed; web checks/build/E2E already passed on the deployed commit |
 | UAT-008 | Created this handoff record | No tokens, credentials, raw provider payloads, or browser storage captured |
-| UAT-009 | Added owner-only Analysis Lab switch | Full V7 visual journey is available as deterministic synthetic fixtures; Live Evidence remains provider-backed and bounded |
+| UAT-009 | Added owner-only Analysis Lab switch | Commit `7132585`; Render deploy `dep-db8kcssv6mdc73e9rc70` is `live`; full V7 visual journey is available as deterministic synthetic fixtures while Live Evidence remains provider-backed and bounded |
 
 ## Owner UAT sequence
 
