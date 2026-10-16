@@ -175,7 +175,7 @@ must not be copied between environments or exposed in tickets.
 ### FE-007 — Replace target-day results probing with a pre-race form plan
 
 - **Priority:** P0
-- **Status:** READY
+- **Status:** PARTIAL / hosted acceptance-card path proven; whole-race form remains on-demand
 - **Depends on:** Existing PuntersEdge provider credentials and FE-005
 - **Scope:** Add explicit PuntersEdge pre-race operations instead of using the
   settled-results operation as the target-card enrichment path. Support the
@@ -325,7 +325,7 @@ must not be copied between environments or exposed in tickets.
 ### FE-015 — Run the target-card end-to-end acceptance for 17 October 2026
 
 - **Priority:** P0
-- **Status:** BLOCKED until FE-002 and at least FE-007 pass
+- **Status:** PARTIAL / target-card ingestion proven; full UAT remains gated by model/UI and provider coverage
 - **Depends on:** FE-002, FE-005, FE-007, FE-008, FE-011, FE-012, FE-014
 - **Scope:** Execute the bounded pre-race workflow for Randwick and Caulfield.
   The run must ingest real provider data, reconcile the fields, materialize an
@@ -398,15 +398,21 @@ not a completed enriched model.
 
 ## Ralph Loop implementation checkpoint
 
-- **Implemented locally:** FE-001 runtime-login parity, FE-003 Betfair metadata
-  whitelist/projection, FE-004 immutable provider-runner-metadata migration,
-  and the PuntersEdge acceptance-card request path in FE-007.
-- **Implemented locally but still requiring hosted evidence:** generic provider
-  runner metadata persistence for PuntersEdge/FormFav/Krok, acceptance-card
-  local-start parsing, and bounded enrichment planning.
-- **Still blocked externally:** FE-002 Betfair entitlement/HTTP 403, FE-010
-  FormFav HTTP 422, and FE-015 target-card UAT until at least one real
-  pre-race form/card path succeeds end to end.
+- **Implemented and proven in hosted staging:** FE-001 runtime-login parity,
+  FE-003 Betfair metadata whitelist/projection, FE-004 immutable
+  `provider_runner_metadata` persistence, and the PuntersEdge acceptance-card
+  path in FE-007. The 17 October 2026 run persisted 10 Randwick races / 142
+  runners and 10 Caulfield races / 129 runners with runner metadata for every
+  returned runner. Krok also persisted the same 20 venue/race cards and 9,740
+  quote rows in that run.
+- **Implemented and proven locally/hosted:** generic provider runner metadata
+  persistence, acceptance-card local-start parsing, and bounded workflow
+  execution. The GitHub Actions run completed successfully in 5m42s after the
+  workflow ceiling was raised from five to ten minutes.
+- **Still blocked externally:** FE-002 Betfair entitlement/HTTP 403 and FE-010
+  FormFav HTTP 422. These are provider account/contract gates, not synthetic
+  fallbacks or application errors.
 - **Not yet claimed:** FE-008/FE-012 complete model-ready feature
-  materialisation, FE-013 validated probabilities, and FE-016 historical model
-  evidence. More provider fields alone do not satisfy those gates.
+  materialisation, FE-013 validated probabilities, FE-014 finished analysis
+  UI wiring, and FE-016 historical model evidence. More provider fields alone
+  do not satisfy those gates.
