@@ -67,14 +67,13 @@ def run_live_enrichment(*, date: str | None = None, venues: tuple[str, ...] = ()
     plans: tuple[tuple[str, str, str | None], ...] = (
         ("formfav", "LIST_MEETINGS", None),
         ("punters-edge", "GET_RESULTS", None),
-        ("krok-odds", "LIST_MEETINGS", None),
-        ("krok-odds", "GET_MARKETS", None),
     )
     if venues:
         plans += tuple(("formfav", "GET_RACES", venue) for venue in venues)
+        plans += tuple(("krok-odds", operation, venue) for operation in ("LIST_MEETINGS", "GET_MARKETS") for venue in venues)
         plans += tuple(("betfair-exchange", "GET_MARKETS", venue) for venue in venues)
     else:
-        plans += (("betfair-exchange", "GET_MARKETS", None),)
+        plans += (("krok-odds", "LIST_MEETINGS", None), ("krok-odds", "GET_MARKETS", None), ("betfair-exchange", "GET_MARKETS", None))
 
     try:
         for provider, operation, venue in plans:
