@@ -137,7 +137,8 @@ def _project_krok_quotes(connection: Connection, envelope: RawEnvelope, races: t
 
     by_race = {(race.venue.casefold(), race.race_number): race for race in races}
     receipt_id = f"receipt:{envelope.envelope_id}"
-    quote_count = 0
+    mapping_rows: list[dict[str, object]] = []
+    quote_rows: list[dict[str, object]] = []
     for item in _race_items(envelope.payload):
         venue = _text(_first(item, "venue", "track", "trackName"), "venue")
         race_number = _positive_int(_first(item, "race_number", "raceNumber", "raceNo", "number"), "race_number")
@@ -172,17 +173,7 @@ def _project_krok_quotes(connection: Connection, envelope: RawEnvelope, races: t
                     "market_id": market_id,
                     "selection_id": selection_id,
                 }
-                connection.execute(
-                    text(
-                        """
-                        INSERT INTO market_selection_mappings
-                            (mapping_id, code, race_id, field_revision, entry_id, market_source, market_id, selection_id)
-                        VALUES (:mapping_id, :code, :race_id, :field_revision, :entry_id, :market_source, :market_id, :selection_id)
-                        ON CONFLICT (mapping_id) DO NOTHING
-                        """
-                    ),
-                    mapping,
-                )
+                mapping_rows.append(mapping)
                 for side, raw_price in (("BACK", _first(raw_odds_row, "win", "best_win")), ("LAY", _first(raw_odds_row, "lay"))):
                     if raw_price in (None, ""):
                         continue
@@ -206,28 +197,41 @@ def _project_krok_quotes(connection: Connection, envelope: RawEnvelope, races: t
                     }).quote
                     if quote is None:
                         continue
-                    connection.execute(
-                        text(
-                            """
-                            INSERT INTO market_quotes (
-                                quote_id, code, race_id, field_revision, entry_id,
-                                market_source, market_id, selection_id, market_type,
-                                price_type, quote_side, price, source_timestamp, retrieved_at,
-                                in_play, size, liquidity, entitlement_reference,
-                                source_receipt_id, data_mode, rights_state, price_phase, runner_status
-                            ) VALUES (
-                                :quote_id, :code, :race_id, :field_revision, :entry_id,
-                                :market_source, :market_id, :selection_id, :market_type,
-                                :price_type, :quote_side, :price, :source_timestamp, :retrieved_at,
-                                :in_play, :size, :liquidity, :entitlement_reference,
-                                :source_receipt_id, :data_mode, :rights_state, :price_phase, :runner_status
-                            ) ON CONFLICT (quote_id) DO NOTHING
-                            """
-                        ),
-                        {**quote.model_dump(exclude={"mapping"}), **quote.mapping.model_dump()},
-                    )
-                    quote_count += 1
-    return quote_count
+                    quote_rows.append({**quote.model_dump(exclude={"mapping"}), **quote.mapping.model_dump()})
+    if mapping_rows:
+        connection.execute(
+            text(
+                """
+                INSERT INTO market_selection_mappings
+                    (mapping_id, code, race_id, field_revision, entry_id, market_source, market_id, selection_id)
+                VALUES (:mapping_id, :code, :race_id, :field_revision, :entry_id, :market_source, :market_id, :selection_id)
+                ON CONFLICT (mapping_id) DO NOTHING
+                """
+            ),
+            mapping_rows,
+        )
+    if quote_rows:
+        connection.execute(
+            text(
+                """
+                INSERT INTO market_quotes (
+                    quote_id, code, race_id, field_revision, entry_id,
+                    market_source, market_id, selection_id, market_type,
+                    price_type, quote_side, price, source_timestamp, retrieved_at,
+                    in_play, size, liquidity, entitlement_reference,
+                    source_receipt_id, data_mode, rights_state, price_phase, runner_status
+                ) VALUES (
+                    :quote_id, :code, :race_id, :field_revision, :entry_id,
+                    :market_source, :market_id, :selection_id, :market_type,
+                    :price_type, :quote_side, :price, :source_timestamp, :retrieved_at,
+                    :in_play, :size, :liquidity, :entitlement_reference,
+                    :source_receipt_id, :data_mode, :rights_state, :price_phase, :runner_status
+                ) ON CONFLICT (quote_id) DO NOTHING
+                """
+            ),
+            quote_rows,
+        )
+    return len(quote_rows)
 
 
 def _parse_generic(envelope: RawEnvelope) -> tuple[ProjectedRace, ...]:
