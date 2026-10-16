@@ -44,13 +44,34 @@ conflicts.
 - Betfair catalogue projection now creates exact market-selection mappings.
 - Betfair book captures can be projected into the append-only `market_quotes`
   table with quarantine for unmapped selections.
+- Krok card odds are now reconciled to exact runner mappings and inserted in
+  bounded batches, preserving BACK/LAY semantics without synthetic prices.
 - Render now declares non-secret approval configuration fields for all four
   providers while keeping every provider disabled by default.
 
+## Current acceptance evidence
+
+The bounded workflow run for `2026-10-17` completed successfully on commit
+`889de24`:
+
+- Krok Randwick: 10 races, 142 runners, 4,143 approved BACK quotes.
+- Krok Caulfield: 10 races, 129 runners, 3,936 approved BACK quotes.
+- Neon canonical store: 20 target races, 259 target entries, 8,079
+  `KROK_ODDS` quotes, all with exact market/selection mappings.
+- The hosted API is `LICENSED`, PostgreSQL-backed, externally connected and
+  wagering-disabled; model status remains `NOT_TRAINED`.
+
+FormFav remains blocked by upstream HTTP 422 on the two target card requests,
+despite the documented AU gallops request shape. Betfair remains blocked by
+upstream HTTP 403, so exchange prices and liquidity are not represented as if
+they were available. PuntersEdge responds successfully but returns no
+canonical target-card projection for this future date.
+
 ## Remaining activation gates
 
-1. Provider-specific approval records and enabled flags must be configured in
-   Render for the operations actually permitted by each account.
+1. Resolve the FormFav HTTP 422 contract/account issue and the Betfair HTTP
+   403 application-key/session entitlement issue, then rerun the bounded
+   target-card workflow.
 2. A real provider response must pass the normaliser and reconciliation tests.
 3. The card/form pipeline must be populated before a combined model can claim
    a probability; a single target-day card is UAT data, not a training set.
