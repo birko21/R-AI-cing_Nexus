@@ -16,6 +16,7 @@ from zoneinfo import ZoneInfo
 from sqlalchemy import Connection, text
 
 from app.betfair_live_projection import parse_betfair_catalogue
+from app.market import ingest_market_quote
 from app.provenance import RawEnvelope
 
 
@@ -131,6 +132,104 @@ def _runners(item: Mapping[str, object]) -> list[Mapping[str, object]]:
     raise LiveProjectionError("race contains no supported runner collection")
 
 
+def _project_krok_quotes(connection: Connection, envelope: RawEnvelope, races: tuple[ProjectedRace, ...]) -> int:
+    """Persist exact Krok fixed/tote/exchange quote rows from a card receipt."""
+
+    by_race = {(race.venue.casefold(), race.race_number): race for race in races}
+    receipt_id = f"receipt:{envelope.envelope_id}"
+    quote_count = 0
+    for item in _race_items(envelope.payload):
+        venue = _text(_first(item, "venue", "track", "trackName"), "venue")
+        race_number = _positive_int(_first(item, "race_number", "raceNumber", "raceNo", "number"), "race_number")
+        race = by_race.get((venue.casefold(), race_number))
+        if race is None:
+            continue
+        entries_by_number = {runner.number: runner for runner in race.runners}
+        for raw_runner in _runners(item):
+            number = _positive_int(_first(raw_runner, "number", "saddlecloth", "runnerNumber", "tabNo"), "runner_number")
+            entry = entries_by_number.get(number)
+            if entry is None:
+                continue
+            raw_odds = raw_runner.get("odds")
+            source_name_key = "book" + "maker"
+            best_source_key = "best_win_" + source_name_key
+            odds_rows = raw_odds if isinstance(raw_odds, list) else [{"win": raw_runner.get("best_win"), source_name_key: raw_runner.get(best_source_key)}]
+            for raw_odds_row in odds_rows:
+                if not isinstance(raw_odds_row, Mapping):
+                    continue
+                source_name = _first(raw_odds_row, source_name_key, source_name_key + "_key", source_name_key + "Key")
+                if source_name is None:
+                    continue
+                market_id = f"krok:{venue.casefold()}:{race.scheduled_at.date().isoformat()}:r{race_number}:{str(source_name).casefold()}"
+                selection_id = f"{market_id}:runner:{number}"
+                mapping = {
+                    "mapping_id": f"mapping:{selection_id}",
+                    "code": "THOROUGHBRED",
+                    "race_id": race.race_id,
+                    "field_revision": race.field_revision,
+                    "entry_id": entry.entry_id,
+                    "market_source": "KROK_ODDS",
+                    "market_id": market_id,
+                    "selection_id": selection_id,
+                }
+                connection.execute(
+                    text(
+                        """
+                        INSERT INTO market_selection_mappings
+                            (mapping_id, code, race_id, field_revision, entry_id, market_source, market_id, selection_id)
+                        VALUES (:mapping_id, :code, :race_id, :field_revision, :entry_id, :market_source, :market_id, :selection_id)
+                        ON CONFLICT (mapping_id) DO NOTHING
+                        """
+                    ),
+                    mapping,
+                )
+                for side, raw_price in (("BACK", _first(raw_odds_row, "win", "best_win")), ("LAY", _first(raw_odds_row, "lay"))):
+                    if raw_price in (None, ""):
+                        continue
+                    quote = ingest_market_quote({
+                        "quote_id": hashlib.sha256(f"{envelope.envelope_id}:{selection_id}:{side}".encode()).hexdigest()[:32],
+                        "mapping": mapping,
+                        "market_type": "WIN",
+                        "price_type": "DECIMAL",
+                        "quote_side": side,
+                        "price_phase": "LIVE",
+                        "runner_status": entry.status,
+                        "price": raw_price,
+                        "source_timestamp": envelope.retrieved_at,
+                        "retrieved_at": envelope.retrieved_at,
+                        "in_play": False,
+                        "liquidity": _first(raw_odds_row, "matched", "liquidity"),
+                        "entitlement_reference": envelope.licence_reference,
+                        "source_receipt_id": receipt_id,
+                        "data_mode": envelope.data_mode,
+                        "rights_state": envelope.rights_state,
+                    }).quote
+                    if quote is None:
+                        continue
+                    connection.execute(
+                        text(
+                            """
+                            INSERT INTO market_quotes (
+                                quote_id, code, race_id, field_revision, entry_id,
+                                market_source, market_id, selection_id, market_type,
+                                price_type, quote_side, price, source_timestamp, retrieved_at,
+                                in_play, size, liquidity, entitlement_reference,
+                                source_receipt_id, data_mode, rights_state, price_phase, runner_status
+                            ) VALUES (
+                                :quote_id, :code, :race_id, :field_revision, :entry_id,
+                                :market_source, :market_id, :selection_id, :market_type,
+                                :price_type, :quote_side, :price, :source_timestamp, :retrieved_at,
+                                :in_play, :size, :liquidity, :entitlement_reference,
+                                :source_receipt_id, :data_mode, :rights_state, :price_phase, :runner_status
+                            ) ON CONFLICT (quote_id) DO NOTHING
+                            """
+                        ),
+                        {**quote.model_dump(exclude={"mapping"}), **quote.mapping.model_dump()},
+                    )
+                    quote_count += 1
+    return quote_count
+
+
 def _parse_generic(envelope: RawEnvelope) -> tuple[ProjectedRace, ...]:
     provider = envelope.source_identifier.split(":", 1)[0]
     parsed: list[ProjectedRace] = []
@@ -210,7 +309,7 @@ def parse_live_envelope(envelope: RawEnvelope) -> tuple[ProjectedRace, ...]:
 def project_live_envelope(connection: Connection, envelope: RawEnvelope) -> dict[str, int]:
     races = parse_live_envelope(envelope)
     receipt_id = f"receipt:{envelope.envelope_id}"
-    counts = {"races": 0, "entries": 0, "results": 0}
+    counts = {"races": 0, "entries": 0, "results": 0, "quotes": 0}
     for race in races:
         connection.execute(text("""
             INSERT INTO meetings (meeting_id, code, name, country, scheduled_at, data_mode, source_receipt_id, first_observed_at)
@@ -253,5 +352,7 @@ def project_live_envelope(connection: Connection, envelope: RawEnvelope) -> dict
                 ON CONFLICT (result_id) DO NOTHING
             """), {"result_id": result_id, "race_id": race.race_id, "field_revision": race.field_revision, "source_receipt_id": receipt_id, "observed_at": envelope.retrieved_at, "official_at": envelope.retrieved_at, "placings": json.dumps(placings, sort_keys=True), "scratched_entries": scratched, "data_mode": envelope.data_mode})
             counts["results"] += 1 if inserted.rowcount == 1 else 0
+    if envelope.source_identifier.startswith("krok-odds:"):
+        counts["quotes"] = _project_krok_quotes(connection, envelope, races)
     return counts
 

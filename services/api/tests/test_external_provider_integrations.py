@@ -153,6 +153,16 @@ def test_krok_uses_race_type_and_expands_racing_market_lines() -> None:
     assert transport.calls[2]["url"].endswith("/api/v1/racing/results/2026-10-16")
 
 
+def test_formfav_uses_documented_australian_gallops_parameters() -> None:
+    transport = FakeTransport()
+    adapter = build_disabled_provider_adapters()["formfav"]
+    active = adapter.__class__(adapter.asset, transport=transport, credential_resolver=lambda: "test-only-secret")
+    active.fetch("GET_RACES", code="THOROUGHBRED", date="2026-10-17", venue="Randwick", approval=approval("formfav", "GET_RACES"))
+    assert transport.calls[0]["params"]["race_code"] == "gallops"
+    assert transport.calls[0]["params"]["country"] == "au"
+    assert "code" not in transport.calls[0]["params"]
+
+
 def test_http_transport_normalizes_top_level_results_array() -> None:
     class Response:
         status_code = 200

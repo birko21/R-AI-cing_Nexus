@@ -349,6 +349,10 @@ class GatedReadOnlyProviderAdapter:
             if operation == "LIST_MEETINGS":
                 params["full"] = "1"
                 params["country"] = "AU"
+        elif provider_id == "formfav":
+            # FormFav's card API uses the sibling adapter's documented AU
+            # gallops vocabulary rather than the Nexus racing-code token.
+            params = {"race_code": "gallops", "country": "au"}
         else:
             params = {"code": code}
         for key, value in (("date", date), ("venue", venue), ("race", race), ("cursor", cursor), ("limit", page_size)):
