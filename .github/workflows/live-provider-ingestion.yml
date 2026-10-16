@@ -24,7 +24,10 @@ concurrency:
 jobs:
   ingest:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    # The endpoint performs bounded provider reads plus transactional
+    # projection. Ten minutes keeps the workflow bounded while allowing a
+    # two-venue target card to complete on a cold Render instance.
+    timeout-minutes: 10
     steps:
       - name: Trigger one bounded read-only ingestion
         env:
@@ -39,6 +42,7 @@ jobs:
           test -n "$TRIGGER_TOKEN"
           BODY=$(jq -n --arg date "$TARGET_DATE" --arg venues "$TARGET_VENUES" '{date: (if $date == "" then null else $date end), venues: ($venues | split(",") | map(select(length > 0)))}')
           curl --fail-with-body --silent --show-error \
+            --max-time 540 \
             --request POST "$INGESTION_URL/internal/live-enrichment/run" \
             --header "Authorization: Bearer $TRIGGER_TOKEN" \
             --header "Content-Type: application/json" \
