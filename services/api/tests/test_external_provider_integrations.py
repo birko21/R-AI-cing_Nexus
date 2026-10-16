@@ -205,6 +205,52 @@ def test_betfair_adapter_uses_read_only_json_rpc_and_never_post_settlement_sp_as
     assert "starting_price" not in body["params"]
 
 
+def test_betfair_runtime_login_matches_the_long_straight_pattern_and_refreshes_once() -> None:
+    class RuntimeBetfairTransport:
+        def __init__(self) -> None:
+            self.calls: list[dict[str, object]] = []
+            self.login_count = 0
+            self.expire_first_api_token = True
+
+        def request(self, **kwargs: object) -> TransportResponse:
+            self.calls.append(kwargs)
+            if kwargs["url"] == "https://identitysso.betfair.com/api/login":
+                self.login_count += 1
+                return TransportResponse(200, {"token": f"runtime-session-{self.login_count}"}, NOW, NOW, "login")
+            if self.expire_first_api_token:
+                self.expire_first_api_token = False
+                raise ProviderActivationError("provider returned HTTP 401")
+            return TransportResponse(200, {"result": []}, NOW, NOW, "catalogue")
+
+    transport = RuntimeBetfairTransport()
+    asset = build_existing_provider_assets()["betfair-exchange"]
+    adapter = build_disabled_provider_adapters()["betfair-exchange"].__class__(
+        asset,
+        transport=transport,
+        credential_resolver=lambda: {"app_key": "test-only-app", "username": "test-only-user", "password": "test-only-password"},
+    )
+
+    page = adapter.fetch(
+        "GET_MARKETS", code="THOROUGHBRED", date="2026-10-17", venue="Randwick",
+        approval=approval("betfair-exchange", "GET_MARKETS"),
+    )
+
+    assert len(page.records) == 1
+    assert transport.login_count == 2
+    assert transport.calls[0]["form_body"] == {"username": "test-only-user", "password": "test-only-password"}
+    assert transport.calls[1]["headers"]["X-Authentication"] == "runtime-session-1"
+    assert transport.calls[3]["headers"]["X-Authentication"] == "runtime-session-2"
+    assert "test-only-password" not in page.records[0].model_dump_json()
+
+
+def test_punters_edge_acceptances_use_the_documented_date_and_venue_shape() -> None:
+    params = build_disabled_provider_adapters()["punters-edge"]._request_params(
+        "GET_ACCEPTANCES", provider_id="punters-edge", code="THOROUGHBRED",
+        date="2026-10-17", venue="Randwick", race=None,
+    )
+    assert params == {"date": "2026-10-17", "venue": "Randwick"}
+
+
 def test_diagnostic_session_requires_metadata_first_and_retains_only_aggregate_output() -> None:
     transport = FakeTransport()
     base = build_disabled_provider_adapters()["punters-edge"]

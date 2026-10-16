@@ -8,8 +8,8 @@ rejected instead of being guessed into the canonical tables.
 from __future__ import annotations
 
 from collections.abc import Mapping
-from dataclasses import dataclass
-from datetime import datetime, timezone
+from dataclasses import dataclass, field
+from datetime import datetime, time, timezone
 import hashlib
 import json
 from zoneinfo import ZoneInfo
@@ -32,6 +32,7 @@ class ProjectedRunner:
     number: int
     status: str
     position: int | None = None
+    metadata: dict[str, object] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -79,6 +80,26 @@ def _timestamp(value: object, label: str, *, default_timezone: str | None = None
     return parsed.astimezone(timezone.utc)
 
 
+def _punters_edge_local_start(envelope: RawEnvelope, item: Mapping[str, object]) -> datetime | None:
+    """Convert the acceptance card's local display time without guessing a date."""
+
+    raw_time = _first(item, "start_time_local", "startTimeLocal")
+    if not isinstance(raw_time, str) or not raw_time.strip():
+        return None
+    request = envelope.payload.get("_request")
+    request_date = request.get("date") if isinstance(request, Mapping) else envelope.payload.get("date")
+    if not isinstance(request_date, str):
+        return None
+    for fmt in ("%I:%M%p", "%I:%M %p", "%H:%M"):
+        try:
+            parsed = datetime.strptime(raw_time.strip().upper(), fmt)
+            local = datetime.combine(datetime.strptime(request_date, "%Y-%m-%d").date(), time(parsed.hour, parsed.minute))
+            return local.replace(tzinfo=ZoneInfo("Australia/Sydney")).astimezone(timezone.utc)
+        except ValueError:
+            continue
+    return None
+
+
 def _positive_int(value: object, label: str) -> int:
     try:
         result = int(value)  # type: ignore[arg-type]
@@ -86,6 +107,49 @@ def _positive_int(value: object, label: str) -> int:
         raise LiveProjectionError(f"provider field {label} is not a positive integer") from exc
     if result < 1:
         raise LiveProjectionError(f"provider field {label} is not a positive integer")
+    return result
+
+
+_FORM_METADATA_KEYS = frozenset({
+    "barrier", "box", "jockey", "trainer", "weight", "weight_kg", "carried_kg",
+    "form", "last10", "last_10", "hcp_rating", "official_rating", "adjusted_rating",
+    "age", "sex", "colour", "sire", "dam", "breeder", "owner", "gear_changes",
+    "claim_kg", "probable_weight_kg", "penalty_kg", "last_start_date",
+    "last_start_position", "last_start_jockey", "last_start_weight_kg",
+    "last_start_barrier", "last_start_winner", "last_start_rating", "field_size",
+    "distance_m", "track_condition", "going", "going_rating", "race_class",
+    "runs_total", "held_rows_total", "stats", "runs", "horse_ref", "runner_ref",
+})
+
+
+def _bounded_metadata(value: object, *, depth: int = 0) -> object | None:
+    if depth > 2:
+        return None
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, list):
+        return [_bounded_metadata(item, depth=depth + 1) for item in value[:20]]
+    if isinstance(value, Mapping):
+        result: dict[str, object] = {}
+        for key, item in list(value.items())[:80]:
+            if not isinstance(key, str):
+                continue
+            bounded = _bounded_metadata(item, depth=depth + 1)
+            if bounded is not None:
+                result[key[:80]] = bounded
+        return result
+    return None
+
+
+def _runner_metadata(provider: str, raw_runner: Mapping[str, object]) -> dict[str, object]:
+    result: dict[str, object] = {}
+    for key in _FORM_METADATA_KEYS:
+        if key not in raw_runner:
+            continue
+        bounded = _bounded_metadata(raw_runner[key])
+        if bounded is not None:
+            result[key] = bounded
+    result["provider"] = provider
     return result
 
 
@@ -241,12 +305,14 @@ def _parse_generic(envelope: RawEnvelope) -> tuple[ProjectedRace, ...]:
         meeting = item.get("meeting")
         meeting_mapping = meeting if isinstance(meeting, Mapping) else {}
         venue = _text(_first(item, "venue", "track", "trackName") or _first(meeting_mapping, "venue", "name", "track"), "venue")
-        scheduled_at = _timestamp(
-            _first(item, "scheduled_at", "scheduledAt", "scheduled_time", "scheduledTime", "jump_time", "jumpTime", "start_time", "startTime", "raceStartTime", "start")
-            or _first(meeting_mapping, "scheduled_at", "scheduledAt", "scheduled_time", "scheduledTime", "jump_time", "jumpTime", "date"),
-            "scheduled_at",
-            default_timezone="Australia/Sydney" if provider == "krok-odds" else None,
-        )
+        scheduled_value = _first(item, "scheduled_at", "scheduledAt", "scheduled_time", "scheduledTime", "jump_time", "jumpTime", "start_time", "startTime", "raceStartTime", "start") or _first(meeting_mapping, "scheduled_at", "scheduledAt", "scheduled_time", "scheduledTime", "jump_time", "jumpTime", "date")
+        scheduled_at = _punters_edge_local_start(envelope, item) if provider == "punters-edge" and scheduled_value is None else None
+        if scheduled_at is None:
+            scheduled_at = _timestamp(
+                scheduled_value,
+                "scheduled_at",
+                default_timezone="Australia/Sydney" if provider == "krok-odds" else None,
+            )
         race_number = _positive_int(_first(item, "race_number", "raceNumber", "raceNo", "number"), "race_number")
         source_race_id = _first(item, "race_id", "raceId", "raceID", "id")
         race_key = _text(source_race_id, "race_id") if source_race_id is not None else f"{venue}:{scheduled_at.date().isoformat()}:{race_number}"
@@ -270,7 +336,7 @@ def _parse_generic(envelope: RawEnvelope) -> tuple[ProjectedRace, ...]:
             status = "SCRATCHED" if status in {"SCRATCHED", "REMOVED", "WITHDRAWN"} else "ACTIVE"
             raw_position = _first(raw_runner, "position", "placing", "finishPosition", "finishingPosition", "place")
             position = _positive_int(raw_position, "position") if raw_position not in (None, "") else None
-            runners.append(ProjectedRunner(entry_id, f"{provider}:runner:{source_key}", name, number, status, position))
+            runners.append(ProjectedRunner(entry_id, f"{provider}:runner:{source_key}", name, number, status, position, _runner_metadata(provider, raw_runner)))
         if not runners:
             raise LiveProjectionError(f"race {race_key} contains no runners")
         runners = sorted(runners, key=lambda runner: (runner.number, runner.entry_id))
@@ -302,7 +368,7 @@ def parse_live_envelope(envelope: RawEnvelope) -> tuple[ProjectedRace, ...]:
             ProjectedRace(
                 "betfair-exchange", race.race_id, race.meeting_id, race.venue, race.race_number,
                 race.scheduled_at, race.field_revision,
-                tuple(ProjectedRunner(runner.entry_id, runner.participant_id, runner.name, runner.number, "SCRATCHED" if runner.status == "REMOVED" else "ACTIVE") for runner in race.runners),
+                tuple(ProjectedRunner(runner.entry_id, runner.participant_id, runner.name, runner.number, "SCRATCHED" if runner.status == "REMOVED" else "ACTIVE", None, {"provider": "betfair-exchange", **runner.metadata}) for runner in race.runners),
                 False,
             )
             for race in catalogue.races
@@ -313,7 +379,7 @@ def parse_live_envelope(envelope: RawEnvelope) -> tuple[ProjectedRace, ...]:
 def project_live_envelope(connection: Connection, envelope: RawEnvelope) -> dict[str, int]:
     races = parse_live_envelope(envelope)
     receipt_id = f"receipt:{envelope.envelope_id}"
-    counts = {"races": 0, "entries": 0, "results": 0, "quotes": 0}
+    counts = {"races": 0, "entries": 0, "results": 0, "quotes": 0, "runner_metadata": 0}
     for race in races:
         connection.execute(text("""
             INSERT INTO meetings (meeting_id, code, name, country, scheduled_at, data_mode, source_receipt_id, first_observed_at)
@@ -341,6 +407,31 @@ def project_live_envelope(connection: Connection, envelope: RawEnvelope) -> dict
                 WHERE NOT EXISTS (SELECT 1 FROM entry_revisions WHERE entry_id = :entry_id AND race_revision_id = :race_revision_id)
             """), {"entry_id": runner.entry_id, "race_revision_id": race_revision_id, "participant_id": runner.participant_id, "number": runner.number, "status": runner.status, "effective_from": race.scheduled_at, "first_observed_at": envelope.first_observed_at, "data_mode": envelope.data_mode, "source_receipt_id": receipt_id})
             counts["entries"] += 1
+            if runner.metadata:
+                connection.execute(text("""
+                    INSERT INTO provider_runner_metadata (
+                        metadata_id, provider_id, race_id, field_revision, entry_id,
+                        selection_id, observed_at, source_receipt_id, data_mode,
+                        rights_state, metadata
+                    ) VALUES (
+                        :metadata_id, :provider_id, :race_id, :field_revision, :entry_id,
+                        :selection_id, :observed_at, :source_receipt_id, :data_mode,
+                        :rights_state, CAST(:metadata AS jsonb)
+                    ) ON CONFLICT (metadata_id) DO NOTHING
+                """), {
+                    "metadata_id": f"{race.provider}:{race.race_id}:{runner.entry_id}:{race.field_revision}",
+                    "provider_id": race.provider.upper().replace("-", "_"),
+                    "race_id": race.race_id,
+                    "field_revision": race.field_revision,
+                    "entry_id": runner.entry_id,
+                    "selection_id": None,
+                    "observed_at": envelope.retrieved_at,
+                    "source_receipt_id": receipt_id,
+                    "data_mode": envelope.data_mode,
+                    "rights_state": envelope.rights_state,
+                    "metadata": json.dumps(runner.metadata, sort_keys=True, separators=(",", ":")),
+                })
+                counts["runner_metadata"] += 1
             if runner.position is not None:
                 placings[runner.entry_id] = runner.position
             if runner.status == "SCRATCHED":

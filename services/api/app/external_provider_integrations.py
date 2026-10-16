@@ -69,6 +69,7 @@ class ReadOnlyTransport(Protocol):
         params: Mapping[str, object],
         json_body: Mapping[str, object] | None,
         timeout_seconds: float,
+        form_body: Mapping[str, str] | None = None,
     ) -> TransportResponse: ...
 
 
@@ -90,6 +91,7 @@ class HttpxReadOnlyTransport:
         params: Mapping[str, object],
         json_body: Mapping[str, object] | None,
         timeout_seconds: float,
+        form_body: Mapping[str, str] | None = None,
     ) -> TransportResponse:
         try:
             response = self._client.request(
@@ -98,6 +100,7 @@ class HttpxReadOnlyTransport:
                 headers=dict(headers),
                 params=dict(params),
                 json=json_body,
+                data=dict(form_body) if form_body is not None else None,
                 timeout=timeout_seconds,
             )
         except httpx.HTTPError as exc:
@@ -170,7 +173,48 @@ def _capabilities(
     )
 
 
-VALID_OPERATIONS = {"LIST_MEETINGS", "GET_RACES", "GET_ENTRIES", "GET_RESULTS", "GET_MARKETS", "ACCOUNT_METADATA_READ"}
+VALID_OPERATIONS = {"LIST_MEETINGS", "GET_RACES", "GET_ENTRIES", "GET_ACCEPTANCES", "GET_RESULTS", "GET_MARKETS", "ACCOUNT_METADATA_READ"}
+
+
+class BetfairSessionTokenManager:
+    """Runtime-login session manager modelled on The Long Straight's adapter.
+
+    The manager deliberately depends on the injected read-only transport so
+    tests cannot accidentally make an external request and production callers
+    retain one bounded HTTP policy for login and JSON-RPC calls.
+    """
+
+    def __init__(self, *, transport: ReadOnlyTransport, app_key: str, username: str, password: str) -> None:
+        if not app_key.strip() or not username.strip() or not password:
+            raise ProviderActivationError("Betfair runtime login requires app key, username and password")
+        self._transport = transport
+        self._app_key = app_key
+        self._username = username
+        self._password = password
+        self._token: str | None = None
+
+    def token(self) -> str:
+        if self._token:
+            return self._token
+        response = self._transport.request(
+            method="POST",
+            url="https://identitysso.betfair.com/api/login",
+            headers={"X-Application": self._app_key, "Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"},
+            params={},
+            json_body=None,
+            form_body={"username": self._username, "password": self._password},
+            timeout_seconds=4.0,
+        )
+        if response.status_code < 200 or response.status_code >= 300:
+            raise ProviderActivationError(f"Betfair login failed with HTTP {response.status_code}")
+        token = response.payload.get("token")
+        if not isinstance(token, str) or not token.strip():
+            raise ProviderActivationError("Betfair login response did not contain a session token")
+        self._token = token.strip()
+        return self._token
+
+    def invalidate(self) -> None:
+        self._token = None
 
 
 def build_existing_provider_assets() -> dict[str, ExistingProviderAsset]:
@@ -191,10 +235,11 @@ def build_existing_provider_assets() -> dict[str, ExistingProviderAsset]:
             "punters-edge", "PuntersEdge", "https://api.puntersedge.online",
             (
                 EndpointSpec("GET_RESULTS", "GET", "/v1/racing/results", "historical results and settled fixed prices"),
+                EndpointSpec("GET_ACCEPTANCES", "GET", "/v1/racing/acceptances", "full-day Australian pre-race acceptance card"),
                 EndpointSpec("GET_ENTRIES", "GET", "/v1/racing/horses/form", "horse history/form"),
                 EndpointSpec("ACCOUNT_METADATA_READ", "GET", "/v1/keys/info", "account metadata and quota"),
             ),
-            _capabilities("punters-edge", "PuntersEdge", frozenset({"race_id", "runner_id", "start_time", "resulted_at", "position", "dead_heat", "fixed_win_price", "fixed_place_price", "horse_form"}), frozenset({"ACCOUNT_METADATA_READ", "GET_RESULTS", "GET_ENTRIES"}), QuotaCapability(unknown=True, notes="A sanitized sibling probe recorded remaining credits; exact current quota is not independently re-verified here.")),
+            _capabilities("punters-edge", "PuntersEdge", frozenset({"race_id", "runner_id", "start_time", "resulted_at", "position", "dead_heat", "fixed_win_price", "fixed_place_price", "horse_form", "acceptances", "barrier", "weight", "jockey", "trainer", "last10", "ratings", "gear", "scratchings"}), frozenset({"ACCOUNT_METADATA_READ", "GET_RESULTS", "GET_ENTRIES", "GET_ACCEPTANCES", "GET_RACES"}), QuotaCapability(unknown=True, notes="A sanitized sibling probe recorded remaining credits; exact current quota is not independently re-verified here.")),
             ("Sibling sanitized validation recorded 10 final AU thoroughbred races, 9 complete, with fixed Win/Place prices.", "Personal free-plan evidence is historical evidence, not a Nexus entitlement record."),
             ("Nexus retention, training and derived-display permission is not evidenced; no transfer from the sibling application is assumed."),
         ),
@@ -263,6 +308,7 @@ class GatedReadOnlyProviderAdapter:
         self.asset = asset
         self._transport = transport
         self._credential_resolver = credential_resolver
+        self._betfair_session_manager: BetfairSessionTokenManager | None = None
 
     @property
     def capabilities(self) -> ProviderCapabilities:
@@ -313,7 +359,32 @@ class GatedReadOnlyProviderAdapter:
             if not api_key:
                 raise ProviderActivationError(f"{self.asset.display_name} requires a server-side API key")
             return normalized, {"X-API-Key": api_key}
-        return normalized, {"Authorization": f"Bearer {normalized.get('token', '')}"}
+        return normalized, {}
+
+    def _betfair_session_token(self, credentials: Mapping[str, str]) -> tuple[str, bool]:
+        """Return a session token and whether it came from runtime login."""
+
+        static_token = credentials.get("session_token", "").strip()
+        if static_token:
+            return static_token, False
+        app_key = credentials.get("app_key", "").strip()
+        username = credentials.get("username", "").strip()
+        password = credentials.get("password", "")
+        if not app_key or not username or not password:
+            raise ProviderActivationError(
+                "Betfair requires server-side app key and either session token or username/password"
+            )
+        if self._transport is None:
+            raise ProviderActivationError("server-side transport is required for Betfair runtime login")
+        if self._betfair_session_manager is None:
+            self._betfair_session_manager = BetfairSessionTokenManager(
+                transport=self._transport, app_key=app_key, username=username, password=password,
+            )
+        return self._betfair_session_manager.token(), True
+
+    def _invalidate_betfair_session(self) -> None:
+        if self._betfair_session_manager is not None:
+            self._betfair_session_manager.invalidate()
 
     @staticmethod
     def _request_params(
@@ -340,6 +411,14 @@ class GatedReadOnlyProviderAdapter:
                 if value is not None:
                     params[key] = value
             return params
+        if provider_id == "punters-edge" and operation == "GET_ACCEPTANCES":
+            params = {"date": date} if date is not None else {}
+            if venue is not None:
+                params["venue"] = venue
+            return params
+        if provider_id == "punters-edge" and operation == "GET_RACES":
+            params = {"venue": venue, "meeting_date": date, "race_number": race} if venue is not None and date is not None and race is not None else {}
+            return {key: value for key, value in params.items() if value is not None}
         # Krok uses its own racing-code vocabulary and silently ignores the
         # generic `code` parameter.  Use `race_type=T` for the board, odds and
         # dated-result endpoints so a broad all-code response cannot be
@@ -404,20 +483,39 @@ class GatedReadOnlyProviderAdapter:
             operation, provider_id=self.asset.provider_id, code=code, date=date, venue=venue, race=race, cursor=cursor, page_size=page_size,
         )
         body: dict[str, object] | None = None
+        runtime_login = False
         if self.asset.provider_id == "betfair-exchange":
             app_key = credentials.get("app_key", "") if isinstance(credentials, Mapping) else ""
-            session_token = credentials.get("session_token", "") if isinstance(credentials, Mapping) else ""
-            if not app_key or not session_token:
-                raise ProviderActivationError("Betfair requires server-side app key and session token")
+            session_token, runtime_login = self._betfair_session_token(credentials)
+            if not app_key:
+                raise ProviderActivationError("Betfair requires a server-side app key")
             headers = {"X-Application": app_key, "X-Authentication": session_token, "Content-Type": "application/json"}
             method_name = endpoint.description.split(" ", 1)[0]
             params = self._betfair_params(view=view, date=date, venue=venue, market_ids=market_ids, page_size=page_size)
             body = {"jsonrpc": "2.0", "method": f"SportsAPING/v1.0/{method_name}", "params": params, "id": 1}
             params = {}
         path = endpoint.path.replace("{date}", date or "")
-        response = self._transport.request(method=endpoint.method, url=f"{self.asset.base_url}{path}", headers=headers, params=params, json_body=body, timeout_seconds=4.0)
+        assert self._transport is not None
+        try:
+            response = self._transport.request(method=endpoint.method, url=f"{self.asset.base_url}{path}", headers=headers, params=params, json_body=body, timeout_seconds=4.0)
+        except ProviderActivationError as exc:
+            if not (runtime_login and "HTTP 401" in str(exc)):
+                raise
+            self._invalidate_betfair_session()
+            refreshed_token, _ = self._betfair_session_token(credentials)
+            headers = {"X-Application": credentials.get("app_key", ""), "X-Authentication": refreshed_token, "Content-Type": "application/json"}
+            response = self._transport.request(method=endpoint.method, url=f"{self.asset.base_url}{path}", headers=headers, params=params, json_body=body, timeout_seconds=4.0)
         if response.status_code < 200 or response.status_code >= 300:
             raise ProviderActivationError(f"provider returned HTTP {response.status_code}")
+        if runtime_login and isinstance(response.payload.get("error"), Mapping):
+            error_text = " ".join(str(value) for value in response.payload["error"].values()).upper()
+            if "INVALID_SESSION" in error_text:
+                self._invalidate_betfair_session()
+                refreshed_token, _ = self._betfair_session_token(credentials)
+                headers = {"X-Application": credentials.get("app_key", ""), "X-Authentication": refreshed_token, "Content-Type": "application/json"}
+                response = self._transport.request(method=endpoint.method, url=f"{self.asset.base_url}{path}", headers=headers, params=params, json_body=body, timeout_seconds=4.0)
+                if response.status_code < 200 or response.status_code >= 300:
+                    raise ProviderActivationError(f"provider returned HTTP {response.status_code}")
         retrieved_at = response.retrieved_at
         payload = dict(response.payload)
         payload["_request"] = {"provider": self.asset.provider_id, "operation": operation, "code": code, "date": date, "venue": venue, "race": race, "view": view}
@@ -456,11 +554,12 @@ class GatedReadOnlyProviderAdapter:
         credentials, headers = self._credentials()
         params = self._request_params(operation, provider_id=self.asset.provider_id, code=code, date=date, venue=venue, race=race)
         body: dict[str, object] | None = None
+        runtime_login = False
         if self.asset.provider_id == "betfair-exchange":
             app_key = credentials.get("app_key", "")
-            session_token = credentials.get("session_token", "")
-            if not app_key or not session_token:
-                raise ProviderActivationError("Betfair requires server-side app key and session token")
+            session_token, runtime_login = self._betfair_session_token(credentials)
+            if not app_key:
+                raise ProviderActivationError("Betfair requires a server-side app key")
             headers = {"X-Application": app_key, "X-Authentication": session_token, "Content-Type": "application/json"}
             method_name = endpoint.description.split(" ", 1)[0]
             params = self._betfair_params(view=view, date=date, venue=venue, market_ids=market_ids, page_size=None)

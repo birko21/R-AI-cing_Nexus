@@ -16,7 +16,7 @@ issue comments. The supported variables are:
 | PuntersEdge | `NEXUS_PROVIDER_PUNTERS_EDGE_API_KEY` |
 | FormFav | `NEXUS_PROVIDER_FORMFAV_API_KEY` |
 | Krok Odds | `NEXUS_PROVIDER_KROK_ODDS_API_KEY` |
-| Betfair Exchange | `NEXUS_PROVIDER_BETFAIR_APP_KEY` and `NEXUS_PROVIDER_BETFAIR_SESSION_TOKEN` |
+| Betfair Exchange | `NEXUS_PROVIDER_BETFAIR_APP_KEY` plus either the legacy `NEXUS_PROVIDER_BETFAIR_SESSION_TOKEN` or runtime-login `NEXUS_PROVIDER_BETFAIR_USERNAME` and `NEXUS_PROVIDER_BETFAIR_PASSWORD` |
 
 Set only the selected `NEXUS_PROVIDER_<PROVIDER>_ENABLED=true` flag. The
 provider approval record is separate and contains references, not secrets. It

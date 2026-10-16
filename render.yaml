@@ -133,6 +133,10 @@ services:
         sync: false
       - key: NEXUS_PROVIDER_BETFAIR_SESSION_TOKEN
         sync: false
+      - key: NEXUS_PROVIDER_BETFAIR_USERNAME
+        sync: false
+      - key: NEXUS_PROVIDER_BETFAIR_PASSWORD
+        sync: false
       - key: NEXUS_PROVIDER_BETFAIR_APPROVAL_TIER
         sync: false
       - key: NEXUS_PROVIDER_BETFAIR_APPROVED_OPERATIONS

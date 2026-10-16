@@ -31,6 +31,7 @@ class BetfairRunner:
     name: str
     number: int
     status: str
+    metadata: dict[str, object]
 
 
 @dataclass(frozen=True)
@@ -52,6 +53,14 @@ class BetfairCatalogue:
 
 
 _RACE_NUMBER = re.compile(r"\b(?:R|RACE)\s*0*(\d{1,2})\b", re.IGNORECASE)
+_RUNNER_METADATA_KEYS = frozenset({
+    "CLOTH_NUMBER", "CLOTH_NUMBER_ALPHA", "COLOURS_DESCRIPTION", "COLOURS_FILENAME",
+    "COLOURS_FILENAME_URL", "FORM", "OFFICIAL_RATING", "ADJUSTED_RATING",
+    "DAYS_SINCE_LAST_RUN", "WEIGHT_VALUE", "WEIGHT_UNIT", "STALL_DRAW",
+    "JOCKEY_NAME", "TRAINER_NAME", "WEARING", "AGE", "SEX_TYPE", "COLOUR_TYPE",
+    "SIRE_NAME", "DAM_NAME", "DAMSIRE_NAME", "OWNER_NAME", "BREEDER_NAME",
+    "JOCKEY_CLAIM", "RUNNER_STATUS",
+})
 
 
 def _required_text(value: object, label: str) -> str:
@@ -123,6 +132,19 @@ def _runner_number(runner: Mapping[str, object], index: int) -> int:
     return index
 
 
+def _runner_metadata(runner: Mapping[str, object]) -> dict[str, object]:
+    metadata = runner.get("metadata")
+    if not isinstance(metadata, Mapping):
+        return {}
+    normalized: dict[str, object] = {}
+    for key, value in metadata.items():
+        if key not in _RUNNER_METADATA_KEYS or value is None:
+            continue
+        if isinstance(value, (str, int, float, bool)):
+            normalized[key] = value
+    return normalized
+
+
 def _field_revision(market_id: str, scheduled_at: datetime, runners: tuple[BetfairRunner, ...]) -> str:
     canonical = {
         "market_id": market_id,
@@ -169,7 +191,7 @@ def parse_betfair_catalogue(envelope: RawEnvelope) -> BetfairCatalogue:
             if status not in {"ACTIVE", "REMOVED", "WINNER", "LOSER", "PLACED"}:
                 status = "ACTIVE"
             entry_id = f"betfair:market:{market_id}:selection:{selection_id}"
-            runners.append(BetfairRunner(entry_id, f"betfair:selection:{selection_id}", selection_id, name, _runner_number(raw_runner, index), status))
+            runners.append(BetfairRunner(entry_id, f"betfair:selection:{selection_id}", selection_id, name, _runner_number(raw_runner, index), status, _runner_metadata(raw_runner)))
         normalized_runners = tuple(sorted(runners, key=lambda item: (item.number, item.selection_id)))
         meeting_key = event_id or f"{venue.lower()}:{scheduled_at.date().isoformat()}"
         meeting_id = f"betfair:event:{meeting_key}"
@@ -183,6 +205,7 @@ def project_betfair_catalogue(connection: Connection, envelope: RawEnvelope) -> 
     receipt_id = f"receipt:{envelope.envelope_id}"
     projected_races = 0
     projected_entries = 0
+    projected_metadata = 0
     for race in catalogue.races:
         connection.execute(
             text(
@@ -302,4 +325,33 @@ def project_betfair_catalogue(connection: Connection, envelope: RawEnvelope) -> 
                 },
             )
             projected_entries += 1
-    return {"races": projected_races, "entries": projected_entries}
+            if runner.metadata:
+                connection.execute(
+                    text(
+                        """
+                        INSERT INTO provider_runner_metadata (
+                            metadata_id, provider_id, race_id, field_revision, entry_id,
+                            selection_id, observed_at, source_receipt_id, data_mode,
+                            rights_state, metadata
+                        ) VALUES (
+                            :metadata_id, 'BETFAIR_EXCHANGE', :race_id, :field_revision,
+                            :entry_id, :selection_id, :observed_at, :source_receipt_id,
+                            :data_mode, :rights_state, CAST(:metadata AS jsonb)
+                        ) ON CONFLICT (metadata_id) DO NOTHING
+                        """
+                    ),
+                    {
+                        "metadata_id": f"betfair:{race.market_id}:{runner.selection_id}:{race.field_revision}",
+                        "race_id": race.race_id,
+                        "field_revision": race.field_revision,
+                        "entry_id": runner.entry_id,
+                        "selection_id": runner.selection_id,
+                        "observed_at": envelope.retrieved_at,
+                        "source_receipt_id": receipt_id,
+                        "data_mode": envelope.data_mode,
+                        "rights_state": envelope.rights_state,
+                        "metadata": json.dumps(runner.metadata, sort_keys=True, separators=(",", ":")),
+                    },
+                )
+                projected_metadata += 1
+    return {"races": projected_races, "entries": projected_entries, "runner_metadata": projected_metadata}

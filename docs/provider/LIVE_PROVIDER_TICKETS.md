@@ -159,6 +159,16 @@ verifier returned `RESULT: PASS`.
 
 See `docs/evidence/live-release/LIVE_RELEASE_EVIDENCE.md`.
 
+## Next enrichment ticket pack
+
+The next work is tracked in
+[`THE_LONG_STRAIGHT_BETFAIR_FORM_ENRICHMENT_TICKETS.md`](THE_LONG_STRAIGHT_BETFAIR_FORM_ENRICHMENT_TICKETS.md).
+It records the audited The Long Straight Betfair access pattern, the external
+403 gate, the required PuntersEdge pre-race form work, the cross-provider field
+matrix, as-of feature materialisation and the real-data UAT gate. It does not
+reinterpret settled-results polling as pre-race form and does not permit a
+synthetic runtime fallback.
+
 ## LIVE-020 — Run release go/no-go closeout — COMPLETE
 
 The private owner-only read-only staging scope is a GO. Public access,

@@ -15,6 +15,7 @@ ProviderOperation = Literal[
     "LIST_MEETINGS",
     "GET_RACES",
     "GET_ENTRIES",
+    "GET_ACCEPTANCES",
     "GET_RESULTS",
     "GET_MARKETS",
     "ACCOUNT_METADATA_READ",
@@ -22,7 +23,7 @@ ProviderOperation = Literal[
 TimestampField = Literal["retrieved_at", "first_observed_at", "published_at"]
 PaginationStyle = Literal["NONE", "CURSOR", "PAGE_NUMBER"]
 
-KNOWN_OPERATIONS = frozenset({"LIST_MEETINGS", "GET_RACES", "GET_ENTRIES", "GET_RESULTS", "GET_MARKETS", "ACCOUNT_METADATA_READ"})
+KNOWN_OPERATIONS = frozenset({"LIST_MEETINGS", "GET_RACES", "GET_ENTRIES", "GET_ACCEPTANCES", "GET_RESULTS", "GET_MARKETS", "ACCOUNT_METADATA_READ"})
 KNOWN_TIMESTAMP_FIELDS = frozenset({"retrieved_at", "first_observed_at", "published_at"})
 
 

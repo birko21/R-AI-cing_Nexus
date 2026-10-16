@@ -31,10 +31,10 @@ def test_betfair_catalogue_normalizes_meeting_race_and_entries() -> None:
                     {
                         "marketId": "1.234",
                         "marketName": "R3 1200m Maiden",
-                        "marketStartTime": "2026-10-12T04:30:00.000Z",
-                        "event": {"id": "event-7", "name": "Randwick"},
-                        "runners": [
-                            {"selectionId": 11, "runnerName": "Alpha", "sortPriority": 2},
+                            "marketStartTime": "2026-10-12T04:30:00.000Z",
+                            "event": {"id": "event-7", "name": "Randwick"},
+                            "runners": [
+                            {"selectionId": 11, "runnerName": "Alpha", "sortPriority": 2, "metadata": {"FORM": "123x", "OFFICIAL_RATING": 82, "COLOURS_FILENAME": "alpha.png", "UNSUPPORTED": "drop-me"}},
                             {"selectionId": 7, "runnerName": "Bravo", "sortPriority": 1},
                         ],
                     }
@@ -48,6 +48,7 @@ def test_betfair_catalogue_normalizes_meeting_race_and_entries() -> None:
     assert race.race_number == 3
     assert [runner.number for runner in race.runners] == [1, 2]
     assert [runner.selection_id for runner in race.runners] == ["7", "11"]
+    assert race.runners[1].metadata == {"COLOURS_FILENAME": "alpha.png", "FORM": "123x", "OFFICIAL_RATING": 82}
 
 
 def test_betfair_catalogue_rejects_missing_identity_and_duplicate_selection() -> None:

@@ -139,6 +139,10 @@ def _credentials_from_environment(provider_id: str, environ: Mapping[str, str]) 
     if provider_id == "betfair-exchange":
         app_key = _env(environ, f"{prefix}APP_KEY")
         session_token = _env(environ, f"{prefix}SESSION_TOKEN")
+        username = _env(environ, f"{prefix}USERNAME")
+        password = _env(environ, f"{prefix}PASSWORD")
+        if app_key and username and password:
+            return {"app_key": app_key, "username": username, "password": password}
         return {"app_key": app_key, "session_token": session_token} if app_key and session_token else None
     api_key = _env(environ, f"{prefix}API_KEY")
     return {"api_key": api_key} if api_key else None
