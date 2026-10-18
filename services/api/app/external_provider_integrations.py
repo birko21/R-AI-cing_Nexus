@@ -536,7 +536,7 @@ class GatedReadOnlyProviderAdapter:
         try:
             response = self._transport.request(method=endpoint.method, url=f"{self.asset.base_url}{path}", headers=headers, params=params, json_body=body, timeout_seconds=4.0)
         except ProviderActivationError as exc:
-            if not (runtime_login and "HTTP 401" in str(exc)):
+            if not (runtime_login and any(marker in str(exc) for marker in ("HTTP 401", "HTTP 403"))):
                 raise
             self._invalidate_betfair_session()
             refreshed_token, _ = self._betfair_session_token(credentials)

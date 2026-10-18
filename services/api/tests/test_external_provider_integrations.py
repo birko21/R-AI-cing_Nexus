@@ -230,7 +230,7 @@ def test_betfair_runtime_login_matches_the_long_straight_pattern_and_refreshes_o
                 return TransportResponse(200, {"token": f"runtime-session-{self.login_count}"}, NOW, NOW, "login")
             if self.expire_first_api_token:
                 self.expire_first_api_token = False
-                raise ProviderActivationError("provider returned HTTP 401")
+                raise ProviderActivationError("provider returned HTTP 403")
             return TransportResponse(200, {"result": []}, NOW, NOW, "catalogue")
 
     transport = RuntimeBetfairTransport()
