@@ -236,21 +236,35 @@ class BetfairSessionTokenManager:
     def token(self) -> str:
         if self._token:
             return self._token
-        try:
-            response = self._transport.request(
-                method="POST",
-                # Betfair documents the .com.au identity endpoint for Australian
-                # accounts. Keep the exchange endpoint aligned with the AU
-                # jurisdiction used by the market-data adapter below.
-                url="https://identitysso.betfair.com.au/api/login",
-                headers={"X-Application": self._app_key, "Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"},
-                params={},
-                json_body=None,
-                form_body={"username": self._username, "password": self._password},
-                timeout_seconds=4.0,
-            )
-        except ProviderActivationError as exc:
-            raise ProviderActivationError(f"Betfair login request failed: {exc}") from exc
+        login_urls = (
+            "https://identitysso.betfair.com.au/api/login",
+            # The Long Straight's working Betfair adapter uses the global
+            # endpoint; retain it as a bounded compatibility fallback for
+            # accounts whose jurisdiction rejects the regional endpoint.
+            "https://identitysso.betfair.com/api/login",
+        )
+        response: TransportResponse | None = None
+        last_error: ProviderActivationError | None = None
+        for index, url in enumerate(login_urls):
+            try:
+                response = self._transport.request(
+                    method="POST",
+                    url=url,
+                    headers={"X-Application": self._app_key, "Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"},
+                    params={},
+                    json_body=None,
+                    form_body={"username": self._username, "password": self._password},
+                    timeout_seconds=4.0,
+                )
+                break
+            except ProviderActivationError as exc:
+                last_error = exc
+                if index == 0 and "HTTP 403" in str(exc):
+                    continue
+                raise ProviderActivationError(f"Betfair login request failed: {exc}") from exc
+        if response is None:
+            assert last_error is not None
+            raise ProviderActivationError(f"Betfair login request failed: {last_error}") from last_error
         if response.status_code < 200 or response.status_code >= 300:
             raise ProviderActivationError(f"Betfair login failed with HTTP {response.status_code}")
         token = response.payload.get("token")

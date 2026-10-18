@@ -4,6 +4,7 @@ import httpx
 import pytest
 
 from app.external_provider_integrations import (
+    BetfairSessionTokenManager,
     ProviderActivationError,
     HttpxReadOnlyTransport,
     TransportResponse,
@@ -253,6 +254,33 @@ def test_betfair_runtime_login_matches_the_long_straight_pattern_and_refreshes_o
     assert transport.calls[1]["headers"]["X-Authentication"] == "runtime-session-1"
     assert transport.calls[3]["headers"]["X-Authentication"] == "runtime-session-2"
     assert "test-only-password" not in page.records[0].model_dump_json()
+
+
+def test_betfair_runtime_login_falls_back_to_global_endpoint_after_regional_403() -> None:
+    class RegionalFallbackTransport:
+        def __init__(self) -> None:
+            self.urls: list[str] = []
+
+        def request(self, **kwargs: object) -> TransportResponse:
+            url = str(kwargs["url"])
+            self.urls.append(url)
+            if url.endswith(".com.au/api/login"):
+                raise ProviderActivationError("provider returned HTTP 403")
+            return TransportResponse(200, {"token": "global-session"}, NOW, NOW, "login")
+
+    transport = RegionalFallbackTransport()
+    manager = BetfairSessionTokenManager(
+        transport=transport,
+        app_key="test-only-app",
+        username="test-only-user",
+        password="test-only-password",
+    )
+
+    assert manager.token() == "global-session"
+    assert transport.urls == [
+        "https://identitysso.betfair.com.au/api/login",
+        "https://identitysso.betfair.com/api/login",
+    ]
 
 
 def test_punters_edge_acceptances_use_the_documented_date_and_venue_shape() -> None:
