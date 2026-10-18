@@ -7,8 +7,10 @@ provider error body, and commits each provider projection atomically.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from datetime import datetime, timezone
 import os
+import re
 
 from sqlalchemy import create_engine
 
@@ -28,10 +30,12 @@ def _date(value: str | None) -> str:
     return selected
 
 
-def _result(provider: str, operation: str, status: str, *, venue: str | None = None, detail: str | None = None, persistence: dict[str, object] | None = None, projection: dict[str, object] | None = None) -> dict[str, object]:
+def _result(provider: str, operation: str, status: str, *, venue: str | None = None, race: int | None = None, detail: str | None = None, persistence: dict[str, object] | None = None, projection: dict[str, object] | None = None) -> dict[str, object]:
     payload: dict[str, object] = {"provider": provider, "operation": operation, "status": status}
     if venue:
         payload["venue"] = venue
+    if race is not None:
+        payload["race"] = race
     if detail:
         payload["detail"] = detail
     if persistence is not None:
@@ -51,6 +55,46 @@ def _safe_error_detail(exc: Exception) -> str:
     return f"{type(exc).__name__}: {message[:180]}" if message else type(exc).__name__
 
 
+def _venue_key(value: object) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", str(value).casefold()).strip("-")
+
+
+def _formfav_race_numbers(payload: Mapping[str, object], venue: str) -> tuple[int, ...]:
+    """Extract only race numbers from the approved FormFav meeting envelope."""
+
+    meetings = payload.get("meetings")
+    if not isinstance(meetings, list):
+        return ()
+    selected: list[int] = []
+    target = _venue_key(venue)
+    for raw_meeting in meetings:
+        if not isinstance(raw_meeting, Mapping):
+            continue
+        identity = next(
+            (raw_meeting.get(key) for key in ("track", "venue", "name", "slug") if raw_meeting.get(key) not in (None, "")),
+            None,
+        )
+        if _venue_key(identity) != target:
+            continue
+        races = raw_meeting.get("races")
+        if not isinstance(races, list):
+            continue
+        for raw_race in races:
+            if not isinstance(raw_race, Mapping):
+                continue
+            value = next(
+                (raw_race.get(key) for key in ("raceNumber", "race_number", "raceNo", "number") if raw_race.get(key) not in (None, "")),
+                None,
+            )
+            try:
+                number = int(value)
+            except (TypeError, ValueError):
+                continue
+            if number > 0:
+                selected.append(number)
+    return tuple(sorted(set(selected)))
+
+
 def run_live_enrichment(*, date: str | None = None, venues: tuple[str, ...] = ()) -> dict[str, object]:
     runtime = load_runtime_config()
     if not runtime.live_enabled:
@@ -64,26 +108,27 @@ def run_live_enrichment(*, date: str | None = None, venues: tuple[str, ...] = ()
     engine = create_engine(sqlalchemy_database_url(database_url), pool_pre_ping=True, pool_size=1, max_overflow=0)
     outputs: list[dict[str, object]] = []
     betfair_market_ids: list[str] = []
-    plans: tuple[tuple[str, str, str | None], ...] = (
-        ("formfav", "LIST_MEETINGS", None),
-        ("punters-edge", "GET_RESULTS", None),
-    )
+    plans: list[tuple[str, str, str | None, int | None]] = [
+        ("formfav", "LIST_MEETINGS", None, None),
+        ("punters-edge", "GET_RESULTS", None, None),
+    ]
     if venues:
-        plans += tuple(("formfav", "GET_RACES", venue) for venue in venues)
-        plans += tuple(("punters-edge", "GET_ACCEPTANCES", venue) for venue in venues)
-        plans += tuple(("krok-odds", operation, venue) for operation in ("LIST_MEETINGS", "GET_MARKETS") for venue in venues)
-        plans += tuple(("betfair-exchange", "GET_MARKETS", venue) for venue in venues)
+        plans += [("punters-edge", "GET_ACCEPTANCES", venue, None) for venue in venues]
+        plans += [("krok-odds", operation, venue, None) for operation in ("LIST_MEETINGS", "GET_MARKETS") for venue in venues]
+        plans += [("betfair-exchange", "GET_MARKETS", venue, None) for venue in venues]
     else:
-        plans += (("krok-odds", "LIST_MEETINGS", None), ("krok-odds", "GET_MARKETS", None), ("betfair-exchange", "GET_MARKETS", None))
+        plans += [("krok-odds", "LIST_MEETINGS", None, None), ("krok-odds", "GET_MARKETS", None, None), ("betfair-exchange", "GET_MARKETS", None, None)]
 
     try:
-        for provider, operation, venue in plans:
+        index = 0
+        while index < len(plans):
+            provider, operation, venue, race = plans[index]
             handle = None
             source_id = f"{provider}:{operation}"
             try:
                 handle = build_live_provider_handle(provider)
                 page = handle.adapter.fetch(
-                    operation, code="THOROUGHBRED", date=selected_date, venue=venue,
+                    operation, code="THOROUGHBRED", date=selected_date, venue=venue, race=race,
                     page_size=100, approval=handle.config.approval,
                 )
                 if len(page.records) != 1:
@@ -101,9 +146,16 @@ def run_live_enrichment(*, date: str | None = None, venues: tuple[str, ...] = ()
                     else:
                         projection = project_live_envelope(connection, envelope)
                     record_ingestion_health(connection, source_id=source_id, checked_at=datetime.now(timezone.utc), success=True)
-                outputs.append(_result(provider, operation, "SUCCESS", venue=venue, persistence=persistence, projection=projection))
+                outputs.append(_result(provider, operation, "SUCCESS", venue=venue, race=race, persistence=persistence, projection=projection))
+
+                if provider == "formfav" and operation == "LIST_MEETINGS" and venues:
+                    generated: list[tuple[str, str, str | None, int | None]] = []
+                    for requested_venue in venues:
+                        for race_number in _formfav_race_numbers(envelope.payload, requested_venue):
+                            generated.append(("formfav", "GET_RACES", requested_venue, race_number))
+                    plans[index + 1:index + 1] = generated
             except Exception as exc:
-                outputs.append(_result(provider, operation, "BLOCKED", venue=venue, detail=_safe_error_detail(exc)))
+                outputs.append(_result(provider, operation, "BLOCKED", venue=venue, race=race, detail=_safe_error_detail(exc)))
                 try:
                     with engine.begin() as connection:
                         record_ingestion_health(connection, source_id=source_id, checked_at=datetime.now(timezone.utc), success=False)
@@ -112,6 +164,7 @@ def run_live_enrichment(*, date: str | None = None, venues: tuple[str, ...] = ()
             finally:
                 if handle is not None:
                     handle.close()
+            index += 1
 
         # A market-book request is intentionally a second phase: Betfair
         # requires explicit market IDs from the catalogue capture.

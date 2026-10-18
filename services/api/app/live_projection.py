@@ -198,7 +198,8 @@ def _runners(item: Mapping[str, object]) -> list[Mapping[str, object]]:
     runner = item.get("runner")
     if isinstance(runner, Mapping):
         return [runner]
-    raise LiveProjectionError("race contains no supported runner collection")
+    available = ",".join(sorted(str(key) for key in item if isinstance(key, str))[:24])
+    raise LiveProjectionError(f"race contains no supported runner collection; keys={available or 'none'}")
 
 
 def _project_krok_quotes(connection: Connection, envelope: RawEnvelope, races: tuple[ProjectedRace, ...]) -> int:
