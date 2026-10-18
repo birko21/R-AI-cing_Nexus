@@ -351,6 +351,24 @@ def test_http_transport_converts_upstream_http_failure_to_safe_activation_error(
         transport.close()
 
 
+def test_http_transport_preserves_only_bounded_provider_error_code() -> None:
+    client = httpx.Client(
+        transport=httpx.MockTransport(
+            lambda request: httpx.Response(
+                403,
+                json={"faultcode": "Client", "faultstring": "ANGX-0004", "detail": {"APINGException": {"errorCode": "DSC-0037"}}},
+            )
+        )
+    )
+    transport = HttpxReadOnlyTransport(client=client)
+    try:
+        with pytest.raises(ProviderActivationError, match=r"HTTP 403 \(DSC-0037\)") as exc_info:
+            transport.request(method="POST", url="https://provider.invalid", headers={}, params={}, json_body={}, timeout_seconds=1)
+        assert "ANGX-0004" not in str(exc_info.value)
+    finally:
+        transport.close()
+
+
 def test_http_transport_rejects_non_json_provider_payload() -> None:
     client = httpx.Client(transport=httpx.MockTransport(lambda request: httpx.Response(200, content=b"not-json")))
     transport = HttpxReadOnlyTransport(client=client)

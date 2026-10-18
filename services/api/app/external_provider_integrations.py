@@ -45,17 +45,31 @@ class ProviderActivationError(RuntimeError):
 def _safe_provider_error_code(payload: Mapping[str, object]) -> str | None:
     """Extract a bounded provider error code without retaining response text."""
 
-    candidates: list[object] = [payload]
-    nested = payload.get("error")
-    if isinstance(nested, Mapping):
-        candidates.append(nested)
-    for candidate in candidates:
-        if not isinstance(candidate, Mapping):
-            continue
-        for key in ("errorCode", "error_code", "code"):
-            value = candidate.get(key)
-            if isinstance(value, (str, int)) and str(value).strip():
-                return str(value).strip()[:80]
+    def walk(value: object, *, depth: int = 0) -> str | None:
+        if depth > 4:
+            return None
+        if isinstance(value, Mapping):
+            for key in ("errorCode", "error_code", "code"):
+                candidate = value.get(key)
+                if isinstance(candidate, (str, int)) and str(candidate).strip():
+                    return str(candidate).strip()[:80]
+            for nested in value.values():
+                found = walk(nested, depth=depth + 1)
+                if found:
+                    return found
+            candidate = value.get("faultstring")
+            if isinstance(candidate, (str, int)) and str(candidate).strip():
+                return str(candidate).strip()[:80]
+        elif isinstance(value, list):
+            for nested in value[:20]:
+                found = walk(nested, depth=depth + 1)
+                if found:
+                    return found
+        return None
+
+    found = walk(payload)
+    if found:
+        return found
     return None
 
 
@@ -123,11 +137,11 @@ class HttpxReadOnlyTransport:
             )
         except httpx.HTTPError as exc:
             raise ProviderActivationError("provider request failed") from exc
-        if response.status_code < 200 or response.status_code >= 300:
-            raise ProviderActivationError(f"provider returned HTTP {response.status_code}")
         try:
             body = response.json()
         except ValueError as exc:
+            if response.status_code < 200 or response.status_code >= 300:
+                raise ProviderActivationError(f"provider returned HTTP {response.status_code}") from exc
             raise ProviderActivationError("provider response was not valid JSON") from exc
         if isinstance(body, list):
             # PuntersEdge returns the results collection as a top-level JSON
@@ -135,7 +149,15 @@ class HttpxReadOnlyTransport:
             # common envelope boundary; projection still validates every row.
             body = {"results": body}
         if not isinstance(body, dict):
+            if response.status_code < 200 or response.status_code >= 300:
+                raise ProviderActivationError(f"provider returned HTTP {response.status_code}")
             raise ProviderActivationError("provider response must be a JSON object or array")
+        if response.status_code < 200 or response.status_code >= 300:
+            detail = f"provider returned HTTP {response.status_code}"
+            error_code = _safe_provider_error_code(body)
+            if error_code:
+                detail += f" ({error_code})"
+            raise ProviderActivationError(detail)
         retrieved_at = datetime.now(timezone.utc)
         return TransportResponse(
             status_code=response.status_code,
