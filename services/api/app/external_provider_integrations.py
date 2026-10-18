@@ -236,18 +236,21 @@ class BetfairSessionTokenManager:
     def token(self) -> str:
         if self._token:
             return self._token
-        response = self._transport.request(
-            method="POST",
-            # Betfair documents the .com.au identity endpoint for Australian
-            # accounts. Keep the exchange endpoint aligned with the AU
-            # jurisdiction used by the market-data adapter below.
-            url="https://identitysso.betfair.com.au/api/login",
-            headers={"X-Application": self._app_key, "Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"},
-            params={},
-            json_body=None,
-            form_body={"username": self._username, "password": self._password},
-            timeout_seconds=4.0,
-        )
+        try:
+            response = self._transport.request(
+                method="POST",
+                # Betfair documents the .com.au identity endpoint for Australian
+                # accounts. Keep the exchange endpoint aligned with the AU
+                # jurisdiction used by the market-data adapter below.
+                url="https://identitysso.betfair.com.au/api/login",
+                headers={"X-Application": self._app_key, "Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"},
+                params={},
+                json_body=None,
+                form_body={"username": self._username, "password": self._password},
+                timeout_seconds=4.0,
+            )
+        except ProviderActivationError as exc:
+            raise ProviderActivationError(f"Betfair login request failed: {exc}") from exc
         if response.status_code < 200 or response.status_code >= 300:
             raise ProviderActivationError(f"Betfair login failed with HTTP {response.status_code}")
         token = response.payload.get("token")
@@ -566,7 +569,10 @@ class GatedReadOnlyProviderAdapter:
             self._invalidate_betfair_session()
             refreshed_token, _ = self._betfair_session_token(credentials)
             headers = {"X-Application": credentials.get("app_key", ""), "X-Authentication": refreshed_token, "Content-Type": "application/json", "Accept": "application/json"}
-            response = self._transport.request(method=endpoint.method, url=f"{self.asset.base_url}{path}", headers=headers, params=params, json_body=body, timeout_seconds=4.0)
+            try:
+                response = self._transport.request(method=endpoint.method, url=f"{self.asset.base_url}{path}", headers=headers, params=params, json_body=body, timeout_seconds=4.0)
+            except ProviderActivationError as exc:
+                raise ProviderActivationError(f"Betfair market request failed after session refresh: {exc}") from exc
         if response.status_code < 200 or response.status_code >= 300:
             detail = f"provider returned HTTP {response.status_code}"
             error_code = _safe_provider_error_code(response.payload)
@@ -637,10 +643,13 @@ class GatedReadOnlyProviderAdapter:
             params = {}
         assert self._transport is not None
         path = endpoint.path.replace("{date}", date or "")
-        response = self._transport.request(
-            method=endpoint.method, url=f"{self.asset.base_url}{path}", headers=headers,
-            params=params, json_body=body, timeout_seconds=4.0,
-        )
+        try:
+            response = self._transport.request(
+                method=endpoint.method, url=f"{self.asset.base_url}{path}", headers=headers,
+                params=params, json_body=body, timeout_seconds=4.0,
+            )
+        except ProviderActivationError as exc:
+            raise ProviderActivationError(f"Betfair diagnostic market request failed: {exc}") from exc
         if response.status_code < 200 or response.status_code >= 300:
             raise ProviderActivationError(f"provider returned HTTP {response.status_code}")
         fields = _field_presence(response.payload)
