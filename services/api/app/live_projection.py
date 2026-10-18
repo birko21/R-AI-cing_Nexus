@@ -158,10 +158,16 @@ def _collection(payload: Mapping[str, object]) -> list[object]:
         value = payload.get(key)
         if isinstance(value, list):
             return value
-        if isinstance(value, Mapping):
-            nested = _collection(value)
-            if nested:
-                return nested
+            if isinstance(value, Mapping):
+                nested = _collection(value)
+                if nested:
+                    return nested
+    # FormFav race cards are a single race object rather than an envelope
+    # containing a ``races`` collection.  Accept that shape only when a
+    # recognised non-empty runner collection is present.
+    for key in ("runners", "entries", "horses", "field", "placings", "finishers"):
+        if isinstance(payload.get(key), list) and payload[key]:
+            return [payload]
     raise LiveProjectionError("provider response contains no supported race collection")
 
 
@@ -193,7 +199,7 @@ def _runners(item: Mapping[str, object]) -> list[Mapping[str, object]]:
     # scalar result fields.
     for key in ("runners", "placings", "entries", "horses", "field", "result", "finishers"):
         value = item.get(key)
-        if isinstance(value, list):
+        if isinstance(value, list) and value:
             return [_mapping(raw, "runner") for raw in value]
     runner = item.get("runner")
     if isinstance(runner, Mapping):

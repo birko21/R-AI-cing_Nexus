@@ -73,6 +73,26 @@ def test_punters_edge_result_rows_use_placings_as_runner_collection() -> None:
     assert [runner.position for runner in races[0].runners] == [1, 2]
 
 
+def test_formfav_single_race_card_is_a_supported_envelope_shape() -> None:
+    races = parse_live_envelope(
+        envelope(
+            {
+                "date": "2026-10-17",
+                "track": "Randwick",
+                "raceNumber": 1,
+                "startTime": "2026-10-17T03:15:00+00:00",
+                "timezone": "Australia/Sydney",
+                "runners": [{"number": 1, "name": "Alpha", "barrier": 3}],
+            },
+            source_identifier="formfav:GET_RACES",
+        )
+    )
+    assert len(races) == 1
+    assert races[0].venue == "Randwick"
+    assert races[0].race_number == 1
+    assert races[0].official is False
+
+
 def test_provider_projection_rejects_ambiguous_payload() -> None:
     with pytest.raises(LiveProjectionError, match="no supported race collection"):
         parse_live_envelope(envelope({"message": "not a racing response"}))
