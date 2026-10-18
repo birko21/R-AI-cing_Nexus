@@ -477,7 +477,7 @@ class GatedReadOnlyProviderAdapter:
                 "marketIds": list(market_ids[:20]),
                 "priceProjection": {"priceData": ["EX_BEST_OFFERS", "EX_TRADED", "SP_AVAILABLE", "SP_TRADED"]},
             }
-        market_filter: dict[str, object] = {"eventTypeIds": ["7"], "marketTypeCodes": ["WIN"], "countryCodes": ["AU"]}
+        market_filter: dict[str, object] = {"eventTypeIds": ["7"], "marketTypeCodes": ["WIN"], "marketCountries": ["AU"]}
         if date:
             market_filter["marketStartTime"] = {
                 "from": f"{date}T00:00:00Z",

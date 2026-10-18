@@ -207,6 +207,14 @@ def test_betfair_adapter_uses_read_only_json_rpc_and_never_post_settlement_sp_as
     assert transport.calls[0]["method"] == "POST"
     assert "starting_price" not in body["params"]
 
+    adapter.fetch(
+        "GET_MARKETS", code="THOROUGHBRED", date="2026-10-17", venue="Randwick",
+        approval=approval("betfair-exchange", "GET_MARKETS"),
+    )
+    catalogue_filter = transport.calls[1]["json_body"]["params"]["filter"]
+    assert catalogue_filter["marketCountries"] == ["AU"]
+    assert "countryCodes" not in catalogue_filter
+
 
 def test_betfair_runtime_login_matches_the_long_straight_pattern_and_refreshes_once() -> None:
     class RuntimeBetfairTransport:
