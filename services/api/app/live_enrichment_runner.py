@@ -110,13 +110,17 @@ def run_live_enrichment(*, date: str | None = None, venues: tuple[str, ...] = ()
     betfair_market_ids: list[str] = []
     plans: list[tuple[str, str, str | None, int | None]] = [
         ("formfav", "LIST_MEETINGS", None, None),
-        ("punters-edge", "GET_RESULTS", None, None),
     ]
     if venues:
+        # The provider accepts a venue filter.  Keep result reads venue-scoped
+        # so a mixed all-day response cannot introduce unrelated rows that do
+        # not carry runner-level settlement fields.
+        plans += [("punters-edge", "GET_RESULTS", venue, None) for venue in venues]
         plans += [("punters-edge", "GET_ACCEPTANCES", venue, None) for venue in venues]
         plans += [("krok-odds", operation, venue, None) for operation in ("LIST_MEETINGS", "GET_MARKETS") for venue in venues]
         plans += [("betfair-exchange", "GET_MARKETS", venue, None) for venue in venues]
     else:
+        plans += [("punters-edge", "GET_RESULTS", None, None)]
         plans += [("krok-odds", "LIST_MEETINGS", None, None), ("krok-odds", "GET_MARKETS", None, None), ("betfair-exchange", "GET_MARKETS", None, None)]
 
     try:
