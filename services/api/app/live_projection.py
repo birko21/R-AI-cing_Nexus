@@ -186,7 +186,12 @@ def _race_items(payload: Mapping[str, object]) -> list[Mapping[str, object]]:
 
 
 def _runners(item: Mapping[str, object]) -> list[Mapping[str, object]]:
-    for key in ("runners", "entries", "horses", "field", "result", "finishers"):
+    # PuntersEdge result rows use ``placings`` for the settled runner list,
+    # while acceptance/card payloads use ``runners``.  Treat placings as the
+    # runner collection only after the provider envelope has already passed
+    # the explicit approval gate; do not infer identities from arbitrary
+    # scalar result fields.
+    for key in ("runners", "placings", "entries", "horses", "field", "result", "finishers"):
         value = item.get(key)
         if isinstance(value, list):
             return [_mapping(raw, "runner") for raw in value]

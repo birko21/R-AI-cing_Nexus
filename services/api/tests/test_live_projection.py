@@ -48,6 +48,31 @@ def test_provider_results_project_to_canonical_identity() -> None:
     assert races[0].runners[0].metadata["provider"] == "punters-edge"
 
 
+def test_punters_edge_result_rows_use_placings_as_runner_collection() -> None:
+    races = parse_live_envelope(
+        envelope(
+            {
+                "results": [
+                    {
+                        "race_id": "pe-race-1",
+                        "venue": "Randwick",
+                        "race_number": 1,
+                        "start_time": "2026-10-12T04:30:00+00:00",
+                        "status": "final",
+                        "placings": [
+                            {"name": "Alpha", "number": 1, "position": 1, "win_price": 3.2, "place_price": 1.5},
+                            {"name": "Bravo", "number": 2, "position": 2, "win_price": 5.0, "place_price": 2.0},
+                        ],
+                    }
+                ]
+            }
+        )
+    )
+    assert len(races) == 1
+    assert races[0].official is True
+    assert [runner.position for runner in races[0].runners] == [1, 2]
+
+
 def test_provider_projection_rejects_ambiguous_payload() -> None:
     with pytest.raises(LiveProjectionError, match="no supported race collection"):
         parse_live_envelope(envelope({"message": "not a racing response"}))

@@ -12,6 +12,7 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import datetime, timezone
+import re
 from typing import Literal, Protocol
 from uuid import uuid4
 
@@ -268,6 +269,15 @@ def build_existing_provider_assets() -> dict[str, ExistingProviderAsset]:
     }
 
 
+def _formfav_track_slug(value: str) -> str:
+    """Match FormFav's documented track-slug query field."""
+
+    slug = re.sub(r"[^a-z0-9]+", "-", value.casefold()).strip("-")
+    if not slug:
+        raise ProviderActivationError("FormFav venue cannot be converted to a track slug")
+    return slug
+
+
 @dataclass(frozen=True)
 class BoundedProbePlan:
     provider_id: str
@@ -431,10 +441,20 @@ class GatedReadOnlyProviderAdapter:
         elif provider_id == "formfav":
             # FormFav's card API uses the sibling adapter's documented AU
             # gallops vocabulary rather than the Nexus racing-code token.
-            params = {"race_code": "gallops", "country": "au"}
+            if operation == "GET_RACES":
+                params = {
+                    "track": _formfav_track_slug(venue) if venue is not None else "",
+                    "timezone": "Australia/Sydney",
+                    "race_code": "gallops",
+                    "country": "au",
+                }
+            else:
+                params = {"race_code": "gallops", "country": "au", "timezone": "Australia/Sydney"}
         else:
             params = {"code": code}
         for key, value in (("date", date), ("venue", venue), ("race", race), ("cursor", cursor), ("limit", page_size)):
+            if provider_id == "formfav" and operation == "GET_RACES" and key == "venue":
+                continue
             if value is not None:
                 params[key] = value
         return params

@@ -160,6 +160,9 @@ def test_formfav_uses_documented_australian_gallops_parameters() -> None:
     active.fetch("GET_RACES", code="THOROUGHBRED", date="2026-10-17", venue="Randwick", approval=approval("formfav", "GET_RACES"))
     assert transport.calls[0]["params"]["race_code"] == "gallops"
     assert transport.calls[0]["params"]["country"] == "au"
+    assert transport.calls[0]["params"]["track"] == "randwick"
+    assert transport.calls[0]["params"]["timezone"] == "Australia/Sydney"
+    assert "venue" not in transport.calls[0]["params"]
     assert "code" not in transport.calls[0]["params"]
 
 
