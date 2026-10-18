@@ -205,6 +205,7 @@ def test_betfair_adapter_uses_read_only_json_rpc_and_never_post_settlement_sp_as
     body = transport.calls[0]["json_body"]
     assert body["method"].endswith("listMarketBook")
     assert transport.calls[0]["method"] == "POST"
+    assert transport.calls[0]["headers"]["Accept"] == "application/json"
     assert "starting_price" not in body["params"]
 
     adapter.fetch(

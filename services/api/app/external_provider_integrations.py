@@ -551,7 +551,7 @@ class GatedReadOnlyProviderAdapter:
             session_token, runtime_login = self._betfair_session_token(credentials)
             if not app_key:
                 raise ProviderActivationError("Betfair requires a server-side app key")
-            headers = {"X-Application": app_key, "X-Authentication": session_token, "Content-Type": "application/json"}
+            headers = {"X-Application": app_key, "X-Authentication": session_token, "Content-Type": "application/json", "Accept": "application/json"}
             method_name = endpoint.description.split(" ", 1)[0]
             params = self._betfair_params(view=view, date=date, venue=venue, market_ids=market_ids, page_size=page_size)
             body = {"jsonrpc": "2.0", "method": f"SportsAPING/v1.0/{method_name}", "params": params, "id": 1}
@@ -565,7 +565,7 @@ class GatedReadOnlyProviderAdapter:
                 raise
             self._invalidate_betfair_session()
             refreshed_token, _ = self._betfair_session_token(credentials)
-            headers = {"X-Application": credentials.get("app_key", ""), "X-Authentication": refreshed_token, "Content-Type": "application/json"}
+            headers = {"X-Application": credentials.get("app_key", ""), "X-Authentication": refreshed_token, "Content-Type": "application/json", "Accept": "application/json"}
             response = self._transport.request(method=endpoint.method, url=f"{self.asset.base_url}{path}", headers=headers, params=params, json_body=body, timeout_seconds=4.0)
         if response.status_code < 200 or response.status_code >= 300:
             detail = f"provider returned HTTP {response.status_code}"
@@ -582,7 +582,7 @@ class GatedReadOnlyProviderAdapter:
             if "INVALID_SESSION" in error_text:
                 self._invalidate_betfair_session()
                 refreshed_token, _ = self._betfair_session_token(credentials)
-                headers = {"X-Application": credentials.get("app_key", ""), "X-Authentication": refreshed_token, "Content-Type": "application/json"}
+                headers = {"X-Application": credentials.get("app_key", ""), "X-Authentication": refreshed_token, "Content-Type": "application/json", "Accept": "application/json"}
                 response = self._transport.request(method=endpoint.method, url=f"{self.asset.base_url}{path}", headers=headers, params=params, json_body=body, timeout_seconds=4.0)
                 if response.status_code < 200 or response.status_code >= 300:
                     raise ProviderActivationError(f"provider returned HTTP {response.status_code}")
@@ -630,7 +630,7 @@ class GatedReadOnlyProviderAdapter:
             session_token, runtime_login = self._betfair_session_token(credentials)
             if not app_key:
                 raise ProviderActivationError("Betfair requires a server-side app key")
-            headers = {"X-Application": app_key, "X-Authentication": session_token, "Content-Type": "application/json"}
+            headers = {"X-Application": app_key, "X-Authentication": session_token, "Content-Type": "application/json", "Accept": "application/json"}
             method_name = endpoint.description.split(" ", 1)[0]
             params = self._betfair_params(view=view, date=date, venue=venue, market_ids=market_ids, page_size=None)
             body = {"jsonrpc": "2.0", "method": f"SportsAPING/v1.0/{method_name}", "params": params, "id": 1}
