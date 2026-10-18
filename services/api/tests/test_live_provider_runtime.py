@@ -49,6 +49,20 @@ def test_runtime_status_is_non_secret_and_does_not_make_network_request() -> Non
     assert "local-test-key" not in str(statuses)
 
 
+def test_betfair_runtime_status_reports_authentication_mode_without_secrets() -> None:
+    statuses = configured_provider_status(environ=_env(
+        NEXUS_PROVIDER_BETFAIR_ENABLED="true",
+        NEXUS_PROVIDER_BETFAIR_APP_KEY="app-key",
+        NEXUS_PROVIDER_BETFAIR_USERNAME="username",
+        NEXUS_PROVIDER_BETFAIR_PASSWORD="password",
+    ))
+    betfair = next(item for item in statuses if item["provider"] == "betfair-exchange")
+    assert betfair["credentials_configured"] is True
+    assert betfair["credential_mode"] == "runtime_login"
+    assert "app-key" not in str(statuses)
+    assert "password" not in str(statuses)
+
+
 def test_private_read_approval_is_reported_as_approved_without_historical_rights() -> None:
     statuses = configured_provider_status(environ=_env(
         NEXUS_PROVIDER_PUNTERS_EDGE_APPROVAL_TIER="PRIVATE_SINGLE_OWNER_READ_ONLY",

@@ -169,10 +169,17 @@ class LiveProviderConfig:
                 )
             else:
                 checkpoint = evaluate_source_approval(self.approval)
+        credential_mode = "none"
+        if self.provider_id == "betfair-exchange" and self.credentials:
+            if self.credentials.get("username") and self.credentials.get("password"):
+                credential_mode = "runtime_login"
+            elif self.credentials.get("session_token"):
+                credential_mode = "static_session"
         return {
             "provider": self.provider_id,
             "enabled": self.enabled,
             "credentials_configured": bool(self.credentials),
+            "credential_mode": credential_mode,
             "diagnostics_enabled": self.diagnostics_enabled,
             "approval_status": checkpoint.status if checkpoint else "NOT_CONFIGURED",
             "approval_missing_requirements": list(checkpoint.missing_requirements) if checkpoint else ["approval_record"],
