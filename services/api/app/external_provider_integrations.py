@@ -216,7 +216,10 @@ class BetfairSessionTokenManager:
             return self._token
         response = self._transport.request(
             method="POST",
-            url="https://identitysso.betfair.com/api/login",
+            # Betfair documents the .com.au identity endpoint for Australian
+            # accounts. Keep the exchange endpoint aligned with the AU
+            # jurisdiction used by the market-data adapter below.
+            url="https://identitysso.betfair.com.au/api/login",
             headers={"X-Application": self._app_key, "Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"},
             params={},
             json_body=None,

@@ -225,7 +225,7 @@ def test_betfair_runtime_login_matches_the_long_straight_pattern_and_refreshes_o
 
         def request(self, **kwargs: object) -> TransportResponse:
             self.calls.append(kwargs)
-            if kwargs["url"] == "https://identitysso.betfair.com/api/login":
+            if kwargs["url"] == "https://identitysso.betfair.com.au/api/login":
                 self.login_count += 1
                 return TransportResponse(200, {"token": f"runtime-session-{self.login_count}"}, NOW, NOW, "login")
             if self.expire_first_api_token:
