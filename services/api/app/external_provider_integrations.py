@@ -42,6 +42,23 @@ class ProviderActivationError(RuntimeError):
     """Raised when a provider request is not explicitly eligible to run."""
 
 
+def _safe_provider_error_code(payload: Mapping[str, object]) -> str | None:
+    """Extract a bounded provider error code without retaining response text."""
+
+    candidates: list[object] = [payload]
+    nested = payload.get("error")
+    if isinstance(nested, Mapping):
+        candidates.append(nested)
+    for candidate in candidates:
+        if not isinstance(candidate, Mapping):
+            continue
+        for key in ("errorCode", "error_code", "code"):
+            value = candidate.get(key)
+            if isinstance(value, (str, int)) and str(value).strip():
+                return str(value).strip()[:80]
+    return None
+
+
 @dataclass(frozen=True)
 class EndpointSpec:
     operation: str
@@ -526,7 +543,15 @@ class GatedReadOnlyProviderAdapter:
             headers = {"X-Application": credentials.get("app_key", ""), "X-Authentication": refreshed_token, "Content-Type": "application/json"}
             response = self._transport.request(method=endpoint.method, url=f"{self.asset.base_url}{path}", headers=headers, params=params, json_body=body, timeout_seconds=4.0)
         if response.status_code < 200 or response.status_code >= 300:
-            raise ProviderActivationError(f"provider returned HTTP {response.status_code}")
+            detail = f"provider returned HTTP {response.status_code}"
+            error_code = _safe_provider_error_code(response.payload)
+            if error_code:
+                detail += f" ({error_code})"
+            raise ProviderActivationError(detail)
+        if self.asset.provider_id == "betfair-exchange" and isinstance(response.payload.get("error"), Mapping):
+            error_code = _safe_provider_error_code(response.payload)
+            if error_code and error_code != "INVALID_SESSION":
+                raise ProviderActivationError(f"Betfair API error ({error_code})")
         if runtime_login and isinstance(response.payload.get("error"), Mapping):
             error_text = " ".join(str(value) for value in response.payload["error"].values()).upper()
             if "INVALID_SESSION" in error_text:
