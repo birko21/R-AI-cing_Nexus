@@ -17,6 +17,7 @@ class ProviderRuntimeStatus(BaseModel):
     provider: str
     enabled: bool
     credentials_configured: bool
+    credential_mode: str
     diagnostics_enabled: bool
     approval_status: str
     approval_missing_requirements: list[str]
